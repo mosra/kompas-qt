@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
     app.setOrganizationName("Mosra");
 
     QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
     /* Localizations */
     QTranslator translatorQt, translator;

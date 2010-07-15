@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     viewPluginManager = new ::PluginManager<AbstractMapView>("");
     tilePluginManager = new ::PluginManager<AbstractTileModel>("");
 
+    view = viewPluginManager->instance("MapView");
+
     setCentralWidget(view);
     resize(800, 600);
 }

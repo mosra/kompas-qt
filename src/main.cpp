@@ -20,8 +20,12 @@
 #include <QtGui/QApplication>
 
 #include "MainWindow.h"
+#include "PluginManager/PluginManager.h"
+#include "Plugins/MapView.h"
 
 int main(int argc, char** argv) {
+    PLUGIN_IMPORT_STATIC(MapView)
+
     QApplication app(argc, argv);
     app.setApplicationName("Map2X");
     /** @todo Organization? */

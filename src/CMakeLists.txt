@@ -7,6 +7,7 @@ include_directories(${MAP2X_CORE_INCLUDE_DIR})
 
 set(Map2X_Qt_SRCS
     MainWindow.cpp
+    AbstractMapView.cpp
     main.cpp
 )
 

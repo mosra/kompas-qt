@@ -17,11 +17,15 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QStyle>
 
+#include "PluginManager/PluginManager.h"
+#include "AbstractMapView.h"
 #include "MainWindow.h"
+
+using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), view(0), tileModel(0) {
     setWindowTitle("Map2X");
 
     createActions();
@@ -29,7 +33,17 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     statusBar();
 
+    /** @todo Plugin dir */
+    viewPluginManager = new ::PluginManager<AbstractMapView>("");
+    tilePluginManager = new ::PluginManager<AbstractTileModel>("");
+
+    setCentralWidget(view);
     resize(800, 600);
+}
+
+MainWindow::~MainWindow() {
+    delete viewPluginManager;
+    delete tilePluginManager;
 }
 
 void MainWindow::createActions() {

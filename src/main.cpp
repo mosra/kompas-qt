@@ -21,10 +21,12 @@
 
 #include "MainWindow.h"
 #include "PluginManager/PluginManager.h"
+#include "Plugins/OpenStreetMapTileModel.h"
 #include "Plugins/MapView.h"
 
 int main(int argc, char** argv) {
     PLUGIN_IMPORT_STATIC(MapView)
+    PLUGIN_IMPORT_STATIC(OpenStreetMap)
 
     QApplication app(argc, argv);
     app.setApplicationName("Map2X");

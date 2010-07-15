@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     tilePluginManager = new ::PluginManager<AbstractTileModel>("");
 
     view = viewPluginManager->instance("MapView");
+    tileModel = tilePluginManager->instance("OpenStreetMap");
+    view->setTileModel(tileModel);
 
     setCentralWidget(view);
     resize(800, 600);

@@ -60,10 +60,15 @@ class MainWindow: public QMainWindow {
         Core::AbstractTileModel* tileModel;
 
         QAction *quitAction,
+            *moveMapAction,
+            *zoomInAction,
             *aboutQtAction;
 
         void createActions();
         void createMenus();
+
+    private slots:
+        void moveMap();
 };
 
 }}

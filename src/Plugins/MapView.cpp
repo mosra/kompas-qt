@@ -37,6 +37,7 @@ MapView::MapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f)
     view = new QGraphicsView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setScene(&map);
 
     /* Single-widget layout */

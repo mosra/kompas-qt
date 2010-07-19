@@ -21,6 +21,7 @@
 #include "AbstractMapView.h"
 #include "MainWindow.h"
 
+using namespace Map2X::Core;
 using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {

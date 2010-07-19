@@ -19,12 +19,10 @@
  * @brief Class Map2X::QtGui::AbstractMapView
  */
 
-#include <QtGui/qwidget.h>
+#include <QtGui/QWidget>
 
 #include "PluginManager/definitions.h"
 #include "AbstractTileModel.h"
-
-using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
@@ -50,7 +48,7 @@ class AbstractMapView: public QWidget {
         virtual void refresh() = 0;
 
     protected:
-        AbstractTileModel* tileModel;   /**< @brief Tile model */
+        Core::AbstractTileModel* tileModel;     /**< @brief Tile model */
 };
 
 }}

@@ -54,10 +54,10 @@ class MainWindow: public QMainWindow {
 
     private:
         PluginManager::PluginManager<AbstractMapView>* viewPluginManager;
-        PluginManager::PluginManager<AbstractTileModel>* tilePluginManager;
+        PluginManager::PluginManager<Core::AbstractTileModel>* tilePluginManager;
 
         AbstractMapView* view;
-        AbstractTileModel* tileModel;
+        Core::AbstractTileModel* tileModel;
 
         QAction *quitAction,
             *aboutQtAction;

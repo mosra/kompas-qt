@@ -15,6 +15,8 @@
 
 #include "AbstractMapView.h"
 
+using namespace Map2X::Core;
+
 namespace Map2X { namespace QtGui {
 
 void AbstractMapView::setTileModel(AbstractTileModel* model) {

@@ -25,13 +25,22 @@
 
 class QGraphicsView;
 
-namespace Map2X {
+namespace Map2X { namespace QtGui { namespace Plugins {
 
-namespace QtGui { namespace Plugins {
+class Tile;
 
-/** @brief Map viewer using QGraphicsView */
+/**
+ * @brief Map viewer using QGraphicsView
+ *
+ * @todo Tile loading and tile not found images for all tile sizes
+ */
 class MapView: public AbstractMapView {
     Q_OBJECT
+
+    private:
+        Core::Zoom _zoom;
+        QString _layer;
+        QStringList _overlays;
 
     public:
         /**
@@ -41,12 +50,69 @@ class MapView: public AbstractMapView {
          */
         MapView(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
+        virtual inline unsigned int zoom() const { return _zoom; }
+        virtual Core::Wgs84Coords coords();
+        virtual QString layer() const { return _layer; }
+        virtual QStringList overlays() const { return _overlays; }
+
+    public slots:
+        virtual bool zoomIn();
+        virtual bool zoomOut();
+        virtual bool zoomTo(Core::Zoom zoom);
+        virtual bool setCoords(const Core::Wgs84Coords& coords);
+        virtual bool move(Direction direction, unsigned int speed) { return false; }
+        virtual bool setLayer(const QString& layer);
+        virtual bool addOverlay(const QString& overlay);
+        virtual bool removeOverlay(const QString& overlay);
+        virtual void reload();
+
     private:
-        QGraphicsView* view;
-        QGraphicsScene map;
+        QGraphicsView* view;                    /**< @brief Map view */
+        QGraphicsScene map;                     /**< @brief Map scene */
+        Core::Coords<unsigned int> tileCount;   /**< @brief Tile count for current view */
+        QList<Tile*> tiles;                     /**< @brief All tiles */
+
+        QPixmap tileNotFoundImage,              /**< @brief "Tile not found" image */
+            tileLoadingImage;                   /**< @brief "Tile loading" image */
+
+        /**
+         * @brief Update map area
+         *
+         * Updates available map area. Called after zooming, adding/removing
+         * map packages or enabling/disabling online maps.
+         */
+        void updateMapArea();
+
+        /**
+         * @brief Update displayed tile count
+         *
+         * Updates count of tiles for current view. Called after resizing view.
+         */
+        void updateTileCount();
+
+        /**
+         * @brief Update tile positions
+         *
+         * Updates tile positions, removes invisible and adds new to blank
+         * parts of view. Called after movement or zooming.
+         */
+        void updateTilePositions();
+
+        /**
+         * @brief Update tile data
+         *
+         * Updates data of tiles. Called after changing layers/overlays.
+         */
+        void updateTileData();
 
     private slots:
-        virtual void refresh();
+        virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
+        inline virtual void tileLoading(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
+            tileData(layer, z, coords, tileLoadingImage);
+        }
+        virtual void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
+            tileData(layer, z, coords, tileNotFoundImage);
+        }
 };
 
 }}}

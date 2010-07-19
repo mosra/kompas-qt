@@ -9,3 +9,4 @@ qt4_wrap_cpp(Map2X_Qt_Plugins_MOC
 )
 
 add_library(Map2XQtPlugins STATIC ${Map2X_Qt_Plugins_SRCS} ${Map2X_Qt_Plugins_MOC})
+target_link_libraries(Map2XQtPlugins ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})

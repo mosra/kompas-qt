@@ -13,15 +13,36 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+#include <QtCore/QMetaType>
+
 #include "AbstractMapView.h"
+#include "TileDataThread.h"
 
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
+AbstractMapView::AbstractMapView(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), tileModel(0) {
+    tileDataThread = new TileDataThread(&tileModel, &tileModelMutex, this);
+
+    qRegisterMetaType<Core::Zoom>("Core::Zoom");
+    qRegisterMetaType<Core::TileCoords>("Core::TileCoords");
+
+    connect(this, SIGNAL(getTileData(QString,Core::Zoom,Core::TileCoords)),
+            tileDataThread, SLOT(getTileData(QString,Core::Zoom,Core::TileCoords)));
+    connect(tileDataThread, SIGNAL(tileData(QString,Core::Zoom,Core::TileCoords,QPixmap)),
+            SLOT(tileData(QString,Core::Zoom,Core::TileCoords,QPixmap)));
+    connect(tileDataThread, SIGNAL(tileLoading(QString,Core::Zoom,Core::TileCoords)),
+            SLOT(tileLoading(QString,Core::Zoom,Core::TileCoords)));
+    connect(tileDataThread, SIGNAL(tileNotFound(QString,Core::Zoom,Core::TileCoords)),
+            SLOT(tileNotFound(QString,Core::Zoom,Core::TileCoords)));
+
+    tileDataThread->start();
+}
+
 void AbstractMapView::setTileModel(AbstractTileModel* model) {
     tileModel = model;
-    refresh();
+    reload();
 }
 
 }}

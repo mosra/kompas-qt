@@ -10,11 +10,14 @@ add_subdirectory(Plugins)
 set(Map2X_Qt_SRCS
     MainWindow.cpp
     AbstractMapView.cpp
+    TileDataThread.cpp
     main.cpp
 )
 
 qt4_wrap_cpp(Map2X_Qt_MOC
     MainWindow.h
+    AbstractMapView.h
+    TileDataThread.h
 )
 
 qt4_add_resources(Map2X_Qt_QRC

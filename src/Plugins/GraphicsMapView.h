@@ -102,6 +102,8 @@ class GraphicsMapView: public AbstractMapView {
          *
          * Updates tile positions, removes invisible and adds new to blank
          * parts of view. Called after movement or zooming.
+         * @todo More precisely calculate positions of tiles (works well when
+         *      moving to bottom right, but sucks when moving to top left)
          */
         void updateTilePositions();
 

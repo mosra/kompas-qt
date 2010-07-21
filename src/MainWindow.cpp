@@ -66,8 +66,10 @@ void MainWindow::createActions() {
     /* Move map */
     moveMapAction = new QAction(tr("Move to Prague"), this);
     zoomInAction = new QAction(tr("Zoom in"), this);
+    zoomOutAction = new QAction(tr("Zoom out"), this);
     connect(moveMapAction, SIGNAL(triggered(bool)), SLOT(moveMap()));
     connect(zoomInAction, SIGNAL(triggered(bool)), view, SLOT(zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered(bool)), view, SLOT(zoomOut()));
 
     /* About Qt */
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
@@ -81,6 +83,7 @@ void MainWindow::createMenus() {
     fileMenu->addAction(quitAction);
     fileMenu->addAction(moveMapAction);
     fileMenu->addAction(zoomInAction);
+    fileMenu->addAction(zoomOutAction);
 
     /* Help menu */
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));

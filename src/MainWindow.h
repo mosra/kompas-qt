@@ -62,6 +62,7 @@ class MainWindow: public QMainWindow {
         QAction *quitAction,
             *moveMapAction,
             *zoomInAction,
+            *zoomOutAction,
             *aboutQtAction;
 
         void createActions();

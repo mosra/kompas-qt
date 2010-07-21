@@ -14,7 +14,6 @@
 */
 
 #include "GraphicsMapView.h"
-#include "Tile.h"
 
 #include <cmath>
 #include <vector>
@@ -23,9 +22,11 @@
 #include <QtCore/QBitArray>
 #include <QtCore/QDebug>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QGraphicsView>
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QMouseEvent>
+
+#include "MapView.h"
+#include "Tile.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -34,11 +35,14 @@ namespace Map2X { namespace QtGui { namespace Plugins {
 
 GraphicsMapView::GraphicsMapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Graphics view */
-    view = new QGraphicsView(this);
+    view = new MapView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setScene(&map);
+
+    /* Update tile positions on map move */
+    connect(view, SIGNAL(mapMoved()), SLOT(updateTilePositions()));
 
     /* Single-widget layout */
     QHBoxLayout* layout = new QHBoxLayout;

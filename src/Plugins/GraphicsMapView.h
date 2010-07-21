@@ -23,10 +23,9 @@
 
 #include "../AbstractMapView.h"
 
-class QGraphicsView;
-
 namespace Map2X { namespace QtGui { namespace Plugins {
 
+class MapView;
 class Tile;
 
 /**
@@ -67,7 +66,7 @@ class GraphicsMapView: public AbstractMapView {
         virtual void reload();
 
     private:
-        QGraphicsView* view;                    /**< @brief Map view */
+        MapView* view;                          /**< @brief Map view */
         QGraphicsScene map;                     /**< @brief Map scene */
         Core::Coords<unsigned int> tileCount;   /**< @brief Tile count for current view */
         QList<Tile*> tiles;                     /**< @brief All tiles */
@@ -91,14 +90,6 @@ class GraphicsMapView: public AbstractMapView {
         void updateTileCount();
 
         /**
-         * @brief Update tile positions
-         *
-         * Updates tile positions, removes invisible and adds new to blank
-         * parts of view. Called after movement or zooming.
-         */
-        void updateTilePositions();
-
-        /**
          * @brief Update tile data
          *
          * Updates data of tiles. Called after changing layers/overlays.
@@ -106,6 +97,14 @@ class GraphicsMapView: public AbstractMapView {
         void updateTileData();
 
     private slots:
+        /**
+         * @brief Update tile positions
+         *
+         * Updates tile positions, removes invisible and adds new to blank
+         * parts of view. Called after movement or zooming.
+         */
+        void updateTilePositions();
+
         virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
         inline virtual void tileLoading(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
             tileData(layer, z, coords, tileLoadingImage);

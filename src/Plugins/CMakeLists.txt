@@ -5,6 +5,7 @@ set(Map2X_Qt_Plugins_SRCS
 )
 
 qt4_wrap_cpp(Map2X_Qt_Plugins_MOC
+    MapView.h
     GraphicsMapView.h
 )
 

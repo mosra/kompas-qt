@@ -25,7 +25,7 @@
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
-/** @brief One tile in MapView */
+/** @brief One tile in GraphicsMapView */
 class Tile: public QGraphicsPixmapItem {
     public:
         /**

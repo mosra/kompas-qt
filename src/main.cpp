@@ -22,10 +22,10 @@
 #include "MainWindow.h"
 #include "PluginManager/PluginManager.h"
 #include "Plugins/OpenStreetMapTileModel.h"
-#include "Plugins/MapView.h"
+#include "Plugins/GraphicsMapView.h"
 
 int main(int argc, char** argv) {
-    PLUGIN_IMPORT_STATIC(MapView)
+    PLUGIN_IMPORT_STATIC(GraphicsMapView)
     PLUGIN_IMPORT_STATIC(OpenStreetMap)
 
     QApplication app(argc, argv);

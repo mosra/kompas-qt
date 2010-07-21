@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "MapView.h"
+#include "GraphicsMapView.h"
 #include "Tile.h"
 
 #include <cmath>
@@ -32,7 +32,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
-MapView::MapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+GraphicsMapView::GraphicsMapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Graphics view */
     view = new QGraphicsView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -49,7 +49,7 @@ MapView::MapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f)
     QTimer::singleShot(500, this, SLOT(reload()));
 }
 
-bool MapView::zoomIn() {
+bool GraphicsMapView::zoomIn() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -74,7 +74,7 @@ bool MapView::zoomIn() {
     return true;
 }
 
-bool MapView::zoomOut() {
+bool GraphicsMapView::zoomOut() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -99,7 +99,7 @@ bool MapView::zoomOut() {
     return true;
 }
 
-bool MapView::zoomTo(Zoom zoom) {
+bool GraphicsMapView::zoomTo(Zoom zoom) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -123,7 +123,7 @@ bool MapView::zoomTo(Zoom zoom) {
     return true;
 }
 
-Wgs84Coords MapView::coords() {
+Wgs84Coords GraphicsMapView::coords() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return Wgs84Coords();
@@ -137,7 +137,7 @@ Wgs84Coords MapView::coords() {
     ));
 }
 
-bool MapView::setCoords(const Wgs84Coords& coords) {
+bool GraphicsMapView::setCoords(const Wgs84Coords& coords) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -157,7 +157,7 @@ bool MapView::setCoords(const Wgs84Coords& coords) {
     return true;
 }
 
-bool MapView::setLayer(const QString& layer) {
+bool GraphicsMapView::setLayer(const QString& layer) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -176,7 +176,7 @@ bool MapView::setLayer(const QString& layer) {
     return true;
 }
 
-bool MapView::addOverlay(const QString& overlay) {
+bool GraphicsMapView::addOverlay(const QString& overlay) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -197,14 +197,14 @@ bool MapView::addOverlay(const QString& overlay) {
     return true;
 }
 
-bool MapView::removeOverlay(const QString& overlay) {
+bool GraphicsMapView::removeOverlay(const QString& overlay) {
     if(!tileModel ||!_overlays.contains(overlay)) return false;
 
     _overlays.removeAll(overlay);
     return true;
 }
 
-void MapView::updateMapArea() {
+void GraphicsMapView::updateMapArea() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return;
@@ -219,7 +219,7 @@ void MapView::updateMapArea() {
                      tileModel->area().h*tileModel->tileSize().x*multiplier);
 }
 
-void MapView::updateTileCount() {
+void GraphicsMapView::updateTileCount() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return;
@@ -238,7 +238,7 @@ void MapView::updateTileCount() {
     updateTilePositions();
 }
 
-void MapView::updateTilePositions() {
+void GraphicsMapView::updateTilePositions() {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return;
@@ -272,7 +272,7 @@ void MapView::updateTilePositions() {
     }
 }
 
-void MapView::updateTileData() {
+void GraphicsMapView::updateTileData() {
     /* Delete old tiles and request new data */
     for(int i = tiles.size()-1; i >= 0; --i) {
         emit getTileData(_layer, _zoom, TileCoords(tiles[i]->x(), tiles[i]->y()));
@@ -281,7 +281,7 @@ void MapView::updateTileData() {
     }
 }
 
-void MapView::tileData(const QString& layer, Zoom z, const TileCoords& coords, const QPixmap& data) {
+void GraphicsMapView::tileData(const QString& layer, Zoom z, const TileCoords& coords, const QPixmap& data) {
     QMutexLocker locker(&tileModelMutex);
 
     /* Delete old "loading" tile */
@@ -297,7 +297,7 @@ void MapView::tileData(const QString& layer, Zoom z, const TileCoords& coords, c
     tiles.append(tile);
 }
 
-void MapView::reload() {
+void GraphicsMapView::reload() {
     QMutexLocker locker(&tileModelMutex);
 
     map.clear();

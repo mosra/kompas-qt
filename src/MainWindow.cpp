@@ -13,13 +13,14 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+#include "MainWindow.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStyle>
 
 #include "PluginManager/PluginManager.h"
 #include "AbstractMapView.h"
-#include "MainWindow.h"
 
 using namespace Map2X::Core;
 using namespace Map2X::PluginManager;
@@ -36,7 +37,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     tilePluginManager = new ::PluginManager<AbstractTileModel>("");
 
     /** @todo GUI for this */
-    view = viewPluginManager->instance("MapView");
+    view = viewPluginManager->instance("GraphicsMapView");
     tileModel = tilePluginManager->instance("OpenStreetMap");
     tileModel->setOnline(true);
     view->setTileModel(tileModel);

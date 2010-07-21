@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_MapView_h
-#define Map2X_QtGui_MapView_h
+#ifndef Map2X_QtGui_GraphicsMapView_h
+#define Map2X_QtGui_GraphicsMapView_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::MapView
+ * @brief Class Map2X::QtGui::GraphicsMapView
  */
 
 #include <QtGui/QGraphicsScene>
@@ -34,7 +34,7 @@ class Tile;
  *
  * @todo Tile loading and tile not found images for all tile sizes
  */
-class MapView: public AbstractMapView {
+class GraphicsMapView: public AbstractMapView {
     Q_OBJECT
 
     private:
@@ -48,7 +48,7 @@ class MapView: public AbstractMapView {
          * @param parent    Parent widget
          * @param f         Window flags
          */
-        MapView(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        GraphicsMapView(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords();
@@ -117,7 +117,7 @@ class MapView: public AbstractMapView {
 
 }}}
 
-PLUGIN_REGISTER_STATIC(MapView, Map2X::QtGui::Plugins::MapView, "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
+PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::QtGui::Plugins::GraphicsMapView, "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
 PLUGIN_SET_NAME("Map viewer using QGraphicsView")
 PLUGIN_FINISH
 

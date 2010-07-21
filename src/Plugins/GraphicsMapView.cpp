@@ -254,20 +254,20 @@ void GraphicsMapView::updateTilePositions() {
         static_cast<unsigned int>(viewed.x()/tileModel->tileSize().x),
         static_cast<unsigned int>(viewed.y()/tileModel->tileSize().y));
 
+    locker.unlock();
+
     QBitArray loadedItems(tileCount.x*tileCount.y, false);
 
     /* Foreach tiles and remove these which are not in area */
     for(int i = tiles.size()-1; i >= 0; --i) {
-        if((tiles[i]->x() < tilesOrigin.x || tiles[i]->x() >= tilesOrigin.x+tileCount.x) ||
-           (tiles[i]->y() < tilesOrigin.y || tiles[i]->y() >= tilesOrigin.y+tileCount.y)) {
+        if((tiles[i]->coords().x < tilesOrigin.x || tiles[i]->coords().x >= tilesOrigin.x+tileCount.x) ||
+           (tiles[i]->coords().y < tilesOrigin.y || tiles[i]->coords().y >= tilesOrigin.y+tileCount.y)) {
             delete tiles[i];
             tiles.removeAt(i);
         } else {
-            loadedItems.setBit((tiles[i]->y()-tilesOrigin.y)*tileCount.x+tiles[i]->x()-tilesOrigin.x, true);
+            loadedItems.setBit((tiles[i]->coords().y-tilesOrigin.y)*tileCount.x+tiles[i]->coords().x-tilesOrigin.x, true);
         }
     }
-
-    locker.unlock();
 
     /* Load unloaded tiles */
     for(int i = 0; i != loadedItems.size(); ++i) {
@@ -279,7 +279,7 @@ void GraphicsMapView::updateTilePositions() {
 void GraphicsMapView::updateTileData() {
     /* Delete old tiles and request new data */
     for(int i = tiles.size()-1; i >= 0; --i) {
-        emit getTileData(_layer, _zoom, TileCoords(tiles[i]->x(), tiles[i]->y()));
+        emit getTileData(_layer, _zoom, TileCoords(tiles[i]->coords().x, tiles[i]->coords().y));
         delete tiles[i];
         tiles.removeAt(i);
     }

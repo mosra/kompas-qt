@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     tileModel->setOnline(true);
     view->setTileModel(tileModel);
     view->zoomTo(10);
-    view->setLayer("Maplint");
+    view->setLayer("Mapnik");
 
     createActions();
     createMenus();

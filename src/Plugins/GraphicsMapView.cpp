@@ -43,6 +43,7 @@ GraphicsMapView::GraphicsMapView(QWidget* parent, Qt::WindowFlags f): AbstractMa
 
     /* Update tile positions on map move */
     connect(view, SIGNAL(mapMoved()), SLOT(updateTilePositions()));
+    connect(view, SIGNAL(mapResized()), SLOT(updateTileCount()));
 
     /* Single-widget layout */
     QHBoxLayout* layout = new QHBoxLayout;
@@ -304,6 +305,8 @@ void GraphicsMapView::tileData(const QString& layer, Zoom z, const TileCoords& c
 void GraphicsMapView::reload() {
     QMutexLocker locker(&tileModelMutex);
 
+    qDeleteAll(tiles);
+    tiles.clear();
     map.clear();
 
     /** @todo Weird cycles if not checking visibility */

@@ -32,8 +32,15 @@ class MapView: public QGraphicsView {
             emit mapMoved();
         }
 
+        virtual void resizeEvent(QResizeEvent* event) {
+            QGraphicsView::resizeEvent(event);
+
+            emit mapResized();
+        }
+
     signals:
         void mapMoved();
+        void mapResized();
 };
 
 }}}

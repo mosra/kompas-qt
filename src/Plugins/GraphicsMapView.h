@@ -74,6 +74,8 @@ class GraphicsMapView: public AbstractMapView {
         QPixmap tileNotFoundImage,              /**< @brief "Tile not found" image */
             tileLoadingImage;                   /**< @brief "Tile loading" image */
 
+    private slots:
+
         /**
          * @brief Update map area
          *
@@ -96,7 +98,6 @@ class GraphicsMapView: public AbstractMapView {
          */
         void updateTileData();
 
-    private slots:
         /**
          * @brief Update tile positions
          *

@@ -38,6 +38,7 @@ namespace Map2X { namespace QtGui {
  * Getting tile data from local files in done in separated thread, if the data
  * aren't available locally and model has enabled online
  * @todo Passing downloaded tile back to model
+ * @todo Cleanup, better removing of finushed jobs (without large foreach)
  */
 class TileDataThread: public QThread {
     Q_OBJECT

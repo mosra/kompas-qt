@@ -19,6 +19,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QStyle>
 
+#include "MainWindowConfigure.h"
 #include "PluginManager/PluginManager.h"
 #include "AbstractMapView.h"
 #include "PluginDialog.h"
@@ -28,7 +29,7 @@ using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), view(0), tileModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), view(0), tileModel(0) {
     setWindowTitle("Map2X");
 
     statusBar();

@@ -21,6 +21,7 @@
 
 #include <QtGui/QMainWindow>
 
+#include "Utility/Configuration.h"
 #include "AbstractMapView.h"
 
 class QAction;
@@ -52,6 +53,10 @@ class MainWindow: public QMainWindow {
          */
         virtual ~MainWindow();
 
+        /** @brief Global application configuration */
+        inline Utility::Configuration* configuration()
+            { return &_configuration; }
+
         /** @brief Instance of PluginManager for map view plugins */
         inline PluginManager::PluginManager<AbstractMapView>* mapViewPluginManager()
             { return _mapViewPluginManager; }
@@ -61,6 +66,8 @@ class MainWindow: public QMainWindow {
             { return _tileModelPluginManager; }
 
     private:
+        Utility::Configuration _configuration;
+
         PluginManager::PluginManager<AbstractMapView>* _mapViewPluginManager;
         PluginManager::PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
 

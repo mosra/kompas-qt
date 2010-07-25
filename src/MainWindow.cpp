@@ -21,6 +21,7 @@
 
 #include "PluginManager/PluginManager.h"
 #include "AbstractMapView.h"
+#include "PluginDialog.h"
 
 using namespace Map2X::Core;
 using namespace Map2X::PluginManager;
@@ -71,6 +72,10 @@ void MainWindow::createActions() {
     connect(zoomInAction, SIGNAL(triggered(bool)), view, SLOT(zoomIn()));
     connect(zoomOutAction, SIGNAL(triggered(bool)), view, SLOT(zoomOut()));
 
+    /* Settings menu */
+    pluginDialogAction = new QAction(tr("Plugins"), this);
+    connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
+
     /* About Qt */
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
@@ -85,6 +90,10 @@ void MainWindow::createMenus() {
     fileMenu->addAction(zoomInAction);
     fileMenu->addAction(zoomOutAction);
 
+    /* Settings menu */
+    QMenu* settingsMenu = menuBar()->addMenu(tr("Settings"));
+    settingsMenu->addAction(pluginDialogAction);
+
     /* Help menu */
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
     helpMenu->addAction(aboutQtAction);
@@ -93,6 +102,11 @@ void MainWindow::createMenus() {
 void MainWindow::moveMap() {
     /* Move map to some WGS coords */
     view->setCoords(Wgs84Coords(50.08333, 14.46667));
+}
+
+void MainWindow::pluginDialog() {
+    PluginDialog dialog(this, this);
+    dialog.exec();
 }
 
 }}

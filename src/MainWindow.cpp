@@ -24,6 +24,7 @@
 #include "AbstractMapView.h"
 #include "PluginDialog.h"
 
+using namespace std;
 using namespace Map2X::Core;
 using namespace Map2X::PluginManager;
 
@@ -31,12 +32,20 @@ namespace Map2X { namespace QtGui {
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), view(0), tileModel(0) {
     setWindowTitle("Map2X");
-
     statusBar();
 
+    /* Initialize configuration file groups, if they doesn't exist */
+    if(!_configuration.group("pluginDirs")) _configuration.addGroup("pluginDirs");
+
+    /* Get values from configuration */
+    string mapViewPluginDir = DATA_DIR + string("plugins/mapView/");
+    string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
+    _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
+    _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
+
     /** @todo Plugin dir */
-    _mapViewPluginManager = new ::PluginManager<AbstractMapView>("");
-    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>("");
+    _mapViewPluginManager = new ::PluginManager<AbstractMapView>(mapViewPluginDir);
+    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>(tileModelPluginDir);
 
     /** @todo GUI for this */
     view = _mapViewPluginManager->instance("GraphicsMapView");

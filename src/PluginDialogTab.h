@@ -28,6 +28,10 @@ class QDataWidgetMapper;
 
 namespace Map2X {
 
+namespace Utility {
+    class Configuration;
+}
+
 namespace PluginManager {
     class AbstractPluginManager;
 }
@@ -41,6 +45,7 @@ class PluginModel;
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.
+ * @todo Dir dialog for selecting plugin dir
  */
 class PluginDialogTab: public QWidget {
     Q_OBJECT
@@ -48,16 +53,32 @@ class PluginDialogTab: public QWidget {
     public:
         /**
          * @brief Constructor
-         * @param manager               Pointer to PluginManager
+         * @param _configuration        Pointer to global configuration
+         * @param _configurationKey     Key name for storing plugin configuration
+         * @param _manager              Pointer to PluginManager
          * @param _categoryDescription  Description of current plugin category
          * @param parent                Parent widget
          * @param f                     Window flags
          */
-        PluginDialogTab(PluginManager::AbstractPluginManager* manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginDialogTab(Utility::Configuration* _configuration, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+        /**
+         * @brief Destructor
+         *
+         * Saves configuration back to the file.
+         * @todo Save only after accepting dialog
+         */
+        virtual ~PluginDialogTab();
 
     private:
+        Utility::Configuration* configuration;
+        std::string configurationKey;
+
+        PluginManager::AbstractPluginManager* manager;
         PluginModel* model;
         QDataWidgetMapper* mapper;
+
+        QLineEdit* pluginDir;
 
         QLabel *loadState,
             *description,

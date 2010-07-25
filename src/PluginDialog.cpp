@@ -30,11 +30,15 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
     /* Tab area */
     QTabWidget* tabs = new QTabWidget;
     tabs->addTab(new PluginDialogTab(
+        mainWindow->configuration(),
+        "mapView",
         mainWindow->mapViewPluginManager(),
         tr("Plugins providing map view area.")),
         tr("Map viewers")
     );
     tabs->addTab(new PluginDialogTab(
+        mainWindow->configuration(),
+        "tileModel",
         mainWindow->tileModelPluginManager(),
         tr("Plugins for displaying different kinds of raster maps.")),
         tr("Raster maps")

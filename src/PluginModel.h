@@ -26,7 +26,7 @@
 namespace Map2X {
 
 namespace PluginManager {
-    class PluginManagerStatic;
+    class AbstractPluginManager;
 }
 
 namespace QtGui {
@@ -58,7 +58,7 @@ class PluginModel: public QAbstractTableModel {
          * @param _manager      Pointer to PluginManager
          * @param parent        Parent object
          */
-        inline PluginModel(PluginManager::PluginManagerStatic* _manager, QObject* parent = 0):
+        inline PluginModel(PluginManager::AbstractPluginManager* _manager, QObject* parent = 0):
             QAbstractTableModel(parent), manager(_manager) { reload(); }
 
         /** @brief Reload data from PluginManager */
@@ -70,7 +70,7 @@ class PluginModel: public QAbstractTableModel {
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     private:
-        PluginManager::PluginManagerStatic* manager;
+        PluginManager::AbstractPluginManager* manager;
         std::vector<std::string> nameList;
 };
 

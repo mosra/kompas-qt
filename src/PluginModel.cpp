@@ -50,38 +50,38 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
 
     /* Load state (checkbox) */
     if(index.column() == CheckState && role == Qt::CheckStateRole) {
-        if(manager->loadState(name) & (PluginManagerStatic::LoadOk|PluginManagerStatic::UnloadFailed|PluginManagerStatic::IsRequired|PluginManagerStatic::IsStatic))
+        if(manager->loadState(name) & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired|AbstractPluginManager::IsStatic))
             return Qt::Checked;
         else return Qt::Unchecked;
 
     /* Load state */
     } else if(index.column() == LoadState && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        PluginManagerStatic::LoadState state = manager->loadState(name);
+        AbstractPluginManager::LoadState state = manager->loadState(name);
 
         switch(state) {
-            case PluginManagerStatic::NotFound:
+            case AbstractPluginManager::NotFound:
                 return tr("Not found");
-            case PluginManagerStatic::WrongPluginVersion:
+            case AbstractPluginManager::WrongPluginVersion:
                 return tr("Wrong plugin version");
-            case PluginManagerStatic::WrongInterfaceVersion:
+            case AbstractPluginManager::WrongInterfaceVersion:
                 return tr("Wrong interface version");
-            case PluginManagerStatic::Conflicts:
+            case AbstractPluginManager::Conflicts:
                 return tr("Conflicts with another");
-            case PluginManagerStatic::UnresolvedDependency:
+            case AbstractPluginManager::UnresolvedDependency:
                 return tr("Unresolved dependency");
-            case PluginManagerStatic::LoadFailed:
+            case AbstractPluginManager::LoadFailed:
                 return tr("Loading failed");
-            case PluginManagerStatic::LoadOk:
+            case AbstractPluginManager::LoadOk:
                 return tr("Loaded");
-            case PluginManagerStatic::Unknown:
+            case AbstractPluginManager::Unknown:
                 return tr("Unknown");
-            case PluginManagerStatic::NotLoaded:
+            case AbstractPluginManager::NotLoaded:
                 return tr("Not loaded");
-            case PluginManagerStatic::UnloadFailed:
+            case AbstractPluginManager::UnloadFailed:
                 return tr("Unload failed");
-            case PluginManagerStatic::IsRequired:
+            case AbstractPluginManager::IsRequired:
                 return tr("Is required by another");
-            case PluginManagerStatic::IsStatic:
+            case AbstractPluginManager::IsStatic:
                 return tr("Static plugin");
         }
 
@@ -90,7 +90,7 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
         return qName;
 
     /* If plugin metadata are not yet loaded, don't get them (slow) */
-    else if(manager->loadState(name) == PluginManagerStatic::Unknown)
+    else if(manager->loadState(name) == AbstractPluginManager::Unknown)
         return QVariant();
 
     /* Metadata are not available */

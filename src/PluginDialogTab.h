@@ -29,7 +29,7 @@ class QDataWidgetMapper;
 namespace Map2X {
 
 namespace PluginManager {
-    class PluginManagerStatic;
+    class AbstractPluginManager;
 }
 
 namespace QtGui {
@@ -53,7 +53,7 @@ class PluginDialogTab: public QWidget {
          * @param parent                Parent widget
          * @param f                     Window flags
          */
-        PluginDialogTab(PluginManager::PluginManagerStatic* manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginDialogTab(PluginManager::AbstractPluginManager* manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private:
         PluginModel* model;

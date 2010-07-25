@@ -26,7 +26,7 @@
 
 namespace Map2X { namespace QtGui {
 
-PluginDialogTab::PluginDialogTab(PluginManager::PluginManagerStatic* manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
+PluginDialogTab::PluginDialogTab(PluginManager::AbstractPluginManager* manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
     /* Initialize labels */
     QLabel* categoryDescription = new QLabel(_categoryDescription);
     categoryDescription->setWordWrap(true);

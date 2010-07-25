@@ -52,9 +52,17 @@ class MainWindow: public QMainWindow {
          */
         virtual ~MainWindow();
 
+        /** @brief Instance of PluginManager for map view plugins */
+        inline PluginManager::PluginManager<AbstractMapView>* mapViewPluginManager()
+            { return _mapViewPluginManager; }
+
+        /** @brief Instance of PluginManager for tile model plugins */
+        inline PluginManager::PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
+            { return _tileModelPluginManager; }
+
     private:
-        PluginManager::PluginManager<AbstractMapView>* viewPluginManager;
-        PluginManager::PluginManager<Core::AbstractTileModel>* tilePluginManager;
+        PluginManager::PluginManager<AbstractMapView>* _mapViewPluginManager;
+        PluginManager::PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
 
         AbstractMapView* view;
         Core::AbstractTileModel* tileModel;

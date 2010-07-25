@@ -33,12 +33,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     statusBar();
 
     /** @todo Plugin dir */
-    viewPluginManager = new ::PluginManager<AbstractMapView>("");
-    tilePluginManager = new ::PluginManager<AbstractTileModel>("");
+    _mapViewPluginManager = new ::PluginManager<AbstractMapView>("");
+    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>("");
 
     /** @todo GUI for this */
-    view = viewPluginManager->instance("GraphicsMapView");
-    tileModel = tilePluginManager->instance("OpenStreetMap");
+    view = _mapViewPluginManager->instance("GraphicsMapView");
+    tileModel = _tileModelPluginManager->instance("OpenStreetMap");
     tileModel->setOnline(true);
     view->setTileModel(tileModel);
     view->zoomTo(10);
@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 }
 
 MainWindow::~MainWindow() {
-    delete viewPluginManager;
-    delete tilePluginManager;
+    delete _mapViewPluginManager;
+    delete _tileModelPluginManager;
 }
 
 void MainWindow::createActions() {

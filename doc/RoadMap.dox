@@ -1,0 +1,13 @@
+/** @page RoadMap Road Map
+
+@section v0_1 Map2X-Qt 0.1
+To-Do:
+- less crappy map view
+- support for overlays in map view
+- configurable plugins, map model, map layer and overlays
+- creating map packages from downloaded tiles
+
+@section v0_2 Map2X-Qt 0.2
+- vector map support
+
+ */

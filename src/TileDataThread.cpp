@@ -156,7 +156,7 @@ void TileDataThread::startDownload(TileJob* job) {
     mutex.unlock();
 }
 
-void TileDataThread::getTileData(const QString& layer, Zoom z, const TileCoords& coords) {
+void TileDataThread::getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
     emit tileLoading(layer, z, coords);
 
     /* Add tile request to the queue */

@@ -104,7 +104,7 @@ bool GraphicsMapView::zoomOut() {
     return true;
 }
 
-bool GraphicsMapView::zoomTo(Zoom zoom) {
+bool GraphicsMapView::zoomTo(Core::Zoom zoom) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -286,7 +286,7 @@ void GraphicsMapView::updateTileData() {
     }
 }
 
-void GraphicsMapView::tileData(const QString& layer, Zoom z, const TileCoords& coords, const QPixmap& data) {
+void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {
     QMutexLocker locker(&tileModelMutex);
 
     /* Delete old "loading" tile */

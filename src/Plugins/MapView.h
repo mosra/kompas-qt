@@ -15,23 +15,44 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Map2X::QtGui::Plugins::MapView
+ */
+
 #include <QtGui/QGraphicsView>
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
+/** @brief Map view area in GraphicsMapView */
 class MapView: public QGraphicsView {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent        Parent widget
+         */
         inline MapView(QWidget* parent = 0): QGraphicsView(parent) {}
 
     protected:
+        /**
+         * @brief Mouse move event
+         * @param event         Event
+         *
+         * Emits mapMoved() signal.
+         */
         inline virtual void mouseMoveEvent(QMouseEvent* event) {
             QGraphicsView::mouseMoveEvent(event);
 
             emit mapMoved();
         }
 
+        /**
+         * @brief Resize event
+         * @param event         Event
+         *
+         * Emits mapResized() signal.
+         */
         virtual void resizeEvent(QResizeEvent* event) {
             QGraphicsView::resizeEvent(event);
 
@@ -39,8 +60,8 @@ class MapView: public QGraphicsView {
         }
 
     signals:
-        void mapMoved();
-        void mapResized();
+        void mapMoved();        /**< @brief Map moved */
+        void mapResized();      /**< @brief Map resized */
 };
 
 }}}

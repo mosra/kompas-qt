@@ -35,6 +35,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     TileDataThread.h
     PluginModel.h
     PluginDialogTab.h
+    PluginDialog.h
 )
 
 qt4_add_resources(Map2X_Qt_QRC

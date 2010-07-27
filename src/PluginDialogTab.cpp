@@ -24,15 +24,16 @@
 
 #include "Utility/Configuration.h"
 #include "PluginManager/AbstractPluginManager.h"
+#include "MainWindow.h"
 #include "PluginModel.h"
 
 using namespace std;
 
 namespace Map2X { namespace QtGui {
 
-PluginDialogTab::PluginDialogTab(Utility::Configuration* _configuration, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), configuration(_configuration), configurationKey(_configurationKey), manager(_manager) {
+PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
     string _pluginDir = _manager->pluginDirectory();
-    configuration->group("pluginDirs")->value<string>(_configurationKey, &_pluginDir);
+    mainWindow->configuration()->group("pluginDirs")->value<string>(_configurationKey, &_pluginDir);
 
     /* Initialize labels */
     pluginDir = new QLineEdit(QString::fromStdString(_pluginDir));
@@ -98,11 +99,26 @@ PluginDialogTab::PluginDialogTab(Utility::Configuration* _configuration, const s
     setLayout(layout);
 }
 
-PluginDialogTab::~PluginDialogTab() {
+void PluginDialogTab::save() {
     /* If configuration dir is changed, change it */
     string currentPluginDir = pluginDir->text().toStdString();
     if(manager->pluginDirectory() != currentPluginDir)
-        configuration->group("pluginDirs")->setValue<string>(configurationKey, pluginDir->text().toStdString());
+        mainWindow->configuration()->group("pluginDirs")->setValue<string>(configurationKey, pluginDir->text().toStdString());
+}
+
+void PluginDialogTab::reset() {
+    string _pluginDir;
+    mainWindow->configuration()->group("pluginDirs")->value<string>(configurationKey, &_pluginDir);
+    pluginDir->setText(QString::fromStdString(_pluginDir));
+}
+
+void PluginDialogTab::restoreDefaults() {
+    /* Remove current pluginDir value from configuration and set it from defaults */
+    mainWindow->configuration()->group("pluginDirs")->removeValue(configurationKey);
+    mainWindow->loadDefaultConfiguration();
+
+    /* Load the value from configuration */
+    reset();
 }
 
 }}

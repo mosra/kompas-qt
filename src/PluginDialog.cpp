@@ -18,6 +18,7 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QPushButton>
 
 #include "PluginManager/PluginManager.h"
 #include "MainWindow.h"
@@ -27,27 +28,34 @@
 namespace Map2X { namespace QtGui {
 
 PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
-    /* Tab area */
-    QTabWidget* tabs = new QTabWidget;
-    tabs->addTab(new PluginDialogTab(
-        mainWindow->configuration(),
-        "mapView",
-        mainWindow->mapViewPluginManager(),
-        tr("Plugins providing map view area.")),
-        tr("Map viewers")
-    );
-    tabs->addTab(new PluginDialogTab(
-        mainWindow->configuration(),
-        "tileModel",
-        mainWindow->tileModelPluginManager(),
-        tr("Plugins for displaying different kinds of raster maps.")),
-        tr("Raster maps")
-    );
-
     /* Buttons */
-    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    buttons = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
+    restoreDefaultsButton = buttons->addButton(QDialogButtonBox::RestoreDefaults);
+    resetButton = buttons->addButton(QDialogButtonBox::Reset);
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+
+    /* Tabs */
+    tabs = new QTabWidget;
+    PluginDialogTab* mapViewTab = new PluginDialogTab(
+        mainWindow,
+        "mapView",
+        mainWindow->mapViewPluginManager(),
+        tr("Plugins providing map view area."));
+    tabs->addTab(mapViewTab, tr("Map viewers"));
+    connect(this, SIGNAL(accepted()), mapViewTab, SLOT(save()));
+    connect(restoreDefaultsButton, SIGNAL(clicked(bool)), mapViewTab, SLOT(restoreDefaults()));
+    connect(resetButton, SIGNAL(clicked(bool)), mapViewTab, SLOT(reset()));
+
+    PluginDialogTab* tileModelTab = new PluginDialogTab(
+        mainWindow,
+        "tileModel",
+        mainWindow->tileModelPluginManager(),
+        tr("Plugins for displaying different kinds of raster maps."));
+    tabs->addTab(tileModelTab, tr("Raster maps"));
+    connect(this, SIGNAL(accepted()), tileModelTab, SLOT(save()));
+    connect(restoreDefaultsButton, SIGNAL(clicked(bool)), tileModelTab, SLOT(restoreDefaults()));
+    connect(resetButton, SIGNAL(clicked(bool)), tileModelTab, SLOT(reset()));
 
     /* Layout */
     QVBoxLayout* layout = new QVBoxLayout;

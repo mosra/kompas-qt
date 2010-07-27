@@ -28,16 +28,13 @@ class QDataWidgetMapper;
 
 namespace Map2X {
 
-namespace Utility {
-    class Configuration;
-}
-
 namespace PluginManager {
     class AbstractPluginManager;
 }
 
 namespace QtGui {
 
+class MainWindow;
 class PluginModel;
 
 /**
@@ -53,25 +50,22 @@ class PluginDialogTab: public QWidget {
     public:
         /**
          * @brief Constructor
-         * @param _configuration        Pointer to global configuration
+         * @param _mainWindow           Pointer to main window instance
          * @param _configurationKey     Key name for storing plugin configuration
          * @param _manager              Pointer to PluginManager
          * @param _categoryDescription  Description of current plugin category
          * @param parent                Parent widget
          * @param f                     Window flags
          */
-        PluginDialogTab(Utility::Configuration* _configuration, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-        /**
-         * @brief Destructor
-         *
-         * Saves configuration back to the file.
-         * @todo Save only after accepting dialog
-         */
-        virtual ~PluginDialogTab();
+    public slots:
+        void save();                    /**< @brief Save changes to configuration */
+        void reset();                   /**< @brief Reset changes */
+        void restoreDefaults();         /**< @brief Load default configuration */
 
     private:
-        Utility::Configuration* configuration;
+        MainWindow* mainWindow;
         std::string configurationKey;
 
         PluginManager::AbstractPluginManager* manager;

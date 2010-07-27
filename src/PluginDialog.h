@@ -21,6 +21,9 @@
 
 #include <QtGui/QDialog>
 
+class QDialogButtonBox;
+class QTabWidget;
+
 namespace Map2X { namespace QtGui {
 
 class MainWindow;
@@ -32,6 +35,8 @@ class MainWindow;
  * @todo Settings for plugin dir, autoloading of all, ...
  */
 class PluginDialog: public QDialog {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor
@@ -40,6 +45,12 @@ class PluginDialog: public QDialog {
          * @param f                 Window flags
          */
         PluginDialog(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+    private:
+        QTabWidget* tabs;
+        QDialogButtonBox* buttons;
+        QPushButton *restoreDefaultsButton,
+            *resetButton;
 };
 
 }}

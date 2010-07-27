@@ -31,17 +31,17 @@ namespace Map2X { namespace QtGui {
 PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
     /* Buttons */
     buttons = new QDialogButtonBox(QDialogButtonBox::Cancel);
-    QPushButton* okButton = buttons->addButton(QDialogButtonBox::Ok);
+    QPushButton* saveButton = buttons->addButton(QDialogButtonBox::Save);
     restoreDefaultsButton = buttons->addButton(QDialogButtonBox::RestoreDefaults);
     resetButton = buttons->addButton(QDialogButtonBox::Reset);
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
     connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
 
-    /* OK button is enabled only after editing, disable back after resets */
-    okButton->setDisabled(true);
-    connect(this, SIGNAL(restoreDefaults(bool)), okButton, SLOT(setDisabled(bool)));
-    connect(resetButton, SIGNAL(clicked(bool)), okButton, SLOT(setEnabled(bool)));
+    /* Save button is enabled only after editing, disable back after resets */
+    saveButton->setDisabled(true);
+    connect(this, SIGNAL(restoreDefaults(bool)), saveButton, SLOT(setDisabled(bool)));
+    connect(resetButton, SIGNAL(clicked(bool)), saveButton, SLOT(setEnabled(bool)));
 
     /* Tabs */
     tabs = new QTabWidget;
@@ -51,7 +51,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
         mainWindow->mapViewPluginManager(),
         tr("Plugins providing map view area."));
     tabs->addTab(mapViewTab, tr("Map viewers"));
-    connect(mapViewTab, SIGNAL(edited(bool)), okButton, SLOT(setEnabled(bool)));
+    connect(mapViewTab, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(this, SIGNAL(accepted()), mapViewTab, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), mapViewTab, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), mapViewTab, SLOT(reset()));
@@ -62,7 +62,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
         mainWindow->tileModelPluginManager(),
         tr("Plugins for displaying different kinds of raster maps."));
     tabs->addTab(tileModelTab, tr("Raster maps"));
-    connect(tileModelTab, SIGNAL(edited(bool)), okButton, SLOT(setEnabled(bool)));
+    connect(tileModelTab, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(this, SIGNAL(accepted()), tileModelTab, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), mapViewTab, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), tileModelTab, SLOT(reset()));

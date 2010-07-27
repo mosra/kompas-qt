@@ -78,6 +78,10 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             mapper, SLOT(setCurrentModelIndex(QModelIndex)));
 
+    /* Emit signal on edit */
+    connect(pluginDir, SIGNAL(textEdited(QString)), this, SIGNAL(edited()));
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
+
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(categoryDescription, 0, 0, 1, 2);

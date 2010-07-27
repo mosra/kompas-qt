@@ -64,6 +64,9 @@ class PluginDialogTab: public QWidget {
         void reset();                   /**< @brief Reset changes */
         void restoreDefaults();         /**< @brief Load default configuration */
 
+    signals:
+        void edited(bool = true);       /**< @brief Emitted when the data are changed */
+
     private:
         MainWindow* mainWindow;
         std::string configurationKey;

@@ -50,7 +50,7 @@ class PluginDialog: public QDialog {
         void restoreDefaultsWarning();
 
     signals:
-        void restoreDefaults();
+        void restoreDefaults(bool = true);
 
     private:
         QTabWidget* tabs;

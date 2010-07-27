@@ -34,16 +34,13 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     setWindowTitle("Map2X");
     statusBar();
 
-    /* Initialize configuration file groups, if they doesn't exist */
-    if(!_configuration.group("pluginDirs")) _configuration.addGroup("pluginDirs");
+    /* Load default configuration */
+    loadDefaultConfiguration();
 
-    /* Get values from configuration */
-    string mapViewPluginDir = DATA_DIR + string("plugins/mapView/");
-    string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
+    string mapViewPluginDir, tileModelPluginDir;
     _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
     _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
 
-    /** @todo Plugin dir */
     _mapViewPluginManager = new ::PluginManager<AbstractMapView>(mapViewPluginDir);
     _tileModelPluginManager = new ::PluginManager<AbstractTileModel>(tileModelPluginDir);
 
@@ -65,6 +62,20 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 MainWindow::~MainWindow() {
     delete _mapViewPluginManager;
     delete _tileModelPluginManager;
+}
+
+void MainWindow::loadDefaultConfiguration() {
+    _configuration.setAutomaticGroupCreation(true);
+    _configuration.setAutomaticKeyCreation(true);
+
+    /* Plugin dirs */
+    string mapViewPluginDir = DATA_DIR + string("plugins/mapView/");
+    string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
+    _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
+    _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
+
+    _configuration.setAutomaticGroupCreation(false);
+    _configuration.setAutomaticKeyCreation(false);
 }
 
 void MainWindow::createActions() {

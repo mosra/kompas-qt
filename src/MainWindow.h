@@ -65,6 +65,15 @@ class MainWindow: public QMainWindow {
         inline PluginManager::PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
             { return _tileModelPluginManager; }
 
+    public slots:
+        /**
+         * @brief Load default configuration
+         *
+         * Goes through configuration and if any group or key is missing, sets
+         * it to default value.
+         */
+        void loadDefaultConfiguration();
+
     private:
         Utility::Configuration _configuration;
 

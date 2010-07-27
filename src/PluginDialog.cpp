@@ -19,6 +19,7 @@
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QPushButton>
+#include <QtGui/QMessageBox>
 
 #include "PluginManager/PluginManager.h"
 #include "MainWindow.h"
@@ -34,6 +35,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
     resetButton = buttons->addButton(QDialogButtonBox::Reset);
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+    connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
 
     /* Tabs */
     tabs = new QTabWidget;
@@ -44,7 +46,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
         tr("Plugins providing map view area."));
     tabs->addTab(mapViewTab, tr("Map viewers"));
     connect(this, SIGNAL(accepted()), mapViewTab, SLOT(save()));
-    connect(restoreDefaultsButton, SIGNAL(clicked(bool)), mapViewTab, SLOT(restoreDefaults()));
+    connect(this, SIGNAL(restoreDefaults()), mapViewTab, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), mapViewTab, SLOT(reset()));
 
     PluginDialogTab* tileModelTab = new PluginDialogTab(
@@ -54,7 +56,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
         tr("Plugins for displaying different kinds of raster maps."));
     tabs->addTab(tileModelTab, tr("Raster maps"));
     connect(this, SIGNAL(accepted()), tileModelTab, SLOT(save()));
-    connect(restoreDefaultsButton, SIGNAL(clicked(bool)), tileModelTab, SLOT(restoreDefaults()));
+    connect(this, SIGNAL(restoreDefaults()), mapViewTab, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), tileModelTab, SLOT(reset()));
 
     /* Layout */
@@ -65,6 +67,13 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
 
     setWindowTitle("Plugins");
     resize(640, 320);
+}
+
+void PluginDialog::restoreDefaultsWarning() {
+    if(QMessageBox::warning(this, tr("Really restore defaults?"),
+       tr("Do you really want to restore default configuration? This action is irreversible."),
+       QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+        emit restoreDefaults();
 }
 
 }}

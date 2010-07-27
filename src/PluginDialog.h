@@ -46,6 +46,12 @@ class PluginDialog: public QDialog {
          */
         PluginDialog(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
+    private slots:
+        void restoreDefaultsWarning();
+
+    signals:
+        void restoreDefaults();
+
     private:
         QTabWidget* tabs;
         QDialogButtonBox* buttons;

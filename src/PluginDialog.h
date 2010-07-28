@@ -19,7 +19,7 @@
  * @brief Class Map2X::QtGui::PluginDialog
  */
 
-#include <QtGui/QDialog>
+#include "AbstractConfigurationDialog.h"
 
 class QDialogButtonBox;
 class QTabWidget;
@@ -34,7 +34,7 @@ class MainWindow;
  * Provides viewing and managing plugins.
  * @todo Settings for plugin dir, autoloading of all, ...
  */
-class PluginDialog: public QDialog {
+class PluginDialog: public AbstractConfigurationDialog {
     Q_OBJECT
 
     public:
@@ -46,17 +46,8 @@ class PluginDialog: public QDialog {
          */
         PluginDialog(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-    private slots:
-        void restoreDefaultsWarning();
-
-    signals:
-        void restoreDefaults(bool = true);
-
     private:
         QTabWidget* tabs;
-        QDialogButtonBox* buttons;
-        QPushButton *restoreDefaultsButton,
-            *resetButton;
 };
 
 }}

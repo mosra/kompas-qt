@@ -22,7 +22,6 @@
 #include <QtGui/QDataWidgetMapper>
 #include <QtGui/QHeaderView>
 
-#include "Utility/Configuration.h"
 #include "PluginManager/AbstractPluginManager.h"
 #include "MainWindow.h"
 #include "PluginModel.h"
@@ -31,7 +30,7 @@ using namespace std;
 
 namespace Map2X { namespace QtGui {
 
-PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
+PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
     string _pluginDir = _manager->pluginDirectory();
     mainWindow->configuration()->group("pluginDirs")->value<string>(_configurationKey, &_pluginDir);
 

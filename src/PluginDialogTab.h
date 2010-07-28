@@ -19,8 +19,7 @@
  * @brief Class Map2X::QtGui::PluginDialogtab
  */
 
-#include <QtGui/QWidget>
-#include <QtCore/QModelIndex>
+#include "AbstractConfigurationWidget.h"
 
 class QLabel;
 class QLineEdit;
@@ -44,7 +43,7 @@ class PluginModel;
  * about that plugin.
  * @todo Dir dialog for selecting plugin dir
  */
-class PluginDialogTab: public QWidget {
+class PluginDialogTab: public AbstractConfigurationWidget {
     Q_OBJECT
 
     public:
@@ -60,12 +59,9 @@ class PluginDialogTab: public QWidget {
         PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
-        void save();                    /**< @brief Save changes to configuration */
-        void reset();                   /**< @brief Reset changes */
-        void restoreDefaults();         /**< @brief Load default configuration */
-
-    signals:
-        void edited(bool = true);       /**< @brief Emitted when the data are changed */
+        virtual void reset();
+        virtual void restoreDefaults();
+        virtual void save();
 
     private:
         MainWindow* mainWindow;

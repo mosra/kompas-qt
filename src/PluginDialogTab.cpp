@@ -103,10 +103,7 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
 }
 
 void PluginDialogTab::save() {
-    /* If configuration dir is changed, change it */
-    string currentPluginDir = pluginDir->text().toStdString();
-    if(manager->pluginDirectory() != currentPluginDir)
-        mainWindow->configuration()->group("pluginDirs")->setValue<string>(configurationKey, pluginDir->text().toStdString());
+    mainWindow->configuration()->group("pluginDirs")->setValue<string>(configurationKey, pluginDir->text().toStdString());
 }
 
 void PluginDialogTab::reset() {

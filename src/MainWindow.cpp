@@ -23,6 +23,7 @@
 #include "PluginManager/PluginManager.h"
 #include "AbstractMapView.h"
 #include "PluginDialog.h"
+#include "TileDataThread.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -46,6 +47,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     view = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
     tileModel = _tileModelPluginManager->instance(_configuration.group("map")->value<string>("tileModel"));
     tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
+    TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     view->setTileModel(tileModel);
     view->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     view->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
@@ -80,6 +82,10 @@ void MainWindow::loadDefaultConfiguration() {
     /* Enabled online maps? */
     bool onlineEnabled = true;
     _configuration.group("map")->value("online", &onlineEnabled);
+
+    /* Maximal count of simultaenous downloads */
+    unsigned int maxSimultaenousDownloads = TileDataThread::maxSimultaenousDownloads();
+    _configuration.group("map")->value("maxSimultaenousDownloads", &maxSimultaenousDownloads);
 
     /* Home position */
     Wgs84Coords homePosition(50.088, 14.354);

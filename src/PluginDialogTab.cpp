@@ -49,7 +49,7 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     conflicts->setWordWrap(true);
 
     /* Initialize model and pass it to view */
-    model = new PluginModel(manager, this);
+    model = new PluginModel(manager, 0, this);
     QTableView* view = new QTableView(this);
     view->verticalHeader()->setDefaultSectionSize(20);
     view->setModel(model);

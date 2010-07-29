@@ -23,7 +23,16 @@ using namespace Map2X::PluginManager;
 namespace Map2X { namespace QtGui {
 
 void PluginModel::reload() {
-    nameList = manager->nameList();
+    if(flags & LoadedOnly) {
+        nameList.clear();
+        vector<string> _nameList = manager->nameList();
+
+        for(vector<string>::const_iterator it = _nameList.begin(); it != _nameList.end(); ++it) {
+            if(manager->loadState(*it) & (AbstractPluginManager::IsStatic|AbstractPluginManager::LoadOk))
+                nameList.push_back(*it);
+        }
+
+    } else nameList = manager->nameList();
 }
 
 QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int role) const {

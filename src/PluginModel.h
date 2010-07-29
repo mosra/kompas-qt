@@ -40,6 +40,11 @@ class PluginModel: public QAbstractTableModel {
     Q_OBJECT
 
     public:
+        /** @brief Flags */
+        enum Flags {
+            LoadedOnly          /**< @brief Display only loaded plugins */
+        };
+
         /** @brief Columns */
         enum Column {
             CheckState,
@@ -56,10 +61,11 @@ class PluginModel: public QAbstractTableModel {
          * @brief Constructor
          *
          * @param _manager      Pointer to PluginManager
+         * @param _flags        Flags
          * @param parent        Parent object
          */
-        inline PluginModel(PluginManager::AbstractPluginManager* _manager, QObject* parent = 0):
-            QAbstractTableModel(parent), manager(_manager) { reload(); }
+        inline PluginModel(PluginManager::AbstractPluginManager* _manager, int _flags = 0, QObject* parent = 0):
+            QAbstractTableModel(parent), manager(_manager), flags(_flags) { reload(); }
 
         /** @brief Reload data from PluginManager */
         void reload();
@@ -71,6 +77,7 @@ class PluginModel: public QAbstractTableModel {
 
     private:
         PluginManager::AbstractPluginManager* manager;
+        int flags;
         std::vector<std::string> nameList;
 };
 

@@ -44,8 +44,28 @@ class TileDataThread: public QThread {
     Q_OBJECT
 
     public:
-        /** @brief Maximum count of simultaenous downloads */
-        static const int maxSimultaenousDownloads = 4;
+        /**
+         * @brief Maximum count of simultaenous downloads
+         *
+         * Default count is 3.
+         */
+        inline static int maxSimultaenousDownloads() { return _maxSimultaenousDownloads; }
+
+        /**
+         * @brief Set maximum count of simultaenous downloads
+         * @param count     Count
+         *
+         * Lowest valid value is 1, highest 10. If the value is out of bounds,
+         * nearest possible value will be applied.
+         */
+        inline static void setMaxSimultaenousDownloads(int count) {
+            if(count < 1)
+                _maxSimultaenousDownloads = 1;
+            else if(count > 10)
+                _maxSimultaenousDownloads = 10;
+            else
+                _maxSimultaenousDownloads = count;
+        }
 
         /**
          * @brief Constructor
@@ -116,6 +136,8 @@ class TileDataThread: public QThread {
         void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords);
 
     private:
+        static int _maxSimultaenousDownloads;
+
         struct TileJob {
             QNetworkReply* reply;
             QString layer;

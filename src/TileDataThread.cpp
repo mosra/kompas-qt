@@ -24,6 +24,8 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
+int TileDataThread::_maxSimultaenousDownloads = 3;
+
 TileDataThread::TileDataThread(AbstractTileModel** _model, QMutex* _modelMutex, QObject* parent): QThread(parent), model(_model), modelMutex(_modelMutex), abort(false) {
     manager = new QNetworkAccessManager;
     connect(this, SIGNAL(download(TileJob*)), this, SLOT(startDownload(TileJob*)));
@@ -65,7 +67,7 @@ void TileDataThread::run() {
         mutex.unlock();
 
         /* If any job is waiting, proceed */
-        if(running < maxSimultaenousDownloads && firstPending) {
+        if(running < _maxSimultaenousDownloads && firstPending) {
 
             /* Make copy of the tile data to avoid unnecessary mutex locks */
             mutex.lock();

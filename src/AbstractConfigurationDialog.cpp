@@ -34,9 +34,13 @@ AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::Wi
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
     connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
 
-    /* Save button is enabled only after editing, disable back after resets */
+    /* Save and reset button is enabled only after editing, disable back after
+        resets */
+    resetButton->setDisabled(true);
     saveButton->setDisabled(true);
+    connect(this, SIGNAL(restoreDefaults(bool)), resetButton, SLOT(setDisabled(bool)));
     connect(this, SIGNAL(restoreDefaults(bool)), saveButton, SLOT(setDisabled(bool)));
+    connect(resetButton, SIGNAL(clicked(bool)), resetButton, SLOT(setEnabled(bool)));
     connect(resetButton, SIGNAL(clicked(bool)), saveButton, SLOT(setEnabled(bool)));
 
     /* Layout */
@@ -54,6 +58,7 @@ void AbstractConfigurationDialog::setCentralLayout(QLayout* layout) {
 }
 
 void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* widget) {
+    connect(widget, SIGNAL(edited(bool)), resetButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(this, SIGNAL(accepted()), widget, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), widget, SLOT(restoreDefaults()));

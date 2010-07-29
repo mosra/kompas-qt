@@ -31,11 +31,8 @@ using namespace std;
 namespace Map2X { namespace QtGui {
 
 PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
-    string _pluginDir = _manager->pluginDirectory();
-    mainWindow->configuration()->group("pluginDirs")->value<string>(_configurationKey, &_pluginDir);
-
     /* Initialize labels */
-    pluginDir = new QLineEdit(QString::fromStdString(_pluginDir));
+    pluginDir = new QLineEdit;
     QLabel* categoryDescription = new QLabel(_categoryDescription);
     categoryDescription->setWordWrap(true);
     loadState = new QLabel;
@@ -100,6 +97,9 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);
+
+    /* Fill in values */
+    reset();
 }
 
 void PluginDialogTab::save() {
@@ -107,9 +107,8 @@ void PluginDialogTab::save() {
 }
 
 void PluginDialogTab::reset() {
-    string _pluginDir;
-    mainWindow->configuration()->group("pluginDirs")->value<string>(configurationKey, &_pluginDir);
-    pluginDir->setText(QString::fromStdString(_pluginDir));
+    pluginDir->setText(QString::fromStdString(
+        mainWindow->configuration()->group("pluginDirs")->value<string>(configurationKey)));
 }
 
 void PluginDialogTab::restoreDefaults() {

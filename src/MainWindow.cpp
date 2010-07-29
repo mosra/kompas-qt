@@ -37,20 +37,19 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load default configuration */
     loadDefaultConfiguration();
 
-    string mapViewPluginDir, tileModelPluginDir;
-    _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
-    _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
-
-    _mapViewPluginManager = new ::PluginManager<AbstractMapView>(mapViewPluginDir);
-    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>(tileModelPluginDir);
+    _mapViewPluginManager = new ::PluginManager<AbstractMapView>
+        (_configuration.group("pluginDirs")->value<string>("mapView"));
+    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>
+        (_configuration.group("pluginDirs")->value<string>("tileModel"));
 
     /** @todo GUI for this */
-    view = _mapViewPluginManager->instance("GraphicsMapView");
-    tileModel = _tileModelPluginManager->instance("OpenStreetMap");
-    tileModel->setOnline(true);
+    view = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
+    tileModel = _tileModelPluginManager->instance(_configuration.group("map")->value<string>("tileModel"));
+    tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
     view->setTileModel(tileModel);
-    view->zoomTo(10);
-    view->setLayer("Mapnik");
+    view->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
+    view->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
+    view->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
 
     createActions();
     createMenus();
@@ -73,6 +72,26 @@ void MainWindow::loadDefaultConfiguration() {
     string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
     _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
     _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
+
+    /* Plugin for map view */
+    string mapViewPlugin = "GraphicsMapView";
+    _configuration.group("map")->value("viewPlugin", &mapViewPlugin);
+
+    /* Enabled online maps? */
+    bool onlineEnabled = true;
+    _configuration.group("map")->value("online", &onlineEnabled);
+
+    /* Home position */
+    Wgs84Coords homePosition(50.088, 14.354);
+    _configuration.group("map")->value("homePosition", &homePosition);
+
+    /* Default tile model, layer, overlays and zoom */
+    string tileModel = "OpenStreetMap";
+    string tileLayer = "Mapnik";
+    Zoom zoom        = 4;
+    _configuration.group("map")->value("tileModel", &tileModel);
+    _configuration.group("map")->value("tileLayer", &tileLayer);
+    _configuration.group("map")->value("zoom", &zoom);
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);

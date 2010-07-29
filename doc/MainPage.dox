@@ -5,4 +5,5 @@ Qt and released under LGPLv3 license. Its main target use in on desktop, where
 it aims to cover all features provided by core library in user-friendly
 interface. Like Core library it is plugin-based, so it's customizable for
 systems with different performance.</p>
+@todo http://marcmutz.wordpress.com/2010/07/29/sneak-preview-qlist-considered-harmful/
  */

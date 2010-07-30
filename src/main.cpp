@@ -24,11 +24,13 @@
 #include "Plugins/OpenStreetMapTileModel.h"
 #include "Plugins/GraphicsMapView.h"
 #include "Plugins/DmsDecimalTool/DmsDecimalTool.h"
+#include "Plugins/DistanceMeterTool/DistanceMeterTool.h"
 
 int main(int argc, char** argv) {
     PLUGIN_IMPORT_STATIC(GraphicsMapView)
     PLUGIN_IMPORT_STATIC(OpenStreetMap)
     PLUGIN_IMPORT_STATIC(DmsDecimal)
+    PLUGIN_IMPORT_STATIC(DistanceMeter)
 
     QApplication app(argc, argv);
     app.setApplicationName("Map2X");

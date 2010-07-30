@@ -23,8 +23,10 @@
 
 #include "Utility/Configuration.h"
 #include "AbstractMapView.h"
+#include "AbstractTool.h"
 
 class QAction;
+class QMenu;
 
 namespace Map2X {
 
@@ -65,6 +67,10 @@ class MainWindow: public QMainWindow {
         inline PluginManager::PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
             { return _tileModelPluginManager; }
 
+        /** @brief Instance of PluginManager for tool plugins */
+        inline PluginManager::PluginManager<AbstractTool>* toolPluginManager()
+            { return _toolPluginManager; }
+
     public slots:
         /**
          * @brief Load default configuration
@@ -79,6 +85,7 @@ class MainWindow: public QMainWindow {
 
         PluginManager::PluginManager<AbstractMapView>* _mapViewPluginManager;
         PluginManager::PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
+        PluginManager::PluginManager<AbstractTool>* _toolPluginManager;
 
         AbstractMapView* view;
         Core::AbstractTileModel* tileModel;
@@ -90,6 +97,8 @@ class MainWindow: public QMainWindow {
             *pluginDialogAction,
             *configurationDialogAction,
             *aboutQtAction;
+
+        QMenu* toolsMenu;
 
         void createActions();
         void createMenus();

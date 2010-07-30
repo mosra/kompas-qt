@@ -42,6 +42,14 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
     tabs->addTab(tileModelTab, tr("Raster maps"));
     connectWidget(tileModelTab);
 
+    PluginDialogTab* toolsTab = new PluginDialogTab(
+        mainWindow,
+        "tools",
+        mainWindow->toolPluginManager(),
+        tr("Various utilites for data computing and conversion."));
+    tabs->addTab(toolsTab, tr("Tools"));
+    connectWidget(toolsTab);
+
     setCentralWidget(tabs);
     setWindowTitle("Plugins");
     resize(640, 320);

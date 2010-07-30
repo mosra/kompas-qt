@@ -25,6 +25,7 @@
 #include "PluginDialog.h"
 #include "TileDataThread.h"
 #include "ConfigurationDialog.h"
+#include "ToolPluginMenuView.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -43,6 +44,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
         (_configuration.group("pluginDirs")->value<string>("mapView"));
     _tileModelPluginManager = new ::PluginManager<AbstractTileModel>
         (_configuration.group("pluginDirs")->value<string>("tileModel"));
+    _toolPluginManager = new ::PluginManager<AbstractTool>
+        (_configuration.group("pluginDirs")->value<string>("tools"));
 
     /** @todo GUI for this */
     view = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
@@ -56,6 +59,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     createActions();
     createMenus();
+
+    /* Tools menu */
+    ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
 
     setCentralWidget(view);
     resize(800, 600);
@@ -73,8 +79,10 @@ void MainWindow::loadDefaultConfiguration() {
     /* Plugin dirs */
     string mapViewPluginDir = DATA_DIR + string("plugins/mapView/");
     string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
+    string toolPluginDir = DATA_DIR + string("plugins/tools/");
     _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
     _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
+    _configuration.group("pluginDirs")->value<string>("tools", &toolPluginDir);
 
     /* Plugin for map view */
     string mapViewPlugin = "GraphicsMapView";
@@ -138,6 +146,9 @@ void MainWindow::createMenus() {
     fileMenu->addAction(moveMapAction);
     fileMenu->addAction(zoomInAction);
     fileMenu->addAction(zoomOutAction);
+
+    /* Tools menu */
+    toolsMenu = menuBar()->addMenu(tr("Tools"));
 
     /* Settings menu */
     QMenu* settingsMenu = menuBar()->addMenu(tr("Settings"));

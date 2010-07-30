@@ -27,6 +27,7 @@ set(Map2X_Qt_SRCS
     PluginModel.cpp
     PluginDialogTab.cpp
     PluginDialog.cpp
+    Wgs84CoordsEdit.cpp
     main.cpp
 )
 

@@ -84,7 +84,7 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("map")->value("online", &onlineEnabled);
 
     /* Maximal count of simultaenous downloads */
-    unsigned int maxSimultaenousDownloads = TileDataThread::maxSimultaenousDownloads();
+    unsigned int maxSimultaenousDownloads = 3;
     _configuration.group("map")->value("maxSimultaenousDownloads", &maxSimultaenousDownloads);
 
     /* Home position */

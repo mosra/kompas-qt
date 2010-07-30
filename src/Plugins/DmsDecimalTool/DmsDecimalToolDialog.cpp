@@ -27,8 +27,6 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui { namespace Plugins {
 
 DmsDecimalToolDialog::DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_mainWindow, parent, f) {
-    qDebug("kell");
-
     /* Initialize labels */
     coords = new Wgs84CoordsEdit;
     latitude = new QDoubleSpinBox;
@@ -38,7 +36,7 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* par
     longtitude = new QDoubleSpinBox;
     longtitude->setMinimum(-180.0);
     longtitude->setMaximum(180.0);
-    latitude->setDecimals(8);
+    longtitude->setDecimals(8);
 
     /* Buttons */
     QPushButton* toDecimalButton = new QPushButton(tr("DMS -> Decimal"));

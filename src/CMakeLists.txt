@@ -27,6 +27,8 @@ set(Map2X_Qt_SRCS
     PluginModel.cpp
     PluginDialogTab.cpp
     PluginDialog.cpp
+    ConfigurationDialog.cpp
+    ConfigurationWidget.cpp
     Wgs84CoordsEdit.cpp
     main.cpp
 )
@@ -40,6 +42,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     PluginModel.h
     PluginDialogTab.h
     PluginDialog.h
+    ConfigurationWidget.h
 )
 
 qt4_add_resources(Map2X_Qt_QRC

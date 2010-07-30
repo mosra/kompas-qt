@@ -24,6 +24,7 @@
 #include "AbstractMapView.h"
 #include "PluginDialog.h"
 #include "TileDataThread.h"
+#include "ConfigurationDialog.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -120,7 +121,9 @@ void MainWindow::createActions() {
 
     /* Settings menu */
     pluginDialogAction = new QAction(tr("Plugins"), this);
+    configurationDialogAction = new QAction(tr("Configure Map2X"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
+    connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
 
     /* About Qt */
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
@@ -139,6 +142,7 @@ void MainWindow::createMenus() {
     /* Settings menu */
     QMenu* settingsMenu = menuBar()->addMenu(tr("Settings"));
     settingsMenu->addAction(pluginDialogAction);
+    settingsMenu->addAction(configurationDialogAction);
 
     /* Help menu */
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
@@ -152,6 +156,11 @@ void MainWindow::moveMap() {
 
 void MainWindow::pluginDialog() {
     PluginDialog dialog(this, this);
+    dialog.exec();
+}
+
+void MainWindow::configurationDialog() {
+    ConfigurationDialog dialog(this, this);
     dialog.exec();
 }
 

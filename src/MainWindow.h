@@ -88,6 +88,7 @@ class MainWindow: public QMainWindow {
             *zoomInAction,
             *zoomOutAction,
             *pluginDialogAction,
+            *configurationDialogAction,
             *aboutQtAction;
 
         void createActions();
@@ -96,6 +97,7 @@ class MainWindow: public QMainWindow {
     private slots:
         void moveMap();
         void pluginDialog();
+        void configurationDialog();
 };
 
 }}

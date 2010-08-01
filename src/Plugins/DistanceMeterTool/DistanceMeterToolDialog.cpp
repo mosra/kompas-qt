@@ -1,4 +1,5 @@
 /*
+    Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2010 Jan Dupal <dupal.j@seznam.cz>
 
     This file is part of Map2X.
@@ -19,6 +20,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QGridLayout>
 #include <QtGui/QDoubleSpinBox>
+#include <QtGui/QMessageBox>
 
 #include "../../Wgs84CoordsEdit.h"
 
@@ -58,6 +60,17 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(MainWindow* _mainWindow, QWidge
 
 void DistanceMeterToolDialog::calculate() {
     double _distance = Wgs84Coords::distance(coordsA->coords(), coordsB->coords());
+
+    if(_distance < 0) {
+        QMessageBox information(this);
+        information.setIcon(QMessageBox::Information);
+        information.setWindowTitle(tr("Mosra & Co. Travel Agency"));
+        information.setText(tr("Congratulations! You have chosen a trip around the world."));
+        information.setInformativeText(tr("Please choose at least one transfer "
+            "point so we can compute the most accurate travel distance for you."));
+        information.exec();
+    }
+
     distance->setValue(_distance);
 }
 

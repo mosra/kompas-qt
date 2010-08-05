@@ -163,6 +163,8 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords) {
 }
 
 bool GraphicsMapView::setLayer(const QString& layer) {
+    if(layer == _layer) return true;
+
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -182,6 +184,8 @@ bool GraphicsMapView::setLayer(const QString& layer) {
 }
 
 bool GraphicsMapView::addOverlay(const QString& overlay) {
+    if(_overlays.contains(overlay)) return true;
+
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -193,11 +197,8 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 
     locker.unlock();
 
-    /* Update tile data (if the overlay is not already set) */
-    if(!_overlays.contains(overlay)) {
         _overlays.append(overlay);
         updateTileData();
-    }
 
     return true;
 }

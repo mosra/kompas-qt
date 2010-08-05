@@ -206,6 +206,7 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
     if(!tileModel ||!_overlays.contains(overlay)) return false;
 
     _overlays.removeAll(overlay);
+    updateTileData();
     return true;
 }
 

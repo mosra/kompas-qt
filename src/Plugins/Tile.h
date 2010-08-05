@@ -19,30 +19,59 @@
  * @brief Class Map2X::QtGui::Plugins::Tile
  */
 
-#include <QtGui/QGraphicsPixmapItem>
+#include <QtGui/QGraphicsItemGroup>
 
 #include "AbstractTileModel.h"
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
 /** @brief One tile in GraphicsMapView */
-class Tile: public QGraphicsPixmapItem {
+class Tile: public QGraphicsItemGroup {
     public:
         /**
          * @brief Constructor
          * @param coords        Tile coordinates
-         * @param pixmap        Tile data
          * @param parent        Parent item
          * @param scene         Scene
          */
-        Tile(const Core::TileCoords& coords, const QPixmap& pixmap, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0):
-            QGraphicsPixmapItem(pixmap, parent, scene), _coords(coords) {}
+        Tile(const Core::TileCoords& coords, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0):
+            QGraphicsItemGroup(parent, scene), _coords(coords) {}
 
         /** @brief Tile coordinates */
         inline Core::TileCoords coords() const { return _coords; }
 
+        /**
+         * @brief Set layer
+         * @param layer         Layer ID (0 = background layer, everything
+         *      another are overlays)
+         * @param pixmap        Pixmap
+         *
+         * Assigns pixmap to given layer.
+         */
+        void setLayer(int layer, const QPixmap& pixmap);
+
+        /**
+         * @brief Set empty layer
+         * @param layer         Layer ID (0 = background layer, everything
+         *      another are overlays)
+         *
+         * Creates empty layer as placeholder. If layer with given ID already
+         * exists, its pixmap is discarded.
+         */
+        void setLayer(int layer);
+
+        /**
+         * @brief Remove layer
+         * @param layer         Layer name
+         */
+        void removeLayer(int layer);
+
+        /** @brief Layer */
+        QGraphicsPixmapItem* layer(int layer);
+
     private:
         Core::TileCoords _coords;
+        QList<QGraphicsPixmapItem*> _layers;
 };
 
 }}}

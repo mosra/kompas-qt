@@ -99,13 +99,6 @@ class GraphicsMapView: public AbstractMapView {
         void updateTileCount();
 
         /**
-         * @brief Update tile data
-         *
-         * Updates data of tiles. Called after changing layers/overlays.
-         */
-        void updateTileData();
-
-        /**
          * @brief Update tile positions
          *
          * Updates tile positions, removes invisible and adds new to blank

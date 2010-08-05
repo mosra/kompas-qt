@@ -2,6 +2,7 @@ include_directories("${Map2XQt_SOURCE_DIR}/src")
 
 set(Map2X_Qt_Plugins_SRCS
     GraphicsMapView.cpp
+    Tile.cpp
 )
 
 qt4_wrap_cpp(Map2X_Qt_Plugins_MOC

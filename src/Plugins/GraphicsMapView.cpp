@@ -178,7 +178,12 @@ bool GraphicsMapView::setLayer(const QString& layer) {
 
     /* Update tile data */
     _layer = layer;
-    updateTileData();
+    foreach(Tile* tile, tiles) {
+        /* Placeholder for new data */
+        tile->setLayer(0);
+
+        emit getTileData(_layer, _zoom, tile->coords());
+    }
 
     return true;
 }
@@ -197,8 +202,16 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 
     locker.unlock();
 
-        _overlays.append(overlay);
-        updateTileData();
+    _overlays.append(overlay);
+
+    int layerNumber = _overlays.size()-1;
+    foreach(Tile* tile, tiles) {
+        /* Add placeholder for new layer */
+        tile->setLayer(layerNumber);
+
+        /* Request new layer data */
+        emit getTileData(overlay, _zoom, tile->coords());
+    }
 
     return true;
 }
@@ -206,8 +219,15 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 bool GraphicsMapView::removeOverlay(const QString& overlay) {
     if(!tileModel ||!_overlays.contains(overlay)) return false;
 
-    _overlays.removeAll(overlay);
-    updateTileData();
+    int layerNumber = -1;
+    for(int i = 0; i != _overlays.size(); ++i) {
+        if(_overlays[i] == overlay) layerNumber = i;
+    }
+
+    _overlays.removeAt(layerNumber);
+    foreach(Tile* tile, tiles)
+        tile->removeLayer(layerNumber);
+
     return true;
 }
 
@@ -272,36 +292,36 @@ void GraphicsMapView::updateTilePositions() {
         }
     }
 
-    /* Load unloaded tiles */
+    /* Create non-existent tiles */
     for(int i = 0; i != loadedItems.size(); ++i) {
         if(loadedItems.at(i)) continue;
-        emit getTileData(_layer, _zoom, TileCoords(tilesOrigin.x+i%tileCount.x, tilesOrigin.y+i/tileCount.x));
-    }
-}
 
-void GraphicsMapView::updateTileData() {
-    /* Delete old tiles and request new data */
-    for(int i = tiles.size()-1; i >= 0; --i) {
-        emit getTileData(_layer, _zoom, tiles[i]->coords());
-        delete tiles[i];
-        tiles.removeAt(i);
+        TileCoords coords(tilesOrigin.x+i%tileCount.x, tilesOrigin.y+i/tileCount.x);
+
+        /* Create new tile at given position */
+        Tile* tile = new Tile(coords, 0, &map);
+        tile->setPos(coords.x*tileModel->tileSize().x, coords.y*tileModel->tileSize().y);
+        tiles.append(tile);
+
+        /* Foreach all layers and overlays and request data for them */
+        emit getTileData(_layer, _zoom, coords);
+        foreach(const QString& overlay, _overlays)
+            emit getTileData(overlay, _zoom, coords);
     }
 }
 
 void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {
     QMutexLocker locker(&tileModelMutex);
 
-    /* Delete old "loading" tile */
-    for(int i = tiles.size()-1; i >= 0; --i) {
-        if(tiles[i]->coords() == coords) {
-            delete tiles[i];
-            tiles.removeAt(i);
-        }
-    }
+    /* Compute layer/overlay number */
+    int layerNumber;
+    if(layer == _layer) layerNumber = 0;
+    else layerNumber = _overlays.indexOf(layer);
 
-    Tile* tile = new Tile(coords, data, 0, &map);
-    tile->setOffset(coords.x*tileModel->tileSize().x, coords.y*tileModel->tileSize().y);
-    tiles.append(tile);
+    for(int i = tiles.size()-1; i >= 0; --i) if(tiles[i]->coords() == coords) {
+        tiles[i]->setLayer(layerNumber, data);
+        break;
+    }
 }
 
 void GraphicsMapView::reload() {

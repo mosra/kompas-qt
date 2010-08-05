@@ -54,6 +54,7 @@ class AbstractMapView: public QWidget {
          * @brief Reload map view
          *
          * Reloads all map data and redraws whole map view from scratch.
+         * @todo Make it less drastic
          */
         virtual void reload() = 0;
 
@@ -63,7 +64,8 @@ class AbstractMapView: public QWidget {
          * @brief Set tile model to the view
          * @param model     Tile model
          *
-         * Calls refresh().
+         * Calls reload().
+         * @todo Multithreading, mutexes, etc.
          */
         void setTileModel(Core::AbstractTileModel* model);
 

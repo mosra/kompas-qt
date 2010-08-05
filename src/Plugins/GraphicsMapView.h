@@ -33,11 +33,8 @@ class Tile;
  *
  * @todo Tile loading and tile not found images for all tile sizes
  * @todo Better handling of resize event - map is loaded twice at startup!
- * @todo Overlay support (Tile as QGraphicsItemGroup, not QGraphicsPixmapItem)
  * @todo Remove reload() and replace with yet existing functions
  * @todo Sometimes laaaarge pause before map tile is loaded (why?)
- * @todo Do not delete tiles, just reposition and reload pixmaps
- * @todo Separation of every plugin into another dir? with NS?
  * @todo Non-crashing state when no model, no zoom or no layer is set
  */
 class GraphicsMapView: public AbstractMapView {

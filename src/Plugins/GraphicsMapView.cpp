@@ -281,7 +281,7 @@ void GraphicsMapView::updateTilePositions() {
 void GraphicsMapView::updateTileData() {
     /* Delete old tiles and request new data */
     for(int i = tiles.size()-1; i >= 0; --i) {
-        emit getTileData(_layer, _zoom, TileCoords(tiles[i]->coords().x, tiles[i]->coords().y));
+        emit getTileData(_layer, _zoom, tiles[i]->coords());
         delete tiles[i];
         tiles.removeAt(i);
     }

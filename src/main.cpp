@@ -21,7 +21,7 @@
 
 #include "MainWindow.h"
 #include "PluginManager/PluginManager.h"
-#include "Plugins/OpenStreetMapTileModel.h"
+#include "Plugins/OpenStreetMapTileModel/OpenStreetMapTileModel.h"
 #include "Plugins/GraphicsMapView/GraphicsMapView.h"
 #include "Plugins/DmsDecimalTool/DmsDecimalTool.h"
 #include "Plugins/DistanceMeterTool/DistanceMeterTool.h"

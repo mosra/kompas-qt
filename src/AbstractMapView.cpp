@@ -22,7 +22,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-AbstractMapView::AbstractMapView(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), tileModel(0) {
+AbstractMapView::AbstractMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin), tileModel(0) {
     tileDataThread = new TileDataThread(&tileModel, &tileModelMutex, this);
 
     qRegisterMetaType<Core::Zoom>("Core::Zoom");

@@ -33,7 +33,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
-GraphicsMapView::GraphicsMapView(QWidget* parent, Qt::WindowFlags f): AbstractMapView(parent, f), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Graphics view */
     view = new MapView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

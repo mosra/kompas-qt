@@ -19,7 +19,7 @@
  * @brief Class Map2X::QtGui::AbstractTool
  */
 
-#include "PluginManager/definitions.h"
+#include "PluginManager/Plugin.h"
 
 #include <QtCore/QString>
 #include <QtGui/QIcon>
@@ -33,10 +33,13 @@ namespace Map2X { namespace QtGui {
  *
  * Base interface for tool plugins.
  */
-class AbstractTool {
+class AbstractTool: public PluginManager::Plugin {
     PLUGIN_INTERFACE("cz.mosra.Map2X.QtGui.AbstractTool/0.1")
 
     public:
+        inline AbstractTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+            Plugin(manager, plugin) {}
+
         /** @brief Menu item text */
         virtual QString menuText() const = 0;
 

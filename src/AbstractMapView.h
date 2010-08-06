@@ -22,7 +22,6 @@
 #include <QtCore/QMutex>
 #include <QtGui/QWidget>
 
-#include "PluginManager/definitions.h"
 #include "AbstractTileModel.h"
 
 namespace Map2X { namespace QtGui {
@@ -30,7 +29,7 @@ namespace Map2X { namespace QtGui {
 class TileDataThread;
 
 /** @brief Abstract class for map viewer widget plugins */
-class AbstractMapView: public QWidget {
+class AbstractMapView: public QWidget, PluginManager::Plugin {
     Q_OBJECT
 
     #ifndef QT_MOC_RUN
@@ -43,12 +42,7 @@ class AbstractMapView: public QWidget {
             Top, TopLeft, Left, BottomLeft, Bottom, BottimRight, Right, TopRight
         };
 
-        /**
-         * @brief Constructor
-         * @param parent    Parent widget
-         * @param f         Window flags
-         */
-        AbstractMapView(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        AbstractMapView(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         /**
          * @brief Reload map view

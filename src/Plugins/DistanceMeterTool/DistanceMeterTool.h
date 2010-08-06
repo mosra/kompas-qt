@@ -1,6 +1,7 @@
 #ifndef Map2X_QtGui_Plugins_DistanceMeterTool_h
 #define Map2X_QtGui_Plugins_DistanceMeterTool_h
 /*
+    Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2010 Jan Dupal <dupal.j@seznam.cz>
 
     This file is part of Map2X.
@@ -20,7 +21,6 @@
  */
 
 #include "../../AbstractTool.h"
-#include "PluginManager/definitions.h"
 #include "DistanceMeterToolDialog.h"
 
 namespace Map2X { namespace QtGui { namespace Plugins {
@@ -28,6 +28,9 @@ namespace Map2X { namespace QtGui { namespace Plugins {
 /** @brief Converting DMS to decimal and back */
 class DistanceMeterTool: public AbstractTool {
     public:
+        DistanceMeterTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+            AbstractTool(manager, plugin) {}
+
         virtual QString menuText() const { return QObject::tr("Distance meter"); }
         virtual AbstractToolDialog* create(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
             { return new DistanceMeterToolDialog(mainWindow, parent, f); }

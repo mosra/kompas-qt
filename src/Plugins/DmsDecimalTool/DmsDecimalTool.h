@@ -20,7 +20,6 @@
  */
 
 #include "../../AbstractTool.h"
-#include "PluginManager/definitions.h"
 #include "DmsDecimalToolDialog.h"
 
 namespace Map2X { namespace QtGui { namespace Plugins {
@@ -28,6 +27,9 @@ namespace Map2X { namespace QtGui { namespace Plugins {
 /** @brief Converting DMS to decimal and back */
 class DmsDecimalTool: public AbstractTool {
     public:
+        DmsDecimalTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+            AbstractTool(manager, plugin) {}
+
         virtual QString menuText() const { return QObject::tr("DMS - Decimal converter"); }
         virtual AbstractToolDialog* create(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
             { return new DmsDecimalToolDialog(mainWindow, parent, f); }

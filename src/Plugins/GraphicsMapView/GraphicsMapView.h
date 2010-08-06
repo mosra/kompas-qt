@@ -46,12 +46,7 @@ class GraphicsMapView: public AbstractMapView {
         QStringList _overlays;
 
     public:
-        /**
-         * @brief Constructor
-         * @param parent    Parent widget
-         * @param f         Window flags
-         */
-        GraphicsMapView(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName);
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords();

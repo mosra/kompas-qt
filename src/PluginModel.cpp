@@ -57,17 +57,17 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     string name = nameList[index.row()];
     QString qName = QString::fromStdString(name);
 
-    /* Load state (checkbox) */
-    if(index.column() == CheckState && role == Qt::CheckStateRole) {
-        if(manager->loadState(name) & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired|AbstractPluginManager::IsStatic))
-            return Qt::Checked;
-        else return Qt::Unchecked;
-
     /* Load state */
-    } else if(index.column() == LoadState && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+    if(index.column() == LoadState) {
         AbstractPluginManager::LoadState state = manager->loadState(name);
 
-        switch(state) {
+        if(role == Qt::CheckStateRole) {
+            if(state & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired|AbstractPluginManager::IsStatic))
+                return Qt::Checked;
+            else
+                return Qt::Unchecked;
+
+        } else if(role == Qt::DisplayRole || role == Qt::EditRole) switch(state) {
             case AbstractPluginManager::NotFound:
                 return tr("Not found");
             case AbstractPluginManager::WrongPluginVersion:

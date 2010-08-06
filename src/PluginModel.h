@@ -47,7 +47,6 @@ class PluginModel: public QAbstractTableModel {
 
         /** @brief Columns */
         enum Column {
-            CheckState,
             LoadState,
             Plugin,
             Name,
@@ -71,7 +70,7 @@ class PluginModel: public QAbstractTableModel {
         void reload();
 
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
-        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 8; }
+        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 7; }
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 

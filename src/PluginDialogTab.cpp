@@ -50,12 +50,11 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     QTableView* view = new QTableView(this);
     view->verticalHeader()->setDefaultSectionSize(20);
     view->setModel(model);
-    view->setColumnHidden(PluginModel::LoadState, true);
     view->setColumnHidden(PluginModel::Description, true);
     view->setColumnHidden(PluginModel::Depends, true);
     view->setColumnHidden(PluginModel::Replaces, true);
     view->setColumnHidden(PluginModel::Conflicts, true);
-    view->setColumnWidth(PluginModel::CheckState, 30);
+    view->setColumnWidth(PluginModel::LoadState, 125);
     view->setColumnWidth(PluginModel::Plugin, 175);
     view->setColumnWidth(PluginModel::Name, 250);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);

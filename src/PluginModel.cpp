@@ -92,6 +92,8 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
                 return tr("Is required by another");
             case AbstractPluginManager::IsStatic:
                 return tr("Static plugin");
+            case AbstractPluginManager::IsUsed:
+                return tr("Is already used");
         }
 
     /* Plugin "filename" */

@@ -23,7 +23,7 @@ using namespace Map2X::PluginManager;
 namespace Map2X { namespace QtGui {
 
 void PluginModel::reload() {
-    if(flags & LoadedOnly) {
+    if(_flags & LoadedOnly) {
         nameList.clear();
         vector<string> _nameList = manager->nameList();
 
@@ -144,6 +144,46 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
 
     /* Something other */
     } return QVariant();
+}
+
+Qt::ItemFlags PluginModel::flags(const QModelIndex& index) const {
+    if(!index.isValid()) return Qt::ItemIsEnabled;
+
+    /* Only load state column is checkable */
+    if(index.column() == LoadState) {
+        string name = nameList[index.row()];
+
+        /* Static plugins are disabled */
+        if(manager->loadState(name) != AbstractPluginManager::IsStatic)
+            return QAbstractTableModel::flags(index)|Qt::ItemIsUserCheckable;
+    }
+
+    return QAbstractItemModel::flags(index);
+}
+
+bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if(!index.isValid() || index.column() != LoadState || role != Qt::CheckStateRole) return false;
+
+    string name = nameList[index.row()];
+
+    /* Static plugins cannot be edited */
+    if(manager->loadState(name) == AbstractPluginManager::IsStatic)
+        return false;
+
+    /* Unload plugin */
+    if(manager->loadState(name) & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
+        if(manager->unload(name) != AbstractPluginManager::NotLoaded) return false;
+
+        emit dataChanged(index, index);
+        return true;
+
+    /* Load plugin */
+    } else {
+        if(manager->load(name) != AbstractPluginManager::LoadOk) return false;
+
+        emit dataChanged(index, index);
+        return true;
+    }
 }
 
 }}

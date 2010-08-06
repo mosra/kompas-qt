@@ -63,8 +63,8 @@ class PluginModel: public QAbstractTableModel {
          * @param _flags        Flags
          * @param parent        Parent object
          */
-        inline PluginModel(PluginManager::AbstractPluginManager* _manager, int _flags = 0, QObject* parent = 0):
-            QAbstractTableModel(parent), manager(_manager), flags(_flags) { reload(); }
+        inline PluginModel(PluginManager::AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0):
+            QAbstractTableModel(parent), manager(_manager), _flags(flags) { reload(); }
 
         /** @brief Reload data from PluginManager */
         void reload();
@@ -74,9 +74,12 @@ class PluginModel: public QAbstractTableModel {
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
+        virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+        virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+
     private:
         PluginManager::AbstractPluginManager* manager;
-        int flags;
+        int _flags;
         std::vector<std::string> nameList;
 };
 

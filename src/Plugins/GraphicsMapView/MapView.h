@@ -20,6 +20,7 @@
  */
 
 #include <QtGui/QGraphicsView>
+#include <QtGui/QMouseEvent>
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
@@ -48,6 +49,20 @@ class MapView: public QGraphicsView {
         }
 
         /**
+         * @brief Mouse wheel event
+         * @param event         Event
+         *
+         * Doesn't move the map, but emits zoomIn() or zoomOut() signal with
+         * current cursor position.
+         */
+        inline virtual void wheelEvent(QWheelEvent* event) {
+            event->accept();
+
+            if(event->delta() > 0) emit zoomIn(event->pos());
+            else emit zoomOut(event->pos());
+        }
+
+        /**
          * @brief Resize event
          * @param event         Event
          *
@@ -62,6 +77,8 @@ class MapView: public QGraphicsView {
     signals:
         void mapMoved();        /**< @brief Map moved */
         void mapResized();      /**< @brief Map resized */
+        void zoomIn(const QPoint& pos = QPoint()); /**< @brief Zooming in requested */
+        void zoomOut(const QPoint& pos = QPoint()); /**< @brief Zooming out requested */
 };
 
 }}}

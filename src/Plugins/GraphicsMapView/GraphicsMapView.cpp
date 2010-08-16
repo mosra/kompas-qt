@@ -45,6 +45,10 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     connect(view, SIGNAL(mapMoved()), SLOT(updateTilePositions()));
     connect(view, SIGNAL(mapResized()), SLOT(updateTileCount()));
 
+    /* Zoom in/out on wheel event */
+    connect(view, SIGNAL(zoomIn(QPoint)), SLOT(zoomIn(QPoint)));
+    connect(view, SIGNAL(zoomOut(QPoint)), SLOT(zoomOut(QPoint)));
+
     /* Single-widget layout */
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(view);

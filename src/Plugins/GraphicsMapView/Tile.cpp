@@ -36,7 +36,10 @@ void Plugins::Tile::setLayer(int layer) {
     if(layer == _layers.count()) _layers.append(0);
 
     /* Layer already exists, discard current data */
-    else if(_layers[layer]) delete _layers[layer];
+    else if(_layers[layer]) {
+        delete _layers[layer];
+        _layers[layer] = 0;
+    }
 }
 
 void Plugins::Tile::removeLayer(int layer) {

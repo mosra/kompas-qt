@@ -42,7 +42,7 @@ class PluginModel: public QAbstractTableModel {
     public:
         /** @brief Flags */
         enum Flags {
-            LoadedOnly          /**< @brief Display only loaded plugins */
+            LoadedOnly  = 0x01      /**< @brief Display only loaded plugins */
         };
 
         /** @brief Columns */

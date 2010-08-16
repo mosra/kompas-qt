@@ -60,4 +60,35 @@ QVariant TileOverlayModel::data(const QModelIndex& index, int role) const {
     return QVariant();
 }
 
+Qt::ItemFlags TileOverlayModel::flags(const QModelIndex& index) const {
+    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount())
+        return Qt::ItemIsEnabled;
+
+    return QAbstractListModel::flags(index)|Qt::ItemIsUserCheckable;
+}
+
+bool TileOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::CheckStateRole)
+        return false;
+
+    /* Remove overlay */
+    if(loaded.at(index.row())) {
+        if((*mapView)->removeOverlay(overlays.at(index.row()))) {
+            loaded.setBit(index.row(), false);
+            emit dataChanged(index, index);
+            return true;
+        }
+
+    /* Add overlay */
+    } else {
+        if((*mapView)->addOverlay(overlays.at(index.row()))) {
+            loaded.setBit(index.row(), true);
+            emit dataChanged(index, index);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 }}

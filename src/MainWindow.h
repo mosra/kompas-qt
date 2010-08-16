@@ -71,6 +71,22 @@ class MainWindow: public QMainWindow {
         inline PluginManager::PluginManager<AbstractTool>* toolPluginManager()
             { return _toolPluginManager; }
 
+        /**
+         * @brief Tile model
+         * @return Returns double pointer, because the tile model class instance
+         * can be replaced with another.
+         */
+        inline Core::AbstractTileModel** tileModel()
+            { return &_tileModel; }
+
+        /**
+         * @brief Map view
+         * @return Returns double pointer, because the map view class instance
+         * can be replaced with another.
+         */
+        inline AbstractMapView** mapView()
+            { return &_mapView; }
+
     public slots:
         /**
          * @brief Load default configuration
@@ -87,8 +103,8 @@ class MainWindow: public QMainWindow {
         PluginManager::PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
         PluginManager::PluginManager<AbstractTool>* _toolPluginManager;
 
-        AbstractMapView* view;
-        Core::AbstractTileModel* tileModel;
+        AbstractMapView* _mapView;
+        Core::AbstractTileModel* _tileModel;
 
         QAction *quitAction,
             *moveMapAction,

@@ -33,7 +33,7 @@ using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), view(0), tileModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _tileModel(0) {
     setWindowTitle("Map2X");
     statusBar();
 
@@ -48,14 +48,14 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
         (_configuration.group("pluginDirs")->value<string>("tools"));
 
     /** @todo GUI for this */
-    view = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
-    tileModel = _tileModelPluginManager->instance(_configuration.group("map")->value<string>("tileModel"));
-    tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
+    _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
+    _tileModel = _tileModelPluginManager->instance(_configuration.group("map")->value<string>("tileModel"));
+    _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
-    view->setTileModel(tileModel);
-    view->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
-    view->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
-    view->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
+    _mapView->setTileModel(_tileModel);
+    _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
+    _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
+    _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
 
     createActions();
     createMenus();
@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Tools menu */
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
 
-    setCentralWidget(view);
+    setCentralWidget(_mapView);
     resize(800, 600);
 }
 
@@ -124,8 +124,8 @@ void MainWindow::createActions() {
     zoomInAction = new QAction(tr("Zoom in"), this);
     zoomOutAction = new QAction(tr("Zoom out"), this);
     connect(moveMapAction, SIGNAL(triggered(bool)), SLOT(moveMap()));
-    connect(zoomInAction, SIGNAL(triggered(bool)), view, SLOT(zoomIn()));
-    connect(zoomOutAction, SIGNAL(triggered(bool)), view, SLOT(zoomOut()));
+    connect(zoomInAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomIn()));
+    connect(zoomOutAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomOut()));
 
     /* Settings menu */
     pluginDialogAction = new QAction(tr("Plugins"), this);
@@ -162,7 +162,7 @@ void MainWindow::createMenus() {
 
 void MainWindow::moveMap() {
     /* Move map to some WGS coords */
-    view->setCoords(Wgs84Coords(50.08333, 14.46667));
+    _mapView->setCoords(Wgs84Coords(50.08333, 14.46667));
 }
 
 void MainWindow::pluginDialog() {

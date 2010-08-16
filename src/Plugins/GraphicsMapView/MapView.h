@@ -53,7 +53,7 @@ class MapView: public QGraphicsView {
          *
          * Emits mapResized() signal.
          */
-        virtual void resizeEvent(QResizeEvent* event) {
+        inline virtual void resizeEvent(QResizeEvent* event) {
             QGraphicsView::resizeEvent(event);
 
             emit mapResized();

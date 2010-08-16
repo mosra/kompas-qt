@@ -26,6 +26,7 @@
 #include "TileDataThread.h"
 #include "ConfigurationDialog.h"
 #include "ToolPluginMenuView.h"
+#include "MapOptionsDock.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -56,6 +57,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
     _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
+
+    QDockWidget* mapOptionsDock = new QDockWidget;
+    mapOptionsDock->setWidget(new MapOptionsDock(this, this));
+    mapOptionsDock->setWindowTitle(tr("Map options"));
+    addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
 
     createActions();
     createMenus();

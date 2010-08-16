@@ -56,6 +56,10 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(8, 1);
     setLayout(layout);
+
+    /* Set actual tile layer, connect combobox with layer changing */
+    tileLayers->setCurrentIndex(tileLayers->findText((*_mainWindow->mapView())->layer()));
+    connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *_mainWindow->mapView(), SLOT(setLayer(QString)));
 }
 
 }}

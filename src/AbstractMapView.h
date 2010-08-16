@@ -111,38 +111,58 @@ class AbstractMapView: public QWidget, PluginManager::Plugin {
          */
         virtual unsigned int zoom() const = 0;
 
-        /** @brief Get current map coordinates */
-        virtual Core::Wgs84Coords coords() = 0;
+        /**
+         * @brief Get current map coordinates
+         * @param pos       Position for which compute the coordinates, relative
+         *      to map view widget. If the position is null, the coordinates
+         *      should be taken from center of view widget.
+         */
+        virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint()) = 0;
 
     public slots:
         /**
          * @brief Zoom map in
+         * @param pos       Position which should keep its coordinates after
+         *      zooming, relative to map view widget. Useful for zooming to
+         *      cursor. If the position is null, the view should zoom to center
+         *      of view widget.
          * @return Whether the map can be zoomed in
          */
-        virtual bool zoomIn() = 0;
+        virtual bool zoomIn(const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Zoom map out
+         * @param pos       Position which should keep its coordinates after
+         *      zooming, relative to map view widget. Useful for zooming to
+         *      cursor. If the position is null, the view should zoom to center
+         *      of view widget.
          * @return Whether the map can be zoomed out
          */
-        virtual bool zoomOut() = 0;
+        virtual bool zoomOut(const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Zoom map to given zoom
          * @param zoom      Zoom level
+         * @param pos       Position which should keep its coordinates after
+         *      zooming, relative to map view widget. Useful for zooming to
+         *      cursor. If the position is null, the view should zoom to center
+         *      of view widget.
          * @return Whether the zoom level is available
          */
-        virtual bool zoomTo(Core::Zoom zoom) = 0;
+        virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Move map to given coordinates
          * @param coords Coordinates
+         * @param pos       Position to which apply the coordinates, relative to
+         *      map view widget. If the position is null, the coordinates should
+         *      be applied to center of view widget.
          * @return Whether the map can be moved to given coordinates (they
          *      are valid and they aren't out of available map area).
          *
          * Moves the map so given coordinates are centered in view area.
          */
-        virtual bool setCoords(const Core::Wgs84Coords& coords) = 0;
+        virtual bool setCoords(const Core::Wgs84Coords& coords, const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Move map in given direction

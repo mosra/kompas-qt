@@ -49,15 +49,15 @@ class GraphicsMapView: public AbstractMapView {
         GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName);
 
         virtual inline unsigned int zoom() const { return _zoom; }
-        virtual Core::Wgs84Coords coords();
+        virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());
         virtual QString layer() const { return _layer; }
         virtual QStringList overlays() const { return _overlays; }
 
     public slots:
-        virtual bool zoomIn();
-        virtual bool zoomOut();
-        virtual bool zoomTo(Core::Zoom zoom);
-        virtual bool setCoords(const Core::Wgs84Coords& coords);
+        virtual bool zoomIn(const QPoint& pos = QPoint());
+        virtual bool zoomOut(const QPoint& pos = QPoint());
+        virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
+        virtual bool setCoords(const Map2X::Core::Wgs84Coords& coords, const QPoint& pos = QPoint());
         virtual bool move(Direction direction, unsigned int speed) { return false; }
         virtual bool setLayer(const QString& layer);
         virtual bool addOverlay(const QString& overlay);

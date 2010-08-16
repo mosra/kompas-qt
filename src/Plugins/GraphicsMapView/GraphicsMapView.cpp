@@ -54,7 +54,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     QTimer::singleShot(500, this, SLOT(reload()));
 }
 
-bool GraphicsMapView::zoomIn() {
+bool GraphicsMapView::zoomIn(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -67,19 +67,19 @@ bool GraphicsMapView::zoomIn() {
     locker.unlock();
 
     /* Get coordinates, zoom in, update map area */
-    Wgs84Coords c = coords();
+    Wgs84Coords c = coords(pos);
     _zoom = *it;
     updateMapArea();
 
     /* Remove old tiles and set coordinates back */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c);
+    setCoords(c, pos);
 
     return true;
 }
 
-bool GraphicsMapView::zoomOut() {
+bool GraphicsMapView::zoomOut(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -92,19 +92,19 @@ bool GraphicsMapView::zoomOut() {
     locker.unlock();
 
     /* Get coordinates, zoom out, update map area */
-    Wgs84Coords c = coords();
+    Wgs84Coords c = coords(pos);
     _zoom = *it;
     updateMapArea();
 
     /* Remove old tiles and set coordinates back */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c);
+    setCoords(c, pos);
 
     return true;
 }
 
-bool GraphicsMapView::zoomTo(Core::Zoom zoom) {
+bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
@@ -116,24 +116,30 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom) {
     locker.unlock();
 
     /* Get coordinates, zoom out, update map area */
-    Wgs84Coords c = coords();
+    Wgs84Coords c = coords(pos);
     _zoom = zoom;
     updateMapArea();
 
     /* Remove old tiles and set coordinates back */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c);
+    setCoords(c, pos);
 
     return true;
 }
 
-Wgs84Coords GraphicsMapView::coords() {
+Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return Wgs84Coords();
 
-    QPointF center = view->mapToScene(view->size().width()/2, view->size().height()/2);
+    /* Position where to get coordinates */
+    QPointF center;
+    if(pos.isNull())
+        center = view->mapToScene(view->width()/2, view->height()/2);
+    else
+        center = view->mapToScene(pos);
+
     return tileModel->toWgs84(_zoom, RasterCoords(
         static_cast<unsigned int>(center.x())/tileModel->tileSize().x,
         static_cast<unsigned int>(center.y())/tileModel->tileSize().y,
@@ -142,17 +148,27 @@ Wgs84Coords GraphicsMapView::coords() {
     ));
 }
 
-bool GraphicsMapView::setCoords(const Wgs84Coords& coords) {
+bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
     if(!tileModel) return false;
 
+    /* Distance of 'pos' from map center */
+    int x, y;
+    if(pos.isNull()) {
+        x = 0;
+        y = 0;
+    } else {
+        x = pos.x()-view->width()/2;
+        y = pos.y()-view->height()/2;
+    }
+
     /* Convert coordinates to raster */
     RasterCoords rc = tileModel->fromWgs84(_zoom, coords);
 
-    /* Center map to that coordinates */
-    view->centerOn(rc.x()*tileModel->tileSize().x+rc.moveX(),
-                   rc.y()*tileModel->tileSize().y+rc.moveY());
+    /* Center map to that coordinates (moved by 'pos' distance from center) */
+    view->centerOn(rc.x()*tileModel->tileSize().x+rc.moveX()-x,
+                   rc.y()*tileModel->tileSize().y+rc.moveY()-y);
 
     locker.unlock();
 

@@ -21,6 +21,8 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QDataWidgetMapper>
 #include <QtGui/QHeaderView>
+#include <QtGui/QPushButton>
+#include <QtGui/QFileDialog>
 
 #include "PluginManager/AbstractPluginManager.h"
 #include "MainWindow.h"
@@ -44,6 +46,10 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     replaces->setWordWrap(true);
     conflicts = new QLabel;
     conflicts->setWordWrap(true);
+
+    /* Button for selecting plugin dir */
+    QPushButton* pluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Select..."));
+    connect(pluginDirButton, SIGNAL(clicked(bool)), SLOT(setPluginDir()));
 
     /* Initialize model and pass it to view */
     model = new PluginModel(manager, 0, this);
@@ -77,11 +83,16 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     connect(pluginDir, SIGNAL(textEdited(QString)), this, SIGNAL(edited()));
     connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
 
+    /* Layout for plugin dir lineedit and button */
+    QHBoxLayout* pluginDirLayout = new QHBoxLayout;
+    pluginDirLayout->addWidget(pluginDir, 1);
+    pluginDirLayout->addWidget(pluginDirButton);
+
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(categoryDescription, 0, 0, 1, 2);
     layout->addWidget(new QLabel(tr("Plugin directory:")), 1, 0);
-    layout->addWidget(pluginDir, 1, 1);
+    layout->addLayout(pluginDirLayout, 1, 1);
     layout->addWidget(view, 2, 0, 1, 2);
     layout->addWidget(new QLabel(tr("Load state:")), 3, 0, Qt::AlignTop);
     layout->addWidget(loadState, 3, 1);
@@ -117,6 +128,15 @@ void PluginDialogTab::restoreDefaults() {
 
     /* Load the value from configuration */
     reset();
+}
+
+void PluginDialogTab::setPluginDir() {
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Select plugin dir"), pluginDir->text());
+
+    if(!dir.isEmpty()) {
+        pluginDir->setText(dir);
+        emit edited();
+    }
 }
 
 }}

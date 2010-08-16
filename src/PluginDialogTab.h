@@ -63,6 +63,9 @@ class PluginDialogTab: public AbstractConfigurationWidget {
         virtual void restoreDefaults();
         virtual void save();
 
+    private slots:
+        virtual void setPluginDir();
+
     private:
         MainWindow* mainWindow;
         std::string configurationKey;

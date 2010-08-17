@@ -20,7 +20,7 @@
 #include <QtGui/QStyle>
 
 #include "MainWindowConfigure.h"
-#include "PluginManager/PluginManager.h"
+#include "PluginManager.h"
 #include "AbstractMapView.h"
 #include "PluginDialog.h"
 #include "TileDataThread.h"
@@ -30,7 +30,6 @@
 
 using namespace std;
 using namespace Map2X::Core;
-using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 
@@ -41,11 +40,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load default configuration */
     loadDefaultConfiguration();
 
-    _mapViewPluginManager = new ::PluginManager<AbstractMapView>
+    _mapViewPluginManager = new PluginManager<AbstractMapView>
         (_configuration.group("pluginDirs")->value<string>("mapView"));
-    _tileModelPluginManager = new ::PluginManager<AbstractTileModel>
+    _tileModelPluginManager = new PluginManager<AbstractTileModel>
         (_configuration.group("pluginDirs")->value<string>("tileModel"));
-    _toolPluginManager = new ::PluginManager<AbstractTool>
+    _toolPluginManager = new PluginManager<AbstractTool>
         (_configuration.group("pluginDirs")->value<string>("tools"));
 
     /** @todo GUI for this */

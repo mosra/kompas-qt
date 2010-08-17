@@ -32,7 +32,7 @@ using namespace std;
 
 namespace Map2X { namespace QtGui {
 
-PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
+PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
     /* Initialize labels */
     pluginDir = new QLineEdit;
     QLabel* categoryDescription = new QLabel(_categoryDescription);

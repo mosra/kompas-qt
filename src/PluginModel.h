@@ -23,13 +23,9 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QStringList>
 
-namespace Map2X {
+namespace Map2X { namespace QtGui {
 
-namespace PluginManager {
-    class AbstractPluginManager;
-}
-
-namespace QtGui {
+class AbstractPluginManager;
 
 /**
  * @brief Model for viewing and managing plugins
@@ -63,7 +59,7 @@ class PluginModel: public QAbstractTableModel {
          * @param _flags        Flags
          * @param parent        Parent object
          */
-        inline PluginModel(PluginManager::AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0):
+        inline PluginModel(AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0):
             QAbstractTableModel(parent), manager(_manager), _flags(flags) { reload(); }
 
         /** @brief Reload data from PluginManager */
@@ -78,7 +74,7 @@ class PluginModel: public QAbstractTableModel {
         virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     private:
-        PluginManager::AbstractPluginManager* manager;
+        AbstractPluginManager* manager;
         int _flags;
         std::vector<std::string> nameList;
 };

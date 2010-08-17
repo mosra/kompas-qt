@@ -27,7 +27,7 @@ namespace Map2X { namespace QtGui { namespace Plugins {
 /** @brief Converting DMS to decimal and back */
 class DmsDecimalTool: public AbstractTool {
     public:
-        DmsDecimalTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+        DmsDecimalTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
         virtual QString menuText() const { return QObject::tr("DMS - Decimal converter"); }

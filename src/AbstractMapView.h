@@ -29,7 +29,7 @@ namespace Map2X { namespace QtGui {
 class TileDataThread;
 
 /** @brief Abstract class for map viewer widget plugins */
-class AbstractMapView: public QWidget, PluginManager::Plugin {
+class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
     Q_OBJECT
 
     #ifndef QT_MOC_RUN
@@ -42,7 +42,7 @@ class AbstractMapView: public QWidget, PluginManager::Plugin {
             Top, TopLeft, Left, BottomLeft, Bottom, BottimRight, Right, TopRight
         };
 
-        AbstractMapView(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        AbstractMapView(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         /**
          * @brief Reload map view

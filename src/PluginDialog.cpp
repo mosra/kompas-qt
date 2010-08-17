@@ -17,7 +17,7 @@
 
 #include <QtGui/QTabWidget>
 
-#include "PluginManager/PluginManager.h"
+#include "PluginManager.h"
 #include "MainWindow.h"
 #include "PluginDialogTab.h"
 

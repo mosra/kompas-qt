@@ -15,10 +15,9 @@
 
 #include "PluginModel.h"
 
-#include "PluginManager/PluginManager.h"
+#include "PluginManager.h"
 
 using namespace std;
-using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 

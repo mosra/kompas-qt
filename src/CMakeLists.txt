@@ -43,6 +43,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     TileDataThread.h
     AbstractConfigurationDialog.h
     AbstractConfigurationWidget.h
+    AbstractPluginManager.h
     PluginModel.h
     PluginDialogTab.h
     PluginDialog.h

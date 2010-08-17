@@ -46,7 +46,7 @@ class GraphicsMapView: public AbstractMapView {
         QStringList _overlays;
 
     public:
-        GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName);
+        GraphicsMapView(Map2X::PluginManager::AbstractPluginManager* manager, const std::string& pluginName);
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());

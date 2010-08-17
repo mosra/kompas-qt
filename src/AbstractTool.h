@@ -33,11 +33,11 @@ namespace Map2X { namespace QtGui {
  *
  * Base interface for tool plugins.
  */
-class AbstractTool: public PluginManager::Plugin {
+class AbstractTool: public Map2X::PluginManager::Plugin {
     PLUGIN_INTERFACE("cz.mosra.Map2X.QtGui.AbstractTool/0.1")
 
     public:
-        inline AbstractTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+        inline AbstractTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             Plugin(manager, plugin) {}
 
         /** @brief Menu item text */

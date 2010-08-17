@@ -28,7 +28,7 @@ namespace Map2X { namespace QtGui { namespace Plugins {
 /** @brief Converting DMS to decimal and back */
 class DistanceMeterTool: public AbstractTool {
     public:
-        DistanceMeterTool(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+        DistanceMeterTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
         virtual QString menuText() const { return QObject::tr("Distance meter"); }

@@ -19,8 +19,6 @@
  * @brief Class Map2X::QtGui::ToolPluginMenuView
  */
 
-#include "PluginManager/PluginManager.h"
-
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
@@ -31,6 +29,8 @@ class QMenu;
 class QAction;
 
 namespace Map2X { namespace QtGui {
+
+template<class T> class PluginManager;
 
 /**
  * @brief Menu view of tool plugins
@@ -49,7 +49,7 @@ class ToolPluginMenuView: public QObject {
          * @param _before       Menu item before which insert tools
          * @param parent        Parent object
          */
-        ToolPluginMenuView(MainWindow* _mainWindow, PluginManager::PluginManager<AbstractTool>* _manager, QMenu* _menu, QAction* _before = 0, QObject* parent = 0);
+        ToolPluginMenuView(MainWindow* _mainWindow, PluginManager<AbstractTool>* _manager, QMenu* _menu, QAction* _before = 0, QObject* parent = 0);
 
     public slots:
         /**
@@ -65,7 +65,7 @@ class ToolPluginMenuView: public QObject {
 
     private:
         MainWindow* mainWindow;
-        PluginManager::PluginManager<AbstractTool>* manager;
+        PluginManager<AbstractTool>* manager;
         QMenu* menu;
         QAction* before;
         QHash<QAction*, AbstractTool*> items;

@@ -28,13 +28,9 @@
 class QAction;
 class QMenu;
 
-namespace Map2X {
+namespace Map2X { namespace QtGui {
 
-namespace PluginManager {
-    template<class T> class PluginManager;
-}
-
-namespace QtGui {
+template<class T> class PluginManager;
 
 /** @brief %Map2X main window */
 class MainWindow: public QMainWindow {
@@ -60,15 +56,15 @@ class MainWindow: public QMainWindow {
             { return &_configuration; }
 
         /** @brief Instance of PluginManager for map view plugins */
-        inline PluginManager::PluginManager<AbstractMapView>* mapViewPluginManager()
+        inline PluginManager<AbstractMapView>* mapViewPluginManager()
             { return _mapViewPluginManager; }
 
         /** @brief Instance of PluginManager for tile model plugins */
-        inline PluginManager::PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
+        inline PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
             { return _tileModelPluginManager; }
 
         /** @brief Instance of PluginManager for tool plugins */
-        inline PluginManager::PluginManager<AbstractTool>* toolPluginManager()
+        inline PluginManager<AbstractTool>* toolPluginManager()
             { return _toolPluginManager; }
 
         /**
@@ -99,9 +95,9 @@ class MainWindow: public QMainWindow {
     private:
         Utility::Configuration _configuration;
 
-        PluginManager::PluginManager<AbstractMapView>* _mapViewPluginManager;
-        PluginManager::PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
-        PluginManager::PluginManager<AbstractTool>* _toolPluginManager;
+        PluginManager<AbstractMapView>* _mapViewPluginManager;
+        PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
+        PluginManager<AbstractTool>* _toolPluginManager;
 
         AbstractMapView* _mapView;
         Core::AbstractTileModel* _tileModel;

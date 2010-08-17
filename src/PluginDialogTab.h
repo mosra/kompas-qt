@@ -25,15 +25,10 @@ class QLabel;
 class QLineEdit;
 class QDataWidgetMapper;
 
-namespace Map2X {
-
-namespace PluginManager {
-    class AbstractPluginManager;
-}
-
-namespace QtGui {
+namespace Map2X { namespace QtGui {
 
 class MainWindow;
+class AbstractPluginManager;
 class PluginModel;
 
 /**
@@ -56,7 +51,7 @@ class PluginDialogTab: public AbstractConfigurationWidget {
          * @param parent                Parent widget
          * @param f                     Window flags
          */
-        PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, PluginManager::AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginDialogTab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         virtual void reset();
@@ -70,7 +65,7 @@ class PluginDialogTab: public AbstractConfigurationWidget {
         MainWindow* mainWindow;
         std::string configurationKey;
 
-        PluginManager::AbstractPluginManager* manager;
+        AbstractPluginManager* manager;
         PluginModel* model;
         QDataWidgetMapper* mapper;
 

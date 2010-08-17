@@ -22,7 +22,7 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
 
-#include "PluginManager/PluginManager.h"
+#include "PluginManager.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
 #include "TileLayerModel.h"

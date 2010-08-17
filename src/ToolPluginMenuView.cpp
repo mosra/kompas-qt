@@ -18,12 +18,13 @@
 #include <QtGui/QMenu>
 #include <QtGui/QAction>
 
+#include "PluginManager.h"
+
 using namespace std;
-using namespace Map2X::PluginManager;
 
 namespace Map2X { namespace QtGui {
 
-ToolPluginMenuView::ToolPluginMenuView(MainWindow* _mainWindow, PluginManager::PluginManager<AbstractTool>* _manager, QMenu* _menu, QAction* _before, QObject* parent): QObject(parent), mainWindow(_mainWindow), manager(_manager), menu(_menu), before(_before) { update(); }
+ToolPluginMenuView::ToolPluginMenuView(MainWindow* _mainWindow, PluginManager<AbstractTool>* _manager, QMenu* _menu, QAction* _before, QObject* parent): QObject(parent), mainWindow(_mainWindow), manager(_manager), menu(_menu), before(_before) { update(); }
 
 void ToolPluginMenuView::update() {
     if(!items.isEmpty()) {

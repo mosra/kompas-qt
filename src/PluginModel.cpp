@@ -176,6 +176,8 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
 
     string name = nameList[index.row()];
 
+    /** @todo Fix when LoadedOnly flag is set */
+
     /* Static plugins cannot be edited */
     if(manager->loadState(name) == AbstractPluginManager::IsStatic)
         return false;

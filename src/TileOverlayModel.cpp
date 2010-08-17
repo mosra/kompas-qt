@@ -25,6 +25,7 @@ namespace Map2X { namespace QtGui {
 TileOverlayModel::TileOverlayModel(Core::AbstractTileModel** _tileModel, AbstractMapView** _mapView, int flags, QObject* parent): QAbstractListModel(parent), tileModel(_tileModel), mapView(_mapView), _flags(flags) { reload(); }
 
 void TileOverlayModel::reload() {
+    beginResetModel();
     overlays.clear();
     loaded.clear();
 
@@ -47,6 +48,7 @@ void TileOverlayModel::reload() {
         /* Make sure loadedOverlays bitarray is as large as overlays list */
         loaded.resize(overlays.size());
     }
+    endResetModel();
 }
 
 QVariant TileOverlayModel::data(const QModelIndex& index, int role) const {

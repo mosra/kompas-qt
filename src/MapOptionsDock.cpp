@@ -30,19 +30,22 @@
 
 namespace Map2X { namespace QtGui {
 
-MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
+MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow) {
     /* Tile model combobox */
+    tileModelsModel = new PluginModel(mainWindow->tileModelPluginManager(), PluginModel::LoadedOnly, this);
     tileModels = new QComboBox;
-    tileModels->setModel(new PluginModel(_mainWindow->tileModelPluginManager(), PluginModel::LoadedOnly, this));
+    tileModels->setModel(tileModelsModel);
     tileModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
+    tileLayerModel = new TileLayerModel(mainWindow->tileModel(), this);
     tileLayers = new QComboBox;
-    tileLayers->setModel(new TileLayerModel(_mainWindow->tileModel(), this));
+    tileLayers->setModel(tileLayerModel);
 
     /* Tile overlays combobox */
+    tileOverlayModel = new TileOverlayModel(mainWindow->tileModel(), mainWindow->mapView(), 0, this);
     tileOverlays = new QListView;
-    tileOverlays->setModel(new TileOverlayModel(_mainWindow->tileModel(), _mainWindow->mapView(), 0, this));
+    tileOverlays->setModel(tileOverlayModel);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
@@ -58,8 +61,8 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     setLayout(layout);
 
     /* Set actual tile layer, connect combobox with layer changing */
-    tileLayers->setCurrentIndex(tileLayers->findText((*_mainWindow->mapView())->layer()));
-    connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *_mainWindow->mapView(), SLOT(setLayer(QString)));
+    tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
+    connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
 }
 
 }}

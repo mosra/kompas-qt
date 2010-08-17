@@ -27,6 +27,9 @@ class QComboBox;
 namespace Map2X { namespace QtGui {
 
 class MainWindow;
+class PluginModel;
+class TileOverlayModel;
+class TileLayerModel;
 
 /** @brief Dock widget with map options */
 class MapOptionsDock: public QWidget {
@@ -40,9 +43,15 @@ class MapOptionsDock: public QWidget {
         MapOptionsDock(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private:
+        MainWindow* mainWindow;
+
         QComboBox *tileModels,
             *tileLayers;
         QListView* tileOverlays;
+
+        PluginModel* tileModelsModel;
+        TileLayerModel* tileLayerModel;
+        TileOverlayModel* tileOverlayModel;
 };
 
 }}

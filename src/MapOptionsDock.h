@@ -33,6 +33,8 @@ class TileLayerModel;
 
 /** @brief Dock widget with map options */
 class MapOptionsDock: public QWidget {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor
@@ -52,6 +54,9 @@ class MapOptionsDock: public QWidget {
         PluginModel* tileModelsModel;
         TileLayerModel* tileLayerModel;
         TileOverlayModel* tileOverlayModel;
+
+    private slots:
+        void setTileModel(int number);
 };
 
 }}

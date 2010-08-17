@@ -49,6 +49,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     PluginDialog.h
     ConfigurationWidget.h
     ToolPluginMenuView.h
+    MapOptionsDock.h
     TileLayerModel.h
     TileOverlayModel.h
 )

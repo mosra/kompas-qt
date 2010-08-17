@@ -92,6 +92,14 @@ class MainWindow: public QMainWindow {
          */
         void loadDefaultConfiguration();
 
+        /**
+         * @brief Set tile model
+         * @param name      Name of the tile model plugin
+         *
+         * Sets given tile model.
+         */
+        void setTileModel(const QString& name);
+
     private:
         Utility::Configuration _configuration;
 

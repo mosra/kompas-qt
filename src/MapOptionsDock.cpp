@@ -15,6 +15,7 @@
 
 #include "MapOptionsDock.h"
 
+#include <string>
 #include <QtGui/QLabel>
 #include <QtGui/QComboBox>
 #include <QtGui/QListWidget>
@@ -27,6 +28,8 @@
 #include "MainWindow.h"
 #include "TileLayerModel.h"
 #include "TileOverlayModel.h"
+
+using namespace std;
 
 namespace Map2X { namespace QtGui {
 
@@ -60,9 +63,19 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     layout->setRowStretch(8, 1);
     setLayout(layout);
 
+    /* Set actual tile model, connect combobox with model changing */
+    tileModels->setCurrentIndex(tileModelsModel->findPlugin(QString::fromStdString(mainWindow->configuration()->group("map")->value<string>("tileModel"))));
+    connect(tileModels, SIGNAL(currentIndexChanged(int)), SLOT(setTileModel(int)));
+
     /* Set actual tile layer, connect combobox with layer changing */
     tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
     connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
+}
+
+void MapOptionsDock::setTileModel(int number) {
+    mainWindow->setTileModel(tileModelsModel->index(number, PluginModel::Plugin).data().toString());
+    tileLayerModel->reload();
+    tileOverlayModel->reload();
 }
 
 }}

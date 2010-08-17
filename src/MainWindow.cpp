@@ -48,11 +48,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
         (_configuration.group("pluginDirs")->value<string>("tools"));
 
     /** @todo GUI for this */
-    _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
-    _tileModel = _tileModelPluginManager->instance(_configuration.group("map")->value<string>("tileModel"));
-    _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
-    _mapView->setTileModel(_tileModel);
+    _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
+    setTileModel(QString::fromStdString(_configuration.group("map")->value<string>("tileModel")));
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
     _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
@@ -115,6 +113,12 @@ void MainWindow::loadDefaultConfiguration() {
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);
+}
+
+void MainWindow::setTileModel(const QString& name) {
+    _tileModel = _tileModelPluginManager->instance(name.toStdString());
+    _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
+    _mapView->setTileModel(_tileModel);
 }
 
 void MainWindow::createActions() {

@@ -23,9 +23,9 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QStringList>
 
-namespace Map2X { namespace QtGui {
+#include "AbstractPluginManager.h"
 
-class AbstractPluginManager;
+namespace Map2X { namespace QtGui {
 
 /**
  * @brief Model for viewing and managing plugins
@@ -59,8 +59,7 @@ class PluginModel: public QAbstractTableModel {
          * @param _flags        Flags
          * @param parent        Parent object
          */
-        inline PluginModel(AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0):
-            QAbstractTableModel(parent), manager(_manager), _flags(flags) { reload(); }
+        PluginModel(AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0);
 
         /** @brief Reload data from PluginManager */
         void reload();
@@ -72,6 +71,10 @@ class PluginModel: public QAbstractTableModel {
 
         virtual Qt::ItemFlags flags(const QModelIndex& index) const;
         virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+
+    private slots:
+        void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
     private:
         AbstractPluginManager* manager;

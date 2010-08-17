@@ -15,11 +15,22 @@
 
 #include "PluginModel.h"
 
+#include <algorithm>
+
 #include "PluginManager.h"
 
 using namespace std;
 
 namespace Map2X { namespace QtGui {
+
+PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* parent): QAbstractTableModel(parent), manager(_manager), _flags(flags) {
+    connect(manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+            SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+            SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+
+    reload();
+}
 
 void PluginModel::reload() {
     if(_flags & LoadedOnly) {
@@ -182,6 +193,48 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
 
         emit dataChanged(index, index);
         return true;
+    }
+}
+
+void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    /* Plugin was loaded */
+    if(!(before & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)) &&
+       (after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {
+
+        /* Add to list, if displaying only loaded plugins */
+        if(_flags & LoadedOnly) {
+            beginInsertRows(QModelIndex(), nameList.size(), nameList.size());
+            /** @todo Insert to right place (alphabetically sorted) */
+            nameList.push_back(name);
+            endInsertRows();
+
+        /* Or just emit signal about data change */
+        } else {
+            /* Find the name in list */
+            vector<string>::const_iterator it = find(nameList.begin(), nameList.end(), name);
+            if(it == nameList.end()) return;
+            emit dataChanged(index(it-nameList.begin(), LoadState), index(it-nameList.begin(), LoadState));
+        }
+    }
+}
+
+void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    /* Plugin was unloaded */
+    if((before & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)) &&
+       !(after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {
+
+        /* Find the name in list */
+        vector<string>::iterator it = find(nameList.begin(), nameList.end(), name);
+        if(it == nameList.end()) return;
+
+        /* Add to list, if displaying only loaded plugins */
+        if(_flags & LoadedOnly) {
+            beginRemoveRows(QModelIndex(), it-nameList.begin(), it-nameList.begin());
+            nameList.erase(it);
+            endRemoveRows();
+
+        /* Or just emit signal about data change */
+        } else emit dataChanged(index(it-nameList.begin(), LoadState), index(it-nameList.begin(), LoadState));
     }
 }
 

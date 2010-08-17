@@ -239,10 +239,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 bool GraphicsMapView::removeOverlay(const QString& overlay) {
     if(!tileModel ||!_overlays.contains(overlay)) return false;
 
-    int layerNumber = -1;
-    for(int i = 0; i != _overlays.size(); ++i) {
-        if(_overlays[i] == overlay) layerNumber = i;
-    }
+    int layerNumber = _overlays.indexOf(overlay);
 
     _overlays.removeAt(layerNumber);
     foreach(Tile* tile, tiles)

@@ -183,15 +183,11 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
     /* Unload plugin */
     if(manager->loadState(name) & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
         if(manager->unload(name) != AbstractPluginManager::NotLoaded) return false;
-
-        emit dataChanged(index, index);
         return true;
 
     /* Load plugin */
     } else {
         if(manager->load(name) != AbstractPluginManager::LoadOk) return false;
-
-        emit dataChanged(index, index);
         return true;
     }
 }

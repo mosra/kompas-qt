@@ -45,6 +45,12 @@ void PluginModel::reload() {
     } else nameList = manager->nameList();
 }
 
+int PluginModel::findPlugin(const QString& name) const {
+    vector<string>::const_iterator it = find(nameList.begin(), nameList.end(), name.toStdString());
+    if(it == nameList.end()) return -1;
+    return it-nameList.begin();
+}
+
 QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch(section) {

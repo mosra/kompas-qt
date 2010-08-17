@@ -64,6 +64,14 @@ class PluginModel: public QAbstractTableModel {
         /** @brief Reload data from PluginManager */
         void reload();
 
+        /**
+         * @brief Find plugin with specific name
+         * @param name          Plugin name
+         * @return Row index of given plugin or -1 if the plugin is not found
+         *      in this model.
+         */
+        int findPlugin(const QString& name) const;
+
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 7; }
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;

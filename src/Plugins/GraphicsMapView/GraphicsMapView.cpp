@@ -387,7 +387,13 @@ void GraphicsMapView::reload() {
     vector<string> l = tileModel->layers();
     if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end()) _layer = QString::fromStdString(l[0]);
 
-    /** @todo Check also overlays */
+    /* Reset map overlays, if the model doesn't have current */
+    vector<string> o = tileModel->overlays();
+    for(int i = _overlays.size()-1; i >= 0; --i) {
+        if(::find(o.begin(), o.end(), _overlays[i].toStdString()) == o.end())
+            _overlays.removeAt(i);
+    }
+
     /** @todo Is this check really needed? Why don't just reset everything to defaults? */
 
     locker.unlock();

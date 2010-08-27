@@ -361,9 +361,16 @@ void GraphicsMapView::reload() {
     /** @todo Weird cycles if not checking visibility */
     if(!isReady()) return;
 
-    /* Reset zoom, if the model doesn't have it */
+    /* Reset zoom, if the model doesn't have current */
     vector<Zoom> z = tileModel->zoomLevels();
     if(::find(z.begin(), z.end(), _zoom) == z.end()) _zoom = z[0];
+
+    /* Reset map layer, if the model doesn't have current */
+    vector<string> l = tileModel->layers();
+    if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end()) _layer = QString::fromStdString(l[0]);
+
+    /** @todo Check also overlays */
+    /** @todo Is this check really needed? Why don't just reset everything to defaults? */
 
     locker.unlock();
 

@@ -33,7 +33,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui { namespace Plugins {
 
-GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), informativeText(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Graphics view */
     view = new MapView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -356,10 +356,24 @@ void GraphicsMapView::reload() {
 
     qDeleteAll(tiles);
     tiles.clear();
-    map.clear();
 
-    /** @todo Weird cycles if not checking visibility */
-    if(!isReady()) return;
+    /* If the view is not ready, display informative text  */
+    if(!isReady()) {
+        informativeText = new QGraphicsTextItem(0, &map);
+        informativeText->setHtml("<center>" + tr(
+            "<strong>No map to display.</strong><br /><br />"
+            "Please select a map and ensure the map has at least one "
+            "zoom level and layer available."
+        ) + "</center>");
+        informativeText->setTextWidth(256);
+
+        return;
+    }
+
+    if(informativeText) {
+        delete informativeText;
+        informativeText = 0;
+    }
 
     /* Reset zoom, if the model doesn't have current */
     vector<Zoom> z = tileModel->zoomLevels();

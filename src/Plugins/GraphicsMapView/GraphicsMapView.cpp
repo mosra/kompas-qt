@@ -299,6 +299,10 @@ void GraphicsMapView::updateTilePositions() {
 
     QPointF viewed = view->mapToScene(0, 0);
 
+    /* Ensure positive coordinates */
+    if(viewed.x() < 0) viewed.setX(0);
+    if(viewed.y() < 0) viewed.setY(0);
+
     /* Origin of viewed tiles */
     Coords<unsigned int> tilesOrigin(
         static_cast<unsigned int>(viewed.x()/tileModel->tileSize().x),

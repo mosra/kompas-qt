@@ -277,9 +277,10 @@ void GraphicsMapView::updateTileCount() {
         view->visibleRegion().boundingRect().width(),
         view->visibleRegion().boundingRect().height()));
 
-    /* If map area is smaller than view area, smaller tile count */
-    if(tileCount.x < tileModel->area().w) tileCount.x = tileModel->area().w;
-    if(tileCount.y < tileModel->area().h) tileCount.y = tileModel->area().h;
+    /* If map area is smaller than view area, set tile count to map area */
+    unsigned int multiplier = pow(tileModel->zoomStep(), _zoom-tileModel->zoomLevels()[0]);
+    if(tileCount.x > tileModel->area().w*multiplier) tileCount.x = tileModel->area().w*multiplier;
+    if(tileCount.y > tileModel->area().h*multiplier) tileCount.y = tileModel->area().h*multiplier;
 
     locker.unlock();
 

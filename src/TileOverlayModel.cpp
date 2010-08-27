@@ -29,25 +29,28 @@ void TileOverlayModel::reload() {
     overlays.clear();
     loaded.clear();
 
-    /* Only loaded overlays */
-    if(_flags & LoadedOnly) {
-        overlays.append((*mapView)->overlays());
-        loaded.fill(true, overlays.size());
+    if(*mapView && *tileModel) {
+        /* Only loaded overlays */
+        if(_flags & LoadedOnly) {
+            overlays.append((*mapView)->overlays());
+            loaded.fill(true, overlays.size());
 
-    /* All available overlays */
-    } else {
-        vector<string> _overlays = (*tileModel)->overlays();
-        QStringList _loaded = (*mapView)->overlays();
-        for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
-            overlays.append(QString::fromStdString(*it));
+        /* All available overlays */
+        } else {
+            vector<string> _overlays = (*tileModel)->overlays();
+            QStringList _loaded = (*mapView)->overlays();
+            for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
+                overlays.append(QString::fromStdString(*it));
 
-            if(_loaded.contains(overlays.last()))
-                loaded.setBit(overlays.size()-1, true);
+                if(_loaded.contains(overlays.last()))
+                    loaded.setBit(overlays.size()-1, true);
+            }
+
+            /* Make sure loadedOverlays bitarray is as large as overlays list */
+            loaded.resize(overlays.size());
         }
-
-        /* Make sure loadedOverlays bitarray is as large as overlays list */
-        loaded.resize(overlays.size());
     }
+
     endResetModel();
 }
 

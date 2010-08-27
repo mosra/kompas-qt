@@ -61,7 +61,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
 bool GraphicsMapView::zoomIn(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Check whether we can zoom in */
     vector<Zoom> z = tileModel->zoomLevels();
@@ -86,7 +86,7 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
 bool GraphicsMapView::zoomOut(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Check whether we can zoom out */
     vector<Zoom> z = tileModel->zoomLevels();
@@ -111,7 +111,7 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Check whether given zoom exists */
     vector<Zoom> z = tileModel->zoomLevels();
@@ -135,7 +135,7 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return Wgs84Coords();
+    if(!isReady()) return Wgs84Coords();
 
     /* Position where to get coordinates */
     QPointF center;
@@ -155,7 +155,7 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
 bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Distance of 'pos' from map center */
     int x, y;
@@ -187,7 +187,7 @@ bool GraphicsMapView::setLayer(const QString& layer) {
 
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Check whether given layer exists */
     vector<string> layers = tileModel->layers();
@@ -213,7 +213,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return false;
+    if(!isReady()) return false;
 
     /* Check whether given overlay exists */
     vector<string> layers = tileModel->overlays();
@@ -237,7 +237,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 }
 
 bool GraphicsMapView::removeOverlay(const QString& overlay) {
-    if(!tileModel ||!_overlays.contains(overlay)) return false;
+    if(!isReady() ||!_overlays.contains(overlay)) return false;
 
     int layerNumber = _overlays.indexOf(overlay);
 
@@ -248,10 +248,14 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
     return true;
 }
 
+bool GraphicsMapView::isReady() {
+    return isVisible() && tileModel && !tileModel->layers().empty() && !tileModel->zoomLevels().empty();
+}
+
 void GraphicsMapView::updateMapArea() {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return;
+    if(!isReady()) return;
 
     /* Compute tile area */
     unsigned int multiplier = pow(tileModel->zoomStep(), _zoom-tileModel->zoomLevels()[0]);
@@ -266,7 +270,7 @@ void GraphicsMapView::updateMapArea() {
 void GraphicsMapView::updateTileCount() {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return;
+    if(!isReady()) return;
 
     /* Tile count for actual viewed area */
     tileCount = tileModel->tilesInArea(Coords<unsigned int>(
@@ -285,7 +289,7 @@ void GraphicsMapView::updateTileCount() {
 void GraphicsMapView::updateTilePositions() {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!tileModel) return;
+    if(!isReady()) return;
 
     QPointF viewed = view->mapToScene(0, 0);
 
@@ -349,7 +353,7 @@ void GraphicsMapView::reload() {
     map.clear();
 
     /** @todo Weird cycles if not checking visibility */
-    if(!tileModel || !isVisible() || tileModel->zoomLevels().empty()) return;
+    if(!isReady()) return;
 
     /* Reset zoom, if the model doesn't have it */
     vector<Zoom> z = tileModel->zoomLevels();

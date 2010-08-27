@@ -265,6 +265,11 @@ void GraphicsMapView::updateMapArea() {
                      tileModel->area().y*tileModel->tileSize().x*multiplier,
                      tileModel->area().w*tileModel->tileSize().x*multiplier,
                      tileModel->area().h*tileModel->tileSize().x*multiplier);
+
+    locker.unlock();
+
+    /* Update tile count to ensure map area fits in it */
+    updateTileCount();
 }
 
 void GraphicsMapView::updateTileCount() {

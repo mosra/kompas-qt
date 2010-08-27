@@ -28,10 +28,12 @@ void TileLayerModel::reload() {
     beginResetModel();
     layers.clear();
 
-    /* All available layers */
-    vector<string> _layers = (*tileModel)->layers();
-    for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it)
-        layers.append(QString::fromStdString(*it));
+    if(*tileModel) {
+        /* All available layers */
+        vector<string> _layers = (*tileModel)->layers();
+        for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it)
+            layers.append(QString::fromStdString(*it));
+    }
 
     endResetModel();
 }

@@ -23,6 +23,7 @@ void Plugins::Tile::setLayer(int layer, const QPixmap& pixmap) {
     setLayer(layer);
 
     _layers[layer] = new QGraphicsPixmapItem(pixmap, this, scene());
+    _layers[layer]->setZValue(layer);
 }
 
 void Plugins::Tile::setLayer(int layer) {

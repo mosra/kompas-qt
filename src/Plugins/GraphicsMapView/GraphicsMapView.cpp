@@ -224,7 +224,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 
     _overlays.append(overlay);
 
-    int layerNumber = _overlays.size()-1;
+    int layerNumber = _overlays.size();
     foreach(Tile* tile, tiles) {
         /* Add placeholder for new layer */
         tile->setLayer(layerNumber);
@@ -243,7 +243,7 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
 
     _overlays.removeAt(layerNumber);
     foreach(Tile* tile, tiles)
-        tile->removeLayer(layerNumber);
+        tile->removeLayer(layerNumber+1);
 
     return true;
 }
@@ -347,7 +347,7 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
     /* Compute layer/overlay number */
     int layerNumber;
     if(layer == _layer) layerNumber = 0;
-    else layerNumber = _overlays.indexOf(layer);
+    else layerNumber = _overlays.indexOf(layer)+1;
 
     for(int i = tiles.size()-1; i >= 0; --i) if(tiles[i]->coords() == coords) {
         tiles[i]->setLayer(layerNumber, data);

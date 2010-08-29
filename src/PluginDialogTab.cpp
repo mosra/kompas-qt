@@ -113,17 +113,17 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
 }
 
 void PluginDialogTab::save() {
-    mainWindow->configuration()->group("pluginDirs")->setValue<string>(configurationKey, pluginDir->text().toStdString());
+    mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<string>("__dir", pluginDir->text().toStdString());
 }
 
 void PluginDialogTab::reset() {
     pluginDir->setText(QString::fromStdString(
-        mainWindow->configuration()->group("pluginDirs")->value<string>(configurationKey)));
+        mainWindow->configuration()->group("plugins")->group(configurationKey)->value<string>("__dir")));
 }
 
 void PluginDialogTab::restoreDefaults() {
     /* Remove current pluginDir value from configuration and set it from defaults */
-    mainWindow->configuration()->group("pluginDirs")->removeValue(configurationKey);
+    mainWindow->configuration()->group("plugins")->removeGroup(configurationKey);
     mainWindow->loadDefaultConfiguration();
 
     /* Load the value from configuration */

@@ -41,11 +41,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     loadDefaultConfiguration();
 
     _mapViewPluginManager = new PluginManager<AbstractMapView>
-        (_configuration.group("pluginDirs")->value<string>("mapView"));
+        (_configuration.group("plugins")->group("mapViews")->value<string>("__dir"));
     _tileModelPluginManager = new PluginManager<AbstractTileModel>
-        (_configuration.group("pluginDirs")->value<string>("tileModel"));
+        (_configuration.group("plugins")->group("tileModels")->value<string>("__dir"));
     _toolPluginManager = new PluginManager<AbstractTool>
-        (_configuration.group("pluginDirs")->value<string>("tools"));
+        (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
 
     /** @todo GUI for this */
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
@@ -80,12 +80,12 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.setAutomaticKeyCreation(true);
 
     /* Plugin dirs */
-    string mapViewPluginDir = DATA_DIR + string("plugins/mapView/");
-    string tileModelPluginDir = DATA_DIR + string("plugins/tileModel/");
+    string mapViewPluginDir = DATA_DIR + string("plugins/mapViews/");
+    string tileModelPluginDir = DATA_DIR + string("plugins/tileModels/");
     string toolPluginDir = DATA_DIR + string("plugins/tools/");
-    _configuration.group("pluginDirs")->value<string>("mapView", &mapViewPluginDir);
-    _configuration.group("pluginDirs")->value<string>("tileModel", &tileModelPluginDir);
-    _configuration.group("pluginDirs")->value<string>("tools", &toolPluginDir);
+    _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
+    _configuration.group("plugins")->group("tileModels")->value<string>("__dir", &tileModelPluginDir);
+    _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);
 
     /* Plugin for map view */
     string mapViewPlugin = "GraphicsMapView";

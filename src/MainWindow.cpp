@@ -130,14 +130,14 @@ void MainWindow::createActions() {
     /* Quit application */
     quitAction = new QAction(tr("Quit"), this);
     quitAction->setShortcut(QKeySequence::Quit);
-    quitAction->setStatusTip(tr("Quit application"));
     connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
 
     /* Move map */
-    moveMapAction = new QAction(tr("Move to Prague"), this);
+    /** @todo Disable when zooming in/out is not possible */
     zoomInAction = new QAction(tr("Zoom in"), this);
+    zoomInAction->setShortcut(Qt::CTRL|Qt::Key_Plus);
     zoomOutAction = new QAction(tr("Zoom out"), this);
-    connect(moveMapAction, SIGNAL(triggered(bool)), SLOT(moveMap()));
+    zoomOutAction->setShortcut(Qt::CTRL|Qt::Key_Minus);
     connect(zoomInAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomIn()));
     connect(zoomOutAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomOut()));
 
@@ -157,9 +157,11 @@ void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
     fileMenu->addAction(quitAction);
-    fileMenu->addAction(moveMapAction);
-    fileMenu->addAction(zoomInAction);
-    fileMenu->addAction(zoomOutAction);
+
+    /* Map menu */
+    QMenu* mapMenu = menuBar()->addMenu(tr("Map"));
+    mapMenu->addAction(zoomInAction);
+    mapMenu->addAction(zoomOutAction);
 
     /* Tools menu */
     toolsMenu = menuBar()->addMenu(tr("Tools"));

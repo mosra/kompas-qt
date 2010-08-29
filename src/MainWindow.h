@@ -112,7 +112,6 @@ class MainWindow: public QMainWindow {
         Core::AbstractTileModel* _tileModel;
 
         QAction *quitAction,
-            *moveMapAction,
             *zoomInAction,
             *zoomOutAction,
             *pluginDialogAction,

@@ -54,6 +54,7 @@ class GraphicsMapView: public AbstractMapView {
         virtual QStringList overlays() const { return _overlays; }
 
     public slots:
+        virtual void setTileModel(Core::AbstractTileModel* model);
         virtual bool zoomIn(const QPoint& pos = QPoint());
         virtual bool zoomOut(const QPoint& pos = QPoint());
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
@@ -62,7 +63,6 @@ class GraphicsMapView: public AbstractMapView {
         virtual bool setLayer(const QString& layer);
         virtual bool addOverlay(const QString& overlay);
         virtual bool removeOverlay(const QString& overlay);
-        virtual void reload();
 
     private:
         MapView* view;                          /**< @brief Map view */

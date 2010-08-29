@@ -355,8 +355,9 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
     }
 }
 
-void GraphicsMapView::reload() {
+void GraphicsMapView::setTileModel(AbstractTileModel* model) {
     QMutexLocker locker(&tileModelMutex);
+    tileModel = model;
 
     qDeleteAll(tiles);
     tiles.clear();

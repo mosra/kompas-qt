@@ -44,24 +44,15 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
 
         AbstractMapView(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        /**
-         * @brief Reload map view
-         *
-         * Reloads all map data and redraws whole map view from scratch.
-         * @todo Make it less drastic
-         */
-        virtual void reload() = 0;
-
         /** @{ @name Map data functions */
 
         /**
          * @brief Set tile model to the view
-         * @param model     Tile model
+         * @param model     Tile model. If set to zero, resets the view.
          *
-         * Calls reload().
-         * @todo Multithreading, mutexes, etc.
+         * Reloads all map data from new model.
          */
-        void setTileModel(Core::AbstractTileModel* model);
+        virtual void setTileModel(Core::AbstractTileModel* model) = 0;
 
         /**
          * @brief Set map layer
@@ -105,7 +96,6 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
 
         /** @{ @name Map movement functions */
 
-    public:
         /**
          * @brief Current zoom
          */

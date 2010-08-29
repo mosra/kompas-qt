@@ -40,9 +40,4 @@ AbstractMapView::AbstractMapView(PluginManager::AbstractPluginManager* manager, 
     tileDataThread->start();
 }
 
-void AbstractMapView::setTileModel(AbstractTileModel* model) {
-    tileModel = model;
-    reload();
-}
-
 }}

@@ -217,12 +217,14 @@ void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::Lo
             /* Find the name in list */
             vector<string>::const_iterator it = find(nameList.begin(), nameList.end(), name);
             if(it == nameList.end()) return;
+            /** @todo Emit dataChanged() for whole row, if metadata changed */
             emit dataChanged(index(it-nameList.begin(), LoadState), index(it-nameList.begin(), LoadState));
         }
     }
 }
 
 void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    /** @bug When trying to unload used plugin the plugin is removed from LoadedOnly model! ... check all states */
     /* Plugin was unloaded */
     if((before & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)) &&
        !(after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {

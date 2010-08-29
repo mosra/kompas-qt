@@ -36,6 +36,7 @@ class Tile;
  * @todo Remove reload() and replace with yet existing functions
  * @todo Sometimes laaaarge pause before map tile is loaded (why?)
  * @todo Non-crashing state when no model, no zoom or no layer is set
+ * @todo Discard all downloads when changing whole tile data
  */
 class GraphicsMapView: public AbstractMapView {
     Q_OBJECT

@@ -23,7 +23,11 @@
 
 namespace Map2X { namespace QtGui {
 
-/** @brief Abstract configuration widget */
+/**
+ * @brief Abstract configuration widget
+ *
+ * @todo Signal if editing requires restart
+ */
 class AbstractConfigurationWidget: public QWidget {
     Q_OBJECT
 

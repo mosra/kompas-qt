@@ -36,7 +36,6 @@ class PluginModel;
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.
- * @todo Dir dialog for selecting plugin dir
  */
 class PluginDialogTab: public AbstractConfigurationWidget {
     Q_OBJECT

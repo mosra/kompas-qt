@@ -342,6 +342,7 @@ void GraphicsMapView::updateTilePositions() {
 }
 
 void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {
+    /** @todo Why the locker here? */
     QMutexLocker locker(&tileModelMutex);
 
     /* Compute layer/overlay number */

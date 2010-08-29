@@ -57,6 +57,9 @@ class MapOptionsDock: public QWidget {
 
     private slots:
         void setTileModel(int number);
+
+        /** @brief Update comboboxes to actually used layers etc. */
+        void setActualData();
 };
 
 }}

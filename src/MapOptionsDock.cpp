@@ -63,12 +63,13 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     layout->setRowStretch(8, 1);
     setLayout(layout);
 
-    /* Set actual tile model, connect combobox with model changing */
+    /* Set actual tile model */
     tileModels->setCurrentIndex(tileModelsModel->findPlugin(QString::fromStdString(mainWindow->configuration()->group("map")->value<string>("tileModel"))));
-    connect(tileModels, SIGNAL(currentIndexChanged(int)), SLOT(setTileModel(int)));
 
-    /* Set actual tile layer, connect combobox with layer changing */
-    tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
+    setActualData();
+
+    /* Connect comboboxes with model / layer changing */
+    connect(tileModels, SIGNAL(currentIndexChanged(int)), SLOT(setTileModel(int)));
     connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
 }
 
@@ -76,6 +77,14 @@ void MapOptionsDock::setTileModel(int number) {
     mainWindow->setTileModel(tileModelsModel->index(number, PluginModel::Plugin).data().toString());
     tileLayerModel->reload();
     tileOverlayModel->reload();
+    setActualData();
+}
+
+void MapOptionsDock::setActualData() {
+    /* Set actual map layer */
+    tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
+
+    /** @todo Actual overlays? */
 }
 
 }}

@@ -30,6 +30,7 @@ class QMenu;
 
 namespace Map2X { namespace QtGui {
 
+class AbstractPluginManager;
 template<class T> class PluginManager;
 
 /** @brief %Map2X main window */
@@ -122,6 +123,8 @@ class MainWindow: public QMainWindow {
 
         void createActions();
         void createMenus();
+
+        void loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager);
 
     private slots:
         void moveMap();

@@ -47,6 +47,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _toolPluginManager = new PluginManager<AbstractTool>
         (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
 
+    /** @todo Do that in splash */
+    loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
+    loadPluginsAsConfigured("tileModels", _tileModelPluginManager);
+    loadPluginsAsConfigured("tools", _toolPluginManager);
+
     /** @todo GUI for this */
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
@@ -167,6 +172,14 @@ void MainWindow::createMenus() {
     /* Help menu */
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
     helpMenu->addAction(aboutQtAction);
+}
+
+void MainWindow::loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager) {
+    vector<string> names = manager->nameList();
+
+    for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it)
+        if(configuration()->group("plugins")->group(group)->value<bool>(*it))
+            manager->load(*it);
 }
 
 void MainWindow::moveMap() {

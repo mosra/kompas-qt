@@ -114,6 +114,12 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
 
 void PluginDialogTab::save() {
     mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<string>("__dir", pluginDir->text().toStdString());
+
+    for(int i = 0; i != model->rowCount(); ++i) {
+        mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<bool>(
+            model->index(i, PluginModel::Plugin).data().toString().toStdString(),
+            model->index(i, PluginModel::LoadState).data(Qt::CheckStateRole).toBool());
+    }
 }
 
 void PluginDialogTab::reset() {

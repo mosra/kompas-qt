@@ -249,7 +249,7 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
 }
 
 bool GraphicsMapView::isReady() {
-    return isVisible() && tileModel && !tileModel->layers().empty() && !tileModel->zoomLevels().empty();
+    return tileModel && !tileModel->layers().empty() && !tileModel->zoomLevels().empty();
 }
 
 void GraphicsMapView::updateMapArea() {
@@ -275,7 +275,7 @@ void GraphicsMapView::updateMapArea() {
 void GraphicsMapView::updateTileCount() {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!isReady()) return;
+    if(!isReady() || !isVisible()) return;
 
     /* Tile count for actual viewed area */
     tileCount = tileModel->tilesInArea(Coords<unsigned int>(
@@ -295,7 +295,7 @@ void GraphicsMapView::updateTileCount() {
 void GraphicsMapView::updateTilePositions() {
     QMutexLocker locker(&tileModelMutex);
 
-    if(!isReady()) return;
+    if(!isReady() || !isVisible()) return;
 
     QPointF viewed = view->mapToScene(0, 0);
 

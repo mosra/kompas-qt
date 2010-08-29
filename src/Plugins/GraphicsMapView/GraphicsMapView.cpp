@@ -364,13 +364,15 @@ void GraphicsMapView::setTileModel(AbstractTileModel* model) {
 
     /* If the view is not ready, display informative text  */
     if(!isReady()) {
-        informativeText = new QGraphicsTextItem(0, &map);
-        informativeText->setHtml("<center>" + tr(
-            "<strong>No map to display.</strong><br /><br />"
-            "Please select a map and ensure the map has at least one "
-            "zoom level and layer available."
-        ) + "</center>");
-        informativeText->setTextWidth(256);
+        if(!informativeText) {
+            informativeText = new QGraphicsTextItem(0, &map);
+            informativeText->setHtml("<center>" + tr(
+                "<strong>No map to display.</strong><br /><br />"
+                "Please select a map and ensure the map has at least one "
+                "zoom level and layer available."
+            ) + "</center>");
+            informativeText->setTextWidth(256);
+        }
 
         return;
     }

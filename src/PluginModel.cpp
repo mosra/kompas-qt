@@ -59,7 +59,9 @@ QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int r
             case Name:          return tr("Name");
             case Description:   return tr("Description");
             case Depends:       return tr("Depends on");
+            case UsedBy:        return tr("Used by");
             case Replaces:      return tr("Replaces");
+            case ReplacedWith:  return tr("Can be replaced with");
             case Conflicts:     return tr("Conflicts with");
         }
     }
@@ -132,26 +134,40 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     else if(index.column() == Description && (role == Qt::DisplayRole || role == Qt::EditRole))
         return QString::fromStdString(manager->metadata(name)->description);
 
-    /* Plugin dependecy */
+    /* On what this plugin depends */
     else if(index.column() == Depends && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
         vector<string> depends = manager->metadata(name)->depends;
         for(vector<string>::const_iterator it = depends.begin(); it != depends.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");
-    }
 
-    /* Plugin replacements */
-    else if(index.column() == Replaces && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+    /* What depends on this plugin */
+    } else if(index.column() == UsedBy && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+        QStringList list;
+        vector<string> usedBy = manager->metadata(name)->usedBy;
+        for(vector<string>::const_iterator it = usedBy.begin(); it != usedBy.end(); ++it)
+            list.append(QString::fromStdString(*it));
+        return list.join(", ");
+
+    /* What this plugin replaces */
+    } else if(index.column() == Replaces && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
         vector<string> replaces = manager->metadata(name)->replaces;
         for(vector<string>::const_iterator it = replaces.begin(); it != replaces.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");
-    }
+
+    /* By what can be this plugin replaced */
+    } else if(index.column() == ReplacedWith && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+        QStringList list;
+        vector<string> replacedWith = manager->metadata(name)->replacedWith;
+        for(vector<string>::const_iterator it = replacedWith.begin(); it != replacedWith.end(); ++it)
+            list.append(QString::fromStdString(*it));
+        return list.join(", ");
 
     /* Plugin conflicts */
-    else if(index.column() == Conflicts && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+    } else if(index.column() == Conflicts && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
         vector<string> _conflicts = manager->metadata(name)->conflicts;
         for(vector<string>::const_iterator it = _conflicts.begin(); it != _conflicts.end(); ++it)

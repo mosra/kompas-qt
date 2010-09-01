@@ -29,7 +29,6 @@ namespace Map2X { namespace QtGui {
 
 /**
  * @brief Model for viewing and managing plugins
- * @todo Required by, conflict with etc.
  * @todo Don't regenerate lists on every data request
  */
 class PluginModel: public QAbstractTableModel {
@@ -48,7 +47,9 @@ class PluginModel: public QAbstractTableModel {
             Name,
             Description,
             Depends,
+            UsedBy,
             Replaces,
+            ReplacedWith,
             Conflicts
         };
 
@@ -73,7 +74,7 @@ class PluginModel: public QAbstractTableModel {
         int findPlugin(const QString& name) const;
 
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
-        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 7; }
+        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 9; }
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 

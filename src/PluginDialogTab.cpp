@@ -42,8 +42,12 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     description->setWordWrap(true);
     depends = new QLabel;
     depends->setWordWrap(true);
+    usedBy = new QLabel;
+    usedBy->setWordWrap(true);
     replaces = new QLabel;
     replaces->setWordWrap(true);
+    replacedWith = new QLabel;
+    replacedWith->setWordWrap(true);
     conflicts = new QLabel;
     conflicts->setWordWrap(true);
 
@@ -58,7 +62,9 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     view->setModel(model);
     view->setColumnHidden(PluginModel::Description, true);
     view->setColumnHidden(PluginModel::Depends, true);
+    view->setColumnHidden(PluginModel::UsedBy, true);
     view->setColumnHidden(PluginModel::Replaces, true);
+    view->setColumnHidden(PluginModel::ReplacedWith, true);
     view->setColumnHidden(PluginModel::Conflicts, true);
     view->setColumnWidth(PluginModel::LoadState, 125);
     view->setColumnWidth(PluginModel::Plugin, 175);
@@ -72,7 +78,9 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     mapper->addMapping(loadState, PluginModel::LoadState, "text");
     mapper->addMapping(description, PluginModel::Description, "text");
     mapper->addMapping(depends, PluginModel::Depends, "text");
+    mapper->addMapping(usedBy, PluginModel::UsedBy, "text");
     mapper->addMapping(replaces, PluginModel::Replaces, "text");
+    mapper->addMapping(replacedWith, PluginModel::ReplacedWith, "text");
     mapper->addMapping(conflicts, PluginModel::Conflicts, "text");
 
     /* On selection change load new row in mapper */
@@ -100,10 +108,14 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     layout->addWidget(description, 4, 1);
     layout->addWidget(new QLabel(tr("Depends on:")), 5, 0, Qt::AlignTop);
     layout->addWidget(depends, 5, 1);
-    layout->addWidget(new QLabel(tr("Replaces:")), 6, 0, Qt::AlignTop);
-    layout->addWidget(replaces, 6, 1);
-    layout->addWidget(new QLabel(tr("Conflicts with:")), 7, 0, Qt::AlignTop);
-    layout->addWidget(conflicts, 7, 1);
+    layout->addWidget(new QLabel(tr("Used by:")), 6, 0, Qt::AlignTop);
+    layout->addWidget(usedBy, 6, 1);
+    layout->addWidget(new QLabel(tr("Replaces:")), 7, 0, Qt::AlignTop);
+    layout->addWidget(replaces, 7, 1);
+    layout->addWidget(new QLabel(tr("Can be replaced with:")), 8, 0, Qt::AlignTop);
+    layout->addWidget(replacedWith, 8, 1);
+    layout->addWidget(new QLabel(tr("Conflicts with:")), 9, 0, Qt::AlignTop);
+    layout->addWidget(conflicts, 9, 1);
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);

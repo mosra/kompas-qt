@@ -73,7 +73,9 @@ class PluginDialogTab: public AbstractConfigurationWidget {
         QLabel *loadState,
             *description,
             *depends,
+            *usedBy,
             *replaces,
+            *replacedWith,
             *conflicts;
 };
 

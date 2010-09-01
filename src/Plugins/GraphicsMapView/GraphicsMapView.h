@@ -122,8 +122,7 @@ class GraphicsMapView: public AbstractMapView {
 
 }}}
 
-PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::QtGui::Plugins::GraphicsMapView, "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
-PLUGIN_SET_NAME("Map viewer using QGraphicsView")
-PLUGIN_FINISH
+PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::QtGui::Plugins::GraphicsMapView,
+                       "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
 
 #endif

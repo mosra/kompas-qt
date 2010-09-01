@@ -1,12 +1,8 @@
 include_directories("${Map2XQt_SOURCE_DIR}/src/")
 
-set(Map2X_Qt_Plugins_DistanceMeterTool_SRCS
+qt4_wrap_cpp(DistanceMeterTool_MOC DistanceMeterToolDialog.h)
+map2x_add_static_plugin(Map2XQt_Plugins DistanceMeterTool DistanceMeterTool.conf
+    DistanceMeterTool.cpp
     DistanceMeterToolDialog.cpp
+    ${DistanceMeterTool_MOC}
 )
-
-qt4_wrap_cpp(Map2X_Qt_Plugins_DistanceMeterTool_MOC
-    DistanceMeterToolDialog.h
-)
-
-add_library(Map2XQtPluginsDistanceMeterTool STATIC ${Map2X_Qt_Plugins_DistanceMeterTool_SRCS} ${Map2X_Qt_Plugins_DistanceMeterTool_MOC})
-target_link_libraries(Map2XQtPluginsDistanceMeterTool ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})

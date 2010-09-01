@@ -35,6 +35,7 @@ set(Map2X_Qt_SRCS
     TileLayerModel.cpp
     TileOverlayModel.cpp
     main.cpp
+    Plugins/registerStatic.cpp
 )
 
 qt4_wrap_cpp(Map2X_Qt_MOC

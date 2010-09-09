@@ -62,7 +62,6 @@ QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int r
             case UsedBy:        return tr("Used by");
             case Replaces:      return tr("Replaces");
             case ReplacedWith:  return tr("Can be replaced with");
-            case Conflicts:     return tr("Conflicts with");
         }
     }
 
@@ -92,8 +91,6 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
                 return tr("Wrong plugin version");
             case AbstractPluginManager::WrongInterfaceVersion:
                 return tr("Wrong interface version");
-            case AbstractPluginManager::Conflicts:
-                return tr("Conflicts with another");
             case AbstractPluginManager::UnresolvedDependency:
                 return tr("Unresolved dependency");
             case AbstractPluginManager::LoadFailed:
@@ -161,20 +158,12 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     /* By what can be this plugin replaced */
     } else if(index.column() == ReplacedWith && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
-        vector<string> replacedWith = manager->metadata(name)->replacedWith;
+        vector<string> replacedWith = manager->metadata(name)->replacedWith();
         for(vector<string>::const_iterator it = replacedWith.begin(); it != replacedWith.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");
 
-    /* Plugin conflicts */
-    } else if(index.column() == Conflicts && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> _conflicts = manager->metadata(name)->conflicts;
-        for(vector<string>::const_iterator it = _conflicts.begin(); it != _conflicts.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* Something other */
+    /* Something another */
     } return QVariant();
 }
 

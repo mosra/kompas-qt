@@ -48,8 +48,6 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     replaces->setWordWrap(true);
     replacedWith = new QLabel;
     replacedWith->setWordWrap(true);
-    conflicts = new QLabel;
-    conflicts->setWordWrap(true);
 
     /* Button for selecting plugin dir */
     QPushButton* pluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Select..."));
@@ -65,7 +63,6 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     view->setColumnHidden(PluginModel::UsedBy, true);
     view->setColumnHidden(PluginModel::Replaces, true);
     view->setColumnHidden(PluginModel::ReplacedWith, true);
-    view->setColumnHidden(PluginModel::Conflicts, true);
     view->setColumnWidth(PluginModel::LoadState, 125);
     view->setColumnWidth(PluginModel::Plugin, 175);
     view->setColumnWidth(PluginModel::Name, 250);
@@ -81,7 +78,6 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     mapper->addMapping(usedBy, PluginModel::UsedBy, "text");
     mapper->addMapping(replaces, PluginModel::Replaces, "text");
     mapper->addMapping(replacedWith, PluginModel::ReplacedWith, "text");
-    mapper->addMapping(conflicts, PluginModel::Conflicts, "text");
 
     /* On selection change load new row in mapper */
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -114,8 +110,6 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     layout->addWidget(replaces, 7, 1);
     layout->addWidget(new QLabel(tr("Can be replaced with:")), 8, 0, Qt::AlignTop);
     layout->addWidget(replacedWith, 8, 1);
-    layout->addWidget(new QLabel(tr("Conflicts with:")), 9, 0, Qt::AlignTop);
-    layout->addWidget(conflicts, 9, 1);
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);

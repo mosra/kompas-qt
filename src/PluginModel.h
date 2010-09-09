@@ -49,8 +49,7 @@ class PluginModel: public QAbstractTableModel {
             Depends,
             UsedBy,
             Replaces,
-            ReplacedWith,
-            Conflicts
+            ReplacedWith
         };
 
         /**
@@ -74,7 +73,7 @@ class PluginModel: public QAbstractTableModel {
         int findPlugin(const QString& name) const;
 
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
-        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 9; }
+        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 8; }
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 

@@ -75,8 +75,7 @@ class PluginDialogTab: public AbstractConfigurationWidget {
             *depends,
             *usedBy,
             *replaces,
-            *replacedWith,
-            *conflicts;
+            *replacedWith;
 };
 
 }}

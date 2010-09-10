@@ -91,14 +91,14 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
                 return tr("Wrong plugin version");
             case AbstractPluginManager::WrongInterfaceVersion:
                 return tr("Wrong interface version");
+            case AbstractPluginManager::WrongMetadataFile:
+                return tr("Error in metadata file");
             case AbstractPluginManager::UnresolvedDependency:
                 return tr("Unresolved dependency");
             case AbstractPluginManager::LoadFailed:
                 return tr("Loading failed");
             case AbstractPluginManager::LoadOk:
                 return tr("Loaded");
-            case AbstractPluginManager::Unknown:
-                return tr("Unknown");
             case AbstractPluginManager::NotLoaded:
                 return tr("Not loaded");
             case AbstractPluginManager::UnloadFailed:
@@ -115,26 +115,18 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     } else if(index.column() == Plugin && (role == Qt::DisplayRole || role == Qt::EditRole))
         return qName;
 
-    /* If plugin metadata are not yet loaded, don't get them (slow) */
-    else if(manager->loadState(name) == AbstractPluginManager::Unknown)
-        return QVariant();
-
-    /* Metadata are not available */
-    else if(manager->metadata(name) == 0)
-        return QVariant();
-
     /* Plugin name */
     else if(index.column() == Name && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return QString::fromStdString(manager->metadata(name)->name);
+        return QString::fromStdString(manager->metadata(name)->name());
 
     /* Plugin description */
     else if(index.column() == Description && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return QString::fromStdString(manager->metadata(name)->description);
+        return QString::fromStdString(manager->metadata(name)->description());
 
     /* On what this plugin depends */
     else if(index.column() == Depends && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
-        vector<string> depends = manager->metadata(name)->depends;
+        vector<string> depends = manager->metadata(name)->depends();
         for(vector<string>::const_iterator it = depends.begin(); it != depends.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");
@@ -142,7 +134,7 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     /* What depends on this plugin */
     } else if(index.column() == UsedBy && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
-        vector<string> usedBy = manager->metadata(name)->usedBy;
+        vector<string> usedBy = manager->metadata(name)->usedBy();
         for(vector<string>::const_iterator it = usedBy.begin(); it != usedBy.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");
@@ -150,7 +142,7 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     /* What this plugin replaces */
     } else if(index.column() == Replaces && (role == Qt::DisplayRole || role == Qt::EditRole)) {
         QStringList list;
-        vector<string> replaces = manager->metadata(name)->replaces;
+        vector<string> replaces = manager->metadata(name)->replaces();
         for(vector<string>::const_iterator it = replaces.begin(); it != replaces.end(); ++it)
             list.append(QString::fromStdString(*it));
         return list.join(", ");

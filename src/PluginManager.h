@@ -16,47 +16,13 @@
 */
 
 #include "AbstractPluginManager.h"
+#include "Utility/Resource.h"
 
 namespace Map2X { namespace QtGui {
 
-template<class T> class PluginManager: public AbstractPluginManager {
-    public:
-        /** @copydoc AbstractPluginManager::AbstractPluginManager() */
-        PluginManager(const std::string& pluginDirectory, QObject* parent = 0): AbstractPluginManager(pluginDirectory, parent) {
-            /* Load static plugins which use the same API */
-            for(std::vector<StaticPlugin>::const_iterator i = staticPlugins.begin(); i != staticPlugins.end(); ++i) {
-                PluginObject p;
-                p.loadState = IsStatic;
-                p.instancer = i->instancer;
-                i->metadataCreator(&p.metadata);
-
-                if(p.metadata.interface == pluginInterface())
-                    plugins.insert(std::pair<std::string, PluginObject>(i->name, p));
-            }
-        }
-
-        std::string pluginInterface() const { return T::pluginInterface(); }
-
-        /**
-         * @brief Plugin class instance
-         * @param name              Plugin name
-         * @return Pointer to new instance of plugin class, zero on error
-         *
-         * Creates new instance of plugin class, if possible. If the plugin is
-         * not successfully loaded, returns zero pointer.
-         */
-        T* instance(const std::string& name) {
-            /* Plugin with given name doesn't exist */
-            if(plugins.find(name) == plugins.end()) return 0;
-
-            PluginObject& plugin = plugins.at(name);
-
-            /* Plugin is not successfully loaded */
-            if(!(plugin.loadState & (LoadOk|IsStatic))) return 0;
-
-            return static_cast<T*>(plugin.instancer(this, name));
-        }
-};
+/* The same code as in Map2X::PluginManager::PluginManager */
+#define MAP2X_SKIP_PLUGINMANAGER_NAMESPACE
+#include "PluginManager/PluginManager.h"
 
 }}
 

@@ -122,8 +122,12 @@ void MainWindow::loadDefaultConfiguration() {
 
 void MainWindow::setTileModel(const QString& name) {
     _tileModel = _tileModelPluginManager->instance(name.toStdString());
-    _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
-    _mapView->setTileModel(_tileModel);
+
+    if(_tileModel) {
+        _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
+        _mapView->setTileModel(_tileModel);
+
+    } else _mapView->setTileModel(0);
 }
 
 void MainWindow::createActions() {

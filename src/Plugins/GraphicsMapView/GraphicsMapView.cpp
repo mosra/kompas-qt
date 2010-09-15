@@ -53,9 +53,6 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(view);
     setLayout(layout);
-
-    /* Initalize after a while (causes align problems) */
-    QTimer::singleShot(500, this, SLOT(reload()));
 }
 
 bool GraphicsMapView::zoomIn(const QPoint& pos) {

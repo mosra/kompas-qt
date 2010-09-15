@@ -180,6 +180,14 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          */
         void getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords);
 
+        /**
+         * @brief Coordinates under mouse
+         * @param coords    Coordinates
+         *
+         * These coordinates are displayed in status bar.
+         */
+        void currentCoordinates(const Core::Wgs84Coords& coords);
+
     protected slots:
         /**
          * @brief Tile data

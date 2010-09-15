@@ -34,6 +34,9 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui { namespace Plugins {
 
 GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), informativeText(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+    /* Enable mouse tracking */
+    setMouseTracking(true);
+
     /* Graphics view */
     view = new MapView(this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -243,6 +246,15 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
         tile->removeLayer(layerNumber+1);
 
     return true;
+}
+
+void GraphicsMapView::mouseMoveEvent(QMouseEvent* event) {
+    /* Capture event only when no button is pressed */
+    if(event->buttons()) event->ignore();
+    else {
+        AbstractMapView::mouseMoveEvent(event);
+        emit currentCoordinates(coords(event->pos()));
+    }
 }
 
 bool GraphicsMapView::isReady() {

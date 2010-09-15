@@ -27,6 +27,7 @@
 
 class QAction;
 class QMenu;
+class QLabel;
 
 namespace Map2X { namespace QtGui {
 
@@ -120,6 +121,8 @@ class MainWindow: public QMainWindow {
 
         QMenu* toolsMenu;
 
+        QLabel* coordinateStatus;
+
         void createActions();
         void createMenus();
 
@@ -129,6 +132,7 @@ class MainWindow: public QMainWindow {
         void moveMap();
         void pluginDialog();
         void configurationDialog();
+        void currentCoordinates(const Core::Wgs84Coords& coords);
 };
 
 }}

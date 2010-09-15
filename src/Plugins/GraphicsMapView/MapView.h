@@ -33,7 +33,9 @@ class MapView: public QGraphicsView {
          * @brief Constructor
          * @param parent        Parent widget
          */
-        inline MapView(QWidget* parent = 0): QGraphicsView(parent) {}
+        inline MapView(QWidget* parent = 0): QGraphicsView(parent) {
+            setMouseTracking(true);
+        }
 
     protected:
         /**
@@ -43,9 +45,11 @@ class MapView: public QGraphicsView {
          * Emits mapMoved() signal.
          */
         inline virtual void mouseMoveEvent(QMouseEvent* event) {
-            QGraphicsView::mouseMoveEvent(event);
-
-            emit mapMoved();
+            if(!event->buttons()) event->ignore();
+            else {
+                QGraphicsView::mouseMoveEvent(event);
+                emit mapMoved();
+            }
         }
 
         /**

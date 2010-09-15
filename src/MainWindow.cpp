@@ -18,6 +18,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStyle>
+#include <QtGui/QStatusBar>
+#include <QtGui/QLabel>
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
@@ -55,6 +57,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /** @todo GUI for this */
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
+    connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
     setTileModel(QString::fromStdString(_configuration.group("map")->value<string>("tileModel")));
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
@@ -70,6 +73,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     /* Tools menu */
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
+
+    /* Status bar with coordinates */
+    coordinateStatus = new QLabel;
+    statusBar()->addPermanentWidget(coordinateStatus);
 
     setCentralWidget(_mapView);
     resize(800, 600);
@@ -201,6 +208,10 @@ void MainWindow::pluginDialog() {
 void MainWindow::configurationDialog() {
     ConfigurationDialog dialog(this, this);
     dialog.exec();
+}
+
+void MainWindow::currentCoordinates(const Map2X::Core::Wgs84Coords& coords) {
+    coordinateStatus->setText(QString::fromStdString(coords.toString(1)));
 }
 
 }}

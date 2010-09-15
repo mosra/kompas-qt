@@ -65,6 +65,9 @@ class GraphicsMapView: public AbstractMapView {
         virtual bool addOverlay(const QString& overlay);
         virtual bool removeOverlay(const QString& overlay);
 
+    protected:
+        virtual void mouseMoveEvent(QMouseEvent* event);
+
     private:
         MapView* view;                          /**< @brief Map view */
         QGraphicsScene map;                     /**< @brief Map scene */

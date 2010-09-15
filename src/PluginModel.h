@@ -46,6 +46,8 @@ class PluginModel: public QAbstractTableModel {
             Plugin,
             Name,
             Description,
+            Authors,
+            Version,
             Depends,
             UsedBy,
             Replaces,
@@ -73,7 +75,7 @@ class PluginModel: public QAbstractTableModel {
         int findPlugin(const QString& name) const;
 
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
-        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 8; }
+        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 10; }
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 

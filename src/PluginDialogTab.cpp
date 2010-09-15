@@ -40,6 +40,8 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     loadState = new QLabel;
     description = new QLabel;
     description->setWordWrap(true);
+    authors = new QLabel;
+    authors->setWordWrap(true);
     depends = new QLabel;
     depends->setWordWrap(true);
     usedBy = new QLabel;
@@ -59,21 +61,26 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     view->verticalHeader()->setDefaultSectionSize(20);
     view->setModel(model);
     view->setColumnHidden(PluginModel::Description, true);
+    view->setColumnHidden(PluginModel::Authors, true);
     view->setColumnHidden(PluginModel::Depends, true);
     view->setColumnHidden(PluginModel::UsedBy, true);
     view->setColumnHidden(PluginModel::Replaces, true);
     view->setColumnHidden(PluginModel::ReplacedWith, true);
     view->setColumnWidth(PluginModel::LoadState, 125);
-    view->setColumnWidth(PluginModel::Plugin, 175);
-    view->setColumnWidth(PluginModel::Name, 250);
+    view->setColumnWidth(PluginModel::Plugin, 150);
+    view->setColumnWidth(PluginModel::Version, 50);
+    view->setColumnWidth(PluginModel::Name, 225);
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->setShowGrid(false);
+
+    view->horizontalHeader()->moveSection(PluginModel::Version, PluginModel::Name);
 
     /* Map data to widgets */
     mapper = new QDataWidgetMapper(this);
     mapper->setModel(model);
     mapper->addMapping(loadState, PluginModel::LoadState, "text");
     mapper->addMapping(description, PluginModel::Description, "text");
+    mapper->addMapping(authors, PluginModel::Authors, "text");
     mapper->addMapping(depends, PluginModel::Depends, "text");
     mapper->addMapping(usedBy, PluginModel::UsedBy, "text");
     mapper->addMapping(replaces, PluginModel::Replaces, "text");
@@ -102,14 +109,16 @@ PluginDialogTab::PluginDialogTab(MainWindow* _mainWindow, const std::string& _co
     layout->addWidget(loadState, 3, 1);
     layout->addWidget(new QLabel(tr("Description:")), 4, 0, Qt::AlignTop);
     layout->addWidget(description, 4, 1);
-    layout->addWidget(new QLabel(tr("Depends on:")), 5, 0, Qt::AlignTop);
-    layout->addWidget(depends, 5, 1);
-    layout->addWidget(new QLabel(tr("Used by:")), 6, 0, Qt::AlignTop);
-    layout->addWidget(usedBy, 6, 1);
-    layout->addWidget(new QLabel(tr("Replaces:")), 7, 0, Qt::AlignTop);
-    layout->addWidget(replaces, 7, 1);
-    layout->addWidget(new QLabel(tr("Can be replaced with:")), 8, 0, Qt::AlignTop);
-    layout->addWidget(replacedWith, 8, 1);
+    layout->addWidget(new QLabel(tr("Author(s):")), 5, 0, Qt::AlignTop);
+    layout->addWidget(authors, 5, 1);
+    layout->addWidget(new QLabel(tr("Depends on:")), 6, 0, Qt::AlignTop);
+    layout->addWidget(depends, 6, 1);
+    layout->addWidget(new QLabel(tr("Used by:")), 7, 0, Qt::AlignTop);
+    layout->addWidget(usedBy, 7, 1);
+    layout->addWidget(new QLabel(tr("Replaces:")), 8, 0, Qt::AlignTop);
+    layout->addWidget(replaces, 8, 1);
+    layout->addWidget(new QLabel(tr("Can be replaced with:")), 9, 0, Qt::AlignTop);
+    layout->addWidget(replacedWith, 9, 1);
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);

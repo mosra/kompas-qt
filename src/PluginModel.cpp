@@ -58,6 +58,8 @@ QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int r
             case Plugin:        return tr("Plugin");
             case Name:          return tr("Name");
             case Description:   return tr("Description");
+            case Authors:       return tr("Author(s)");
+            case Version:       return tr("Version");
             case Depends:       return tr("Depends on");
             case UsedBy:        return tr("Used by");
             case Replaces:      return tr("Replaces");
@@ -122,6 +124,18 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     /* Plugin description */
     else if(index.column() == Description && (role == Qt::DisplayRole || role == Qt::EditRole))
         return QString::fromStdString(manager->metadata(name)->description());
+
+    /* Author(s) */
+    else if(index.column() == Authors && (role == Qt::DisplayRole || role == Qt::EditRole)) {
+        QStringList list;
+        vector<string> authors = manager->metadata(name)->authors();
+        for(vector<string>::const_iterator it = authors.begin(); it != authors.end(); ++it)
+            list.append(QString::fromStdString(*it));
+        return list.join(", ");
+
+    /* Plugin version */
+    } else if(index.column() == Version && (role == Qt::DisplayRole || role == Qt::EditRole))
+        return QString::fromStdString(manager->metadata(name)->version());
 
     /* On what this plugin depends */
     else if(index.column() == Depends && (role == Qt::DisplayRole || role == Qt::EditRole)) {

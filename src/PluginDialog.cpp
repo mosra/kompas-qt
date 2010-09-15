@@ -52,7 +52,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
 
     setCentralWidget(tabs);
     setWindowTitle("Plugins");
-    resize(640, 320);
+    resize(640, 480);
 }
 
 }}

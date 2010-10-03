@@ -24,6 +24,7 @@
 #include "Utility/Configuration.h"
 #include "AbstractMapView.h"
 #include "AbstractTool.h"
+#include "AbstractProjection.h"
 
 class QAction;
 class QMenu;
@@ -60,6 +61,10 @@ class MainWindow: public QMainWindow {
         /** @brief Instance of PluginManager for map view plugins */
         inline PluginManager<AbstractMapView>* mapViewPluginManager()
             { return _mapViewPluginManager; }
+
+        /** @brief Instance of PluginManager for projection plugins */
+        inline PluginManager<Core::AbstractProjection>* projectionPluginManager()
+            { return _projectionPluginManager; }
 
         /** @brief Instance of PluginManager for tile model plugins */
         inline PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
@@ -106,6 +111,7 @@ class MainWindow: public QMainWindow {
         Utility::Configuration _configuration;
 
         PluginManager<AbstractMapView>* _mapViewPluginManager;
+        PluginManager<Core::AbstractProjection>* _projectionPluginManager;
         PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
         PluginManager<AbstractTool>* _toolPluginManager;
 

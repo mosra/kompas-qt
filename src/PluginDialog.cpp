@@ -34,6 +34,14 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFl
     tabs->addTab(mapViewTab, tr("Map viewers"));
     connectWidget(mapViewTab);
 
+    PluginDialogTab* projectionTab = new PluginDialogTab(
+        mainWindow,
+        "projections",
+        mainWindow->projectionPluginManager(),
+        tr("Plugins for map projections."));
+    tabs->addTab(projectionTab, tr("Projections"));
+    connectWidget(projectionTab);
+
     PluginDialogTab* tileModelTab = new PluginDialogTab(
         mainWindow,
         "tileModels",

@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     _mapViewPluginManager = new PluginManager<AbstractMapView>
         (_configuration.group("plugins")->group("mapViews")->value<string>("__dir"));
+    _projectionPluginManager = new PluginManager<AbstractProjection>
+        (_configuration.group("plugins")->group("projections")->value<string>("__dir"));
     _tileModelPluginManager = new PluginManager<AbstractTileModel>
         (_configuration.group("plugins")->group("tileModels")->value<string>("__dir"));
     _toolPluginManager = new PluginManager<AbstractTool>
@@ -93,9 +95,11 @@ void MainWindow::loadDefaultConfiguration() {
 
     /* Plugin dirs */
     string mapViewPluginDir = DATA_DIR + string("plugins/mapViews/");
+    string projectionPluginDir = DATA_DIR + string("plugins/projections/");
     string tileModelPluginDir = DATA_DIR + string("plugins/tileModels/");
     string toolPluginDir = DATA_DIR + string("plugins/tools/");
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
+    _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("tileModels")->value<string>("__dir", &tileModelPluginDir);
     _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);
 

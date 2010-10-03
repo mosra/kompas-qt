@@ -25,6 +25,7 @@
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QMouseEvent>
 
+#include "AbstractProjection.h"
 #include "MapView.h"
 #include "Tile.h"
 
@@ -145,11 +146,9 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     else
         center = view->mapToScene(pos);
 
-    return tileModel->toWgs84(_zoom, RasterCoords(
-        static_cast<unsigned int>(center.x())/tileModel->tileSize().x,
-        static_cast<unsigned int>(center.y())/tileModel->tileSize().y,
-        static_cast<unsigned int>(center.x())%tileModel->tileSize().x,
-        static_cast<unsigned int>(center.y())%tileModel->tileSize().y
+    return tileModel->projection()->toWgs84(Coords<double>(
+        center.x()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().x),
+        center.y()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().y)
     ));
 }
 
@@ -169,11 +168,11 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     }
 
     /* Convert coordinates to raster */
-    RasterCoords rc = tileModel->fromWgs84(_zoom, coords);
+    Coords<double> rc = tileModel->projection()->fromWgs84(coords);
 
     /* Center map to that coordinates (moved by 'pos' distance from center) */
-    view->centerOn(rc.x()*tileModel->tileSize().x+rc.moveX()-x,
-                   rc.y()*tileModel->tileSize().y+rc.moveY()-y);
+    view->centerOn(rc.x*pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().x-x,
+                   rc.y*pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().y-y);
 
     locker.unlock();
 

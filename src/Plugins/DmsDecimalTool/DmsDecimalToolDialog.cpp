@@ -23,8 +23,9 @@
 #include "../../Wgs84CoordsEdit.h"
 
 using namespace Map2X::Core;
+using namespace Map2X::QtGui;
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 DmsDecimalToolDialog::DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_mainWindow, parent, f) {
     /* Initialize labels */
@@ -71,4 +72,4 @@ void DmsDecimalToolDialog::toDms() {
     coords->setCoords(Wgs84Coords(latitude->value(), longtitude->value()));
 }
 
-}}}
+}}

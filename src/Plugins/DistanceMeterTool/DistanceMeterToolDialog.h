@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_DistanceMeterToolDialog_h
-#define Map2X_QtGui_Plugins_DistanceMeterToolDialog_h
+#ifndef Map2X_Plugins_DistanceMeterToolDialog_h
+#define Map2X_Plugins_DistanceMeterToolDialog_h
 /*
     Copyright © 2010 Jan Dupal <dupal.j@seznam.cz>
 
@@ -23,27 +23,29 @@
 
 class QDoubleSpinBox;
 
-namespace Map2X { namespace QtGui {
+namespace Map2X {
 
-class Wgs84CoordsEdit;
+namespace QtGui {
+    class Wgs84CoordsEdit;
+}
 
 namespace Plugins {
 
 /** @brief Measuring distance between two Wsg84 coords */
-class DistanceMeterToolDialog: public AbstractToolDialog {
+class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
     Q_OBJECT
 
     public:
-        DistanceMeterToolDialog(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DistanceMeterToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void calculate();
 
     private:
-        Wgs84CoordsEdit *coordsA, *coordsB;
+        QtGui::Wgs84CoordsEdit *coordsA, *coordsB;
         QDoubleSpinBox* distance;
 };
 
-}}}
+}}
 
 #endif

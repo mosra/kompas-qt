@@ -15,9 +15,9 @@
 
 #include "Tile.h"
 
-namespace Map2X { namespace QtGui {
+namespace Map2X { namespace Plugins {
 
-void Plugins::Tile::setLayer(int layer, const QPixmap& pixmap) {
+void Tile::setLayer(int layer, const QPixmap& pixmap) {
     if(layer < 0) return;
 
     setLayer(layer);
@@ -26,7 +26,7 @@ void Plugins::Tile::setLayer(int layer, const QPixmap& pixmap) {
     _layers[layer]->setZValue(layer);
 }
 
-void Plugins::Tile::setLayer(int layer) {
+void Tile::setLayer(int layer) {
     if(layer < 0) return;
 
     /* If layer number is larger than actual layer count, initialize all missing
@@ -43,7 +43,7 @@ void Plugins::Tile::setLayer(int layer) {
     }
 }
 
-void Plugins::Tile::removeLayer(int layer) {
+void Tile::removeLayer(int layer) {
     if(layer < 0 || layer >= _layers.count()) return;
 
     delete _layers[layer];

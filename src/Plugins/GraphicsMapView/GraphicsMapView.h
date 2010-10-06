@@ -23,7 +23,7 @@
 
 #include "../../AbstractMapView.h"
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 class MapView;
 class Tile;
@@ -38,7 +38,7 @@ class Tile;
  * @todo Non-crashing state when no model, no zoom or no layer is set
  * @todo Discard all downloads when changing whole tile data
  */
-class GraphicsMapView: public AbstractMapView {
+class GraphicsMapView: public QtGui::AbstractMapView {
     Q_OBJECT
 
     private:
@@ -123,9 +123,9 @@ class GraphicsMapView: public AbstractMapView {
         }
 };
 
-}}}
+}}
 
-PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::QtGui::Plugins::GraphicsMapView,
+PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::Plugins::GraphicsMapView,
                        "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
 
 #endif

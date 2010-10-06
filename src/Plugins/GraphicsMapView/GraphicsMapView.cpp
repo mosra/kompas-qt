@@ -30,8 +30,9 @@
 
 using namespace std;
 using namespace Map2X::Core;
+using namespace Map2X::QtGui;
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), informativeText(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Enable mouse tracking */
@@ -415,4 +416,4 @@ void GraphicsMapView::setTileModel(AbstractTileModel* model) {
     updateTileCount();
 }
 
-}}}
+}}

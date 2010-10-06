@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_DmsDecimalToolDialog_h
-#define Map2X_QtGui_Plugins_DmsDecimalToolDialog_h
+#ifndef Map2X_Plugins_DmsDecimalToolDialog_h
+#define Map2X_Plugins_DmsDecimalToolDialog_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -23,29 +23,31 @@
 
 class QDoubleSpinBox;
 
-namespace Map2X { namespace QtGui {
+namespace Map2X {
 
-class Wgs84CoordsEdit;
+namespace QtGui {
+    class Wgs84CoordsEdit;
+}
 
 namespace Plugins {
 
 /** @brief Converting DMS to decimal and back */
-class DmsDecimalToolDialog: public AbstractToolDialog {
+class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
     Q_OBJECT
 
     public:
-        DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DmsDecimalToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void toDecimal();
         void toDms();
 
     private:
-        Wgs84CoordsEdit* coords;
+        QtGui::Wgs84CoordsEdit* coords;
         QDoubleSpinBox *latitude,
             *longtitude;
 };
 
-}}}
+}}
 
 #endif

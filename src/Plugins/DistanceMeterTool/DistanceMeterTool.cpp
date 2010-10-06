@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_DistanceMeterTool_h
-#define Map2X_QtGui_Plugins_DistanceMeterTool_h
+#ifndef Map2X_Plugins_DistanceMeterTool_h
+#define Map2X_Plugins_DistanceMeterTool_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
     Copyright © 2010 Jan Dupal <dupal.j@seznam.cz>
@@ -23,23 +23,23 @@
 #include "../../AbstractTool.h"
 #include "DistanceMeterToolDialog.h"
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 /** @brief Converting DMS to decimal and back */
-class DistanceMeterTool: public AbstractTool {
+class DistanceMeterTool: public QtGui::AbstractTool {
     public:
         DistanceMeterTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
         virtual QString menuText() const { return QObject::tr("Distance meter"); }
-        virtual AbstractToolDialog* create(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
+        virtual QtGui::AbstractToolDialog* create(QtGui::MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
             { return new DistanceMeterToolDialog(mainWindow, parent, f); }
 };
 
-}}}
+}}
 
 PLUGIN_REGISTER_STATIC(DistanceMeterTool,
-                       Map2X::QtGui::Plugins::DistanceMeterTool,
+                       Map2X::Plugins::DistanceMeterTool,
                        "cz.mosra.Map2X.QtGui.AbstractTool/0.1")
 
 #endif

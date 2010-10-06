@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_Tile_h
-#define Map2X_QtGui_Plugins_Tile_h
+#ifndef Map2X_Plugins_Tile_h
+#define Map2X_Plugins_Tile_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -23,7 +23,7 @@
 
 #include "AbstractTileModel.h"
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 /** @brief One tile in GraphicsMapView */
 class Tile: public QGraphicsItemGroup {
@@ -74,6 +74,6 @@ class Tile: public QGraphicsItemGroup {
         QList<QGraphicsPixmapItem*> _layers;
 };
 
-}}}
+}}
 
 #endif

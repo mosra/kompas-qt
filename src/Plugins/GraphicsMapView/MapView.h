@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_MapView_h
-#define Map2X_QtGui_Plugins_MapView_h
+#ifndef Map2X_Plugins_MapView_h
+#define Map2X_Plugins_MapView_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -22,7 +22,7 @@
 #include <QtGui/QGraphicsView>
 #include <QtGui/QMouseEvent>
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 /** @brief Map view area in GraphicsMapView */
 class MapView: public QGraphicsView {
@@ -85,6 +85,6 @@ class MapView: public QGraphicsView {
         void zoomOut(const QPoint& pos = QPoint()); /**< @brief Zooming out requested */
 };
 
-}}}
+}}
 
 #endif

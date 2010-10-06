@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_Plugins_DmsDecimalTool_h
-#define Map2X_QtGui_Plugins_DmsDecimalTool_h
+#ifndef Map2X_Plugins_DmsDecimalTool_h
+#define Map2X_Plugins_DmsDecimalTool_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -22,22 +22,22 @@
 #include "../../AbstractTool.h"
 #include "DmsDecimalToolDialog.h"
 
-namespace Map2X { namespace QtGui { namespace Plugins {
+namespace Map2X { namespace Plugins {
 
 /** @brief Converting DMS to decimal and back */
-class DmsDecimalTool: public AbstractTool {
+class DmsDecimalTool: public QtGui::AbstractTool {
     public:
         DmsDecimalTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
         virtual QString menuText() const { return QObject::tr("DMS - Decimal converter"); }
-        virtual AbstractToolDialog* create(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
+        virtual QtGui::AbstractToolDialog* create(QtGui::MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
             { return new DmsDecimalToolDialog(mainWindow, parent, f); }
 };
 
-}}}
+}}
 
-PLUGIN_REGISTER_STATIC(DmsDecimalTool, Map2X::QtGui::Plugins::DmsDecimalTool,
+PLUGIN_REGISTER_STATIC(DmsDecimalTool, Map2X::Plugins::DmsDecimalTool,
                        "cz.mosra.Map2X.QtGui.AbstractTool/0.1")
 
 #endif

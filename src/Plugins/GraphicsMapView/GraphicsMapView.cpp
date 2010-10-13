@@ -33,6 +33,9 @@ using namespace std;
 using namespace Map2X::Core;
 using namespace Map2X::QtGui;
 
+PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::Plugins::GraphicsMapView,
+                       "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
+
 namespace Map2X { namespace Plugins {
 
 GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& pluginName): AbstractMapView(manager, pluginName), _zoom(0), informativeText(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {

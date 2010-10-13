@@ -125,7 +125,4 @@ class GraphicsMapView: public QtGui::AbstractMapView {
 
 }}
 
-PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::Plugins::GraphicsMapView,
-                       "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
-
 #endif

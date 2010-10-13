@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(Map2XQt)
 
-set(CMAKE_MODULE_PATH "${Map2XQt_SOURCE_DIR}/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${Map2XQt_SOURCE_DIR}/modules/")
 
 add_subdirectory(src)
 

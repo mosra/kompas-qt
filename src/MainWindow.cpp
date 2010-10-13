@@ -120,7 +120,7 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("map")->value("homePosition", &homePosition);
 
     /* Default tile model, layer, overlays and zoom */
-    string tileModel = "OpenStreetMap";
+    string tileModel = "OpenStreetMapTileModel";
     string tileLayer = "Mapnik";
     Zoom zoom        = 4;
     _configuration.group("map")->value("tileModel", &tileModel);

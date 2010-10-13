@@ -15,7 +15,7 @@ endif()
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
 
-include_directories(${MAP2X_CORE_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${MAP2X_CORE_INCLUDE_DIR} ${MAP2X_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(Plugins)
 

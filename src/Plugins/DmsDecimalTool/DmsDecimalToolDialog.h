@@ -19,7 +19,7 @@
  * @brief Class Map2X::QtGui::Plugins::DmsDecimalToolDialog
  */
 
-#include "../../AbstractToolDialog.h"
+#include "AbstractToolDialog.h"
 
 class QDoubleSpinBox;
 

@@ -21,7 +21,7 @@
 
 #include <QtGui/QGraphicsScene>
 
-#include "../../AbstractMapView.h"
+#include "AbstractMapView.h"
 
 namespace Map2X { namespace Plugins {
 

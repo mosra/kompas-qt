@@ -20,7 +20,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QDoubleSpinBox>
 
-#include "../../Wgs84CoordsEdit.h"
+#include "Wgs84CoordsEdit.h"
 
 using namespace Map2X::Core;
 using namespace Map2X::QtGui;

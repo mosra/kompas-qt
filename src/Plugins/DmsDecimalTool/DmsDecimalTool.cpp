@@ -19,7 +19,7 @@
  * @brief Class Map2X::QtGui::Plugins::DmsDecimalTool
  */
 
-#include "../../AbstractTool.h"
+#include "AbstractTool.h"
 #include "DmsDecimalToolDialog.h"
 
 namespace Map2X { namespace Plugins {

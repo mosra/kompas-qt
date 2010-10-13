@@ -20,7 +20,7 @@
  * @brief Class Map2X::QtGui::Plugins::DistanceMeterTool
  */
 
-#include "../../AbstractTool.h"
+#include "AbstractTool.h"
 #include "DistanceMeterToolDialog.h"
 
 namespace Map2X { namespace Plugins {

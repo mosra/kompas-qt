@@ -4,6 +4,12 @@ project(Map2XQt)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${Map2XQt_SOURCE_DIR}/modules/")
 
+include(Map2XMacros)
+
+set_parent_scope(MAP2X_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+include(FindMap2XQt)
+
 add_subdirectory(src)
 
 option(BUILD_TESTS "Build unit tests (requires Qt4)." OFF)

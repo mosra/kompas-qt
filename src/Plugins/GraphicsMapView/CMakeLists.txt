@@ -1,5 +1,3 @@
-include_directories("${Map2XQt_SOURCE_DIR}/src")
-
 qt4_wrap_cpp(GraphicsMapView_MOC
     MapView.h
     GraphicsMapView.h

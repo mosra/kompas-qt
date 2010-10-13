@@ -94,10 +94,10 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.setAutomaticKeyCreation(true);
 
     /* Plugin dirs */
-    string mapViewPluginDir = DATA_DIR + string("plugins/mapViews/");
-    string projectionPluginDir = DATA_DIR + string("plugins/projections/");
-    string tileModelPluginDir = DATA_DIR + string("plugins/tileModels/");
-    string toolPluginDir = DATA_DIR + string("plugins/tools/");
+    string mapViewPluginDir = PLUGIN_MAPVIEW_DIR;
+    string projectionPluginDir = PLUGIN_PROJECTION_DIR;
+    string tileModelPluginDir = PLUGIN_TILEMODEL_DIR;
+    string toolPluginDir = PLUGIN_TOOL_DIR;
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("tileModels")->value<string>("__dir", &tileModelPluginDir);

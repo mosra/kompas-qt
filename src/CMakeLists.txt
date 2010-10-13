@@ -6,10 +6,8 @@ find_package(Map2XCore REQUIRED)
 # TODO: This will work only under user who compiled that
 if(UNIX)
     set(CONFIGURATION_FILE "$ENV{HOME}/.map2x.conf")
-    set(DATA_DIR "${CMAKE_INSTALL_PREFIX}/share/map2x/")
 elseif(WIN32)
     set(CONFIGURATION_FILE "$ENV{AppData}/map2x.conf")
-    set(DATA_DIR "${CMAKE_INSTALL_PREFIX}/Map2X/")
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake

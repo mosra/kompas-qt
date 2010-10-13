@@ -10,6 +10,7 @@ set_parent_scope(MAP2X_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 include(FindMap2XQt)
 
+add_subdirectory(modules)
 add_subdirectory(src)
 
 option(BUILD_TESTS "Build unit tests (requires Qt4)." OFF)
@@ -25,3 +26,11 @@ if(BUILD_TESTS)
     endif()
 
 endif()
+
+install(DIRECTORY src/ DESTINATION ${MAP2X_QT_INCLUDE_INSTALL_DIR}
+                 FILES_MATCHING PATTERN "*.h"
+                 PATTERN "*/Test" EXCLUDE
+                 PATTERN src/Plugins EXCLUDE)
+install(DIRECTORY src/Plugins/ DESTINATION ${MAP2X_PLUGINS_INCLUDE_INSTALL_DIR}
+                FILES_MATCHING PATTERN "*.h"
+                PATTERN "*/Test" EXCLUDE)

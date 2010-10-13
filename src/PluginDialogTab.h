@@ -36,6 +36,7 @@ class PluginModel;
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.
+ * @todo Display only non empty metadata
  */
 class PluginDialogTab: public AbstractConfigurationWidget {
     Q_OBJECT

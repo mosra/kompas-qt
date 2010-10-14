@@ -20,7 +20,7 @@
 namespace Map2X { namespace QtGui {
 
 ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
-    ConfigurationWidget* widget = new ConfigurationWidget(mainWindow);
+    ConfigurationWidget* widget = new ConfigurationWidget(mainWindow, this);
     connectWidget(widget);
     setCentralWidget(widget);
     setWindowTitle(tr("Map2X configuration"));

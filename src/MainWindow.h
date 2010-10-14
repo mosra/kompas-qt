@@ -40,6 +40,8 @@ class MainWindow: public QMainWindow {
     Q_OBJECT
 
     public:
+        static MainWindow* instance() { return _instance; }
+
         /**
          * @brief Constructor
          * @param parent    Parent widget
@@ -108,6 +110,8 @@ class MainWindow: public QMainWindow {
         void setTileModel(const QString& name);
 
     private:
+        static MainWindow* _instance;
+
         Utility::Configuration _configuration;
 
         PluginManager<AbstractMapView>* _mapViewPluginManager;

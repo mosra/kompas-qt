@@ -35,7 +35,11 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
+MainWindow* MainWindow::_instance;
+
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _tileModel(0) {
+    _instance = this;
+
     setWindowTitle("Map2X");
     statusBar();
 

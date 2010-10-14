@@ -15,11 +15,12 @@
 
 #include "ConfigurationDialog.h"
 
+#include "MainWindow.h"
 #include "ConfigurationWidget.h"
 
 namespace Map2X { namespace QtGui {
 
-ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
+ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractConfigurationDialog(mainWindow, f) {
     ConfigurationWidget* widget = new ConfigurationWidget(mainWindow, this);
     connectWidget(widget);
     setCentralWidget(widget);

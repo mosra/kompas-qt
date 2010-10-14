@@ -23,7 +23,7 @@
 
 namespace Map2X { namespace QtGui {
 
-PluginDialog::PluginDialog(MainWindow* mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
+PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractConfigurationDialog(mainWindow, f) {
     /* Tabs */
     tabs = new QTabWidget;
     PluginDialogTab* mapViewTab = new PluginDialogTab(

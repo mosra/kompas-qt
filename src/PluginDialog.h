@@ -41,10 +41,9 @@ class PluginDialog: public AbstractConfigurationDialog {
         /**
          * @brief Constructor
          * @param mainWindow        Pointer to main window
-         * @param parent            Parent widget
          * @param f                 Window flags
          */
-        PluginDialog(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
 
     private:
         QTabWidget* tabs;

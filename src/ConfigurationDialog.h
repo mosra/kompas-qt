@@ -25,10 +25,9 @@ class ConfigurationDialog: public AbstractConfigurationDialog {
         /**
          * @brief Constructor
          * @param mainWindow        Pointer to main window
-         * @param parent            Parent widget
          * @param f                 Flags
          */
-        ConfigurationDialog(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
 };
 
 }}

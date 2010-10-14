@@ -205,12 +205,12 @@ void MainWindow::moveMap() {
 }
 
 void MainWindow::pluginDialog() {
-    PluginDialog dialog(this, this);
+    PluginDialog dialog(this);
     dialog.exec();
 }
 
 void MainWindow::configurationDialog() {
-    ConfigurationDialog dialog(this, this);
+    ConfigurationDialog dialog(this);
     dialog.exec();
 }
 

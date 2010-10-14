@@ -400,6 +400,7 @@ void GraphicsMapView::setTileModel() {
     MainWindow::instance()->unlockTileModel();
 
     /* Reset zoom, if the model doesn't have current */
+    /** @todo Reset to closest available zoom */
     if(::find(z.begin(), z.end(), _zoom) == z.end()) _zoom = z[0];
 
     /* Reset map layer, if the model doesn't have current */

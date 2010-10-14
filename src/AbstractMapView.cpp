@@ -22,8 +22,8 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-AbstractMapView::AbstractMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin), tileModel(0) {
-    tileDataThread = new TileDataThread(&tileModel, &tileModelMutex, this);
+AbstractMapView::AbstractMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin) {
+    tileDataThread = new TileDataThread(this);
 
     qRegisterMetaType<Core::Zoom>("Core::Zoom");
     qRegisterMetaType<Core::TileCoords>("Core::TileCoords");

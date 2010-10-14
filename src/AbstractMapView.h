@@ -19,7 +19,6 @@
  * @brief Class Map2X::QtGui::AbstractMapView
  */
 
-#include <QtCore/QMutex>
 #include <QtGui/QWidget>
 
 #include "AbstractTileModel.h"
@@ -48,11 +47,11 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
 
         /**
          * @brief Set tile model to the view
-         * @param model     Tile model. If set to zero, resets the view.
          *
          * Reloads all map data from new model.
+         * @todo Rename to something meaningful.
          */
-        virtual void setTileModel(Core::AbstractTileModel* model) = 0;
+        virtual void setTileModel() = 0;
 
         /**
          * @brief Set map layer
@@ -165,8 +164,6 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
         /*@}*/
 
     protected:
-        Core::AbstractTileModel* tileModel;     /**< @brief Tile model */
-        QMutex tileModelMutex;                  /**< @brief Mutex for tile model */
         TileDataThread* tileDataThread;         /**< @brief Thread for downloading tile data */
 
     signals:

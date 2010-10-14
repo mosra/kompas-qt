@@ -69,12 +69,9 @@ class TileDataThread: public QThread {
 
         /**
          * @brief Constructor
-         *
-         * @param _model        Pointer to pointer to tile model
-         * @param _modelMutex   Mutex for locking access to tile model
          * @param parent        Parent object
          */
-        TileDataThread(Core::AbstractTileModel** _model, QMutex* _modelMutex, QObject* parent = 0);
+        TileDataThread(QObject* parent = 0);
 
         /**
          * @brief Destructor
@@ -147,9 +144,6 @@ class TileDataThread: public QThread {
 
             TileJob(): reply(0), running(false) {}
         };
-
-        Core::AbstractTileModel** model;
-        QMutex* modelMutex;
 
         QMutex mutex;
         QWaitCondition condition;

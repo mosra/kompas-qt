@@ -19,6 +19,8 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkAccessManager>
 
+#include "MainWindow.h"
+
 using namespace std;
 using namespace Map2X::Core;
 
@@ -26,7 +28,7 @@ namespace Map2X { namespace QtGui {
 
 int TileDataThread::_maxSimultaenousDownloads = 1;
 
-TileDataThread::TileDataThread(AbstractTileModel** _model, QMutex* _modelMutex, QObject* parent): QThread(parent), model(_model), modelMutex(_modelMutex), abort(false) {
+TileDataThread::TileDataThread(QObject* parent): QThread(parent), abort(false) {
     manager = new QNetworkAccessManager;
     connect(this, SIGNAL(download(TileJob*)), this, SLOT(startDownload(TileJob*)));
     connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(finishDownload(QNetworkReply*)));
@@ -76,10 +78,11 @@ void TileDataThread::run() {
             QString layer = firstPending->layer;
             mutex.unlock();
 
+            AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForWrite();
+
             /* No model available */
-            modelMutex->lock();
-            if(!*model) {
-                modelMutex->unlock();
+            if(!tileModel) {
+                MainWindow::instance()->unlockTileModel();
                 for(int i = 0; i != queue.size(); ++i) {
                     if(firstPending == &queue[i]) {
                         queue.removeAt(i);
@@ -91,8 +94,10 @@ void TileDataThread::run() {
             }
 
             /* First try to get the data locally */
-            string data = (*model)->tileData(layer.toStdString(), zoom, coords);
-            modelMutex->unlock();
+            string data = tileModel->tileData(layer.toStdString(), zoom, coords);
+            bool online = tileModel->online();
+
+            MainWindow::instance()->unlockTileModel();
 
             /* If found, emit signal with data and remove from queue */
             if(!data.empty()) {
@@ -111,12 +116,8 @@ void TileDataThread::run() {
 
             /* Else try to download the item */
             } else {
-                modelMutex->lock();
-
                 /* Online is not enabled, tile not found */
-                if(!(*model)->online()) {
-                    modelMutex->unlock();
-
+                if(!online) {
                     mutex.lock();
                     for(int i = 0; i != queue.size(); ++i) {
                         if(firstPending == &queue[i]) {
@@ -129,7 +130,6 @@ void TileDataThread::run() {
 
                 /* Request item download */
                 } else {
-                    modelMutex->unlock();
                     mutex.lock();
                     firstPending->running = true;
                     mutex.unlock();
@@ -148,13 +148,13 @@ void TileDataThread::run() {
 
 void TileDataThread::startDownload(TileJob* job) {
     mutex.lock();
-    modelMutex->lock();
+    const AbstractTileModel* model = MainWindow::instance()->lockTileModelForRead();
 
     /* Create request for given tile */
     job->reply = manager->get(QNetworkRequest(QUrl(
-        QString::fromStdString((*model)->tileUrl(job->layer.toStdString(), job->zoom, job->coords)))));
+        QString::fromStdString(model->tileUrl(job->layer.toStdString(), job->zoom, job->coords)))));
 
-    modelMutex->unlock();
+    MainWindow::instance()->unlockTileModel();
     mutex.unlock();
 }
 

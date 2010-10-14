@@ -19,6 +19,7 @@
  * @brief Class Map2X::QtGui::MainWindow
  */
 
+#include <QtCore/QReadWriteLock>
 #include <QtGui/QMainWindow>
 
 #include "Utility/Configuration.h"
@@ -77,12 +78,38 @@ class MainWindow: public QMainWindow {
             { return _toolPluginManager; }
 
         /**
-         * @brief Tile model
-         * @return Returns double pointer, because the tile model class instance
-         * can be replaced with another.
+         * @brief Get tile model for reading
+         * @return Pointer to tile model
+         *
+         * This functions locks tile model for reading. After usage the model
+         * have to be unlocked with unlockTileModel().
          */
-        inline Core::AbstractTileModel** tileModel()
-            { return &_tileModel; }
+        inline const Core::AbstractTileModel* lockTileModelForRead() {
+            tileModelLock.lockForRead();
+            return _tileModel;
+        }
+
+        /**
+         * @brief Get tile model for writing
+         * @return Pointer to tile model
+         *
+         * This functions locks tile model for writing. After usage the model
+         * have to be unlocked with unlockTileModel().
+         */
+        inline Core::AbstractTileModel* lockTileModelForWrite() {
+            tileModelLock.lockForWrite();
+            return _tileModel;
+        }
+
+        /**
+         * @brief Unlock tile model
+         *
+         * Unlocks tile model previously locked with lockTileModelRead() or
+         * lockTileModelWrite().
+         */
+        inline void unlockTileModel() {
+            tileModelLock.unlock();
+        }
 
         /**
          * @brief Map view
@@ -121,6 +148,7 @@ class MainWindow: public QMainWindow {
 
         AbstractMapView* _mapView;
         Core::AbstractTileModel* _tileModel;
+        QReadWriteLock tileModelLock;
 
         QAction *quitAction,
             *zoomInAction,

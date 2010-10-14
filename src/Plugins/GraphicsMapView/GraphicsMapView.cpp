@@ -25,6 +25,7 @@
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QMouseEvent>
 
+#include "MainWindow.h"
 #include "AbstractProjection.h"
 #include "MapView.h"
 #include "Tile.h"
@@ -64,16 +65,15 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
 }
 
 bool GraphicsMapView::zoomIn(const QPoint& pos) {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
-    /* Check whether we can zoom in */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
     vector<Zoom> z = tileModel->zoomLevels();
+    MainWindow::instance()->unlockTileModel();
+
+    /* Check whether we can zoom in */
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(++it == z.end()) return false;
-
-    locker.unlock();
 
     /* Get coordinates, zoom in, update map area */
     Wgs84Coords c = coords(pos);
@@ -89,16 +89,15 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
 }
 
 bool GraphicsMapView::zoomOut(const QPoint& pos) {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
-    /* Check whether we can zoom out */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
     vector<Zoom> z = tileModel->zoomLevels();
+    MainWindow::instance()->unlockTileModel();
+
+    /* Check whether we can zoom out */
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(it-- == z.begin()) return false;
-
-    locker.unlock();
 
     /* Get coordinates, zoom out, update map area */
     Wgs84Coords c = coords(pos);
@@ -114,15 +113,14 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 }
 
 bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
-    /* Check whether given zoom exists */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
     vector<Zoom> z = tileModel->zoomLevels();
-    if(::find(z.begin(), z.end(), zoom) == z.end()) return false;
+    MainWindow::instance()->unlockTileModel();
 
-    locker.unlock();
+    /* Check whether given zoom exists */
+    if(::find(z.begin(), z.end(), zoom) == z.end()) return false;
 
     /* Get coordinates, zoom out, update map area */
     Wgs84Coords c = coords(pos);
@@ -138,8 +136,6 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 }
 
 Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return Wgs84Coords();
 
     /* Position where to get coordinates */
@@ -149,15 +145,19 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     else
         center = view->mapToScene(pos);
 
-    return tileModel->projection()->toWgs84(Coords<double>(
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
+    Wgs84Coords ret = tileModel->projection()->toWgs84(Coords<double>(
         center.x()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().x),
         center.y()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().y)
     ));
+
+    MainWindow::instance()->unlockTileModel();
+
+    return ret;
 }
 
 bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
     /* Distance of 'pos' from map center */
@@ -170,6 +170,8 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
         y = pos.y()-view->height()/2;
     }
 
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
     /* Convert coordinates to raster */
     Coords<double> rc = tileModel->projection()->fromWgs84(coords);
 
@@ -177,7 +179,7 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     view->centerOn(rc.x*pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().x-x,
                    rc.y*pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().y-y);
 
-    locker.unlock();
+    MainWindow::instance()->unlockTileModel();
 
     /* Update tile positions */
     updateTilePositions();
@@ -187,17 +189,15 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
 
 bool GraphicsMapView::setLayer(const QString& layer) {
     if(layer == _layer) return true;
-
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
-    /* Check whether given layer exists */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
     vector<string> layers = tileModel->layers();
+    MainWindow::instance()->unlockTileModel();
+
+    /* Check whether given layer exists */
     if(::find(layers.begin(), layers.end(), layer.toStdString()) == layers.end())
         return false;
-
-    locker.unlock();
 
     /* Update tile data */
     _layer = layer;
@@ -213,17 +213,15 @@ bool GraphicsMapView::setLayer(const QString& layer) {
 
 bool GraphicsMapView::addOverlay(const QString& overlay) {
     if(_overlays.contains(overlay)) return true;
-
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return false;
 
     /* Check whether given overlay exists */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
     vector<string> layers = tileModel->overlays();
+    MainWindow::instance()->unlockTileModel();
+
     if(::find(layers.begin(), layers.end(), overlay.toStdString()) == layers.end())
         return false;
-
-    locker.unlock();
 
     _overlays.append(overlay);
 
@@ -261,13 +259,17 @@ void GraphicsMapView::mouseMoveEvent(QMouseEvent* event) {
 }
 
 bool GraphicsMapView::isReady() {
-    return tileModel && !tileModel->layers().empty() && !tileModel->zoomLevels().empty();
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+    bool is = tileModel && !tileModel->layers().empty() && !tileModel->zoomLevels().empty();
+    MainWindow::instance()->unlockTileModel();
+
+    return is;
 }
 
 void GraphicsMapView::updateMapArea() {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady()) return;
+
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
 
     /* Compute tile area */
     unsigned int multiplier = pow(tileModel->zoomStep(), _zoom-tileModel->zoomLevels()[0]);
@@ -278,16 +280,16 @@ void GraphicsMapView::updateMapArea() {
                      tileModel->area().w*tileModel->tileSize().x*multiplier,
                      tileModel->area().h*tileModel->tileSize().x*multiplier);
 
-    locker.unlock();
+    MainWindow::instance()->unlockTileModel();
 
     /* Update tile count to ensure map area fits in it */
     updateTileCount();
 }
 
 void GraphicsMapView::updateTileCount() {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady() || !isVisible()) return;
+
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
 
     /* Tile count for actual viewed area */
     tileCount = tileModel->tilesInArea(Coords<unsigned int>(
@@ -299,15 +301,15 @@ void GraphicsMapView::updateTileCount() {
     if(tileCount.x > tileModel->area().w*multiplier) tileCount.x = tileModel->area().w*multiplier;
     if(tileCount.y > tileModel->area().h*multiplier) tileCount.y = tileModel->area().h*multiplier;
 
-    locker.unlock();
+    MainWindow::instance()->unlockTileModel();
 
     updateTilePositions();
 }
 
 void GraphicsMapView::updateTilePositions() {
-    QMutexLocker locker(&tileModelMutex);
-
     if(!isReady() || !isVisible()) return;
+
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
 
     QPointF viewed = view->mapToScene(0, 0);
 
@@ -319,8 +321,6 @@ void GraphicsMapView::updateTilePositions() {
     Coords<unsigned int> tilesOrigin(
         static_cast<unsigned int>(viewed.x()/tileModel->tileSize().x),
         static_cast<unsigned int>(viewed.y()/tileModel->tileSize().y));
-
-    locker.unlock();
 
     QBitArray loadedItems(tileCount.x*tileCount.y, false);
 
@@ -351,12 +351,11 @@ void GraphicsMapView::updateTilePositions() {
         foreach(const QString& overlay, _overlays)
             emit getTileData(overlay, _zoom, coords);
     }
+
+    MainWindow::instance()->unlockTileModel();
 }
 
 void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {
-    /** @todo Why the locker here? */
-    QMutexLocker locker(&tileModelMutex);
-
     /* Compute layer/overlay number */
     int layerNumber;
     if(layer == _layer) layerNumber = 0;
@@ -368,10 +367,7 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
     }
 }
 
-void GraphicsMapView::setTileModel(AbstractTileModel* model) {
-    QMutexLocker locker(&tileModelMutex);
-    tileModel = model;
-
+void GraphicsMapView::setTileModel() {
     qDeleteAll(tiles);
     tiles.clear();
 
@@ -395,24 +391,27 @@ void GraphicsMapView::setTileModel(AbstractTileModel* model) {
         informativeText = 0;
     }
 
-    /* Reset zoom, if the model doesn't have current */
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
     vector<Zoom> z = tileModel->zoomLevels();
+    vector<string> l = tileModel->layers();
+    vector<string> o = tileModel->overlays();
+
+    MainWindow::instance()->unlockTileModel();
+
+    /* Reset zoom, if the model doesn't have current */
     if(::find(z.begin(), z.end(), _zoom) == z.end()) _zoom = z[0];
 
     /* Reset map layer, if the model doesn't have current */
-    vector<string> l = tileModel->layers();
     if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end()) _layer = QString::fromStdString(l[0]);
 
     /* Reset map overlays, if the model doesn't have current */
-    vector<string> o = tileModel->overlays();
     for(int i = _overlays.size()-1; i >= 0; --i) {
         if(::find(o.begin(), o.end(), _overlays[i].toStdString()) == o.end())
             _overlays.removeAt(i);
     }
 
     /** @todo Is this check really needed? Why don't just reset everything to defaults? */
-
-    locker.unlock();
 
     updateMapArea();
     updateTileCount();

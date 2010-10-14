@@ -19,17 +19,10 @@
  * @brief Class Map2X::QtGui::TileLayerModel
  */
 
-#include <QtCore/QAbstractTableModel>
+#include <QtCore/QAbstractListModel>
 #include <QtCore/QStringList>
-#include <QtCore/QBitArray>
 
-namespace Map2X {
-
-namespace Core {
-    class AbstractTileModel;
-}
-
-namespace QtGui {
+namespace Map2X { namespace QtGui {
 
 /**
  * @brief Model for tile layers
@@ -42,10 +35,9 @@ class TileLayerModel: public QAbstractListModel {
     public:
         /**
          * @brief Constructor
-         * @param _tileModel        Tile model
          * @param parent            Parent object
          */
-        TileLayerModel(Core::AbstractTileModel** _tileModel, QObject* parent = 0);
+        TileLayerModel(QObject* parent = 0);
 
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return layers.count(); }
@@ -60,7 +52,6 @@ class TileLayerModel: public QAbstractListModel {
         void reload();
 
     private:
-        Core::AbstractTileModel** tileModel;
         QStringList layers;
 };
 

@@ -41,12 +41,12 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     tileModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
-    tileLayerModel = new TileLayerModel(mainWindow->tileModel(), this);
+    tileLayerModel = new TileLayerModel(this);
     tileLayers = new QComboBox;
     tileLayers->setModel(tileLayerModel);
 
     /* Tile overlays combobox */
-    tileOverlayModel = new TileOverlayModel(mainWindow->tileModel(), mainWindow->mapView(), 0, this);
+    tileOverlayModel = new TileOverlayModel(mainWindow->mapView(), 0, this);
     tileOverlays = new QListView;
     tileOverlays->setModel(tileOverlayModel);
 

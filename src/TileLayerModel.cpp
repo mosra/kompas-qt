@@ -17,23 +17,29 @@
 
 #include "AbstractTileModel.h"
 #include "AbstractMapView.h"
+#include "MainWindow.h"
 
 using namespace std;
+using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-TileLayerModel::TileLayerModel(Core::AbstractTileModel** _tileModel, QObject* parent): QAbstractListModel(parent), tileModel(_tileModel) { reload(); }
+TileLayerModel::TileLayerModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
 void TileLayerModel::reload() {
     beginResetModel();
     layers.clear();
 
-    if(*tileModel) {
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
+    if(tileModel) {
         /* All available layers */
-        vector<string> _layers = (*tileModel)->layers();
+        vector<string> _layers = tileModel->layers();
         for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it)
             layers.append(QString::fromStdString(*it));
     }
+
+    MainWindow::instance()->unlockTileModel();
 
     endResetModel();
 }

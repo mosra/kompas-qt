@@ -19,20 +19,13 @@
  * @brief Class Map2X::QtGui::TileOverlayModel
  */
 
-#include <QtCore/QAbstractTableModel>
+#include <QtCore/QAbstractListModel>
 #include <QtCore/QStringList>
 #include <QtCore/QBitArray>
 
-namespace Map2X {
-
-namespace Core {
-    class AbstractTileModel;
-}
-
-namespace QtGui {
+namespace Map2X { namespace QtGui {
 
 class AbstractMapView;
-class MainWindow;
 
 /**
  * @brief Model for tile overlays
@@ -51,13 +44,12 @@ class TileOverlayModel: public QAbstractListModel {
 
         /**
          * @brief Constructor
-         * @param _tileModel        Tile model
          * @param _mapView          Map view which displays map from given tile
          *      model
          * @param flags             Flags
          * @param parent            Parent object
          */
-        TileOverlayModel(Core::AbstractTileModel** _tileModel, AbstractMapView** _mapView, int flags = 0, QObject* parent = 0);
+        TileOverlayModel(AbstractMapView** _mapView, int flags = 0, QObject* parent = 0);
 
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return overlays.count(); }
@@ -76,7 +68,6 @@ class TileOverlayModel: public QAbstractListModel {
         void reload();
 
     private:
-        Core::AbstractTileModel** tileModel;
         AbstractMapView** mapView;
         int _flags;
 

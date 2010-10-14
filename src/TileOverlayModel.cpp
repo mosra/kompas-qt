@@ -17,19 +17,23 @@
 
 #include "AbstractTileModel.h"
 #include "AbstractMapView.h"
+#include "MainWindow.h"
 
 using namespace std;
+using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-TileOverlayModel::TileOverlayModel(Core::AbstractTileModel** _tileModel, AbstractMapView** _mapView, int flags, QObject* parent): QAbstractListModel(parent), tileModel(_tileModel), mapView(_mapView), _flags(flags) { reload(); }
+TileOverlayModel::TileOverlayModel(AbstractMapView** _mapView, int flags, QObject* parent): QAbstractListModel(parent), mapView(_mapView), _flags(flags) { reload(); }
 
 void TileOverlayModel::reload() {
     beginResetModel();
     overlays.clear();
     loaded.clear();
 
-    if(*mapView && *tileModel) {
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
+    if(*mapView && tileModel) {
         /* Only loaded overlays */
         if(_flags & LoadedOnly) {
             overlays.append((*mapView)->overlays());
@@ -37,7 +41,7 @@ void TileOverlayModel::reload() {
 
         /* All available overlays */
         } else {
-            vector<string> _overlays = (*tileModel)->overlays();
+            vector<string> _overlays = tileModel->overlays();
             QStringList _loaded = (*mapView)->overlays();
             for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
                 overlays.append(QString::fromStdString(*it));
@@ -50,6 +54,8 @@ void TileOverlayModel::reload() {
             loaded.resize(overlays.size());
         }
     }
+
+    MainWindow::instance()->unlockTileModel();
 
     endResetModel();
 }

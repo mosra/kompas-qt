@@ -23,7 +23,6 @@ set(Map2X_Qt_SRCS
     TileDataThread.cpp
     AbstractConfigurationDialog.cpp
     PluginModel.cpp
-    PluginDialogTab.cpp
     PluginDialog.cpp
     ConfigurationDialog.cpp
     ConfigurationWidget.cpp
@@ -44,7 +43,6 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     AbstractConfigurationWidget.h
     AbstractPluginManager.h
     PluginModel.h
-    PluginDialogTab.h
     PluginDialog.h
     ConfigurationWidget.h
     ToolPluginMenuView.h

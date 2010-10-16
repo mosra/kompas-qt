@@ -23,10 +23,15 @@
 
 class QDialogButtonBox;
 class QTabWidget;
+class QLabel;
+class QLineEdit;
+class QDataWidgetMapper;
 
 namespace Map2X { namespace QtGui {
 
 class MainWindow;
+class AbstractPluginManager;
+class PluginModel;
 
 /**
  * @brief Plugin settings dialog
@@ -45,8 +50,60 @@ class PluginDialog: public AbstractConfigurationDialog {
          */
         PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
 
+    protected:
+        class Tab;
+
     private:
         QTabWidget* tabs;
+};
+
+/**
+ * @brief Tab in Plugin dialog
+ *
+ * Shows table with all plugin and after selecting any row detailed information
+ * about that plugin.
+ * @todo Display only non empty metadata
+ */
+class PluginDialog::Tab: public AbstractConfigurationWidget {
+    Q_OBJECT
+
+    public:
+        /**
+         * @brief Constructor
+         * @param _mainWindow           Pointer to main window instance
+         * @param _configurationKey     Key name for storing plugin configuration
+         * @param _manager              Pointer to PluginManager
+         * @param _categoryDescription  Description of current plugin category
+         * @param parent                Parent widget
+         * @param f                     Window flags
+         */
+        Tab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+    public slots:
+        virtual void reset();
+        virtual void restoreDefaults();
+        virtual void save();
+
+    private slots:
+        virtual void setPluginDir();
+
+    private:
+        MainWindow* mainWindow;
+        std::string configurationKey;
+
+        AbstractPluginManager* manager;
+        PluginModel* model;
+        QDataWidgetMapper* mapper;
+
+        QLineEdit* pluginDir;
+
+        QLabel *loadState,
+            *description,
+            *authors,
+            *depends,
+            *usedBy,
+            *replaces,
+            *replacedWith;
 };
 
 }}

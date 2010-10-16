@@ -80,6 +80,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     /* Tools menu */
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
+    menuView->update();
 
     /* Status bar with coordinates */
     coordinateStatus = new QLabel;

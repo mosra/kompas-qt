@@ -1,0 +1,89 @@
+/** @class Map2X::QtGui::AbstractPluginMenuView
+@section AbstractPluginMenuView_subclassing Subclassing example: Export menu
+We have some file format plugins and we want to create an Export menu for all
+of them. Some of them are for reading only, so we have to filter them out.
+
+Here's an excerpt of format plugin interface:
+@code
+class AbstractFormat {
+    // ...
+
+    public:
+        virtual QString name() const = 0;
+        virtual bool isWriteable() const = 0;
+
+    // ...
+};
+@endcode
+
+Then we subclass AbstractPluginMenuView and declare some properties and methods
+which have to be implemented:
+@code
+class ExportMenuView: public AbstractPluginMenuView {
+    public:
+        ToolPluginMenuView(Map2X::PluginManager::PluginManager<AbstractFormat>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
+            AbstractPluginMenuView(manager, menu, before, parent), formatManager(manager) {}
+
+        void update();
+
+    protected slots:
+        void trigger(QAction* action);
+
+    protected:
+        QAction* createMenuAction(const std::string& pluginName);
+
+    private:
+        Map2X::PluginManager::PluginManager<AbstractFormat>* formatManager;
+        QHash<QAction*, std::string> items;
+};
+@endcode
+When an action from menu is triggered, we know only QAction* pointer and we
+need to connect it somehow with particular plugin. That's why there is an QHash
+array which has an plugin name associated with every action. We need to clear
+it before every update() to avoid old items staying there. That's why we are
+reimplementing also update() method:
+@code
+void ExportMenuView::update() {
+    qDeleteAll<QList<QAction*> >(items.keys());
+    items.clear();
+    AbstractPluginMenuView::update();
+}
+@endcode
+Then we implement trigger() slot, which uses the plugin and opens an wizard or
+something like that, which is now not important. Important thing is that the
+menu can have some items which were not created with this class and these must
+be skipped to avoid undefined behaviour:
+@code
+void ExportMenuView::trigger(QAction* action) {
+    if(!items.contains(action)) return;
+
+    std::string pluginName = items.value(action);
+
+    // ...
+}
+@endcode
+Last method waiting to be implemented is item creator. As said before, we test
+every plugin whether it is capable of writing:
+@code
+QAction* ExportMenuView::createMenuAction(const std::string& pluginName) {
+    AbstractFormat* f = formatManager->instance(pluginName);
+
+    if(!f->isWriteable()) return 0;
+
+    QAction* action = new QAction(f->name(), this);
+    items.insert(action, pluginName);
+
+    return action;
+}
+@endcode
+The last step is to create ExportMenuView instance and load the menu with
+plugins, e.g.:
+@code
+// ...
+
+ExportMenuView* v = new ExportMenuView(formatManager, exportMenu, 0, mainWindow);
+v->update();
+
+// ...
+@endcode
+*/

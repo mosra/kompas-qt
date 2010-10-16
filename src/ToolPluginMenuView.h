@@ -19,9 +19,10 @@
  * @brief Class Map2X::QtGui::ToolPluginMenuView
  */
 
-#include <QtCore/QObject>
 #include <QtCore/QHash>
 
+#include "AbstractPluginMenuView.h"
+#include "PluginManager.h"
 #include "MainWindow.h"
 #include "AbstractTool.h"
 
@@ -37,37 +38,31 @@ template<class T> class PluginManager;
  *
  * Fills up given menu with loaded tool plugins.
  */
-class ToolPluginMenuView: public QObject {
-    Q_OBJECT
-
+class ToolPluginMenuView: public AbstractPluginMenuView {
     public:
         /**
          * @brief Constructor
          * @param _mainWindow   Pointer to main window
-         * @param _manager      Plugin manager with tools
-         * @param _menu         Menu to which insert tools
-         * @param _before       Menu item before which insert tools
-         * @param parent        Parent object
+         * @param manager       Plugin manager
+         * @param menu          Menu to which add items
+         * @param before        Menu item before which add items. If set to 0,
+         *      the items will be put at the end of menu.
+         * @param parent        Parent widget
          */
-        ToolPluginMenuView(MainWindow* _mainWindow, PluginManager<AbstractTool>* _manager, QMenu* _menu, QAction* _before = 0, QObject* parent = 0);
+        ToolPluginMenuView(MainWindow* _mainWindow, PluginManager<AbstractTool>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0): AbstractPluginMenuView(manager, menu, before, parent), toolManager(manager), mainWindow(_mainWindow) {}
 
-    public slots:
-        /**
-         * @brief Update plugin list
-         *
-         * Reloads menu with actual plugin list.
-         */
-        void update();
+        virtual ~ToolPluginMenuView();
+        virtual void update();
 
     private slots:
         /** @todo Open as modeless dialog */
-        void openToolDialog();
+        virtual void trigger(QAction* action);
 
     private:
+        virtual QAction* createMenuAction(const std::string& pluginName);
+
+        PluginManager<AbstractTool>* toolManager;
         MainWindow* mainWindow;
-        PluginManager<AbstractTool>* manager;
-        QMenu* menu;
-        QAction* before;
         QHash<QAction*, AbstractTool*> items;
 };
 

@@ -27,6 +27,7 @@ set(Map2X_Qt_SRCS
     ConfigurationDialog.cpp
     ConfigurationWidget.cpp
     Wgs84CoordsEdit.cpp
+    AbstractPluginMenuView.cpp
     ToolPluginMenuView.cpp
     MapOptionsDock.cpp
     TileLayerModel.cpp
@@ -45,7 +46,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     PluginModel.h
     PluginDialog.h
     ConfigurationWidget.h
-    ToolPluginMenuView.h
+    AbstractPluginMenuView.h
     MapOptionsDock.h
     TileLayerModel.h
     TileOverlayModel.h

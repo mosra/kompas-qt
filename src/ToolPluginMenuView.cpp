@@ -23,9 +23,13 @@ using namespace std;
 
 namespace Map2X { namespace QtGui {
 
-ToolPluginMenuView::~ToolPluginMenuView() {}
+ToolPluginMenuView::~ToolPluginMenuView() {
+    qDeleteAll<QList<AbstractTool*> >(items.values());
+    items.clear();
+}
 
 void ToolPluginMenuView::update() {
+    qDeleteAll<QList<AbstractTool*> >(items.values());
     qDeleteAll<QList<QAction*> >(items.keys());
     items.clear();
 
@@ -41,7 +45,7 @@ void ToolPluginMenuView::trigger(QAction* action) {
 
 QAction* ToolPluginMenuView::createMenuAction(const string& pluginName) {
     AbstractTool* instance = toolManager->instance(pluginName);
-    QAction* action = new QAction(instance->menuIcon(), instance->menuText(), mainWindow);
+    QAction* action = new QAction(instance->menuIcon(), instance->menuText(), this);
     items.insert(action, instance);
 
     return action;

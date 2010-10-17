@@ -147,6 +147,12 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
 
     const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
 
+    /* The model doesn't have projection, return invalid coordinates */
+    if(!tileModel->projection()) {
+        MainWindow::instance()->unlockTileModel();
+        return Wgs84Coords();
+    }
+
     Wgs84Coords ret = tileModel->projection()->toWgs84(Coords<double>(
         center.x()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().x),
         center.y()/(pow(tileModel->zoomStep(), _zoom)*tileModel->tileSize().y)
@@ -171,6 +177,12 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     }
 
     const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+
+    /* The model doesn't have projection, nothing to do */
+    if(!tileModel->projection()) {
+        MainWindow::instance()->unlockTileModel();
+        return false;
+    }
 
     /* Convert coordinates to raster */
     Coords<double> rc = tileModel->projection()->fromWgs84(coords);

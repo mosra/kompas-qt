@@ -41,6 +41,9 @@ void TileOverlayModel::reload() {
 
         /* All available overlays */
         } else {
+            /* Make sure loadedOverlays bitarray is as large as overlays list */
+            loaded.fill(false, overlays.size());
+
             vector<string> _overlays = tileModel->overlays();
             QStringList _loaded = (*mapView)->overlays();
             for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
@@ -49,9 +52,6 @@ void TileOverlayModel::reload() {
                 if(_loaded.contains(overlays.last()))
                     loaded.setBit(overlays.size()-1, true);
             }
-
-            /* Make sure loadedOverlays bitarray is as large as overlays list */
-            loaded.resize(overlays.size());
         }
     }
 

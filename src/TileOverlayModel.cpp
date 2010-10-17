@@ -41,10 +41,11 @@ void TileOverlayModel::reload() {
 
         /* All available overlays */
         } else {
-            /* Make sure loadedOverlays bitarray is as large as overlays list */
-            loaded.fill(false, overlays.size());
-
             vector<string> _overlays = tileModel->overlays();
+
+            /* Make sure loadedOverlays bitarray is as large as overlays list */
+            loaded.fill(false, _overlays.size());
+
             QStringList _loaded = (*mapView)->overlays();
             for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
                 overlays.append(QString::fromStdString(*it));

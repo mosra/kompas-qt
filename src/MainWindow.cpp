@@ -20,6 +20,7 @@
 #include <QtGui/QStyle>
 #include <QtGui/QStatusBar>
 #include <QtGui/QLabel>
+#include <QtGui/QDockWidget>
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"

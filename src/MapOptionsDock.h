@@ -19,7 +19,7 @@
  * @brief Class Map2X::QtGui::MapOptionsDock
  */
 
-#include <QtGui/QDockWidget>
+#include <QtGui/QWidget>
 
 class QListView;
 class QComboBox;

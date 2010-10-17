@@ -19,7 +19,10 @@
  * @brief Class Map2X::QtGui::MapOptionsDock
  */
 
+#include <QtCore/QStringList>
+#include <QtCore/QBitArray>
 #include <QtGui/QWidget>
+#include <QtGui/QAbstractProxyModel>
 
 class QListView;
 class QComboBox;
@@ -30,6 +33,7 @@ class MainWindow;
 class PluginModel;
 class TileOverlayModel;
 class TileLayerModel;
+class AbstractMapView;
 
 /** @brief Dock widget with map options */
 class MapOptionsDock: public QWidget {
@@ -43,6 +47,9 @@ class MapOptionsDock: public QWidget {
          * @param f                 Window flags
          */
         MapOptionsDock(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+    protected:
+        class EditableTileOverlayModel;
 
     private:
         MainWindow* mainWindow;
@@ -60,6 +67,50 @@ class MapOptionsDock: public QWidget {
 
         /** @brief Update comboboxes to actually used layers etc. */
         void setActualData();
+};
+
+class MapOptionsDock::EditableTileOverlayModel: public QAbstractProxyModel {
+    Q_OBJECT
+
+    public:
+        /**
+         * @brief Constructor
+         * @param _mapView          Map view which displays map from given tile
+         *      model
+         * @param parent            Parent object
+         */
+        inline EditableTileOverlayModel(AbstractMapView** _mapView, QObject* parent = 0):
+            QAbstractProxyModel(parent), mapView(_mapView) {}
+
+        inline virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
+            { return createIndex(row, column); }
+        inline virtual QModelIndex parent(const QModelIndex& child) const
+            { return QModelIndex(); }
+        inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
+            { return 1; }
+        inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
+            { return sourceModel()->rowCount(); }
+
+        virtual void setSourceModel(QAbstractItemModel* sourceModel);
+        virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+        virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
+        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+        virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+
+    public slots:
+        /**
+         * @brief Reload data
+         *
+         * Should be called when tile model is changed, map view is changed or
+         * overlays are changed.
+         */
+        void reload();
+
+    private:
+        AbstractMapView** mapView;
+
+        QBitArray loaded;
 };
 
 }}

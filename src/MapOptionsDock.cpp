@@ -28,8 +28,11 @@
 #include "MainWindow.h"
 #include "TileLayerModel.h"
 #include "TileOverlayModel.h"
+#include "AbstractTileModel.h"
+#include "AbstractMapView.h"
 
 using namespace std;
+using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
@@ -46,9 +49,11 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     tileLayers->setModel(tileLayerModel);
 
     /* Tile overlays combobox */
-    tileOverlayModel = new TileOverlayModel(mainWindow->mapView(), 0, this);
+    tileOverlayModel = new TileOverlayModel(this);
+    EditableTileOverlayModel* editableTileOverlayModel = new EditableTileOverlayModel(mainWindow->mapView(), this);
+    editableTileOverlayModel->setSourceModel(tileOverlayModel);
     tileOverlays = new QListView;
-    tileOverlays->setModel(tileOverlayModel);
+    tileOverlays->setModel(editableTileOverlayModel);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
@@ -85,6 +90,78 @@ void MapOptionsDock::setActualData() {
     tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
 
     /** @todo Actual overlays? */
+}
+
+void MapOptionsDock::EditableTileOverlayModel::setSourceModel(QAbstractItemModel* sourceModel) {
+    disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(reload()));
+
+    QAbstractProxyModel::setSourceModel(sourceModel);
+    reload();
+
+    connect(sourceModel, SIGNAL(modelReset()), SLOT(reload()));
+}
+
+QModelIndex MapOptionsDock::EditableTileOverlayModel::mapFromSource(const QModelIndex& sourceIndex) const {
+    return index(sourceIndex.row(), sourceIndex.column());
+}
+
+QModelIndex MapOptionsDock::EditableTileOverlayModel::mapToSource(const QModelIndex& proxyIndex) const {
+    return sourceModel()->index(proxyIndex.row(), proxyIndex.column());
+}
+
+void MapOptionsDock::EditableTileOverlayModel::reload() {
+    beginResetModel();
+    loaded.clear();
+
+    if(*mapView) {
+        /* Make sure loadedOverlays bitarray is as large as overlays list */
+        loaded.fill(false, sourceModel()->rowCount());
+
+        QStringList _loaded = (*mapView)->overlays();
+        for(int row = 0; row != sourceModel()->rowCount(); ++row) {
+            if(_loaded.contains(sourceModel()->index(row, 0).data().toString()))
+                loaded.setBit(row, true);
+        }
+    }
+
+    endResetModel();
+}
+
+QVariant MapOptionsDock::EditableTileOverlayModel::data(const QModelIndex& index, int role) const {
+    if(role == Qt::CheckStateRole && index.isValid() && index.column() == 0 && index.row() < rowCount())
+        return loaded.at(index.row()) ? Qt::Checked : Qt::Unchecked;
+
+    return QAbstractProxyModel::data(index, role);
+}
+
+Qt::ItemFlags MapOptionsDock::EditableTileOverlayModel::flags(const QModelIndex& index) const {
+    if(index.isValid() && index.column() == 0 && index.row() < rowCount())
+        return QAbstractProxyModel::flags(index)|Qt::ItemIsUserCheckable;
+
+    return QAbstractProxyModel::flags(index);
+}
+
+bool MapOptionsDock::EditableTileOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if(index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
+        /* Remove overlay */
+        if(loaded.at(index.row())) {
+            if((*mapView)->removeOverlay(data(index).toString())) {
+                loaded.setBit(index.row(), false);
+                emit dataChanged(index, index);
+                return true;
+            }
+
+        /* Add overlay */
+        } else {
+            if((*mapView)->addOverlay(data(index).toString())) {
+                loaded.setBit(index.row(), true);
+                emit dataChanged(index, index);
+                return true;
+            }
+        }
+    }
+
+    return QAbstractProxyModel::setData(index, value, role);
 }
 
 }}

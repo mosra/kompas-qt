@@ -24,36 +24,19 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-TileOverlayModel::TileOverlayModel(AbstractMapView** _mapView, int flags, QObject* parent): QAbstractListModel(parent), mapView(_mapView), _flags(flags) { reload(); }
+TileOverlayModel::TileOverlayModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
 void TileOverlayModel::reload() {
     beginResetModel();
     overlays.clear();
-    loaded.clear();
 
     const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
 
-    if(*mapView && tileModel) {
-        /* Only loaded overlays */
-        if(_flags & LoadedOnly) {
-            overlays.append((*mapView)->overlays());
-            loaded.fill(true, overlays.size());
-
-        /* All available overlays */
-        } else {
-            vector<string> _overlays = tileModel->overlays();
-
-            /* Make sure loadedOverlays bitarray is as large as overlays list */
-            loaded.fill(false, _overlays.size());
-
-            QStringList _loaded = (*mapView)->overlays();
-            for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
-                overlays.append(QString::fromStdString(*it));
-
-                if(_loaded.contains(overlays.last()))
-                    loaded.setBit(overlays.size()-1, true);
-            }
-        }
+    if(tileModel) {
+        /* All available layers */
+        vector<string> _overlays = tileModel->overlays();
+        for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it)
+            overlays.append(QString::fromStdString(*it));
     }
 
     MainWindow::instance()->unlockTileModel();
@@ -64,43 +47,9 @@ void TileOverlayModel::reload() {
 QVariant TileOverlayModel::data(const QModelIndex& index, int role) const {
     if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
 
-    if(role == Qt::DisplayRole)
-        return overlays.at(index.row());
-    if(role == Qt::CheckStateRole)
-        return loaded.at(index.row()) ? Qt::Checked : Qt::Unchecked;
+    if(role == Qt::DisplayRole) return overlays.at(index.row());
 
     return QVariant();
-}
-
-Qt::ItemFlags TileOverlayModel::flags(const QModelIndex& index) const {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount())
-        return Qt::ItemIsEnabled;
-
-    return QAbstractListModel::flags(index)|Qt::ItemIsUserCheckable;
-}
-
-bool TileOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::CheckStateRole)
-        return false;
-
-    /* Remove overlay */
-    if(loaded.at(index.row())) {
-        if((*mapView)->removeOverlay(overlays.at(index.row()))) {
-            loaded.setBit(index.row(), false);
-            emit dataChanged(index, index);
-            return true;
-        }
-
-    /* Add overlay */
-    } else {
-        if((*mapView)->addOverlay(overlays.at(index.row()))) {
-            loaded.setBit(index.row(), true);
-            emit dataChanged(index, index);
-            return true;
-        }
-    }
-
-    return false;
 }
 
 }}

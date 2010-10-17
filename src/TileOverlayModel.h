@@ -21,58 +21,38 @@
 
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QStringList>
-#include <QtCore/QBitArray>
 
 namespace Map2X { namespace QtGui {
-
-class AbstractMapView;
 
 /**
  * @brief Model for tile overlays
  *
- * Provides editable model which allows adding or removing overlays from tile
- * model.
+ * Single-column model which displays all available overlayss of given tile model.
  */
 class TileOverlayModel: public QAbstractListModel {
     Q_OBJECT
 
     public:
-        /** @brief Flags */
-        enum Flags {
-            LoadedOnly      = 0x04  /**< @brief Display only loaded overlays */
-        };
-
         /**
          * @brief Constructor
-         * @param _mapView          Map view which displays map from given tile
-         *      model
-         * @param flags             Flags
          * @param parent            Parent object
          */
-        TileOverlayModel(AbstractMapView** _mapView, int flags = 0, QObject* parent = 0);
+        TileOverlayModel(QObject* parent = 0);
 
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return overlays.count(); }
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-        virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-        virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
-
     public slots:
         /**
          * @brief Reload data
          *
-         * Should be called when tile model is changed, map view is changed or
-         * overlays are changed.
+         * Should be called when tile model is changed or layers are changed.
          */
         void reload();
 
     private:
-        AbstractMapView** mapView;
-        int _flags;
-
         QStringList overlays;
-        QBitArray loaded;
 };
 
 }}

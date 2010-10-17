@@ -276,9 +276,9 @@ void GraphicsMapView::updateMapArea() {
 
     /* Resize map to area */
     map.setSceneRect(tileModel->area().x*tileModel->tileSize().x*multiplier,
-                     tileModel->area().y*tileModel->tileSize().x*multiplier,
+                     tileModel->area().y*tileModel->tileSize().y*multiplier,
                      tileModel->area().w*tileModel->tileSize().x*multiplier,
-                     tileModel->area().h*tileModel->tileSize().x*multiplier);
+                     tileModel->area().h*tileModel->tileSize().y*multiplier);
 
     MainWindow::instance()->unlockTileModel();
 

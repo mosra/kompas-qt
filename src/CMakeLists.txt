@@ -32,6 +32,7 @@ set(Map2X_Qt_SRCS
     MapOptionsDock.cpp
     TileLayerModel.cpp
     TileOverlayModel.cpp
+    TileZoomModel.cpp
     main.cpp
     Plugins/registerStatic.cpp
 )
@@ -50,6 +51,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     MapOptionsDock.h
     TileLayerModel.h
     TileOverlayModel.h
+    TileZoomModel.h
 )
 
 qt4_add_resources(Map2X_Qt_QRC

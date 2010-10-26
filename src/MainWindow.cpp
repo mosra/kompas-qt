@@ -29,6 +29,7 @@
 #include "TileDataThread.h"
 #include "ConfigurationDialog.h"
 #include "ToolPluginMenuView.h"
+#include "SaveRasterMenuView.h"
 #include "MapOptionsDock.h"
 
 using namespace std;
@@ -77,6 +78,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     createActions();
     createMenus();
+
+    /* Save raster map menu */
+    SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_tileModelPluginManager, saveRasterMenu, 0, this);
+    saveRasterMenuView->update();
 
     /* Tools menu */
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
@@ -180,6 +185,11 @@ void MainWindow::createActions() {
 void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
+
+    /* Save raster map menu */
+    saveRasterMenu = fileMenu->addMenu(tr("Save map as..."));
+
+    fileMenu->addSeparator();
     fileMenu->addAction(quitAction);
 
     /* Map menu */

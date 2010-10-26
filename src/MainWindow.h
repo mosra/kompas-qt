@@ -157,7 +157,8 @@ class MainWindow: public QMainWindow {
             *configurationDialogAction,
             *aboutQtAction;
 
-        QMenu* toolsMenu;
+        QMenu *saveRasterMenu,
+            *toolsMenu;
 
         QLabel* coordinateStatus;
 

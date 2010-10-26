@@ -51,6 +51,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());
+        virtual Core::AbsoluteArea<unsigned int> tilesInArea(const QRect& area = QRect());
         virtual QString layer() const { return _layer; }
         virtual QStringList overlays() const { return _overlays; }
 

@@ -163,6 +163,38 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     return ret;
 }
 
+AbsoluteArea<unsigned int> GraphicsMapView::tilesInArea(const QRect& area) {
+    QRect sceneArea;
+    if(area.isNull()) {
+        sceneArea.setTopLeft(view->mapToScene(visibleRegion().boundingRect().topLeft()).toPoint());
+        sceneArea.setBottomRight(view->mapToScene(visibleRegion().boundingRect().bottomRight()).toPoint());
+    } else {
+        sceneArea.setTopLeft(view->mapToScene(area.topLeft()).toPoint());
+        sceneArea.setBottomRight(view->mapToScene(area.bottomRight()).toPoint());
+    }
+
+    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+    TileSize tileSize = tileModel->tileSize();
+    MainWindow::instance()->unlockTileModel();
+
+    /* Fix cases where scene is smaller than viewed area */
+    if(sceneArea.left() < 0) {
+        sceneArea.setLeft(0);
+        sceneArea.setRight(tileSize.x*tileCount.x-1);
+    }
+    if(sceneArea.top() < 0) {
+        sceneArea.setTop(0);
+        sceneArea.setBottom(tileSize.y*tileCount.y-1);
+    }
+
+    return AbsoluteArea<unsigned int>(
+        sceneArea.left()/tileSize.x,
+        sceneArea.top()/tileSize.y,
+        sceneArea.right()/tileSize.x,
+        sceneArea.bottom()/tileSize.y
+    );
+}
+
 bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     if(!isReady()) return false;
 

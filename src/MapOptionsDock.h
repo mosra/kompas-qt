@@ -31,8 +31,8 @@ namespace Map2X { namespace QtGui {
 
 class MainWindow;
 class PluginModel;
-class TileOverlayModel;
-class TileLayerModel;
+class RasterOverlayModel;
+class RasterLayerModel;
 class AbstractMapView;
 
 /** @brief Dock widget with map options */
@@ -49,18 +49,18 @@ class MapOptionsDock: public QWidget {
         MapOptionsDock(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     protected:
-        class EditableTileOverlayModel;
+        class EditableRasterOverlayModel;
 
     private:
         MainWindow* mainWindow;
 
         QComboBox *rasterModels,
-            *tileLayers;
-        QListView* tileOverlays;
+            *rasterLayers;
+        QListView* rasterOverlays;
 
         PluginModel* rasterModelsModel;
-        TileLayerModel* tileLayerModel;
-        TileOverlayModel* tileOverlayModel;
+        RasterLayerModel* rasterLayerModel;
+        RasterOverlayModel* rasterOverlayModel;
 
     private slots:
         void setRasterModel(int number);
@@ -69,7 +69,7 @@ class MapOptionsDock: public QWidget {
         void setActualData();
 };
 
-class MapOptionsDock::EditableTileOverlayModel: public QAbstractProxyModel {
+class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
     Q_OBJECT
 
     public:
@@ -79,7 +79,7 @@ class MapOptionsDock::EditableTileOverlayModel: public QAbstractProxyModel {
          *      model
          * @param parent            Parent object
          */
-        inline EditableTileOverlayModel(AbstractMapView** _mapView, QObject* parent = 0):
+        inline EditableRasterOverlayModel(AbstractMapView** _mapView, QObject* parent = 0):
             QAbstractProxyModel(parent), mapView(_mapView) {}
 
         inline virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const

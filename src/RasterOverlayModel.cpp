@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "TileOverlayModel.h"
+#include "RasterOverlayModel.h"
 
 #include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
@@ -24,9 +24,9 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-TileOverlayModel::TileOverlayModel(QObject* parent): QAbstractListModel(parent) { reload(); }
+RasterOverlayModel::RasterOverlayModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
-void TileOverlayModel::reload() {
+void RasterOverlayModel::reload() {
     beginResetModel();
     overlays.clear();
 
@@ -44,7 +44,7 @@ void TileOverlayModel::reload() {
     endResetModel();
 }
 
-QVariant TileOverlayModel::data(const QModelIndex& index, int role) const {
+QVariant RasterOverlayModel::data(const QModelIndex& index, int role) const {
     if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
 
     if(role == Qt::DisplayRole) return overlays.at(index.row());

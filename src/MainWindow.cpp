@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     setRasterModel(QString::fromStdString(_configuration.group("map")->value<string>("rasterModel")));
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
-    _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
+    _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("rasterLayer")));
 
     QDockWidget* mapOptionsDock = new QDockWidget;
     mapOptionsDock->setWidget(new MapOptionsDock(this, this));
@@ -132,10 +132,10 @@ void MainWindow::loadDefaultConfiguration() {
 
     /* Default tile model, layer, overlays and zoom */
     string rasterModel = "OpenStreetMapRasterModel";
-    string tileLayer = "Mapnik";
+    string rasterLayer = "Mapnik";
     Zoom zoom        = 4;
     _configuration.group("map")->value("rasterModel", &rasterModel);
-    _configuration.group("map")->value("tileLayer", &tileLayer);
+    _configuration.group("map")->value("rasterLayer", &rasterLayer);
     _configuration.group("map")->value("zoom", &zoom);
 
     _configuration.setAutomaticGroupCreation(false);

@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_TileZoomModel_h
-#define Map2X_QtGui_TileZoomModel_h
+#ifndef Map2X_QtGui_RasterLayerModel_h
+#define Map2X_QtGui_RasterLayerModel_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,22 +16,20 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::TileZoomModel
+ * @brief Class Map2X::QtGui::RasterLayerModel
  */
 
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QStringList>
 
-#include "AbstractRasterModel.h"
-
 namespace Map2X { namespace QtGui {
 
 /**
- * @brief Model for tile zoom levels
+ * @brief Model for tile layers
  *
- * Single-column model which displays all available zoom levels of given tile model.
+ * Single-column model which displays all available layers of given tile model.
  */
-class TileZoomModel: public QAbstractListModel {
+class RasterLayerModel: public QAbstractListModel {
     Q_OBJECT
 
     public:
@@ -39,10 +37,10 @@ class TileZoomModel: public QAbstractListModel {
          * @brief Constructor
          * @param parent            Parent object
          */
-        TileZoomModel(QObject* parent = 0);
+        RasterLayerModel(QObject* parent = 0);
 
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
-            { return z.count(); }
+            { return layers.count(); }
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     public slots:
@@ -54,7 +52,7 @@ class TileZoomModel: public QAbstractListModel {
         void reload();
 
     private:
-        QList<Core::Zoom> z;
+        QStringList layers;
 };
 
 }}

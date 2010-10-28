@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "TileZoomModel.h"
+#include "RasterZoomModel.h"
 
 #include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
@@ -24,9 +24,9 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-TileZoomModel::TileZoomModel(QObject* parent): QAbstractListModel(parent) { reload(); }
+RasterZoomModel::RasterZoomModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
-void TileZoomModel::reload() {
+void RasterZoomModel::reload() {
     beginResetModel();
     z.clear();
 
@@ -44,7 +44,7 @@ void TileZoomModel::reload() {
     endResetModel();
 }
 
-QVariant TileZoomModel::data(const QModelIndex& index, int role) const {
+QVariant RasterZoomModel::data(const QModelIndex& index, int role) const {
     if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
 
     if(role == Qt::DisplayRole) return z.at(index.row());

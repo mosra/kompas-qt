@@ -26,8 +26,8 @@
 #include "PluginManager.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
-#include "TileLayerModel.h"
-#include "TileOverlayModel.h"
+#include "RasterLayerModel.h"
+#include "RasterOverlayModel.h"
 #include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
 
@@ -44,25 +44,25 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     rasterModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
-    tileLayerModel = new TileLayerModel(this);
-    tileLayers = new QComboBox;
-    tileLayers->setModel(tileLayerModel);
+    rasterLayerModel = new RasterLayerModel(this);
+    rasterLayers = new QComboBox;
+    rasterLayers->setModel(rasterLayerModel);
 
     /* Tile overlays combobox */
-    tileOverlayModel = new TileOverlayModel(this);
-    EditableTileOverlayModel* editableTileOverlayModel = new EditableTileOverlayModel(mainWindow->mapView(), this);
-    editableTileOverlayModel->setSourceModel(tileOverlayModel);
-    tileOverlays = new QListView;
-    tileOverlays->setModel(editableTileOverlayModel);
+    rasterOverlayModel = new RasterOverlayModel(this);
+    EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(mainWindow->mapView(), this);
+    editableRasterOverlayModel->setSourceModel(rasterOverlayModel);
+    rasterOverlays = new QListView;
+    rasterOverlays->setModel(editableRasterOverlayModel);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Server:")), 0, 0);
     layout->addWidget(rasterModels, 0, 1);
     layout->addWidget(new QLabel(tr("Map layer:")), 5, 0);
-    layout->addWidget(tileLayers, 5, 1);
+    layout->addWidget(rasterLayers, 5, 1);
     layout->addWidget(new QLabel(tr("Overlays:")), 6, 0, 1, 2);
-    layout->addWidget(tileOverlays, 7, 0, 1, 2);
+    layout->addWidget(rasterOverlays, 7, 0, 1, 2);
     layout->addWidget(new QWidget, 8, 0, 1, 2);
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(8, 1);
@@ -75,24 +75,24 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 
     /* Connect comboboxes with model / layer changing */
     connect(rasterModels, SIGNAL(currentIndexChanged(int)), SLOT(setRasterModel(int)));
-    connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
+    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
 }
 
 void MapOptionsDock::setRasterModel(int number) {
     mainWindow->setRasterModel(rasterModelsModel->index(number, PluginModel::Plugin).data().toString());
-    tileLayerModel->reload();
-    tileOverlayModel->reload();
+    rasterLayerModel->reload();
+    rasterOverlayModel->reload();
     setActualData();
 }
 
 void MapOptionsDock::setActualData() {
     /* Set actual map layer */
-    tileLayers->setCurrentIndex(tileLayers->findText((*mainWindow->mapView())->layer()));
+    rasterLayers->setCurrentIndex(rasterLayers->findText((*mainWindow->mapView())->layer()));
 
     /** @todo Actual overlays? */
 }
 
-void MapOptionsDock::EditableTileOverlayModel::setSourceModel(QAbstractItemModel* sourceModel) {
+void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemModel* sourceModel) {
     disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(reload()));
 
     QAbstractProxyModel::setSourceModel(sourceModel);
@@ -101,15 +101,15 @@ void MapOptionsDock::EditableTileOverlayModel::setSourceModel(QAbstractItemModel
     connect(sourceModel, SIGNAL(modelReset()), SLOT(reload()));
 }
 
-QModelIndex MapOptionsDock::EditableTileOverlayModel::mapFromSource(const QModelIndex& sourceIndex) const {
+QModelIndex MapOptionsDock::EditableRasterOverlayModel::mapFromSource(const QModelIndex& sourceIndex) const {
     return index(sourceIndex.row(), sourceIndex.column());
 }
 
-QModelIndex MapOptionsDock::EditableTileOverlayModel::mapToSource(const QModelIndex& proxyIndex) const {
+QModelIndex MapOptionsDock::EditableRasterOverlayModel::mapToSource(const QModelIndex& proxyIndex) const {
     return sourceModel()->index(proxyIndex.row(), proxyIndex.column());
 }
 
-void MapOptionsDock::EditableTileOverlayModel::reload() {
+void MapOptionsDock::EditableRasterOverlayModel::reload() {
     beginResetModel();
     loaded.clear();
 
@@ -127,21 +127,21 @@ void MapOptionsDock::EditableTileOverlayModel::reload() {
     endResetModel();
 }
 
-QVariant MapOptionsDock::EditableTileOverlayModel::data(const QModelIndex& index, int role) const {
+QVariant MapOptionsDock::EditableRasterOverlayModel::data(const QModelIndex& index, int role) const {
     if(role == Qt::CheckStateRole && index.isValid() && index.column() == 0 && index.row() < rowCount())
         return loaded.at(index.row()) ? Qt::Checked : Qt::Unchecked;
 
     return QAbstractProxyModel::data(index, role);
 }
 
-Qt::ItemFlags MapOptionsDock::EditableTileOverlayModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags MapOptionsDock::EditableRasterOverlayModel::flags(const QModelIndex& index) const {
     if(index.isValid() && index.column() == 0 && index.row() < rowCount())
         return QAbstractProxyModel::flags(index)|Qt::ItemIsUserCheckable;
 
     return QAbstractProxyModel::flags(index);
 }
 
-bool MapOptionsDock::EditableTileOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
     if(index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
         /* Remove overlay */
         if(loaded.at(index.row())) {

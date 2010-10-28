@@ -26,9 +26,9 @@
 #include <QtGui/QListWidget>
 
 #include "MainWindow.h"
-#include "TileLayerModel.h"
-#include "TileOverlayModel.h"
-#include "TileZoomModel.h"
+#include "RasterLayerModel.h"
+#include "RasterOverlayModel.h"
+#include "RasterZoomModel.h"
 
 using namespace Map2X::Core;
 
@@ -154,7 +154,7 @@ SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wi
 
     /* List view for all zoom levels */
     zoomLevelsView = new QListView;
-    zoomLevelsView->setModel(new TileZoomModel(this));
+    zoomLevelsView->setModel(new RasterZoomModel(this));
     zoomLevelsView->setSelectionMode(QAbstractItemView::MultiSelection);
     connect(zoomLevelsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
@@ -256,12 +256,12 @@ SaveRasterWizard::LayersPage::LayersPage(SaveRasterWizard* _wizard): QWizardPage
 
     layersView = new QListView;
     layersView->setSelectionMode(QAbstractItemView::MultiSelection);
-    layersView->setModel(new TileLayerModel);
+    layersView->setModel(new RasterLayerModel);
     connect(layersView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     overlaysView = new QListView;
     overlaysView->setSelectionMode(QAbstractItemView::MultiSelection);
-    overlaysView->setModel(new TileOverlayModel);
+    overlaysView->setModel(new RasterOverlayModel);
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Layers:")), 0, 0);

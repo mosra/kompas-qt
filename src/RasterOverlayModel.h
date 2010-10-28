@@ -1,5 +1,5 @@
-#ifndef Map2X_QtGui_TileOverlayModel_h
-#define Map2X_QtGui_TileOverlayModel_h
+#ifndef Map2X_QtGui_RasterOverlayModel_h
+#define Map2X_QtGui_RasterOverlayModel_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::TileOverlayModel
+ * @brief Class Map2X::QtGui::RasterOverlayModel
  */
 
 #include <QtCore/QAbstractListModel>
@@ -29,7 +29,7 @@ namespace Map2X { namespace QtGui {
  *
  * Single-column model which displays all available overlayss of given tile model.
  */
-class TileOverlayModel: public QAbstractListModel {
+class RasterOverlayModel: public QAbstractListModel {
     Q_OBJECT
 
     public:
@@ -37,7 +37,7 @@ class TileOverlayModel: public QAbstractListModel {
          * @brief Constructor
          * @param parent            Parent object
          */
-        TileOverlayModel(QObject* parent = 0);
+        RasterOverlayModel(QObject* parent = 0);
 
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return overlays.count(); }

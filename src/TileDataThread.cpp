@@ -94,7 +94,8 @@ void TileDataThread::run() {
             }
 
             /* First try to get the data locally */
-            string data = rasterModel->tileData(layer.toStdString(), zoom, coords);
+            string data = rasterModel->tileFromPackage(layer.toStdString(), zoom, coords);
+            /** @todo Get data also from cache */
             bool online = rasterModel->online();
 
             MainWindow::instance()->unlockRasterModel();

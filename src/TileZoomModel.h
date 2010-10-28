@@ -22,7 +22,7 @@
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QStringList>
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 namespace Map2X { namespace QtGui {
 

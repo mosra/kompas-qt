@@ -78,11 +78,11 @@ void TileDataThread::run() {
             QString layer = firstPending->layer;
             mutex.unlock();
 
-            AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForWrite();
+            AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForWrite();
 
             /* No model available */
-            if(!tileModel) {
-                MainWindow::instance()->unlockTileModel();
+            if(!rasterModel) {
+                MainWindow::instance()->unlockRasterModel();
                 for(int i = 0; i != queue.size(); ++i) {
                     if(firstPending == &queue[i]) {
                         queue.removeAt(i);
@@ -94,10 +94,10 @@ void TileDataThread::run() {
             }
 
             /* First try to get the data locally */
-            string data = tileModel->tileData(layer.toStdString(), zoom, coords);
-            bool online = tileModel->online();
+            string data = rasterModel->tileData(layer.toStdString(), zoom, coords);
+            bool online = rasterModel->online();
 
-            MainWindow::instance()->unlockTileModel();
+            MainWindow::instance()->unlockRasterModel();
 
             /* If found, emit signal with data and remove from queue */
             if(!data.empty()) {
@@ -148,13 +148,13 @@ void TileDataThread::run() {
 
 void TileDataThread::startDownload(TileJob* job) {
     mutex.lock();
-    const AbstractTileModel* model = MainWindow::instance()->lockTileModelForRead();
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
 
     /* Create request for given tile */
     job->reply = manager->get(QNetworkRequest(QUrl(
         QString::fromStdString(model->tileUrl(job->layer.toStdString(), job->zoom, job->coords)))));
 
-    MainWindow::instance()->unlockTileModel();
+    MainWindow::instance()->unlockRasterModel();
     mutex.unlock();
 }
 

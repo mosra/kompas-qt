@@ -52,13 +52,13 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractC
     tabs->addTab(projectionTab, tr("Projections"));
     connectWidget(projectionTab);
 
-    Tab* tileModelTab = new Tab(
+    Tab* rasterModelTab = new Tab(
         mainWindow,
-        "tileModels",
-        mainWindow->tileModelPluginManager(),
+        "rasterModels",
+        mainWindow->rasterModelPluginManager(),
         tr("Plugins for displaying different kinds of raster maps."));
-    tabs->addTab(tileModelTab, tr("Raster maps"));
-    connectWidget(tileModelTab);
+    tabs->addTab(rasterModelTab, tr("Raster maps"));
+    connectWidget(rasterModelTab);
 
     Tab* toolsTab = new Tab(
         mainWindow,

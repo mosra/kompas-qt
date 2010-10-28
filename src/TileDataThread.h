@@ -25,7 +25,7 @@
 #include <QtCore/QWaitCondition>
 #include <QtGui/QPixmap>
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 class QNetworkReply;
 class QNetworkAccessManager;

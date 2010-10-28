@@ -124,10 +124,10 @@ SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wi
     zoomLabel->setAlignment(Qt::AlignJustify);
 
     /* Limits for zoom, current zoom */
-    const AbstractTileModel* model = MainWindow::instance()->lockTileModelForRead();
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
     int minimum = model->zoomLevels().front();
     int maximum = model->zoomLevels().back();
-    MainWindow::instance()->unlockTileModel();
+    MainWindow::instance()->unlockRasterModel();
     int current = (*MainWindow::instance()->mapView())->zoom();
 
     /* Set maximum, minimum and current zoom value */
@@ -337,16 +337,16 @@ SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWi
 void SaveRasterWizard::StatisticsPage::initializePage() {
     AbstractMapView* mapView = *MainWindow::instance()->mapView();
 
-    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
-    Zoom minAvailableZoom = tileModel->zoomLevels()[0];
-    double zoomMultiplier = tileModel->zoomStep()*tileModel->zoomStep();
-    MainWindow::instance()->unlockTileModel();
+    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Zoom minAvailableZoom = rasterModel->zoomLevels()[0];
+    double zoomMultiplier = rasterModel->zoomStep()*rasterModel->zoomStep();
+    MainWindow::instance()->unlockRasterModel();
 
     quint64 _tileCountMinZoom;
 
     /* Tile count for whole map at _lowest possible_ zoom */
     if(wizard->areaType == SaveRasterWizard::WholeMap) {
-        TileArea area = tileModel->area();
+        TileArea area = rasterModel->area();
         _tileCountMinZoom = area.w*area.h*pow(zoomMultiplier, wizard->zoomLevels[0]-minAvailableZoom);
 
     /* Tile count for visible area at _current_ zoom */

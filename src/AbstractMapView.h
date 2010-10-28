@@ -22,7 +22,7 @@
 #include <QtGui/QWidget>
 
 #include "AbsoluteArea.h"
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 namespace Map2X { namespace QtGui {
 
@@ -52,7 +52,7 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * Reloads all map data from new model.
          * @todo Rename to something meaningful.
          */
-        virtual void setTileModel() = 0;
+        virtual void setRasterModel() = 0;
 
         /**
          * @brief Set map layer

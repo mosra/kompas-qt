@@ -39,7 +39,7 @@ namespace Map2X { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _tileModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _rasterModel(0) {
     _instance = this;
 
     setWindowTitle("Map2X");
@@ -52,21 +52,21 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
         (_configuration.group("plugins")->group("mapViews")->value<string>("__dir"));
     _projectionPluginManager = new PluginManager<AbstractProjection>
         (_configuration.group("plugins")->group("projections")->value<string>("__dir"));
-    _tileModelPluginManager = new PluginManager<AbstractTileModel>
-        (_configuration.group("plugins")->group("tileModels")->value<string>("__dir"));
+    _rasterModelPluginManager = new PluginManager<AbstractRasterModel>
+        (_configuration.group("plugins")->group("rasterModels")->value<string>("__dir"));
     _toolPluginManager = new PluginManager<AbstractTool>
         (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
 
     /** @todo Do that in splash */
     loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
-    loadPluginsAsConfigured("tileModels", _tileModelPluginManager);
+    loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
     loadPluginsAsConfigured("tools", _toolPluginManager);
 
     /** @todo GUI for this */
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
     connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
-    setTileModel(QString::fromStdString(_configuration.group("map")->value<string>("tileModel")));
+    setRasterModel(QString::fromStdString(_configuration.group("map")->value<string>("rasterModel")));
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
     _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("tileLayer")));
@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     createMenus();
 
     /* Save raster map menu */
-    SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_tileModelPluginManager, saveRasterMenu, 0, this);
+    SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
     saveRasterMenuView->update();
 
     /* Tools menu */
@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
 MainWindow::~MainWindow() {
     delete _mapViewPluginManager;
-    delete _tileModelPluginManager;
+    delete _rasterModelPluginManager;
 }
 
 void MainWindow::loadDefaultConfiguration() {
@@ -107,11 +107,11 @@ void MainWindow::loadDefaultConfiguration() {
     /* Plugin dirs */
     string mapViewPluginDir = PLUGIN_MAPVIEW_DIR;
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
-    string tileModelPluginDir = PLUGIN_TILEMODEL_DIR;
+    string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
     string toolPluginDir = PLUGIN_TOOL_DIR;
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
-    _configuration.group("plugins")->group("tileModels")->value<string>("__dir", &tileModelPluginDir);
+    _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);
     _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);
 
     /* Plugin for map view */
@@ -131,10 +131,10 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("map")->value("homePosition", &homePosition);
 
     /* Default tile model, layer, overlays and zoom */
-    string tileModel = "OpenStreetMapTileModel";
+    string rasterModel = "OpenStreetMapRasterModel";
     string tileLayer = "Mapnik";
     Zoom zoom        = 4;
-    _configuration.group("map")->value("tileModel", &tileModel);
+    _configuration.group("map")->value("rasterModel", &rasterModel);
     _configuration.group("map")->value("tileLayer", &tileLayer);
     _configuration.group("map")->value("zoom", &zoom);
 
@@ -142,17 +142,17 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.setAutomaticKeyCreation(false);
 }
 
-void MainWindow::setTileModel(const QString& name) {
-    lockTileModelForWrite();
+void MainWindow::setRasterModel(const QString& name) {
+    lockRasterModelForWrite();
 
-    _tileModel = _tileModelPluginManager->instance(name.toStdString());
+    _rasterModel = _rasterModelPluginManager->instance(name.toStdString());
 
-    if(_tileModel)
-        _tileModel->setOnline(_configuration.group("map")->value<bool>("online"));
+    if(_rasterModel)
+        _rasterModel->setOnline(_configuration.group("map")->value<bool>("online"));
 
-    unlockTileModel();
+    unlockRasterModel();
 
-    _mapView->setTileModel();
+    _mapView->setRasterModel();
 }
 
 void MainWindow::createActions() {

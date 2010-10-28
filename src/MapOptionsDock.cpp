@@ -28,7 +28,7 @@
 #include "MainWindow.h"
 #include "TileLayerModel.h"
 #include "TileOverlayModel.h"
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
 
 using namespace std;
@@ -38,10 +38,10 @@ namespace Map2X { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow) {
     /* Tile model combobox */
-    tileModelsModel = new PluginModel(mainWindow->tileModelPluginManager(), PluginModel::LoadedOnly, this);
-    tileModels = new QComboBox;
-    tileModels->setModel(tileModelsModel);
-    tileModels->setModelColumn(PluginModel::Name);
+    rasterModelsModel = new PluginModel(mainWindow->rasterModelPluginManager(), PluginModel::LoadedOnly, this);
+    rasterModels = new QComboBox;
+    rasterModels->setModel(rasterModelsModel);
+    rasterModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
     tileLayerModel = new TileLayerModel(this);
@@ -58,7 +58,7 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Server:")), 0, 0);
-    layout->addWidget(tileModels, 0, 1);
+    layout->addWidget(rasterModels, 0, 1);
     layout->addWidget(new QLabel(tr("Map layer:")), 5, 0);
     layout->addWidget(tileLayers, 5, 1);
     layout->addWidget(new QLabel(tr("Overlays:")), 6, 0, 1, 2);
@@ -69,17 +69,17 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     setLayout(layout);
 
     /* Set actual tile model */
-    tileModels->setCurrentIndex(tileModelsModel->findPlugin(QString::fromStdString(mainWindow->configuration()->group("map")->value<string>("tileModel"))));
+    rasterModels->setCurrentIndex(rasterModelsModel->findPlugin(QString::fromStdString(mainWindow->configuration()->group("map")->value<string>("rasterModel"))));
 
     setActualData();
 
     /* Connect comboboxes with model / layer changing */
-    connect(tileModels, SIGNAL(currentIndexChanged(int)), SLOT(setTileModel(int)));
+    connect(rasterModels, SIGNAL(currentIndexChanged(int)), SLOT(setRasterModel(int)));
     connect(tileLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
 }
 
-void MapOptionsDock::setTileModel(int number) {
-    mainWindow->setTileModel(tileModelsModel->index(number, PluginModel::Plugin).data().toString());
+void MapOptionsDock::setRasterModel(int number) {
+    mainWindow->setRasterModel(rasterModelsModel->index(number, PluginModel::Plugin).data().toString());
     tileLayerModel->reload();
     tileOverlayModel->reload();
     setActualData();

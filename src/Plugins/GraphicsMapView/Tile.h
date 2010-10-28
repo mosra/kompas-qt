@@ -21,7 +21,7 @@
 
 #include <QtGui/QGraphicsItemGroup>
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 namespace Map2X { namespace Plugins {
 

@@ -54,16 +54,16 @@ class MapOptionsDock: public QWidget {
     private:
         MainWindow* mainWindow;
 
-        QComboBox *tileModels,
+        QComboBox *rasterModels,
             *tileLayers;
         QListView* tileOverlays;
 
-        PluginModel* tileModelsModel;
+        PluginModel* rasterModelsModel;
         TileLayerModel* tileLayerModel;
         TileOverlayModel* tileOverlayModel;
 
     private slots:
-        void setTileModel(int number);
+        void setRasterModel(int number);
 
         /** @brief Update comboboxes to actually used layers etc. */
         void setActualData();

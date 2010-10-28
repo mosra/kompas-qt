@@ -70,8 +70,8 @@ class MainWindow: public QMainWindow {
             { return _projectionPluginManager; }
 
         /** @brief Instance of PluginManager for tile model plugins */
-        inline PluginManager<Core::AbstractTileModel>* tileModelPluginManager()
-            { return _tileModelPluginManager; }
+        inline PluginManager<Core::AbstractRasterModel>* rasterModelPluginManager()
+            { return _rasterModelPluginManager; }
 
         /** @brief Instance of PluginManager for tool plugins */
         inline PluginManager<AbstractTool>* toolPluginManager()
@@ -82,11 +82,11 @@ class MainWindow: public QMainWindow {
          * @return Pointer to tile model
          *
          * This functions locks tile model for reading. After usage the model
-         * have to be unlocked with unlockTileModel().
+         * have to be unlocked with unlockRasterModel().
          */
-        inline const Core::AbstractTileModel* lockTileModelForRead() {
-            tileModelLock.lockForRead();
-            return _tileModel;
+        inline const Core::AbstractRasterModel* lockRasterModelForRead() {
+            rasterModelLock.lockForRead();
+            return _rasterModel;
         }
 
         /**
@@ -94,21 +94,21 @@ class MainWindow: public QMainWindow {
          * @return Pointer to tile model
          *
          * This functions locks tile model for writing. After usage the model
-         * have to be unlocked with unlockTileModel().
+         * have to be unlocked with unlockRasterModel().
          */
-        inline Core::AbstractTileModel* lockTileModelForWrite() {
-            tileModelLock.lockForWrite();
-            return _tileModel;
+        inline Core::AbstractRasterModel* lockRasterModelForWrite() {
+            rasterModelLock.lockForWrite();
+            return _rasterModel;
         }
 
         /**
          * @brief Unlock tile model
          *
-         * Unlocks tile model previously locked with lockTileModelRead() or
-         * lockTileModelWrite().
+         * Unlocks tile model previously locked with lockRasterModelRead() or
+         * lockRasterModelWrite().
          */
-        inline void unlockTileModel() {
-            tileModelLock.unlock();
+        inline void unlockRasterModel() {
+            rasterModelLock.unlock();
         }
 
         /**
@@ -134,7 +134,7 @@ class MainWindow: public QMainWindow {
          *
          * Sets given tile model.
          */
-        void setTileModel(const QString& name);
+        void setRasterModel(const QString& name);
 
     private:
         static MainWindow* _instance;
@@ -143,12 +143,12 @@ class MainWindow: public QMainWindow {
 
         PluginManager<AbstractMapView>* _mapViewPluginManager;
         PluginManager<Core::AbstractProjection>* _projectionPluginManager;
-        PluginManager<Core::AbstractTileModel>* _tileModelPluginManager;
+        PluginManager<Core::AbstractRasterModel>* _rasterModelPluginManager;
         PluginManager<AbstractTool>* _toolPluginManager;
 
         AbstractMapView* _mapView;
-        Core::AbstractTileModel* _tileModel;
-        QReadWriteLock tileModelLock;
+        Core::AbstractRasterModel* _rasterModel;
+        QReadWriteLock rasterModelLock;
 
         QAction *quitAction,
             *zoomInAction,

@@ -15,7 +15,7 @@
 
 #include "TileLayerModel.h"
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
 #include "MainWindow.h"
 
@@ -30,16 +30,16 @@ void TileLayerModel::reload() {
     beginResetModel();
     layers.clear();
 
-    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
-    if(tileModel) {
+    if(rasterModel) {
         /* All available layers */
-        vector<string> _layers = tileModel->layers();
+        vector<string> _layers = rasterModel->layers();
         for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it)
             layers.append(QString::fromStdString(*it));
     }
 
-    MainWindow::instance()->unlockTileModel();
+    MainWindow::instance()->unlockRasterModel();
 
     endResetModel();
 }

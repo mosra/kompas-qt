@@ -15,7 +15,7 @@
 
 #include "TileZoomModel.h"
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
 #include "MainWindow.h"
 
@@ -30,16 +30,16 @@ void TileZoomModel::reload() {
     beginResetModel();
     z.clear();
 
-    const AbstractTileModel* tileModel = MainWindow::instance()->lockTileModelForRead();
+    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
-    if(tileModel) {
+    if(rasterModel) {
         /* All available zoom levels */
-        vector<Zoom> _z = tileModel->zoomLevels();
+        vector<Zoom> _z = rasterModel->zoomLevels();
         for(vector<Zoom>::const_iterator it = _z.begin(); it != _z.end(); ++it)
             z.append(*it);
     }
 
-    MainWindow::instance()->unlockTileModel();
+    MainWindow::instance()->unlockRasterModel();
 
     endResetModel();
 }

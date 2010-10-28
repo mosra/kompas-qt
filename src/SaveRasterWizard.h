@@ -22,7 +22,7 @@
 #include <QtGui/QWizard>
 #include <QtGui/QSpinBox>
 
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 class QListView;
 class QRadioButton;

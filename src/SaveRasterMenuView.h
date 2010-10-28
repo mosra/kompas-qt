@@ -17,20 +17,20 @@
 
 #include "AbstractPluginMenuView.h"
 #include "PluginManager.h"
-#include "AbstractTileModel.h"
+#include "AbstractRasterModel.h"
 
 namespace Map2X { namespace QtGui {
 
 class SaveRasterMenuView: public AbstractPluginMenuView {
     public:
-        SaveRasterMenuView(PluginManager<Core::AbstractTileModel>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
+        SaveRasterMenuView(PluginManager<Core::AbstractRasterModel>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
             AbstractPluginMenuView(manager, menu, before, parent), rasterManager(manager) {}
 
     private slots:
         virtual void trigger(QAction* action);
 
     private:
-        PluginManager<Core::AbstractTileModel>* rasterManager;
+        PluginManager<Core::AbstractRasterModel>* rasterManager;
 
         virtual QAction* createMenuAction(const std::string& pluginName);
 };

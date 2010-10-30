@@ -379,22 +379,25 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
     tileCountTotal->setText(QString::number(_tileCountTotal));
 
     /* Download size okay, don't display anything */
-    if(_tileCountTotal < 104857)
+    if(_tileCountTotal < 104857) {
         fupWarning->setText("");
+        canDownload = true;
 
     /* Donwload size over 1 GB, display warning */
-    else if(_tileCountTotal < 1048576)
+    } else if(_tileCountTotal < 1048576) {
         fupWarning->setText("Download size is over 1 GB. Consider selecting "
             "smaller data amount, because this download can lead to pernament "
             "IP ban.");
+        canDownload = true;
 
     /* Download size over 10 GB, don't allow download */
-    else {
+    } else {
         fupWarning->setText("Download size is over 10 GB. Please select smaller "
             "data amount or the download will not be allowed.");
         canDownload = false;
-        emit completeChanged();
     }
+
+    emit completeChanged();
 
     /* Download size (10 kB for one tile) */
     downloadSize->setText(QString("%0 MB").arg(_tileCountTotal/102.4, 0, 'f', 1));

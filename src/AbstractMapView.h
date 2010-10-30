@@ -21,6 +21,7 @@
 
 #include <QtGui/QWidget>
 
+#include "AbsoluteArea.h"
 #include "AbstractTileModel.h"
 
 namespace Map2X { namespace QtGui {

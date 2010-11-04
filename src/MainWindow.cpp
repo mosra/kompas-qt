@@ -66,6 +66,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
     connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
+
+    createActions();
+    createMenus();
+
     setRasterModel(QString::fromStdString(_configuration.group("map")->value<string>("rasterModel")));
     _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
     _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
@@ -75,9 +79,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     mapOptionsDock->setWidget(new MapOptionsDock(this, this));
     mapOptionsDock->setWindowTitle(tr("Map options"));
     addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
-
-    createActions();
-    createMenus();
 
     /* Save raster map menu */
     SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
@@ -147,8 +148,15 @@ void MainWindow::setRasterModel(const QString& name) {
 
     _rasterModel = _rasterModelPluginManager->instance(name.toStdString());
 
-    if(_rasterModel)
+    /** @todo Disable Save Raster menu when no writeable format is available at all */
+
+    /* Raster model is available, configure it & enable save menu */
+    if(_rasterModel) {
+        saveRasterMenu->setDisabled(false);
         _rasterModel->setOnline(_configuration.group("map")->value<bool>("online"));
+
+    /* Raster model is not available, disable save menu */
+    } else saveRasterMenu->setDisabled(true);
 
     unlockRasterModel();
 

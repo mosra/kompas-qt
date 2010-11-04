@@ -150,7 +150,8 @@ class MainWindow: public QMainWindow {
         Core::AbstractRasterModel* _rasterModel;
         QReadWriteLock rasterModelLock;
 
-        QAction *quitAction,
+        QAction *saveRasterAction,
+            *quitAction,
             *zoomInAction,
             *zoomOutAction,
             *pluginDialogAction,

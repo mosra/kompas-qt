@@ -149,11 +149,21 @@ void MainWindow::setRasterModel(const QString& name) {
     _rasterModel = _rasterModelPluginManager->instance(name.toStdString());
 
     /** @todo Disable Save Raster menu when no writeable format is available at all */
+    /** @todo If current raster model doesn't have NonCOnvertableFormat, it's shown in the menu twice. */
 
     /* Raster model is available, configure it & enable save menu */
     if(_rasterModel) {
         saveRasterMenu->setDisabled(false);
         _rasterModel->setOnline(_configuration.group("map")->value<bool>("online"));
+
+        /* Update action in "save raster" menu */
+        saveRasterAction->setText(tr("Offline %0 package").arg(
+            QString::fromStdString(_rasterModelPluginManager->metadata(name.toStdString())->name())
+        ));
+        if(_rasterModel->features() & AbstractRasterModel::WriteableFormat)
+            saveRasterAction->setDisabled(false);
+        else
+            saveRasterAction->setDisabled(true);
 
     /* Raster model is not available, disable save menu */
     } else saveRasterMenu->setDisabled(true);
@@ -164,6 +174,9 @@ void MainWindow::setRasterModel(const QString& name) {
 }
 
 void MainWindow::createActions() {
+    /* Save raster map */
+    saveRasterAction = new QAction(this);
+
     /* Quit application */
     quitAction = new QAction(tr("Quit"), this);
     quitAction->setShortcut(QKeySequence::Quit);
@@ -196,6 +209,9 @@ void MainWindow::createMenus() {
 
     /* Save raster map menu */
     saveRasterMenu = fileMenu->addMenu(tr("Save map as..."));
+    saveRasterMenu->addAction(saveRasterAction);
+    saveRasterMenu->addSeparator();
+    saveRasterMenu->setDisabled(true);
 
     fileMenu->addSeparator();
     fileMenu->addAction(quitAction);

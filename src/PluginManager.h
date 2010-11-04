@@ -16,6 +16,7 @@
 */
 
 #include "AbstractPluginManager.h"
+#include "PluginManager/Plugin.h"
 #include "Utility/Resource.h"
 
 namespace Map2X { namespace QtGui {

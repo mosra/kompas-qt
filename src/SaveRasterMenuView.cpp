@@ -21,6 +21,16 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 QAction* SaveRasterMenuView::createMenuAction(const std::string& pluginName) {
+    AbstractRasterModel* instance = rasterManager->instance(pluginName);
+    if(!instance) return 0;
+
+    /* Skip formats which are not writeable or convertable from another */
+    if(!(instance->features() & AbstractRasterModel::WriteableFormat) || (instance->features() & AbstractRasterModel::NonConvertableFormat)) {
+        delete instance;
+        return 0;
+    }
+    delete instance;
+
     return new QAction(QString::fromStdString(rasterManager->metadata(pluginName)->name()), this);
 }
 

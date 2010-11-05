@@ -39,8 +39,11 @@ class RasterLayerModel: public QAbstractListModel {
          */
         RasterLayerModel(QObject* parent = 0);
 
+        /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return layers.count(); }
+
+        /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     public slots:

@@ -58,7 +58,7 @@ class PluginDialog: public AbstractConfigurationDialog {
 };
 
 /**
- * @brief Tab in Plugin dialog
+ * @brief %Tab in Plugin dialog
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.

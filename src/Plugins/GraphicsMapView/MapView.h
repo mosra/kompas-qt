@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::MapView
+ * @brief Class Map2X::Plugins::MapView
  */
 
 #include <QtGui/QGraphicsView>

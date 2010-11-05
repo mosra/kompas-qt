@@ -69,6 +69,11 @@ class MapOptionsDock: public QWidget {
         void setActualData();
 };
 
+/**
+ * @brief Editable raster overlay model
+ *
+ * Used exclusively in MapOptionsDock, allows selecting overlays for displaying.
+ */
 class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
     Q_OBJECT
 
@@ -82,20 +87,38 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
         inline EditableRasterOverlayModel(AbstractMapView** _mapView, QObject* parent = 0):
             QAbstractProxyModel(parent), mapView(_mapView) {}
 
+        /** @brief Index creation */
         inline virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
             { return createIndex(row, column); }
+
+        /** @brief Parent index of given index */
         inline virtual QModelIndex parent(const QModelIndex& child) const
             { return QModelIndex(); }
+
+        /** @brief Column count */
         inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
             { return 1; }
+
+        /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return sourceModel()->rowCount(); }
 
+        /** @brief Set source model */
         virtual void setSourceModel(QAbstractItemModel* sourceModel);
+
+        /** @brief Map index from source model */
         virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+
+        /** @brief Map index to source model */
         virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
+
+        /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+
+        /** @brief Item flags */
         virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+
+        /** @brief Data write access */
         virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     public slots:

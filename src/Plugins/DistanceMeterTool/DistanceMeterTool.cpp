@@ -17,7 +17,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::DistanceMeterTool
+ * @brief Class Map2X::Plugins::DistanceMeterTool
  */
 
 #include "AbstractTool.h"
@@ -25,9 +25,10 @@
 
 namespace Map2X { namespace Plugins {
 
-/** @brief Converting DMS to decimal and back */
+/** @brief Measuring distance between two WGS84 coords */
 class DistanceMeterTool: public QtGui::AbstractTool {
     public:
+        /** @copydoc QtGui::AbstractTool::AbstractTool */
         DistanceMeterTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 

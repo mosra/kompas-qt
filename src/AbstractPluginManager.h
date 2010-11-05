@@ -15,18 +15,38 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Map2X::QtGui::AbstractPluginManager
+ */
+
 #include <QtCore/QObject>
 
 #include "PluginManager/AbstractPluginManager.h"
 
 namespace Map2X { namespace QtGui {
 
+/**
+ * @brief Qt version of PluginManager::AbstractPluginManager
+ *
+ * Instead of PluginManager::AbstractPluginManager provides signal notification
+ * when a plugin is loaded or unloaded.
+ */
 class AbstractPluginManager: public QObject, public Map2X::PluginManager::AbstractPluginManager {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param pluginDirectory       Plugin directory
+         * @param parent                Parent object
+         * @copydetails PluginManager::AbstractPluginManager::AbstractPluginManager()
+         */
         inline AbstractPluginManager(const std::string& pluginDirectory, QObject* parent = 0): QObject(parent), Map2X::PluginManager::AbstractPluginManager(pluginDirectory) {}
 
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::load()
+         * Emits loadAttempt().
+         */
         inline LoadState load(const std::string& name) {
             LoadState before = loadState(name);
             LoadState after = Map2X::PluginManager::AbstractPluginManager::load(name);
@@ -34,6 +54,10 @@ class AbstractPluginManager: public QObject, public Map2X::PluginManager::Abstra
             return after;
         }
 
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::unload()
+         * Emits unloadAttempt().
+         */
         inline LoadState unload(const std::string& name) {
             LoadState before = loadState(name);
             LoadState after = Map2X::PluginManager::AbstractPluginManager::unload(name);
@@ -42,8 +66,21 @@ class AbstractPluginManager: public QObject, public Map2X::PluginManager::Abstra
         }
 
     signals:
+        /**
+         * @brief Plugin load attempt
+         * @param name      Plugin name
+         * @param before    State before load attempt
+         * @param after     State after load attempt
+         */
         void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
-        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState state, AbstractPluginManager::LoadState after);
+
+        /**
+         * @brief Plugin unload attempt
+         * @param name      Plugin name
+         * @param before    State before unload attempt
+         * @param after     State after unload attempt
+         */
+        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 };
 
 }}

@@ -15,14 +15,26 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Map2X::QtGui::SaveRasterMenuView
+ */
+
 #include "AbstractPluginMenuView.h"
 #include "PluginManager.h"
 #include "AbstractRasterModel.h"
 
 namespace Map2X { namespace QtGui {
 
+/**
+ * @brief Menu view for Save Raster menu
+ *
+ * Displays only these plugins which have
+ * Core::AbstractRasterModel::WriteableFormat feature and don't have
+ * Core::AbstractRasterModel::NonConvertableFormat feature.
+ */
 class SaveRasterMenuView: public AbstractPluginMenuView {
     public:
+        /** @copydoc QtGui::AbstractPluginMenuView */
         SaveRasterMenuView(PluginManager<Core::AbstractRasterModel>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
             AbstractPluginMenuView(manager, menu, before, parent), rasterManager(manager) {}
 

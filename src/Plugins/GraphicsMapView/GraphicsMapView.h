@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::GraphicsMapView
+ * @brief Class Map2X::Plugins::GraphicsMapView
  */
 
 #include <QtGui/QGraphicsScene>
@@ -47,7 +47,8 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         QStringList _overlays;
 
     public:
-        GraphicsMapView(Map2X::PluginManager::AbstractPluginManager* manager, const std::string& pluginName);
+        /** @copydoc QtGui::AbstractMapView::AbstractMapView */
+        GraphicsMapView(Map2X::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());
@@ -67,6 +68,12 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         virtual bool removeOverlay(const QString& overlay);
 
     protected:
+        /**
+         * @brief Mouse move event
+         *
+         * If mouse is over the map and no button is pressed, emits
+         * currentCoordinates().
+         */
         virtual void mouseMoveEvent(QMouseEvent* event);
 
     private:

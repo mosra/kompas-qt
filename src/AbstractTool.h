@@ -37,6 +37,7 @@ class AbstractTool: public Map2X::PluginManager::Plugin {
     PLUGIN_INTERFACE("cz.mosra.Map2X.QtGui.AbstractTool/0.1")
 
     public:
+        /** @copydoc PluginManager::Plugin::Plugin */
         inline AbstractTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             Plugin(manager, plugin) {}
 

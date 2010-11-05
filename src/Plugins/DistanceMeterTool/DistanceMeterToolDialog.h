@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::DistanceMeterToolDialog
+ * @brief Class Map2X::Plugins::DistanceMeterToolDialog
  */
 
 #include "../../AbstractToolDialog.h"
@@ -31,11 +31,12 @@ namespace QtGui {
 
 namespace Plugins {
 
-/** @brief Measuring distance between two Wsg84 coords */
+/** @brief Measuring distance between two WGS84 coords */
 class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
     Q_OBJECT
 
     public:
+        /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
         DistanceMeterToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:

@@ -36,6 +36,11 @@ class SaveRasterWizard: public QWizard {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent        Parent widget
+         * @param flags         Window flags
+         */
         SaveRasterWizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
     protected:
@@ -46,17 +51,24 @@ class SaveRasterWizard: public QWizard {
         class StatisticsPage;
         class DownloadPage;
 
+        /** @brief Area type (from AreaPage) */
         enum AreaType {
             WholeMap,
             VisibleArea,
             CustomArea
         };
-        AreaType areaType;              /**< @brief Area type (from AreaPage) */
+
+        /**
+         * @brief Area type (from AreaPage)
+         * @see SaveRasterWizard::AreaPage::validatePage()
+         */
+        AreaType areaType;
 
         /**
          * @brief List of zoom levels to save
          *
          * Sorted ascending.
+         * @see SaveRasterWizard::ZoomPage::validatePage()
          */
         QList<Core::Zoom> zoomLevels;
 
@@ -64,10 +76,25 @@ class SaveRasterWizard: public QWizard {
             overlays;                   /**< @brief Overlays to save */
 };
 
+/**
+ * @brief Area selection wizard page
+ *
+ * Provides selection of whole map, visible area or custom specified area.
+ * @see SaveRasterWizard::AreaType
+ */
 class SaveRasterWizard::AreaPage: public QWizardPage {
     public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
         AreaPage(SaveRasterWizard* _wizard);
 
+        /**
+         * @brief Page validator
+         *
+         * Saves selected area type into SaveRasterWizard::areaType.
+         */
         virtual bool validatePage();
 
     private:
@@ -80,13 +107,33 @@ class SaveRasterWizard::AreaPage: public QWizardPage {
         QPushButton* customAreaSelect;
 };
 
+/**
+ * @brief Zoom selection wizard page
+ *
+ * Provides selection of zoom levels as a range or by selecting particular zoom
+ * levels.
+ */
 class SaveRasterWizard::ZoomPage: public QWizardPage {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
         ZoomPage(SaveRasterWizard* _wizard);
 
+        /**
+         * @brief Whether the page is complete
+         * @return True if at least one zoom level is selected
+         */
         virtual bool isComplete() const;
+
+        /**
+         * @brief Page validator
+         *
+         * Saves selected zoom levels into SaveRasterWizard::zoomLevels.
+         */
         virtual bool validatePage();
 
     private slots:
@@ -112,11 +159,31 @@ class SaveRasterWizard::ZoomPage: public QWizardPage {
         QListView *zoomLevelsView;
 };
 
+/**
+ * @brief Layer and overlay selection wizard page
+ *
+ * Provides two listviews for selecting layers and overlays.
+ */
 class SaveRasterWizard::LayersPage: public QWizardPage {
     public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
         LayersPage(SaveRasterWizard* _wizard);
 
+        /**
+         * @brief Whether the page is complete
+         * @return True if at least one layer is selected.
+         */
         virtual bool isComplete() const;
+
+        /**
+         * @brief Page validator
+         *
+         * Saves selected layers into SaveRasterWizard::layers and overlays into
+         * SaveRasterWizard::overlays.
+         */
         virtual bool validatePage();
 
     private:
@@ -126,11 +193,30 @@ class SaveRasterWizard::LayersPage: public QWizardPage {
             *overlaysView;
 };
 
+/**
+ * @brief Statistics wizard page
+ *
+ * Displays total tile count and estimated package size.
+ */
 class SaveRasterWizard::StatisticsPage: public QWizardPage {
     public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
         StatisticsPage(SaveRasterWizard* _wizard);
 
+        /**
+         * @brief Whether the page is complete
+         * @return True if estimated package size doesn't exceed 10 GB.
+         */
         inline virtual bool isComplete() const { return canDownload; }
+
+        /**
+         * @brief Page initializator
+         *
+         * Gets all needed data from SaveRasterWizard and computes data count.
+         */
         virtual void initializePage();
 
     private:
@@ -147,8 +233,17 @@ class SaveRasterWizard::StatisticsPage: public QWizardPage {
             *fupWarning;
 };
 
+/**
+ * @brief Download wizard page
+ *
+ * Downloads all tile data and creates the package.
+ */
 class SaveRasterWizard::DownloadPage: public QWizardPage {
     public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
         DownloadPage(SaveRasterWizard* _wizard);
 
     private:

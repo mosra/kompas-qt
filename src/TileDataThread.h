@@ -153,6 +153,14 @@ class TileDataThread: public QThread {
         QList<TileJob> queue;
 
     signals:
+        /**
+         * @brief Download given tile
+         *
+         * Emitted from getTileData(), connected to private slot
+         * startDownload(). The slot is not called directly because
+         * QNetworkManager somehow doesn't like sharing QNetworkReply between
+         * different threads.
+         */
         void download(TileJob* job);
 
     private slots:

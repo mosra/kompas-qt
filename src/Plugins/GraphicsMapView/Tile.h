@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::Tile
+ * @brief Class Map2X::Plugins::Tile
  */
 
 #include <QtGui/QGraphicsItemGroup>

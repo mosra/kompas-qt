@@ -15,6 +15,10 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Map2X::QtGui::ConfigurationDialog
+ */
+
 #include "AbstractConfigurationDialog.h"
 
 namespace Map2X { namespace QtGui {

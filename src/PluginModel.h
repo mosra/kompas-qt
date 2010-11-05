@@ -58,7 +58,7 @@ class PluginModel: public QAbstractTableModel {
          * @brief Constructor
          *
          * @param _manager      Pointer to PluginManager
-         * @param _flags        Flags
+         * @param flags         Flags
          * @param parent        Parent object
          */
         PluginModel(AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0);
@@ -74,12 +74,22 @@ class PluginModel: public QAbstractTableModel {
          */
         int findPlugin(const QString& name) const;
 
+        /** @brief Row count */
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
+
+        /** @brief Column count */
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 10; }
+
+        /** @brief Header data access */
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+        /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
+        /** @brief Item flags */
         virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+
+        /** @brief Data write access */
         virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     private slots:

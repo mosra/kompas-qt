@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::DmsDecimalToolDialog
+ * @brief Class Map2X::Plugins::DmsDecimalToolDialog
  */
 
 #include "AbstractToolDialog.h"
@@ -36,6 +36,7 @@ class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
     Q_OBJECT
 
     public:
+        /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
         DmsDecimalToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:

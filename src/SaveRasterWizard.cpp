@@ -299,8 +299,7 @@ bool SaveRasterWizard::LayersPage::validatePage() {
 
 SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), canDownload(true) {
     setTitle(tr("Statistics"));
-    setSubTitle(tr("Review amount of data to be downloaded, return back and make changes or proceed to download."));
-    setCommitPage(true);
+    setSubTitle(tr("Review amount of data to be downloaded, return back and make changes or proceed to creating the package."));
 
     QFont boldFont;
     boldFont.setBold(true);

@@ -42,6 +42,7 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
             Top, TopLeft, Left, BottomLeft, Bottom, BottimRight, Right, TopRight
         };
 
+        /** @copydoc PluginManager::Plugin::Plugin */
         AbstractMapView(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         /** @{ @name Map data functions */

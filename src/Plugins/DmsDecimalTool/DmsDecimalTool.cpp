@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Map2X::QtGui::Plugins::DmsDecimalTool
+ * @brief Class Map2X::Plugins::DmsDecimalTool
  */
 
 #include "AbstractTool.h"
@@ -27,6 +27,7 @@ namespace Map2X { namespace Plugins {
 /** @brief Converting DMS to decimal and back */
 class DmsDecimalTool: public QtGui::AbstractTool {
     public:
+        /** @copydoc QtGui::AbstractTool::AbstractTool */
         DmsDecimalTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 

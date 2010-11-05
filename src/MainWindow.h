@@ -41,6 +41,7 @@ class MainWindow: public QMainWindow {
     Q_OBJECT
 
     public:
+        /** @brief Global instance of MainWindow */
         static MainWindow* instance() { return _instance; }
 
         /**

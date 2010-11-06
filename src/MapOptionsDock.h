@@ -54,14 +54,10 @@ class MapOptionsDock: public QWidget {
     private:
         MainWindow* mainWindow;
 
-        QComboBox *rasterModels,
-            *rasterLayers;
+        QComboBox *rasterLayers;
         QListView* rasterOverlays;
 
-        PluginModel* rasterModelsModel;
     private slots:
-        void setRasterModel(int number);
-
         /** @brief Update comboboxes to actually used layers etc. */
         void setActualData();
 };

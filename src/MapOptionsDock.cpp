@@ -37,11 +37,6 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow) {
-    /* Tile model combobox */
-    rasterModelsModel = new PluginModel(mainWindow->rasterModelPluginManager(), PluginModel::LoadedOnly, this);
-    rasterModels = new QComboBox;
-    rasterModels->setModel(rasterModelsModel);
-    rasterModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
     rasterLayers = new QComboBox;
@@ -55,19 +50,14 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Server:")), 0, 0);
-    layout->addWidget(rasterModels, 0, 1);
-    layout->addWidget(new QLabel(tr("Map layer:")), 5, 0);
-    layout->addWidget(rasterLayers, 5, 1);
-    layout->addWidget(new QLabel(tr("Overlays:")), 6, 0, 1, 2);
-    layout->addWidget(rasterOverlays, 7, 0, 1, 2);
-    layout->addWidget(new QWidget, 8, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Map layer:")), 0, 0);
+    layout->addWidget(rasterLayers, 0, 1);
+    layout->addWidget(new QLabel(tr("Overlays:")), 1, 0, 1, 2);
+    layout->addWidget(rasterOverlays, 2, 0, 1, 2);
+    layout->addWidget(new QWidget, 3, 0, 1, 2);
     layout->setColumnStretch(1, 1);
-    layout->setRowStretch(8, 1);
+    layout->setRowStretch(3, 1);
     setLayout(layout);
-
-    /* Set actual tile model */
-    rasterModels->setCurrentIndex(rasterModelsModel->findPlugin(QString::fromStdString(mainWindow->configuration()->group("map")->value<string>("rasterModel"))));
 
     setActualData();
 
@@ -75,13 +65,7 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     connect(MainWindow::instance(), SIGNAL(rasterModelChanged()), SLOT(setActualData()));
 
     /* Connect comboboxes with model / layer changing */
-    connect(rasterModels, SIGNAL(currentIndexChanged(int)), SLOT(setRasterModel(int)));
     connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
-}
-
-void MapOptionsDock::setRasterModel(int number) {
-    mainWindow->setRasterModel(rasterModelsModel->index(number, PluginModel::Plugin).data().toString());
-    setActualData();
 }
 
 void MapOptionsDock::setActualData() {

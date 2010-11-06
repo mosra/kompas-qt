@@ -29,6 +29,7 @@
 #include "ConfigurationDialog.h"
 #include "ToolPluginMenuView.h"
 #include "SaveRasterMenuView.h"
+#include "OpenRasterMenuView.h"
 #include "MapOptionsDock.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
@@ -85,6 +86,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     mapOptionsDock->setWidget(new MapOptionsDock(this, this));
     mapOptionsDock->setWindowTitle(tr("Map options"));
     addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
+
+    /* Open raster map menu */
+    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(_rasterModelPluginManager, openRasterMenu, 0, this);
+    openRasterMenuView->update();
 
     /* Save raster map menu */
     SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
@@ -184,6 +189,9 @@ void MainWindow::setRasterModel(const QString& name) {
 }
 
 void MainWindow::createActions() {
+    /* Open raster map */
+    openRasterAction = new QAction(tr("Open local package"), this);
+
     /* Save raster map */
     saveRasterAction = new QAction(this);
 
@@ -217,8 +225,13 @@ void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
 
+    /* Open raster map menu */
+    openRasterMenu = fileMenu->addMenu(tr("Open map"));
+    openRasterMenu->addAction(openRasterAction);
+    openRasterMenu->addSeparator();
+
     /* Save raster map menu */
-    saveRasterMenu = fileMenu->addMenu(tr("Save map as..."));
+    saveRasterMenu = fileMenu->addMenu(tr("Save map"));
     saveRasterMenu->addAction(saveRasterAction);
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);

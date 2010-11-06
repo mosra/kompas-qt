@@ -175,7 +175,8 @@ class MainWindow: public QMainWindow {
         Core::AbstractRasterModel* _rasterModel;
         QReadWriteLock rasterModelLock;
 
-        QAction *saveRasterAction,
+        QAction *openRasterAction,
+            *saveRasterAction,
             *quitAction,
             *zoomInAction,
             *zoomOutAction,
@@ -183,7 +184,8 @@ class MainWindow: public QMainWindow {
             *configurationDialogAction,
             *aboutQtAction;
 
-        QMenu *saveRasterMenu,
+        QMenu *openRasterMenu,
+            *saveRasterMenu,
             *toolsMenu;
 
         QLabel* coordinateStatus;

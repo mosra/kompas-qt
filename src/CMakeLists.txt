@@ -29,6 +29,7 @@ set(Map2X_Qt_SRCS
     Wgs84CoordsEdit.cpp
     AbstractPluginMenuView.cpp
     ToolPluginMenuView.cpp
+    OpenRasterMenuView.cpp
     SaveRasterMenuView.cpp
     SaveRasterWizard.cpp
     MapOptionsDock.cpp

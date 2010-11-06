@@ -57,7 +57,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         virtual QStringList overlays() const { return _overlays; }
 
     public slots:
-        virtual void setRasterModel();
+        virtual void updateRasterModel();
         virtual bool zoomIn(const QPoint& pos = QPoint());
         virtual bool zoomOut(const QPoint& pos = QPoint());
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());

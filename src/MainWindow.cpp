@@ -170,7 +170,7 @@ void MainWindow::setRasterModel(const QString& name) {
 
     unlockRasterModel();
 
-    _mapView->setRasterModel();
+    _mapView->updateRasterModel();
 }
 
 void MainWindow::createActions() {

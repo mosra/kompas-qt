@@ -48,12 +48,11 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
         /** @{ @name Map data functions */
 
         /**
-         * @brief Set tile model to the view
+         * @brief Update raster model
          *
          * Reloads all map data from new model.
-         * @todo Rename to something meaningful.
          */
-        virtual void setRasterModel() = 0;
+        virtual void updateRasterModel() = 0;
 
         /**
          * @brief Set map layer

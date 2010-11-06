@@ -411,7 +411,7 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
     }
 }
 
-void GraphicsMapView::setRasterModel() {
+void GraphicsMapView::updateRasterModel() {
     qDeleteAll(tiles);
     tiles.clear();
 

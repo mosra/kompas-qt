@@ -136,6 +136,10 @@ class MainWindow: public QMainWindow {
         inline AbstractMapView** mapView()
             { return &_mapView; }
 
+    signals:
+        /** @brief Raster model has been changed to another */
+        void rasterModelChanged();
+
     public slots:
         /**
          * @brief Load default configuration

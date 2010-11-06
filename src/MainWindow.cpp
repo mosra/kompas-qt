@@ -176,10 +176,11 @@ void MainWindow::setRasterModel(const QString& name) {
 
     unlockRasterModel();
 
-    _mapView->updateRasterModel();
     _rasterLayerModel->reload();
     _rasterOverlayModel->reload();
     _rasterZoomModel->reload();
+
+    emit rasterModelChanged();
 }
 
 void MainWindow::createActions() {

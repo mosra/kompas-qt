@@ -47,13 +47,16 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
 
         /** @{ @name Map data functions */
 
+    public slots:
         /**
          * @brief Update raster model
          *
-         * Reloads all map data from new model.
+         * Connected to MainWindow::rasterModelChanged(). Reloads all map data
+         * from new model.
          */
         virtual void updateRasterModel() = 0;
 
+    public:
         /**
          * @brief Set map layer
          * @param layer     Layer

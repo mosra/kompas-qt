@@ -71,6 +71,9 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 
     setActualData();
 
+    /* Update data when raster model is changed */
+    connect(MainWindow::instance(), SIGNAL(rasterModelChanged()), SLOT(setActualData()));
+
     /* Connect comboboxes with model / layer changing */
     connect(rasterModels, SIGNAL(currentIndexChanged(int)), SLOT(setRasterModel(int)));
     connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));

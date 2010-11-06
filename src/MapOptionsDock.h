@@ -59,9 +59,6 @@ class MapOptionsDock: public QWidget {
         QListView* rasterOverlays;
 
         PluginModel* rasterModelsModel;
-        RasterLayerModel* rasterLayerModel;
-        RasterOverlayModel* rasterOverlayModel;
-
     private slots:
         void setRasterModel(int number);
 

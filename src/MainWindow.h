@@ -36,6 +36,10 @@ namespace Map2X { namespace QtGui {
 class AbstractPluginManager;
 template<class T> class PluginManager;
 
+class RasterLayerModel;
+class RasterOverlayModel;
+class RasterZoomModel;
+
 /** @brief %Map2X main window */
 class MainWindow: public QMainWindow {
     Q_OBJECT
@@ -77,6 +81,18 @@ class MainWindow: public QMainWindow {
         /** @brief Instance of PluginManager for tool plugins */
         inline PluginManager<AbstractTool>* toolPluginManager()
             { return _toolPluginManager; }
+
+        /** @brief Global raster map layer model */
+        inline RasterLayerModel* rasterLayerModel()
+            { return _rasterLayerModel; }
+
+        /** @brief Global raster map layer model */
+        inline RasterOverlayModel* rasterOverlayModel()
+            { return _rasterOverlayModel; }
+
+        /** @brief Global raster map layer model */
+        inline RasterZoomModel* rasterZoomModel()
+            { return _rasterZoomModel; }
 
         /**
          * @brief Get tile model for reading
@@ -146,6 +162,10 @@ class MainWindow: public QMainWindow {
         PluginManager<Core::AbstractProjection>* _projectionPluginManager;
         PluginManager<Core::AbstractRasterModel>* _rasterModelPluginManager;
         PluginManager<AbstractTool>* _toolPluginManager;
+
+        RasterLayerModel* _rasterLayerModel;
+        RasterOverlayModel* _rasterOverlayModel;
+        RasterZoomModel* _rasterZoomModel;
 
         AbstractMapView* _mapView;
         Core::AbstractRasterModel* _rasterModel;

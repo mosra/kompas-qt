@@ -44,14 +44,12 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     rasterModels->setModelColumn(PluginModel::Name);
 
     /* Tile layers combobox */
-    rasterLayerModel = new RasterLayerModel(this);
     rasterLayers = new QComboBox;
-    rasterLayers->setModel(rasterLayerModel);
+    rasterLayers->setModel(MainWindow::instance()->rasterLayerModel());
 
     /* Tile overlays combobox */
-    rasterOverlayModel = new RasterOverlayModel(this);
     EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(mainWindow->mapView(), this);
-    editableRasterOverlayModel->setSourceModel(rasterOverlayModel);
+    editableRasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
     rasterOverlays = new QListView;
     rasterOverlays->setModel(editableRasterOverlayModel);
 
@@ -80,8 +78,6 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 
 void MapOptionsDock::setRasterModel(int number) {
     mainWindow->setRasterModel(rasterModelsModel->index(number, PluginModel::Plugin).data().toString());
-    rasterLayerModel->reload();
-    rasterOverlayModel->reload();
     setActualData();
 }
 

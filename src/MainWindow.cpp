@@ -24,13 +24,15 @@
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
-#include "AbstractMapView.h"
 #include "PluginDialog.h"
 #include "TileDataThread.h"
 #include "ConfigurationDialog.h"
 #include "ToolPluginMenuView.h"
 #include "SaveRasterMenuView.h"
 #include "MapOptionsDock.h"
+#include "RasterLayerModel.h"
+#include "RasterOverlayModel.h"
+#include "RasterZoomModel.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -56,6 +58,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
         (_configuration.group("plugins")->group("rasterModels")->value<string>("__dir"));
     _toolPluginManager = new PluginManager<AbstractTool>
         (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
+
+    _rasterLayerModel = new RasterLayerModel(this);
+    _rasterOverlayModel = new RasterOverlayModel(this);
+    _rasterZoomModel = new RasterZoomModel(this);
 
     /** @todo Do that in splash */
     loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
@@ -171,6 +177,9 @@ void MainWindow::setRasterModel(const QString& name) {
     unlockRasterModel();
 
     _mapView->updateRasterModel();
+    _rasterLayerModel->reload();
+    _rasterOverlayModel->reload();
+    _rasterZoomModel->reload();
 }
 
 void MainWindow::createActions() {

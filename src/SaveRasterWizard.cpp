@@ -154,7 +154,7 @@ SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wi
 
     /* List view for all zoom levels */
     zoomLevelsView = new QListView;
-    zoomLevelsView->setModel(new RasterZoomModel(this));
+    zoomLevelsView->setModel(MainWindow::instance()->rasterZoomModel());
     zoomLevelsView->setSelectionMode(QAbstractItemView::MultiSelection);
     connect(zoomLevelsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
@@ -256,12 +256,12 @@ SaveRasterWizard::LayersPage::LayersPage(SaveRasterWizard* _wizard): QWizardPage
 
     layersView = new QListView;
     layersView->setSelectionMode(QAbstractItemView::MultiSelection);
-    layersView->setModel(new RasterLayerModel);
+    layersView->setModel(MainWindow::instance()->rasterLayerModel());
     connect(layersView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     overlaysView = new QListView;
     overlaysView->setSelectionMode(QAbstractItemView::MultiSelection);
-    overlaysView->setModel(new RasterOverlayModel);
+    overlaysView->setModel(MainWindow::instance()->rasterOverlayModel());
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Layers:")), 0, 0);

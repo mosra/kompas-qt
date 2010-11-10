@@ -157,27 +157,33 @@ void MainWindow::loadDefaultConfiguration() {
 void MainWindow::setRasterModel(const QString& name) {
     lockRasterModelForWrite();
 
-    _rasterModel = _rasterModelPluginManager->instance(name.toStdString());
+    AbstractRasterModel* newModel = _rasterModelPluginManager->instance(name.toStdString());
 
     /** @todo Disable Save Raster menu when no writeable format is available at all */
     /** @todo If current raster model doesn't have NonCOnvertableFormat, it's shown in the menu twice. */
 
     /* Raster model is available, configure it & enable save menu */
-    if(_rasterModel) {
+    if(newModel) {
+        /* Set online maps enabled like in old model */
+        if(_rasterModel) newModel->setOnline(_rasterModel->online());
+        else newModel->setOnline(_configuration.group("map")->value<bool>("online"));
+
         saveRasterMenu->setDisabled(false);
-        _rasterModel->setOnline(_configuration.group("map")->value<bool>("online"));
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(
             QString::fromStdString(_rasterModelPluginManager->metadata(name.toStdString())->name())
         ));
-        if(_rasterModel->features() & AbstractRasterModel::WriteableFormat)
+        if(newModel->features() & AbstractRasterModel::WriteableFormat)
             saveRasterAction->setDisabled(false);
         else
             saveRasterAction->setDisabled(true);
 
     /* Raster model is not available, disable save menu */
     } else saveRasterMenu->setDisabled(true);
+
+    delete _rasterModel;
+    _rasterModel = newModel;
 
     unlockRasterModel();
 

@@ -24,6 +24,8 @@
 #include <QtGui/QWidget>
 #include <QtGui/QAbstractProxyModel>
 
+class QLabel;
+class QCheckBox;
 class QListView;
 class QComboBox;
 
@@ -54,6 +56,8 @@ class MapOptionsDock: public QWidget {
     private:
         MainWindow* mainWindow;
 
+        QLabel* rasterModelName;
+        QCheckBox* rasterModelOnline;
         QComboBox *rasterLayers;
         QListView* rasterOverlays;
 

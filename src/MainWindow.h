@@ -157,6 +157,12 @@ class MainWindow: public QMainWindow {
          */
         void setRasterModel(const QString& name);
 
+        /**
+         * @brief Enable or disable online maps
+         * @param enabled   Whether disable or enable
+         */
+        void setOnlineEnabled(bool enabled);
+
     private:
         static MainWindow* _instance;
 

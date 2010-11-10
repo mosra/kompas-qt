@@ -37,6 +37,15 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow) {
+    QFont font;
+    font.setBold(true);
+
+    rasterModelName = new QLabel;
+    rasterModelName->setFont(font);
+
+    rasterModelOnline = new QCheckBox(tr("Enable online maps"));
+    rasterModelOnline->setChecked(MainWindow::instance()->configuration()->group("map")->value<bool>("online"));
+    connect(rasterModelOnline, SIGNAL(clicked(bool)), MainWindow::instance(), SLOT(setOnlineEnabled(bool)));
 
     /* Tile layers combobox */
     rasterLayers = new QComboBox;
@@ -50,13 +59,15 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Map layer:")), 0, 0);
-    layout->addWidget(rasterLayers, 0, 1);
-    layout->addWidget(new QLabel(tr("Overlays:")), 1, 0, 1, 2);
-    layout->addWidget(rasterOverlays, 2, 0, 1, 2);
-    layout->addWidget(new QWidget, 3, 0, 1, 2);
+    layout->addWidget(rasterModelName, 0, 0, 1, 2);
+    layout->addWidget(rasterModelOnline, 1, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Map layer:")), 2, 0);
+    layout->addWidget(rasterLayers, 2, 1);
+    layout->addWidget(new QLabel(tr("Overlays:")), 3, 0, 1, 2);
+    layout->addWidget(rasterOverlays, 4, 0, 1, 2);
+    layout->addWidget(new QWidget, 5, 0, 1, 2);
     layout->setColumnStretch(1, 1);
-    layout->setRowStretch(3, 1);
+    layout->setRowStretch(5, 1);
     setLayout(layout);
 
     setActualData();
@@ -69,10 +80,30 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
 }
 
 void MapOptionsDock::setActualData() {
+    /* Display actual model name */
+    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+
+    /* Raster model is loaded, enable and display its name */
+    if(rasterModel) {
+        setDisabled(false);
+
+        rasterModelName->setText(QString::fromStdString(MainWindow::instance()->rasterModelPluginManager()->metadata(rasterModel->name())->name()));
+
+        /* Enable online maps enablenator if they are supported */
+        if(rasterModel->features() & AbstractRasterModel::LoadableFromUrl)
+            rasterModelOnline->setDisabled(false);
+        else
+            rasterModelOnline->setDisabled(true);
+
+    /* No raster model loaded, disable widget */
+    } else setDisabled(true);
+
     /* Set actual map layer */
     rasterLayers->setCurrentIndex(rasterLayers->findText((*mainWindow->mapView())->layer()));
 
     /** @todo Actual overlays? */
+
+    MainWindow::instance()->unlockRasterModel();
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemModel* sourceModel) {

@@ -194,6 +194,18 @@ void MainWindow::setRasterModel(const QString& name) {
     emit rasterModelChanged();
 }
 
+void MainWindow::setOnlineEnabled(bool enabled) {
+    lockRasterModelForWrite();
+    _rasterModel->setOnline(enabled);
+    unlockRasterModel();
+
+    _rasterLayerModel->reload();
+    _rasterOverlayModel->reload();
+    _rasterZoomModel->reload();
+
+    emit rasterModelChanged();
+}
+
 void MainWindow::createActions() {
     /* Open raster map */
     openRasterAction = new QAction(tr("Open local package"), this);

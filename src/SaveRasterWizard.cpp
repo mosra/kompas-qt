@@ -24,6 +24,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSpinBox>
 #include <QtGui/QListWidget>
+#include <QtGui/QLineEdit>
+#include <QtGui/QFileDialog>
 
 #include "MainWindow.h"
 #include "RasterLayerModel.h"
@@ -39,6 +41,7 @@ SaveRasterWizard::SaveRasterWizard(QWidget* parent, Qt::WindowFlags flags): QWiz
     addPage(new ZoomPage(this));
     addPage(new LayersPage(this));
     addPage(new StatisticsPage(this));
+    addPage(new MetadataPage(this));
     addPage(new DownloadPage(this));
 
     /* Modify commit button text */
@@ -400,6 +403,57 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
 
     /* Download size (10 kB for one tile) */
     downloadSize->setText(QString("%0 MB").arg(_tileCountTotal/102.4, 0, 'f', 1));
+}
+
+SaveRasterWizard::MetadataPage::MetadataPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
+    setTitle(tr("Metadata"));
+    setSubTitle(tr("Select where to save the package, fill in metadata and proceed to download."));
+    setCommitPage(true);
+
+    /* Initialize widgets */
+    filename = new QLineEdit;
+    connect(filename, SIGNAL(textChanged(QString)), SIGNAL(completeChanged()));
+    name = new QLineEdit;
+    description = new QLineEdit;
+    packager = new QLineEdit;
+    QPushButton* fileButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Select..."));
+    connect(fileButton, SIGNAL(clicked(bool)), SLOT(saveFileDialog()));
+
+    QHBoxLayout* fileLayout = new QHBoxLayout;
+    fileLayout->addWidget(filename);
+    fileLayout->addWidget(fileButton);
+
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(new QLabel(tr("Save to:")), 0, 0);
+    layout->addLayout(fileLayout, 0, 1);
+    layout->addWidget(new QLabel(tr("Package name:")), 1, 0);
+    layout->addWidget(name, 1, 1);
+    layout->addWidget(new QLabel(tr("Description:")), 2, 0);
+    layout->addWidget(description, 2, 1);
+    layout->addWidget(new QLabel(tr("Packager:")), 3, 0);
+    layout->addWidget(packager, 3, 1);
+
+    setLayout(layout);
+}
+
+bool SaveRasterWizard::MetadataPage::isComplete() const {
+    if(filename->text().isEmpty()) return false;
+    else return true;
+}
+
+bool SaveRasterWizard::MetadataPage::validatePage() {
+    if(filename->text().isEmpty()) return false;
+
+    wizard->filename = filename->text();
+    wizard->name = name->text();
+    wizard->description = description->text();
+    wizard->packager = packager->text();
+
+    return true;
+}
+
+void SaveRasterWizard::MetadataPage::saveFileDialog() {
+    filename->setText(QFileDialog::getSaveFileName(this, tr("Save package as...")));
 }
 
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {

@@ -49,6 +49,7 @@ class SaveRasterWizard: public QWizard {
         class LayersPage;
         class SavePage;
         class StatisticsPage;
+        class MetadataPage;
         class DownloadPage;
 
         /** @brief Area type (from AreaPage) */
@@ -74,6 +75,11 @@ class SaveRasterWizard: public QWizard {
 
         QStringList layers,             /**< @brief Layers to save */
             overlays;                   /**< @brief Overlays to save */
+
+        QString filename,               /**< @brief Package filename */
+            name,                       /**< @brief Package name */
+            description,                /**< @brief Package description */
+            packager;                   /**< @brief Packager name */
 };
 
 /**
@@ -231,6 +237,48 @@ class SaveRasterWizard::StatisticsPage: public QWizardPage {
             *tileCountTotal,
             *downloadSize,
             *fupWarning;
+};
+
+/**
+ * @brief Metadata wizard page
+ *
+ * Allows user to specify package filename and package metadata (name,
+ * description, packager name).
+ */
+class SaveRasterWizard::MetadataPage: public QWizardPage {
+    Q_OBJECT
+
+    public:
+        /**
+         * @brief Constructor
+         * @param _wizard       Wizard instance
+         */
+        MetadataPage(SaveRasterWizard* _wizard);
+
+        /**
+         * @brief Whether the page is complete
+         * @return True if filename is not empty
+         */
+        virtual bool isComplete() const;
+
+        /**
+         * @brief Page validator
+         *
+         * Saves data to SaveRasterWizard::filename, SaveRasterWizard::name,
+         * SaveRasterWizard::description and SaveRasterWizard::packager.
+         */
+        virtual bool validatePage();
+
+    private slots:
+        void saveFileDialog();
+
+    private:
+        SaveRasterWizard* wizard;
+
+        QLineEdit *filename,
+            *name,
+            *description,
+            *packager;
 };
 
 /**

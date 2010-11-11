@@ -69,21 +69,35 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
+    double multiplier = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether we can zoom in */
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(++it == z.end()) return false;
 
-    /* Get coordinates, zoom in, update map area */
-    Wgs84Coords c = coords(pos);
+    /* Get the coordinates before zooming */
+    QPointF move;
+    if(!pos.isNull())  {
+        move.setX(pos.x()-view->width()/2);
+        move.setY(pos.y()-view->height()/2);
+    }
+    QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
+
+    /* Zoom in, update map area */
+    multiplier *= *it-_zoom;
     _zoom = *it;
     updateMapArea();
 
-    /* Remove old tiles and set coordinates back */
+    /* Remove old tiles */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c, pos);
+
+    /* Center on multiplied position, count with 'pos' distance from center */
+    view->centerOn(coords*multiplier-move);
+
+    /* Load new tiles */
+    updateTilePositions();
 
     return true;
 }
@@ -93,21 +107,35 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
+    double divisor = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether we can zoom out */
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(it-- == z.begin()) return false;
 
-    /* Get coordinates, zoom out, update map area */
-    Wgs84Coords c = coords(pos);
+    /* Get coordinates before we zoom out (so they don't get cropped) */
+    QPointF move;
+    if(!pos.isNull())  {
+        move.setX(pos.x()-view->width()/2);
+        move.setY(pos.y()-view->height()/2);
+    }
+    QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
+
+    /* Zoom out, update map area */
+    divisor *= _zoom-*it;
     _zoom = *it;
     updateMapArea();
 
-    /* Remove old tiles and set coordinates back */
+    /* Remove old tiles */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c, pos);
+
+    /* Center on divided position, count with 'pos' distance from center */
+    view->centerOn(coords/divisor-move);
+
+    /* Load new tiles */
+    updateTilePositions();
 
     return true;
 }
@@ -117,20 +145,35 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
+    double multiplier = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether given zoom exists */
     if(::find(z.begin(), z.end(), zoom) == z.end()) return false;
 
-    /* Get coordinates, zoom out, update map area */
-    Wgs84Coords c = coords(pos);
+    /* Get coordinates before we zoom (so they don't get cropped) */
+    QPointF move;
+    if(!pos.isNull())  {
+        move.setX(pos.x()-view->width()/2);
+        move.setY(pos.y()-view->height()/2);
+    }
+    QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
+
+    /* Zoom, update map area */
+    if(zoom-_zoom < 0) multiplier = 1/(multiplier*(_zoom-zoom));
+    else multiplier *= zoom-_zoom;
     _zoom = zoom;
     updateMapArea();
 
-    /* Remove old tiles and set coordinates back */
+    /* Remove old tiles */
     qDeleteAll<QList<Tile*> >(tiles);
     tiles.clear();
-    setCoords(c, pos);
+
+    /* Center on divided position, count with 'pos' distance from center */
+    view->centerOn(coords*multiplier-move);
+
+    /* Load new tiles */
+    updateTilePositions();
 
     return true;
 }

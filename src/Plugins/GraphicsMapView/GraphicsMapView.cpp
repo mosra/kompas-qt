@@ -347,7 +347,7 @@ void GraphicsMapView::mouseMoveEvent(QMouseEvent* event) {
 
 bool GraphicsMapView::isReady() {
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    bool is = rasterModel && !rasterModel->layers().empty() && !rasterModel->zoomLevels().empty();
+    bool is = rasterModel && !rasterModel->layers().empty() && !rasterModel->zoomLevels().empty() && rasterModel->area() != TileArea();
     MainWindow::instance()->unlockRasterModel();
 
     return is;

@@ -163,6 +163,18 @@ class MainWindow: public QMainWindow {
          */
         void setOnlineEnabled(bool enabled);
 
+    private slots:
+        /**
+         * @brief Open raster map file
+         *
+         * Allows user to select an file through open file dialog. First checks
+         * whether the file can be opened with currently active model (if it
+         * either supports multiple packages or doesn't have any opened
+         * packages), otherwise goes through all available raster plugins
+         * and tries to open the file with them.
+         */
+        void openRaster();
+
     private:
         static MainWindow* _instance;
 

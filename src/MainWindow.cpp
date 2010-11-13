@@ -21,6 +21,8 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QLabel>
 #include <QtGui/QDockWidget>
+#include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
@@ -206,9 +208,76 @@ void MainWindow::setOnlineEnabled(bool enabled) {
     emit rasterModelChanged();
 }
 
+void MainWindow::openRaster() {
+    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"));
+    if(filename.isEmpty()) return;
+
+    /* If the package cannot be opened with current model, try all plugins */
+    if(_rasterModel->addPackage(filename.toStdString()) == -1) {
+
+        std::ifstream i(filename.toUtf8().constData());
+        string firstSupport;
+
+        vector<string> plugins = _rasterModelPluginManager->nameList();
+        for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+            /* Skip not loaded plugins */
+            if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
+                continue;
+
+            /* Instance of the model */
+            AbstractRasterModel* instance = _rasterModelPluginManager->instance(*it);
+            if(!instance) continue;
+
+            /* Skip models which cannot recognize its file format */
+            if(!(instance->features() & AbstractRasterModel::SelfRecognizable)) {
+                delete instance;
+                continue;
+            }
+
+            /* Rewind file and try to recognize it */
+            i.clear();
+            i.seekg(0, ios::beg);
+            int state = instance->recognizeFile(filename.toStdString(), i);
+
+            /* Try to get full supporting plugin, if not found, go with first
+            partially supporting. */
+            if(state == AbstractRasterModel::PartiallySupported && !firstSupport.empty())
+                firstSupport = *it;
+            else if(state == AbstractRasterModel::FullySupported) {
+                firstSupport = *it;
+                break;
+            }
+
+            delete instance;
+        }
+
+        i.close();
+
+        /* No supporting plugin found */
+        if(firstSupport.empty()) {
+            QMessageBox::warning(this, tr("Unsupported file format"), tr("No suitable map plugin was found for this file."));
+            return;
+        }
+
+        /* Set the plugin and load package with it */
+        setRasterModel(QString::fromStdString(firstSupport));
+        lockRasterModelForWrite();
+        if(_rasterModel->addPackage(filename.toStdString()) == -1)
+            QMessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
+        unlockRasterModel();
+    }
+
+    _rasterLayerModel->reload();
+    _rasterOverlayModel->reload();
+    _rasterZoomModel->reload();
+
+    emit rasterModelChanged();
+}
+
 void MainWindow::createActions() {
     /* Open raster map */
     openRasterAction = new QAction(tr("Open local package"), this);
+    connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
 
     /* Save raster map */
     saveRasterAction = new QAction(this);

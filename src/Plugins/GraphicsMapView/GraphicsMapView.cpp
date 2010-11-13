@@ -479,6 +479,8 @@ void GraphicsMapView::updateRasterModel() {
                 "zoom level and layer available."
             ) + "</center>");
             informativeText->setTextWidth(256);
+            map.setSceneRect(0, 0, 0, 0);
+            view->centerOn(0, 0);
         }
 
         return;

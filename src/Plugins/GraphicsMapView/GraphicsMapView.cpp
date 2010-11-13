@@ -399,6 +399,7 @@ void GraphicsMapView::updateTilePositions() {
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
     QPointF viewed = view->mapToScene(0, 0);
+    TileArea area = rasterModel->area()*pow(rasterModel->zoomStep(), _zoom-rasterModel->zoomLevels()[0]);
 
     /* Ensure positive coordinates */
     if(viewed.x() < 0) viewed.setX(0);
@@ -408,6 +409,16 @@ void GraphicsMapView::updateTilePositions() {
     Coords<unsigned int> tilesOrigin(
         static_cast<unsigned int>(viewed.x()/rasterModel->tileSize().x),
         static_cast<unsigned int>(viewed.y()/rasterModel->tileSize().y));
+
+    /* Ensure coordinates fit into map area */
+    if(tilesOrigin.x < area.x)
+        tilesOrigin.x = area.x;
+    if(tilesOrigin.y < area.y)
+        tilesOrigin.y = area.y;
+    if(tilesOrigin.x + tileCount.x >= area.x+area.w)
+        tilesOrigin.x = area.x+area.w-tileCount.x;
+    if(tilesOrigin.y + tileCount.y >= area.y+area.h)
+        tilesOrigin.y = area.y+area.h-tileCount.y;
 
     QBitArray loadedItems(tileCount.x*tileCount.y, false);
 

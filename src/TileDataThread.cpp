@@ -26,7 +26,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-int TileDataThread::_maxSimultaenousDownloads = 1;
+int TileDataThread::_maxSimultaenousDownloads = 3;
 
 TileDataThread::TileDataThread(QObject* parent): QThread(parent), abort(false) {
     manager = new QNetworkAccessManager;

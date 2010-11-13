@@ -111,9 +111,12 @@ void TileDataThread::run() {
                 }
                 mutex.unlock();
 
-                QPixmap pixmap;
-                pixmap.loadFromData(data.c_str());
-                emit tileData(layer, zoom, coords, pixmap);
+                /* QByteArray::fromRawData() doesn't copy data under pointer,
+                   "change" them to force deep copy */
+                QByteArray b = QByteArray::fromRawData(data.data(), data.size());
+                b[0] = b[0];
+
+                emit tileData(layer, zoom, coords, b);
 
             /* Else try to download the item */
             } else {
@@ -195,11 +198,7 @@ void TileDataThread::finishDownload(QNetworkReply* reply) {
         emit tileNotFound(dl.layer, dl.zoom, dl.coords);
 
     /* Download success */
-    } else {
-        QPixmap pixmap;
-        pixmap.loadFromData(reply->readAll());
-        emit tileData(dl.layer, dl.zoom, dl.coords, pixmap);
-    }
+    } else emit tileData(dl.layer, dl.zoom, dl.coords, reply->readAll());
 
     reply->deleteLater();
     condition.wakeOne();

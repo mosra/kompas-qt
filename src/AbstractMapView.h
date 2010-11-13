@@ -208,7 +208,7 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * @param coords    Tile coordinates
          * @param data      Tile data
          */
-        virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) = 0;
+        virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QByteArray& data) = 0;
 
         /**
          * @brief Tile data downloading

@@ -109,7 +109,7 @@ class TileDataThread: public QThread {
          * @param coords    Tile coordinates
          * @param data      Tile data
          */
-        void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
+        void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QByteArray& data);
 
         /**
          * @brief Tile loading

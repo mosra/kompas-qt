@@ -34,8 +34,8 @@ AbstractMapView::AbstractMapView(Map2X::PluginManager::AbstractPluginManager* ma
 
     connect(this, SIGNAL(getTileData(QString,Core::Zoom,Core::TileCoords)),
             tileDataThread, SLOT(getTileData(QString,Core::Zoom,Core::TileCoords)));
-    connect(tileDataThread, SIGNAL(tileData(QString,Core::Zoom,Core::TileCoords,QPixmap)),
-            SLOT(tileData(QString,Core::Zoom,Core::TileCoords,QPixmap)));
+    connect(tileDataThread, SIGNAL(tileData(QString,Core::Zoom,Core::TileCoords,QByteArray)),
+            SLOT(tileData(QString,Core::Zoom,Core::TileCoords,QByteArray)));
     connect(tileDataThread, SIGNAL(tileLoading(QString,Core::Zoom,Core::TileCoords)),
             SLOT(tileLoading(QString,Core::Zoom,Core::TileCoords)));
     connect(tileDataThread, SIGNAL(tileNotFound(QString,Core::Zoom,Core::TileCoords)),

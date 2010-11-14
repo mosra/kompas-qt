@@ -4,3 +4,7 @@ kompas_add_static_plugin(KompasQt_Plugins DistanceMeterTool DistanceMeterTool.co
     DistanceMeterToolDialog.cpp
     ${DistanceMeterTool_MOC}
 )
+
+if(WIN32)
+    target_link_libraries(DistanceMeterTool ${KOMPAS_CORE_LIBRARY})
+endif()

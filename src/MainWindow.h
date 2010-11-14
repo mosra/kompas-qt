@@ -150,12 +150,12 @@ class MainWindow: public QMainWindow {
         void loadDefaultConfiguration();
 
         /**
-         * @brief Set tile model
-         * @param name      Name of the tile model plugin
+         * @brief Set raster model
+         * @param model     Instance of raster model
          *
-         * Sets given tile model.
+         * Replaces current raster model with given instance.
          */
-        void setRasterModel(const QString& name);
+        void setRasterModel(Core::AbstractRasterModel* model);
 
         /**
          * @brief Enable or disable online maps

@@ -134,27 +134,19 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.setAutomaticKeyCreation(false);
 }
 
-void MainWindow::setRasterModel(const QString& name) {
-    lockRasterModelForWrite();
-
-    AbstractRasterModel* newModel = _rasterModelPluginManager->instance(name.toStdString());
-
+void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /** @todo Disable Save Raster menu when no writeable format is available at all */
     /** @todo If current raster model doesn't have NonCOnvertableFormat, it's shown in the menu twice. */
 
     /* Raster model is available, configure it & enable save menu */
-    if(newModel) {
-        /* Set online maps enabled like in old model */
-        if(_rasterModel) newModel->setOnline(_rasterModel->online());
-        else newModel->setOnline(_configuration.group("map")->value<bool>("online"));
-
+    if(model) {
         saveRasterMenu->setDisabled(false);
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(
-            QString::fromStdString(_rasterModelPluginManager->metadata(name.toStdString())->name())
+            QString::fromStdString(_rasterModelPluginManager->metadata(model->name())->name())
         ));
-        if(newModel->features() & AbstractRasterModel::WriteableFormat)
+        if(model->features() & AbstractRasterModel::WriteableFormat)
             saveRasterAction->setDisabled(false);
         else
             saveRasterAction->setDisabled(true);
@@ -162,9 +154,9 @@ void MainWindow::setRasterModel(const QString& name) {
     /* Raster model is not available, disable save menu */
     } else saveRasterMenu->setDisabled(true);
 
+    lockRasterModelForWrite();
     delete _rasterModel;
-    _rasterModel = newModel;
-
+    _rasterModel = model;
     unlockRasterModel();
 
     _rasterLayerModel->reload();
@@ -194,7 +186,7 @@ void MainWindow::openRaster() {
     if(_rasterModel->addPackage(filename.toStdString()) == -1) {
 
         std::ifstream i(filename.toUtf8().constData());
-        string firstSupport;
+        AbstractRasterModel* firstSupport = 0;
 
         vector<string> plugins = _rasterModelPluginManager->nameList();
         for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
@@ -218,30 +210,36 @@ void MainWindow::openRaster() {
             int state = instance->recognizeFile(filename.toStdString(), i);
 
             /* Try to get full supporting plugin, if not found, go with first
-            partially supporting. */
-            if(state == AbstractRasterModel::PartiallySupported && !firstSupport.empty())
-                firstSupport = *it;
+                partially supporting. */
+            if(state == AbstractRasterModel::PartiallySupported && !firstSupport)
+                firstSupport = instance;
             else if(state == AbstractRasterModel::FullySupported) {
-                firstSupport = *it;
+                firstSupport = instance;
                 break;
-            }
 
-            delete instance;
+            /* Otherwise delete instance and continue with another */
+            } else delete instance;
         }
 
         i.close();
 
         /* No supporting plugin found */
-        if(firstSupport.empty()) {
+        if(!firstSupport) {
             QMessageBox::warning(this, tr("Unsupported file format"), tr("No suitable map plugin was found for this file."));
             return;
         }
 
-        /* Set the plugin and load package with it */
-        setRasterModel(QString::fromStdString(firstSupport));
-        lockRasterModelForWrite();
-        if(_rasterModel->addPackage(filename.toStdString()) == -1)
+        /* If package cannot be opened, destroy that bitch and go home */
+        if(firstSupport->addPackage(filename.toStdString())) {
             QMessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
+            delete firstSupport;
+            return;
+        }
+
+        /* Set the plugin and load package with it */
+        lockRasterModelForWrite();
+        delete _rasterModel;
+        _rasterModel = firstSupport;
         unlockRasterModel();
     }
 

@@ -90,10 +90,18 @@ void MapOptionsDock::setActualData() {
         rasterModelName->setText(QString::fromStdString(MainWindow::instance()->rasterModelPluginManager()->metadata(rasterModel->name())->name()));
 
         /* Enable online maps enablenator if they are supported */
-        if(rasterModel->features() & AbstractRasterModel::LoadableFromUrl)
+        if(rasterModel->features() & AbstractRasterModel::LoadableFromUrl) {
             rasterModelOnline->setDisabled(false);
-        else
+
+            if(rasterModel->online())
+                rasterModelOnline->setChecked(true);
+            else
+                rasterModelOnline->setChecked(false);
+
+        } else {
             rasterModelOnline->setDisabled(true);
+            rasterModelOnline->setChecked(false);
+        }
 
     /* No raster model loaded, disable widget */
     } else setDisabled(true);

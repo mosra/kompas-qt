@@ -141,6 +141,7 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /* Raster model is available, configure it & enable save menu */
     if(model) {
         saveRasterMenu->setDisabled(false);
+        closeRasterAction->setDisabled(false);
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(
@@ -152,7 +153,10 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
             saveRasterAction->setDisabled(true);
 
     /* Raster model is not available, disable save menu */
-    } else saveRasterMenu->setDisabled(true);
+    } else {
+        saveRasterMenu->setDisabled(true);
+        closeRasterAction->setDisabled(true);
+    }
 
     lockRasterModelForWrite();
     delete _rasterModel;
@@ -246,7 +250,10 @@ void MainWindow::openRaster() {
         /* Replace current raster model with new */
         setRasterModel(firstSupport);
     }
+}
 
+void MainWindow::closeRaster() {
+    setRasterModel(0);
 }
 
 void MainWindow::createActions() {
@@ -256,6 +263,11 @@ void MainWindow::createActions() {
 
     /* Save raster map */
     saveRasterAction = new QAction(this);
+
+    /* Close raster map */
+    closeRasterAction = new QAction(tr("Close map"), this);
+    closeRasterAction->setDisabled(true);
+    connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
 
     /* Quit application */
     quitAction = new QAction(tr("Quit"), this);
@@ -298,6 +310,7 @@ void MainWindow::createMenus() {
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);
 
+    fileMenu->addAction(closeRasterAction);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAction);
 

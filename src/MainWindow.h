@@ -175,6 +175,11 @@ class MainWindow: public QMainWindow {
          */
         void openRaster();
 
+        /**
+         * @brief Close raster map
+         */
+        void closeRaster();
+
     private:
         static MainWindow* _instance;
 
@@ -195,6 +200,7 @@ class MainWindow: public QMainWindow {
 
         QAction *openRasterAction,
             *saveRasterAction,
+            *closeRasterAction,
             *quitAction,
             *zoomInAction,
             *zoomOutAction,

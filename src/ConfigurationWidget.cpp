@@ -39,39 +39,21 @@ ConfigurationWidget::ConfigurationWidget(MainWindow* _mainWindow, QWidget* paren
         mainWindow->mapViewPluginManager(), PluginModel::LoadedOnly, this));
     mapViewPlugin->setModelColumn(PluginModel::Plugin);
 
-    /* Home position */
-    homePosition = new Wgs84CoordsEdit;
-
-    /* Online maps */
-    enableOnlineMaps = new QCheckBox(tr("Enable online maps"));
-
     /* Maximal count of simultaenous downloads */
     maxSimultaenousDownloads = new QSpinBox;
     maxSimultaenousDownloads->setMinimum(1);
     maxSimultaenousDownloads->setMaximum(5);
-    maxSimultaenousDownloads->setDisabled(true);
-    QLabel* maxSimultaenousDownloadsLabel = new QLabel(tr("Max simultaenous downloads:"));
-    maxSimultaenousDownloadsLabel->setDisabled(true);
-
-    /* If online maps are disabled, disable download count */
-    connect(enableOnlineMaps, SIGNAL(toggled(bool)), maxSimultaenousDownloads, SLOT(setEnabled(bool)));
-    connect(enableOnlineMaps, SIGNAL(toggled(bool)), maxSimultaenousDownloadsLabel, SLOT(setEnabled(bool)));
 
     /* Emit signal when edited */
     connect(mapViewPlugin, SIGNAL(currentIndexChanged(int)), SIGNAL(edited()));
-    connect(homePosition, SIGNAL(textEdited(QString)), SIGNAL(edited()));
-    connect(enableOnlineMaps, SIGNAL(stateChanged(int)), SIGNAL(edited()));
     connect(maxSimultaenousDownloads, SIGNAL(valueChanged(int)), SIGNAL(edited()));
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Map view plugin:")), 0, 0);
     layout->addWidget(mapViewPlugin, 0, 1);
-    layout->addWidget(new QLabel(tr("Home position:")), 1, 0);
-    layout->addWidget(homePosition, 1, 1);
-    layout->addWidget(enableOnlineMaps, 2, 0, 1, 2);
-    layout->addWidget(maxSimultaenousDownloadsLabel, 3, 0);
-    layout->addWidget(maxSimultaenousDownloads, 3, 1);
+    layout->addWidget(new QLabel(tr("Max simultaenous downloads:")), 1, 0);
+    layout->addWidget(maxSimultaenousDownloads, 1, 1);
     layout->addWidget(new QWidget, 4, 0, 1, 2);
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(4, 1);
@@ -84,18 +66,12 @@ ConfigurationWidget::ConfigurationWidget(MainWindow* _mainWindow, QWidget* paren
 void ConfigurationWidget::reset() {
     mapViewPlugin->setCurrentIndex(mapViewPlugin->findText(QString::fromStdString(
         mainWindow->configuration()->group("map")->value<string>("viewPlugin"))));
-    homePosition->setCoords(
-        mainWindow->configuration()->group("map")->value<Wgs84Coords>("homePosition"));
-    enableOnlineMaps->setChecked(
-        mainWindow->configuration()->group("map")->value<bool>("online"));
     maxSimultaenousDownloads->setValue(
         mainWindow->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
 }
 
 void ConfigurationWidget::restoreDefaults() {
     mainWindow->configuration()->group("map")->removeValue("viewPlugin");
-    mainWindow->configuration()->group("map")->removeValue("homePosition");
-    mainWindow->configuration()->group("map")->removeValue("online");
     mainWindow->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
     mainWindow->loadDefaultConfiguration();
 
@@ -105,10 +81,6 @@ void ConfigurationWidget::restoreDefaults() {
 void ConfigurationWidget::save() {
     mainWindow->configuration()->group("map")->setValue<string>("viewPlugin",
         mapViewPlugin->currentText().toStdString());
-    mainWindow->configuration()->group("map")->setValue<Wgs84Coords>("homePosition",
-        homePosition->coords());
-    mainWindow->configuration()->group("map")->setValue<bool>("online",
-        enableOnlineMaps->isChecked());
     mainWindow->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
         maxSimultaenousDownloads->value());
 }

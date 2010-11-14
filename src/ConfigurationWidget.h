@@ -51,8 +51,6 @@ class ConfigurationWidget: public AbstractConfigurationWidget {
     private:
         MainWindow* mainWindow;
         QComboBox* mapViewPlugin;
-        Wgs84CoordsEdit* homePosition;
-        QCheckBox* enableOnlineMaps;
         QSpinBox* maxSimultaenousDownloads;
 };
 

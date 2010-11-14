@@ -71,18 +71,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
     loadPluginsAsConfigured("tools", _toolPluginManager);
 
-    /** @todo GUI for this */
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
     _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
     connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
 
     createActions();
     createMenus();
-
-    setRasterModel(QString::fromStdString(_configuration.group("map")->value<string>("rasterModel")));
-    _mapView->zoomTo(_configuration.group("map")->value<Zoom>("zoom"));
-    _mapView->setCoords(_configuration.group("map")->value<Wgs84Coords>("homePosition"));
-    _mapView->setLayer(QString::fromStdString(_configuration.group("map")->value<string>("rasterLayer")));
 
     QDockWidget* mapOptionsDock = new QDockWidget;
     mapOptionsDock->setWidget(new MapOptionsDock(this, this));
@@ -132,25 +126,9 @@ void MainWindow::loadDefaultConfiguration() {
     string mapViewPlugin = "GraphicsMapView";
     _configuration.group("map")->value("viewPlugin", &mapViewPlugin);
 
-    /* Enabled online maps? */
-    bool onlineEnabled = true;
-    _configuration.group("map")->value("online", &onlineEnabled);
-
     /* Maximal count of simultaenous downloads */
     unsigned int maxSimultaenousDownloads = 3;
     _configuration.group("map")->value("maxSimultaenousDownloads", &maxSimultaenousDownloads);
-
-    /* Home position */
-    Wgs84Coords homePosition(50.088, 14.354);
-    _configuration.group("map")->value("homePosition", &homePosition);
-
-    /* Default tile model, layer, overlays and zoom */
-    string rasterModel = "OpenStreetMapRasterModel";
-    string rasterLayer = "Mapnik";
-    Zoom zoom        = 4;
-    _configuration.group("map")->value("rasterModel", &rasterModel);
-    _configuration.group("map")->value("rasterLayer", &rasterLayer);
-    _configuration.group("map")->value("zoom", &zoom);
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);

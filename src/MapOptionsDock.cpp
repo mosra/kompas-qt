@@ -104,7 +104,12 @@ void MapOptionsDock::setActualData() {
         }
 
     /* No raster model loaded, disable widget */
-    } else setDisabled(true);
+    } else {
+        setDisabled(true);
+
+        rasterModelName->setText(tr("No map loaded"));
+        rasterModelOnline->setChecked(false);
+    }
 
     /* Set actual map layer */
     rasterLayers->setCurrentIndex(rasterLayers->findText((*mainWindow->mapView())->layer()));

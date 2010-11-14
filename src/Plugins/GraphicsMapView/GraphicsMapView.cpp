@@ -62,6 +62,8 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(view);
     setLayout(layout);
+
+    updateRasterModel();
 }
 
 bool GraphicsMapView::zoomIn(const QPoint& pos) {

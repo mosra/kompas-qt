@@ -182,9 +182,16 @@ void MainWindow::openRaster() {
     QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"));
     if(filename.isEmpty()) return;
 
-    /* If the package cannot be opened with current model, try all plugins */
-    if(_rasterModel->addPackage(filename.toStdString()) == -1) {
+    /* Try to open the package with current model */
+    if(_rasterModel && _rasterModel->addPackage(filename.toStdString()) != -1) {
+        _rasterLayerModel->reload();
+        _rasterOverlayModel->reload();
+        _rasterZoomModel->reload();
 
+        emit rasterModelChanged();
+
+    /* Else try all plugins */
+    } else {
         std::ifstream i(filename.toUtf8().constData());
         AbstractRasterModel* firstSupport = 0;
 
@@ -236,18 +243,10 @@ void MainWindow::openRaster() {
             return;
         }
 
-        /* Set the plugin and load package with it */
-        lockRasterModelForWrite();
-        delete _rasterModel;
-        _rasterModel = firstSupport;
-        unlockRasterModel();
+        /* Replace current raster model with new */
+        setRasterModel(firstSupport);
     }
 
-    _rasterLayerModel->reload();
-    _rasterOverlayModel->reload();
-    _rasterZoomModel->reload();
-
-    emit rasterModelChanged();
 }
 
 void MainWindow::createActions() {

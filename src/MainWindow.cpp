@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     createMenus();
 
     QDockWidget* mapOptionsDock = new QDockWidget;
-    mapOptionsDock->setWidget(new MapOptionsDock(this, this));
+    mapOptionsDock->setWidget(new MapOptionsDock(this));
     mapOptionsDock->setWindowTitle(tr("Map options"));
     addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
 

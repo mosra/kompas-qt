@@ -44,18 +44,15 @@ class MapOptionsDock: public QWidget {
     public:
         /**
          * @brief Constructor
-         * @param _mainWindow       Main window instance
          * @param parent            Parent widget
          * @param f                 Window flags
          */
-        MapOptionsDock(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        MapOptionsDock(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     protected:
         class EditableRasterOverlayModel;
 
     private:
-        MainWindow* mainWindow;
-
         QLabel* rasterModelName;
         QCheckBox* rasterModelOnline;
         QComboBox *rasterLayers;
@@ -104,10 +101,14 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
         virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
         /** @brief Map index from source model */
-        virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const;
+        virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const {
+            return index(sourceIndex.row(), sourceIndex.column());
+        }
 
         /** @brief Map index to source model */
-        virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const;
+        virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const {
+            return sourceModel()->index(proxyIndex.row(), proxyIndex.column());
+        }
 
         /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

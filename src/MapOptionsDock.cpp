@@ -36,7 +36,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): QWidget(parent, f), mainWindow(_mainWindow) {
+MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
     QFont font;
     font.setBold(true);
 
@@ -47,12 +47,12 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     rasterModelOnline->setChecked(MainWindow::instance()->configuration()->group("map")->value<bool>("online"));
     connect(rasterModelOnline, SIGNAL(clicked(bool)), MainWindow::instance(), SLOT(setOnlineEnabled(bool)));
 
-    /* Tile layers combobox */
+    /* Raster layers combobox */
     rasterLayers = new QComboBox;
     rasterLayers->setModel(MainWindow::instance()->rasterLayerModel());
 
-    /* Tile overlays combobox */
-    EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(mainWindow->mapView(), this);
+    /* Raster overlays list view */
+    EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(MainWindow::instance()->mapView(), this);
     editableRasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
     rasterOverlays = new QListView;
     rasterOverlays->setModel(editableRasterOverlayModel);
@@ -76,7 +76,8 @@ MapOptionsDock::MapOptionsDock(MainWindow* _mainWindow, QWidget* parent, Qt::Win
     connect(MainWindow::instance(), SIGNAL(rasterModelChanged()), SLOT(setActualData()));
 
     /* Connect comboboxes with model / layer changing */
-    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *mainWindow->mapView(), SLOT(setLayer(QString)));
+    /** @todo Make it non-dependent on one map view */
+    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *MainWindow::instance()->mapView(), SLOT(setLayer(QString)));
 }
 
 void MapOptionsDock::setActualData() {
@@ -112,7 +113,7 @@ void MapOptionsDock::setActualData() {
     }
 
     /* Set actual map layer */
-    rasterLayers->setCurrentIndex(rasterLayers->findText((*mainWindow->mapView())->layer()));
+    rasterLayers->setCurrentIndex(rasterLayers->findText((*MainWindow::instance()->mapView())->layer()));
 
     /** @todo Actual overlays? */
 
@@ -126,14 +127,6 @@ void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemMod
     reload();
 
     connect(sourceModel, SIGNAL(modelReset()), SLOT(reload()));
-}
-
-QModelIndex MapOptionsDock::EditableRasterOverlayModel::mapFromSource(const QModelIndex& sourceIndex) const {
-    return index(sourceIndex.row(), sourceIndex.column());
-}
-
-QModelIndex MapOptionsDock::EditableRasterOverlayModel::mapToSource(const QModelIndex& proxyIndex) const {
-    return sourceModel()->index(proxyIndex.row(), proxyIndex.column());
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::reload() {

@@ -36,6 +36,7 @@ namespace Map2X { namespace QtGui {
 class AbstractPluginManager;
 template<class T> class PluginManager;
 
+class RasterPackageModel;
 class RasterLayerModel;
 class RasterOverlayModel;
 class RasterZoomModel;
@@ -81,6 +82,10 @@ class MainWindow: public QMainWindow {
         /** @brief Instance of PluginManager for tool plugins */
         inline PluginManager<AbstractTool>* toolPluginManager()
             { return _toolPluginManager; }
+
+        /** @brief Global raster map package model */
+        inline RasterPackageModel* rasterPackageModel()
+            { return _rasterPackageModel; }
 
         /** @brief Global raster map layer model */
         inline RasterLayerModel* rasterLayerModel()
@@ -190,6 +195,7 @@ class MainWindow: public QMainWindow {
         PluginManager<Core::AbstractRasterModel>* _rasterModelPluginManager;
         PluginManager<AbstractTool>* _toolPluginManager;
 
+        RasterPackageModel* _rasterPackageModel;
         RasterLayerModel* _rasterLayerModel;
         RasterOverlayModel* _rasterOverlayModel;
         RasterZoomModel* _rasterZoomModel;

@@ -33,6 +33,7 @@
 #include "SaveRasterMenuView.h"
 #include "OpenRasterMenuView.h"
 #include "MapOptionsDock.h"
+#include "RasterPackageModel.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _toolPluginManager = new PluginManager<AbstractTool>
         (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
 
+    _rasterPackageModel = new RasterPackageModel(this);
     _rasterLayerModel = new RasterLayerModel(this);
     _rasterOverlayModel = new RasterOverlayModel(this);
     _rasterZoomModel = new RasterZoomModel(this);
@@ -163,6 +165,7 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     _rasterModel = model;
     unlockRasterModel();
 
+    _rasterPackageModel->reload();
     _rasterLayerModel->reload();
     _rasterOverlayModel->reload();
     _rasterZoomModel->reload();
@@ -175,6 +178,7 @@ void MainWindow::setOnlineEnabled(bool enabled) {
     _rasterModel->setOnline(enabled);
     unlockRasterModel();
 
+    _rasterPackageModel->reload();
     _rasterLayerModel->reload();
     _rasterOverlayModel->reload();
     _rasterZoomModel->reload();
@@ -188,6 +192,7 @@ void MainWindow::openRaster() {
 
     /* Try to open the package with current model */
     if(_rasterModel && _rasterModel->addPackage(filename.toStdString()) != -1) {
+        _rasterPackageModel->reload();
         _rasterLayerModel->reload();
         _rasterOverlayModel->reload();
         _rasterZoomModel->reload();

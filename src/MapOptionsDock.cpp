@@ -26,6 +26,7 @@
 #include "PluginManager.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
+#include "RasterPackageModel.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "AbstractRasterModel.h"
@@ -37,19 +38,16 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
-    QFont font;
-    font.setBold(true);
-
-    rasterModelName = new QLabel;
-    rasterModelName->setFont(font);
-
-    rasterModelOnline = new QCheckBox(tr("Enable online maps"));
-    rasterModelOnline->setChecked(MainWindow::instance()->configuration()->group("map")->value<bool>("online"));
-    connect(rasterModelOnline, SIGNAL(clicked(bool)), MainWindow::instance(), SLOT(setOnlineEnabled(bool)));
+    /* Raster packages list view */
+    EditableRasterPackageModel* editableRasterPackageModel = new EditableRasterPackageModel(this);
+    editableRasterPackageModel->setSourceModel(MainWindow::instance()->rasterPackageModel());
+    rasterPackages = new QListView;
+    rasterPackages->setModel(editableRasterPackageModel);
 
     /* Raster layers combobox */
     rasterLayers = new QComboBox;
     rasterLayers->setModel(MainWindow::instance()->rasterLayerModel());
+    rasterLayers->setModelColumn(RasterPackageModel::Name);
 
     /* Raster overlays list view */
     EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(MainWindow::instance()->mapView(), this);
@@ -59,8 +57,8 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(rasterModelName, 0, 0, 1, 2);
-    layout->addWidget(rasterModelOnline, 1, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Maps:")), 0, 0, 1, 2);
+    layout->addWidget(rasterPackages, 1, 0, 1, 2);
     layout->addWidget(new QLabel(tr("Map layer:")), 2, 0);
     layout->addWidget(rasterLayers, 2, 1);
     layout->addWidget(new QLabel(tr("Overlays:")), 3, 0, 1, 2);
@@ -84,33 +82,11 @@ void MapOptionsDock::setActualData() {
     /* Display actual model name */
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
-    /* Raster model is loaded, enable and display its name */
-    if(rasterModel) {
-        setDisabled(false);
-
-        rasterModelName->setText(QString::fromStdString(MainWindow::instance()->rasterModelPluginManager()->metadata(rasterModel->name())->name()));
-
-        /* Enable online maps enablenator if they are supported */
-        if(rasterModel->features() & AbstractRasterModel::LoadableFromUrl) {
-            rasterModelOnline->setDisabled(false);
-
-            if(rasterModel->online())
-                rasterModelOnline->setChecked(true);
-            else
-                rasterModelOnline->setChecked(false);
-
-        } else {
-            rasterModelOnline->setDisabled(true);
-            rasterModelOnline->setChecked(false);
-        }
+    /* Raster model is loaded, enable widget */
+    if(rasterModel) setDisabled(false);
 
     /* No raster model loaded, disable widget */
-    } else {
-        setDisabled(true);
-
-        rasterModelName->setText(tr("No map loaded"));
-        rasterModelOnline->setChecked(false);
-    }
+    else setDisabled(true);
 
     /* Set actual map layer */
     rasterLayers->setCurrentIndex(rasterLayers->findText((*MainWindow::instance()->mapView())->layer()));
@@ -118,6 +94,75 @@ void MapOptionsDock::setActualData() {
     /** @todo Actual overlays? */
 
     MainWindow::instance()->unlockRasterModel();
+}
+
+void MapOptionsDock::EditableRasterPackageModel::setSourceModel(QAbstractItemModel* sourceModel) {
+    disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(reload()));
+
+    QAbstractProxyModel::setSourceModel(sourceModel);
+    reload();
+
+    connect(sourceModel, SIGNAL(modelReset()), SLOT(reload()));
+}
+
+void MapOptionsDock::EditableRasterPackageModel::reload() {
+    beginResetModel();
+
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+
+    /* If raster model is not available or it doesn't support raster maps, don't show online maps item */
+    if(!model || !(model->features() & AbstractRasterModel::LoadableFromUrl)) {
+        rasterModelName.clear();
+        online = NotSupported;
+
+    /* Else show it and enable/disable it */
+    } else {
+        rasterModelName = QString::fromStdString(MainWindow::instance()->rasterModelPluginManager()->metadata(model->name())->name());
+
+        if(model->online())     online = Enabled;
+        else                    online = Disabled;
+    }
+
+    MainWindow::instance()->unlockRasterModel();
+
+    endResetModel();
+}
+
+QVariant MapOptionsDock::EditableRasterPackageModel::data(const QModelIndex& _index, int role) const {
+    if(online == NotSupported)
+        return QAbstractProxyModel::data(_index, role);
+
+    else if(_index.isValid() && _index.row() == 0 &&_index.column() == RasterPackageModel::Name) {
+        if(role == Qt::DisplayRole)
+            return tr("Online %0").arg(rasterModelName);
+
+        if(role == Qt::CheckStateRole)
+            return online == Enabled ? Qt::Checked : Qt::Unchecked;
+    }
+
+    return QAbstractProxyModel::data(index(_index.row()-1, _index.column(), _index.parent()), role);
+}
+
+Qt::ItemFlags MapOptionsDock::EditableRasterPackageModel::flags(const QModelIndex& _index) const {
+    if(online == NotSupported)
+        return QAbstractProxyModel::flags(_index);
+
+    else if(online != NotSupported && _index.isValid() && _index.column() == 0 && _index.row() == 0)
+        return Qt::ItemIsEnabled|Qt::ItemIsSelectable|Qt::ItemIsUserCheckable;
+
+    return QAbstractProxyModel::flags(index(_index.row()-1, _index.column(), _index.parent()));
+}
+
+bool MapOptionsDock::EditableRasterPackageModel::setData(const QModelIndex& _index, const QVariant& value, int role) {
+    if(online == NotSupported)
+        return QAbstractProxyModel::setData(_index, value, role);
+
+    else if(_index.isValid() && _index.column() == 0 && _index.row() == 0 && role == Qt::CheckStateRole) {
+        MainWindow::instance()->setOnlineEnabled(online == Enabled ? false : true);
+        return true;
+    }
+
+    return QAbstractProxyModel::setData(index(_index.row()-1, _index.column(), _index.parent()), value, role);
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemModel* sourceModel) {

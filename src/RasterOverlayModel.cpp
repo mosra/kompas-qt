@@ -15,16 +15,12 @@
 
 #include "RasterOverlayModel.h"
 
-#include "AbstractRasterModel.h"
-#include "AbstractMapView.h"
 #include "MainWindow.h"
 
 using namespace std;
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
-
-RasterOverlayModel::RasterOverlayModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
 void RasterOverlayModel::reload() {
     beginResetModel();
@@ -45,11 +41,10 @@ void RasterOverlayModel::reload() {
 }
 
 QVariant RasterOverlayModel::data(const QModelIndex& index, int role) const {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
+    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::DisplayRole)
+        return QVariant();
 
-    if(role == Qt::DisplayRole) return overlays.at(index.row());
-
-    return QVariant();
+    return overlays.at(index.row());
 }
 
 }}

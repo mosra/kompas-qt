@@ -15,16 +15,12 @@
 
 #include "RasterZoomModel.h"
 
-#include "AbstractRasterModel.h"
-#include "AbstractMapView.h"
 #include "MainWindow.h"
 
 using namespace std;
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
-
-RasterZoomModel::RasterZoomModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
 void RasterZoomModel::reload() {
     beginResetModel();
@@ -45,11 +41,10 @@ void RasterZoomModel::reload() {
 }
 
 QVariant RasterZoomModel::data(const QModelIndex& index, int role) const {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
+    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::DisplayRole)
+        return QVariant();
 
-    if(role == Qt::DisplayRole) return z.at(index.row());
-
-    return QVariant();
+    return z.at(index.row());
 }
 
 }}

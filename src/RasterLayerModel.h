@@ -37,7 +37,8 @@ class RasterLayerModel: public QAbstractListModel {
          * @brief Constructor
          * @param parent            Parent object
          */
-        RasterLayerModel(QObject* parent = 0);
+        inline RasterLayerModel(QObject* parent = 0):
+            QAbstractListModel(parent) { reload(); }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const

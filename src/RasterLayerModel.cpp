@@ -15,16 +15,12 @@
 
 #include "RasterLayerModel.h"
 
-#include "AbstractRasterModel.h"
-#include "AbstractMapView.h"
 #include "MainWindow.h"
 
 using namespace std;
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
-
-RasterLayerModel::RasterLayerModel(QObject* parent): QAbstractListModel(parent) { reload(); }
 
 void RasterLayerModel::reload() {
     beginResetModel();
@@ -45,11 +41,10 @@ void RasterLayerModel::reload() {
 }
 
 QVariant RasterLayerModel::data(const QModelIndex& index, int role) const {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount()) return QVariant();
+    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::DisplayRole)
+        return QVariant();
 
-    if(role == Qt::DisplayRole) return layers.at(index.row());
-
-    return QVariant();
+    return layers.at(index.row());
 }
 
 }}

@@ -39,7 +39,8 @@ class RasterZoomModel: public QAbstractListModel {
          * @brief Constructor
          * @param parent            Parent object
          */
-        RasterZoomModel(QObject* parent = 0);
+        inline RasterZoomModel(QObject* parent = 0):
+            QAbstractListModel(parent) { reload(); }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
@@ -52,7 +53,7 @@ class RasterZoomModel: public QAbstractListModel {
         /**
          * @brief Reload data
          *
-         * Should be called when tile model is changed or layers are changed.
+         * Should be called when tile model is changed or zoom levels are changed.
          */
         void reload();
 

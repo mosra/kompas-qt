@@ -344,7 +344,7 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
     double zoomMultiplier = rasterModel->zoomStep()*rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
-    quint64 _tileCountMinZoom;
+    quint64 _tileCountMinZoom = 0;
 
     /* Tile count for whole map at _lowest possible_ zoom */
     if(wizard->areaType == SaveRasterWizard::WholeMap) {

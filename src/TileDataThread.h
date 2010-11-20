@@ -39,6 +39,7 @@ namespace Map2X { namespace QtGui {
  * aren't available locally and model has enabled online
  * @todo Passing downloaded tile back to model
  * @todo Cleanup, better removing of finushed jobs (without large foreach)
+ * @todo Generalize for all data?
  */
 class TileDataThread: public QThread {
     Q_OBJECT

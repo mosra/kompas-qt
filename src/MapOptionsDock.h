@@ -54,11 +54,14 @@ class MapOptionsDock: public QWidget {
         class EditableRasterOverlayModel;
 
     private:
+        QComboBox* mapView;
         QComboBox *rasterLayers;
         QListView *rasterPackages,
             *rasterOverlays;
 
     private slots:
+        void setMapView(int id);
+
         /** @brief Update comboboxes to actually used layers etc. */
         void setActualData();
 };

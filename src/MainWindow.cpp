@@ -74,8 +74,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     loadPluginsAsConfigured("tools", _toolPluginManager);
 
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
-    _mapView = _mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin"));
-    connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
+
+    /* Map view plugin */
+    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
     createActions();
     createMenus();
@@ -101,7 +102,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     coordinateStatus = new QLabel;
     statusBar()->addPermanentWidget(coordinateStatus);
 
-    setCentralWidget(_mapView);
     resize(800, 600);
 }
 
@@ -134,6 +134,16 @@ void MainWindow::loadDefaultConfiguration() {
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);
+}
+
+void MainWindow::setMapView(AbstractMapView* view) {
+    /** @todo Allow no map view */
+    if(!view) return;
+    if(_mapView) delete _mapView;
+
+    _mapView = view;
+    connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
+    setCentralWidget(_mapView);
 }
 
 void MainWindow::setRasterModel(AbstractRasterModel* model) {

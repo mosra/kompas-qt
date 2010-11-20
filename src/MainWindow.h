@@ -155,6 +155,14 @@ class MainWindow: public QMainWindow {
         void loadDefaultConfiguration();
 
         /**
+         * @brief Set map view
+         * @param view      Instance of map view
+         *
+         * Replaces current map view with given instance.
+         */
+        void setMapView(AbstractMapView* view);
+
+        /**
          * @brief Set raster model
          * @param model     Instance of raster model
          *

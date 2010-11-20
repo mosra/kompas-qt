@@ -38,6 +38,12 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
+    mapView = new QComboBox;
+    mapView->setModel(new PluginModel(
+        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this));
+    mapView->setModelColumn(PluginModel::Name);
+    connect(mapView, SIGNAL(currentIndexChanged(int)), SLOT(setMapView(int)));
+
     /* Raster packages list view */
     EditableRasterPackageModel* editableRasterPackageModel = new EditableRasterPackageModel(this);
     editableRasterPackageModel->setSourceModel(MainWindow::instance()->rasterPackageModel());
@@ -57,15 +63,17 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Maps:")), 0, 0, 1, 2);
-    layout->addWidget(rasterPackages, 1, 0, 1, 2);
-    layout->addWidget(new QLabel(tr("Map layer:")), 2, 0);
-    layout->addWidget(rasterLayers, 2, 1);
-    layout->addWidget(new QLabel(tr("Overlays:")), 3, 0, 1, 2);
-    layout->addWidget(rasterOverlays, 4, 0, 1, 2);
-    layout->addWidget(new QWidget, 5, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Map view:")), 0, 0);
+    layout->addWidget(mapView, 0, 1);
+    layout->addWidget(new QLabel(tr("Maps:")), 1, 0, 1, 2);
+    layout->addWidget(rasterPackages, 2, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Map layer:")), 3, 0);
+    layout->addWidget(rasterLayers, 3, 1);
+    layout->addWidget(new QLabel(tr("Overlays:")), 4, 0, 1, 2);
+    layout->addWidget(rasterOverlays, 5, 0, 1, 2);
+    layout->addWidget(new QWidget, 6, 0, 1, 2);
     layout->setColumnStretch(1, 1);
-    layout->setRowStretch(5, 1);
+    layout->setRowStretch(6, 1);
     setLayout(layout);
 
     setActualData();
@@ -76,6 +84,11 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     /* Connect comboboxes with model / layer changing */
     /** @todo Make it non-dependent on one map view */
     connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *MainWindow::instance()->mapView(), SLOT(setLayer(QString)));
+}
+
+void MapOptionsDock::setMapView(int id) {
+    AbstractMapView* view = MainWindow::instance()->mapViewPluginManager()->instance(mapView->model()->index(id, PluginModel::Plugin).data().toString().toStdString());
+    MainWindow::instance()->setMapView(view);
 }
 
 void MapOptionsDock::setActualData() {

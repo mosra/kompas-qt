@@ -16,6 +16,7 @@
 #include "SaveRasterWizard.h"
 
 #include <cmath>
+#include <algorithm>
 #include <QtCore/QVariant>
 #include <QtGui/QGroupBox>
 #include <QtGui/QGridLayout>
@@ -32,11 +33,12 @@
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
 
+using namespace std;
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-SaveRasterWizard::SaveRasterWizard(QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), areaType(VisibleArea) {
+SaveRasterWizard::SaveRasterWizard(QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags) {
     addPage(new AreaPage(this));
     addPage(new ZoomPage(this));
     addPage(new LayersPage(this));
@@ -46,8 +48,13 @@ SaveRasterWizard::SaveRasterWizard(QWidget* parent, Qt::WindowFlags flags): QWiz
 
     /* Modify commit button text */
     setButtonText(CommitButton, tr("Download"));
-
     setWindowTitle(tr("Save map as..."));
+
+    /* Save zoom step and tile size */
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    tileSize = model->tileSize();
+    zoomStep = model->zoomStep();
+    MainWindow::instance()->unlockRasterModel();
 }
 
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
@@ -104,12 +111,28 @@ SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wi
 }
 
 bool SaveRasterWizard::AreaPage::validatePage() {
-    if(wholeMap->isChecked())
-        wizard->areaType = SaveRasterWizard::WholeMap;
-    else if(customArea->isChecked())
-        wizard->areaType = SaveRasterWizard::CustomArea;
-    else
-        wizard->areaType = SaveRasterWizard::VisibleArea;
+    /* Tile count for whole map at _lowest possible_ zoom */
+    if(wholeMap->isChecked()) {
+        const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+        Zoom minAvailableZoom = rasterModel->zoomLevels()[0];
+        TileArea minimalArea = rasterModel->area();
+        MainWindow::instance()->unlockRasterModel();
+
+        wizard->area = minimalArea*pow(wizard->zoomStep, wizard->zoomLevels[0]-minAvailableZoom);
+
+    /* Tile count for visible area at _current_ zoom */
+    } else if(visibleArea->isChecked()) {
+        AbstractMapView* mapView = *MainWindow::instance()->mapView();
+
+        /* Tile coordinates in visible area, divide them for smallest zoom */
+        TileArea currentArea = (*MainWindow::instance()->mapView())->viewedArea();
+        /** @bug Round it up, so the area is not zero sized when current zoom is big and lowest save zoom is small */
+        wizard->area = currentArea/pow(wizard->zoomStep, mapView->zoom()-wizard->zoomLevels[0]);
+
+    /* Tile count for selected area at _current_ zoom */
+    } else {
+        /** @todo CustomArea to be implemented... */
+    }
 
     return true;
 }
@@ -236,7 +259,7 @@ bool SaveRasterWizard::ZoomPage::validatePage() {
     /* Save zoom range */
     if(basicButton->isChecked()) {
         for(int i = minZoom->value(); i <= maxZoom->value(); ++i)
-            wizard->zoomLevels << i;
+            wizard->zoomLevels.push_back(i);
 
     /* Save each selected level */
     } else {
@@ -244,10 +267,10 @@ bool SaveRasterWizard::ZoomPage::validatePage() {
         if(list.isEmpty()) return false;
 
         foreach(const QModelIndex& index, list)
-            wizard->zoomLevels << index.data().toUInt();
+            wizard->zoomLevels.push_back(index.data().toUInt());
 
         /* Sort the list ascending */
-        qSort(wizard->zoomLevels);
+        sort(wizard->zoomLevels.begin(), wizard->zoomLevels.end());
     }
 
     return true;
@@ -290,12 +313,12 @@ bool SaveRasterWizard::LayersPage::validatePage() {
     QModelIndexList layerList = layersView->selectionModel()->selectedIndexes();
     if(layerList.isEmpty()) return false;
     foreach(const QModelIndex& index, layerList)
-        wizard->layers << index.data().toString();
+        wizard->layers.push_back(index.data().toString().toStdString());
 
     /* Save overlays */
     QModelIndexList overlayList = overlaysView->selectionModel()->selectedIndexes();
     foreach(const QModelIndex& index, overlayList)
-        wizard->overlays << index.data().toString();
+        wizard->overlays.push_back(index.data().toString().toStdString());
 
     return true;
 }
@@ -337,40 +360,15 @@ SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWi
 }
 
 void SaveRasterWizard::StatisticsPage::initializePage() {
-    AbstractMapView* mapView = *MainWindow::instance()->mapView();
-
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    Zoom minAvailableZoom = rasterModel->zoomLevels()[0];
-    double zoomMultiplier = rasterModel->zoomStep()*rasterModel->zoomStep();
-    MainWindow::instance()->unlockRasterModel();
-
-    quint64 _tileCountMinZoom = 0;
-
-    /* Tile count for whole map at _lowest possible_ zoom */
-    if(wizard->areaType == SaveRasterWizard::WholeMap) {
-        TileArea area = rasterModel->area();
-        _tileCountMinZoom = area.w*area.h*pow(zoomMultiplier, wizard->zoomLevels[0]-minAvailableZoom);
-
-    /* Tile count for visible area at _current_ zoom */
-    } else if(wizard->areaType == SaveRasterWizard::VisibleArea) {
-        /* Tile coordinates in visible area, divide them for smallest zoom */
-        AbsoluteArea<unsigned int> tiles = mapView->tilesInArea();
-        tiles = tiles/pow(zoomMultiplier, mapView->zoom()-wizard->zoomLevels[0]);
-
-        _tileCountMinZoom = (tiles.x2-tiles.x1+1)*(tiles.y2-tiles.y1+1);
-
-    /* Tile count for selected area at _current_ zoom */
-    } else {
-        /** @todo CustomArea to be implemented... */
-    }
-
-    tileCountMinZoom->setText(QString::number(_tileCountMinZoom));
+    tileCountMinZoom->setText(QString::number(wizard->area.w*wizard->area.h));
         zoomLevelCount->setText(QString::number(wizard->zoomLevels.size()));
 
     /* Tile count for all zoom levels */
     quint64 _tileCountOneLayer = 0;
-    foreach(Zoom z, wizard->zoomLevels)
-        _tileCountOneLayer += _tileCountMinZoom*pow(zoomMultiplier, z-wizard->zoomLevels[0]);
+    for(vector<Zoom>::const_iterator it = wizard->zoomLevels.begin(); it != wizard->zoomLevels.end(); ++it) {
+        TileArea a = wizard->area*pow(wizard->zoomStep, *it-wizard->zoomLevels[0]);
+        _tileCountOneLayer += static_cast<quint64>(a.w)*a.h;
+    }
 
     tileCountOneLayer->setText(QString::number(_tileCountOneLayer));
 
@@ -444,10 +442,10 @@ bool SaveRasterWizard::MetadataPage::isComplete() const {
 bool SaveRasterWizard::MetadataPage::validatePage() {
     if(filename->text().isEmpty()) return false;
 
-    wizard->filename = filename->text();
-    wizard->name = name->text();
-    wizard->description = description->text();
-    wizard->packager = packager->text();
+    wizard->filename = filename->text().toStdString();
+    wizard->name = name->text().toStdString();
+    wizard->description = description->text().toStdString();
+    wizard->packager = packager->text().toStdString();
 
     return true;
 }

@@ -208,7 +208,7 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     return ret;
 }
 
-AbsoluteArea<unsigned int> GraphicsMapView::tilesInArea(const QRect& area) {
+TileArea GraphicsMapView::viewedArea(const QRect& area) {
     QRect sceneArea;
     if(area.isNull()) {
         sceneArea.setTopLeft(view->mapToScene(visibleRegion().boundingRect().topLeft()).toPoint());
@@ -232,12 +232,12 @@ AbsoluteArea<unsigned int> GraphicsMapView::tilesInArea(const QRect& area) {
         sceneArea.setBottom(tileSize.y*tileCount.y-1);
     }
 
-    return AbsoluteArea<unsigned int>(
-        sceneArea.left()/tileSize.x,
-        sceneArea.top()/tileSize.y,
-        sceneArea.right()/tileSize.x,
-        sceneArea.bottom()/tileSize.y
-    );
+    TileArea a;
+    a.x = sceneArea.left()/tileSize.x;
+    a.y = sceneArea.top()/tileSize.y;
+    a.w = sceneArea.right()/tileSize.x-a.x+1;
+    a.h = sceneArea.bottom()/tileSize.y-a.y+1;
+    return a;
 }
 
 bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {

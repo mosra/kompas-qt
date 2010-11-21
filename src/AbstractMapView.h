@@ -113,15 +113,14 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
         virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint()) = 0;
 
         /**
-         * @brief Tile coordinates in given area
+         * @brief Currently viewed tile area
          * @param area      Area relative to map view widget. If given area is
          *      null, the function returns coordinates for whole visible area
          *      in map view widget.
-         * @return Left, top, right and bottom coordinates of tiles in the area.
-         *      If the map is smaller than view area, returns coordinates for
-         *      existing tiles only.
+         * @return Coordinates of tile area. If the map is smaller than view
+         *      area, returns coordinates for existing tiles only.
          */
-        virtual Core::AbsoluteArea<unsigned int> tilesInArea(const QRect& area = QRect()) = 0;
+        virtual Core::TileArea viewedArea(const QRect& area = QRect()) = 0;
 
     public slots:
         /**

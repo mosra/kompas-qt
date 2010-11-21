@@ -52,31 +52,19 @@ class SaveRasterWizard: public QWizard {
         class MetadataPage;
         class DownloadPage;
 
-        /** @brief Area type (from AreaPage) */
-        enum AreaType {
-            WholeMap,
-            VisibleArea,
-            CustomArea
-        };
-
-        /**
-         * @brief Area type (from AreaPage)
-         * @see SaveRasterWizard::AreaPage::validatePage()
-         */
-        AreaType areaType;
+        Core::TileSize tileSize;        /**< @brief Tile size of source model */
+        double zoomStep;                /**< @brief Zoom step of source model */
+        Core::TileArea area;            /**< @brief Tile area to download */
 
         /**
          * @brief List of zoom levels to save
-         *
-         * Sorted ascending.
-         * @see SaveRasterWizard::ZoomPage::validatePage()
          */
-        QList<Core::Zoom> zoomLevels;
-
-        QStringList layers,             /**< @brief Layers to save */
+        std::vector<Core::Zoom> zoomLevels;
+        std::vector<std::string>
+            layers,                     /**< @brief Layers to save */
             overlays;                   /**< @brief Overlays to save */
 
-        QString filename,               /**< @brief Package filename */
+        std::string filename,           /**< @brief Package filename */
             name,                       /**< @brief Package name */
             description,                /**< @brief Package description */
             packager;                   /**< @brief Packager name */

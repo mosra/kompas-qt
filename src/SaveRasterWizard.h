@@ -38,10 +38,11 @@ class SaveRasterWizard: public QWizard {
     public:
         /**
          * @brief Constructor
+         * @param model         Model to which save
          * @param parent        Parent widget
          * @param flags         Window flags
          */
-        SaveRasterWizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+        SaveRasterWizard(const std::string& _model, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
     protected:
         class AreaPage;
@@ -51,6 +52,11 @@ class SaveRasterWizard: public QWizard {
         class StatisticsPage;
         class MetadataPage;
         class DownloadPage;
+
+        /**
+         * @brief Raster model name which save to
+         */
+        std::string model;
 
         Core::TileSize tileSize;        /**< @brief Tile size of source model */
         double zoomStep;                /**< @brief Zoom step of source model */

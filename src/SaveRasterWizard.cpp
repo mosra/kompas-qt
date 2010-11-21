@@ -38,7 +38,7 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-SaveRasterWizard::SaveRasterWizard(QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags) {
+SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model) {
     addPage(new ZoomPage(this));
     addPage(new AreaPage(this));
     addPage(new LayersPage(this));

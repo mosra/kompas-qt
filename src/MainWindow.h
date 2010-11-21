@@ -189,6 +189,11 @@ class MainWindow: public QMainWindow {
         void openRaster();
 
         /**
+         * @brief Save offline package of current raster map
+         */
+        void saveRaster();
+
+        /**
          * @brief Close raster map
          */
         void closeRaster();

@@ -37,6 +37,7 @@
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
+#include "SaveRasterWizard.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -267,6 +268,19 @@ void MainWindow::openRaster() {
     }
 }
 
+void MainWindow::saveRaster() {
+    string name;
+
+    lockRasterModelForRead();
+    if(_rasterModel) name = _rasterModel->name();
+    unlockRasterModel();
+
+    if(name.empty()) return;
+
+    SaveRasterWizard wizard(name);
+    wizard.exec();
+}
+
 void MainWindow::closeRaster() {
     setRasterModel(0);
 }
@@ -278,6 +292,7 @@ void MainWindow::createActions() {
 
     /* Save raster map */
     saveRasterAction = new QAction(this);
+    connect(saveRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
 
     /* Close raster map */
     closeRasterAction = new QAction(tr("Close map"), this);

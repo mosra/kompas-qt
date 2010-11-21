@@ -31,11 +31,15 @@ QAction* SaveRasterMenuView::createMenuAction(const std::string& pluginName) {
     }
     delete instance;
 
-    return new QAction(QString::fromStdString(rasterManager->metadata(pluginName)->name()), this);
+    QAction* a = new QAction(QString::fromStdString(rasterManager->metadata(pluginName)->name()), this);
+    actions.insert(a, pluginName);
+    return a;
 }
 
 void SaveRasterMenuView::trigger(QAction* action) {
-    SaveRasterWizard wizard;
+    if(!actions.contains(action)) return;
+
+    SaveRasterWizard wizard(actions.value(action));
     wizard.exec();
 }
 

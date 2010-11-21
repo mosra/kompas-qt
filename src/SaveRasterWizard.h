@@ -28,8 +28,11 @@ class QListView;
 class QRadioButton;
 class QLabel;
 class QGroupBox;
+class QProgressBar;
 
 namespace Map2X { namespace QtGui {
+
+class SaveRasterThread;
 
 /** @brief Wizard for saving raster maps */
 class SaveRasterWizard: public QWizard {
@@ -281,6 +284,8 @@ class SaveRasterWizard::MetadataPage: public QWizardPage {
  * Downloads all tile data and creates the package.
  */
 class SaveRasterWizard::DownloadPage: public QWizardPage {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor
@@ -288,8 +293,29 @@ class SaveRasterWizard::DownloadPage: public QWizardPage {
          */
         DownloadPage(SaveRasterWizard* _wizard);
 
+        virtual void initializePage();
+
+        inline virtual bool isComplete() const { return _isComplete; }
+
+    private slots:
+        void updateStatus(Core::Zoom _currentZoom, int currentZoomNumber, const std::string& _currentLayer, int currentLayerNumber, int _totalCompleted, int _currentZoomLayerCompleted);
+
+        void completed();
+        void error();
+
     private:
         SaveRasterWizard* wizard;
+
+        SaveRasterThread* saveThread;
+
+        QLabel *filename,
+            *currentZoom,
+            *currentLayer;
+
+        QProgressBar *totalCompleted,
+            *currentZoomLayerCompleted;
+
+        bool _isComplete;
 };
 
 }}

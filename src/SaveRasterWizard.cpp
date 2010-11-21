@@ -27,11 +27,13 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
+#include <QtGui/QProgressBar>
 
 #include "MainWindow.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
+#include "SaveRasterThread.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -454,9 +456,74 @@ void SaveRasterWizard::MetadataPage::saveFileDialog() {
     filename->setText(QFileDialog::getSaveFileName(this, tr("Save package as...")));
 }
 
-SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
+SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {
     setTitle(tr("Downloading..."));
     setSubTitle(tr("The data are now being downloaded and saved to your package."));
+
+    saveThread = new SaveRasterThread(this);
+    connect(saveThread, SIGNAL(completeChanged(Core::Zoom,int,std::string,int,int,int)), SLOT(updateStatus(Core::Zoom,int,std::string,int,int,int)));
+    connect(saveThread, SIGNAL(error()), SLOT(error()));
+    connect(saveThread, SIGNAL(completed()), SLOT(completed()));
+
+    filename = new QLabel;
+    currentZoom = new QLabel;
+    currentLayer = new QLabel;
+    totalCompleted = new QProgressBar;
+    currentZoomLayerCompleted = new QProgressBar;
+
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(filename, 0, 0, 1, 2);
+    layout->addWidget(currentZoom, 1, 0);
+    layout->addWidget(currentLayer, 1, 1);
+    layout->addWidget(new QLabel(tr("Total progress:")), 2, 0, 1, 2);
+    layout->addWidget(totalCompleted, 3, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Current layer/zoom progress:")), 4, 0, 1, 2);
+    layout->addWidget(currentZoomLayerCompleted, 5, 0, 1, 2);
+    layout->setRowMinimumHeight(1, 48);
+    setLayout(layout);
+}
+
+void SaveRasterWizard::DownloadPage::initializePage() {
+    filename->setText(tr("Initializing package %0 ...").arg(QString::fromStdString(wizard->filename)));
+
+    updateStatus(0, 0, "", 0, 0, 0);
+
+    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, wizard->zoomStep, wizard->area, wizard->layers, wizard->overlays))
+        filename->setText(tr("Failed to initialize package %0").arg(QString::fromStdString(wizard->filename)));
+
+    if(!wizard->name.empty())
+        saveThread->setPackageAttribute(AbstractRasterModel::Name, wizard->name);
+    if(!wizard->description.empty())
+        saveThread->setPackageAttribute(AbstractRasterModel::Description, wizard->description);
+    if(!wizard->packager.empty())
+        saveThread->setPackageAttribute(AbstractRasterModel::Packager, wizard->packager);
+
+    saveThread->start();
+}
+
+void SaveRasterWizard::DownloadPage::updateStatus(Zoom _currentZoom, int currentZoomNumber, const string& _currentLayer, int currentLayerNumber, int _totalCompleted, int _currentZoomLayerCompleted) {
+    filename->setText(tr("Downloading and saving data ..."));
+
+    currentZoom->setText(tr("Current zoom: %0 (%1/%2)").arg(_currentZoom).arg(currentZoomNumber).arg(wizard->zoomLevels.size()));
+    currentLayer->setText(tr("Current layer: %0 (%1/%2)").arg(QString::fromStdString(_currentLayer)).arg(currentLayerNumber).arg(wizard->layers.size()+wizard->overlays.size()));
+    totalCompleted->setValue(_totalCompleted);
+    currentZoomLayerCompleted->setValue(_currentZoomLayerCompleted);
+}
+
+void SaveRasterWizard::DownloadPage::completed() {
+    filename->setText(tr("Package completed."));
+
+    _isComplete = true;
+    wizard->button(CancelButton)->setDisabled(true);
+    emit completeChanged();
+}
+
+void SaveRasterWizard::DownloadPage::error() {
+    filename->setText(tr("Error while creating package."));
+
+    _isComplete = true;
+    wizard->button(CancelButton)->setDisabled(true);
+    emit completeChanged();
 }
 
 }}

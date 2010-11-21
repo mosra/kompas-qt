@@ -32,6 +32,7 @@ set(Map2X_Qt_SRCS
     OpenRasterMenuView.cpp
     SaveRasterMenuView.cpp
     SaveRasterWizard.cpp
+    SaveRasterThread.cpp
     MapOptionsDock.cpp
     RasterPackageModel.cpp
     RasterLayerModel.cpp
@@ -53,6 +54,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     ConfigurationWidget.h
     AbstractPluginMenuView.h
     SaveRasterWizard.h
+    SaveRasterThread.h
     MapOptionsDock.h
     RasterPackageModel.h
     RasterLayerModel.h

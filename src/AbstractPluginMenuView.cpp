@@ -19,6 +19,19 @@ using namespace std;
 
 namespace Map2X { namespace QtGui {
 
+AbstractPluginMenuView::AbstractPluginMenuView(AbstractPluginManager* _manager, QMenu* _menu, QAction* _before, QObject* parent): QObject(parent), manager(_manager), menu(_menu), before(_before) {
+    connect(_manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)), this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(_manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+    this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+}
+
+void AbstractPluginMenuView::tryUpdate(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    /* State changed between loaded <-> unloaded => update menu. Static plugins
+        aren't changing, so don't test them. */
+    if((before & AbstractPluginManager::LoadOk) != (after & AbstractPluginManager::LoadOk))
+        update();
+}
+
 void AbstractPluginMenuView::update() {
     /* Clear menu before adding new items */
     clearMenu();

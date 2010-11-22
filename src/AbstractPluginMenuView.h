@@ -48,7 +48,7 @@ class AbstractPluginMenuView: public QObject {
          *      the items will be put at the end of menu.
          * @param parent        Parent widget
          */
-        inline AbstractPluginMenuView(AbstractPluginManager* _manager, QMenu* _menu, QAction* _before = 0, QObject* parent = 0): manager(_manager), menu(_menu), before(_before) {}
+        AbstractPluginMenuView(AbstractPluginManager* _manager, QMenu* _menu, QAction* _before = 0, QObject* parent = 0);
 
         /**
          * @brief Destructor
@@ -63,7 +63,6 @@ class AbstractPluginMenuView: public QObject {
          * items for them via createMenuAction().
          * @attention It has to be called explicitly after instantiation,
          * otherwise the menu will be empty.
-         * @todo Connect plugin manager updates with this.
          */
         void update();
 
@@ -95,6 +94,9 @@ class AbstractPluginMenuView: public QObject {
          * displayed in the menu.
          */
         virtual QAction* createMenuAction(const std::string& pluginName) = 0;
+
+    private slots:
+        void tryUpdate(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
     private:
         QMenu* menu;

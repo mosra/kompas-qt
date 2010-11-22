@@ -16,7 +16,7 @@
 #include "SaveRasterThread.h"
 
 #include <cmath>
-#include <QtCore/QDebug>
+#include <QtCore/QMetaType>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
@@ -26,7 +26,16 @@
 using namespace std;
 using namespace Map2X::Core;
 
+Q_DECLARE_METATYPE(std::string)
+
 namespace Map2X { namespace QtGui {
+
+SaveRasterThread::SaveRasterThread(QObject* parent): QThread(parent), abort(false), destinationModel(0) {
+    manager = new QNetworkAccessManager(this);
+    connect(this, SIGNAL(download(std::string,Core::Zoom,Core::TileCoords)), SLOT(startDownload(std::string,Core::Zoom,Core::TileCoords)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(finishDownload(QNetworkReply*)));
+    qRegisterMetaType<std::string>();
+}
 
 SaveRasterThread::~SaveRasterThread() {
     abort = true;
@@ -96,14 +105,20 @@ void SaveRasterThread::run() {
 
                     TileCoords coords(currentArea.x+col, currentArea.y+row);
 
-                    AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForWrite();
-
                     /* First try to get tile from file */
+                    AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForWrite();
                     string data = sourceModel->tileFromPackage(layer, zoom, coords);
-
-                    /** @todo Also download */
-
                     MainWindow::instance()->unlockRasterModel();
+
+                    /* Otherwise download */
+                    if(data.empty()) {
+                        emit download(layer, zoom, coords);
+                        mutex.lock();
+                        condition.wait(&mutex);
+                        mutex.unlock();
+
+                        data = lastDownloadedData;
+                    }
 
                     if(!destinationModel->tileToPackage(layer, zoom, coords, data)) {
                         emit error();
@@ -124,6 +139,19 @@ void SaveRasterThread::run() {
 
     destinationModel->finalizePackage();
     emit completed();
+}
+
+void SaveRasterThread::startDownload(const string& layer, Zoom zoom, const TileCoords& coords) {
+    const AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForRead();
+    manager->get(QNetworkRequest(QUrl(QString::fromStdString(sourceModel->tileUrl(layer, zoom, coords)))));
+    MainWindow::instance()->unlockRasterModel();
+}
+
+void SaveRasterThread::finishDownload(QNetworkReply* reply) {
+    QByteArray data = reply->readAll();
+    lastDownloadedData.assign(data.data(), data.size());
+    reply->deleteLater();
+    condition.wakeOne();
 }
 
 }}

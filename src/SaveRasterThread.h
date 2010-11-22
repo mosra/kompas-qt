@@ -16,14 +16,12 @@
 */
 
 #include <QtCore/QThread>
-#include <QtCore/QMetaType>
+#include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
+#include <QtNetwork/QNetworkAccessManager>
 
 #include "AbstractRasterModel.h"
 #include "MainWindow.h"
-
-Q_DECLARE_METATYPE(std::string)
-
-class QNetworkAccessManager;
 
 namespace Map2X { namespace QtGui {
 
@@ -31,9 +29,7 @@ class SaveRasterThread: public QThread {
     Q_OBJECT
 
     public:
-        SaveRasterThread(QObject* parent = 0): QThread(parent), abort(false), destinationModel(0) {
-            qRegisterMetaType<std::string>();
-        }
+        SaveRasterThread(QObject* parent = 0);
 
         virtual ~SaveRasterThread();
 
@@ -52,8 +48,19 @@ class SaveRasterThread: public QThread {
         void error();
         void completed();
 
+        void download(const std::string& layer, Core::Zoom zoom, const Core::TileCoords& coords);
+
+    private slots:
+        void startDownload(const std::string& layer, Core::Zoom zoom, const Core::TileCoords& coords);
+        void finishDownload(QNetworkReply* reply);
+
     private:
         bool abort;
+
+        QNetworkAccessManager* manager;
+        QMutex mutex;
+        QWaitCondition condition;
+        std::string lastDownloadedData;
 
         Core::AbstractRasterModel* destinationModel;
 

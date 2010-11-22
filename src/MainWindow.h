@@ -40,6 +40,7 @@ class RasterPackageModel;
 class RasterLayerModel;
 class RasterOverlayModel;
 class RasterZoomModel;
+class SaveRasterMenuView;
 
 /** @brief %Map2X main window */
 class MainWindow: public QMainWindow {
@@ -230,6 +231,8 @@ class MainWindow: public QMainWindow {
         QMenu *openRasterMenu,
             *saveRasterMenu,
             *toolsMenu;
+
+        SaveRasterMenuView* saveRasterMenuView;
 
         QLabel* coordinateStatus;
 

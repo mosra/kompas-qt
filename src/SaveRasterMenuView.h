@@ -30,8 +30,8 @@ namespace Map2X { namespace QtGui {
  *
  * Displays only these plugins which have
  * Core::AbstractRasterModel::WriteableFormat feature and don't have
- * Core::AbstractRasterModel::NonConvertableFormat feature.
- */
+ * Core::AbstractRasterModel::NonConvertableFormat feature, skips currently
+ * active raster model. */
 class SaveRasterMenuView: public AbstractPluginMenuView {
     public:
         /** @copydoc QtGui::AbstractPluginMenuView */
@@ -42,6 +42,7 @@ class SaveRasterMenuView: public AbstractPluginMenuView {
         virtual void trigger(QAction* action);
 
     private:
+        std::string currentModel;
         QHash<QAction*, std::string> actions;
         PluginManager<Core::AbstractRasterModel>* rasterManager;
 

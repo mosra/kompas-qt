@@ -15,6 +15,7 @@
 
 #include "SaveRasterMenuView.h"
 #include "SaveRasterWizard.h"
+#include "MainWindow.h"
 
 using namespace Map2X::Core;
 
@@ -23,9 +24,18 @@ namespace Map2X { namespace QtGui {
 void SaveRasterMenuView::clearMenu() {
     qDeleteAll<QList<QAction*> >(actions.keys());
     actions.clear();
+
+    /* Get current raster map plugin name */
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    if(model)   currentModel = model->name();
+    else        currentModel.clear();
+    MainWindow::instance()->unlockRasterModel();
 }
 
 QAction* SaveRasterMenuView::createMenuAction(const std::string& pluginName) {
+    /* Don't show current model in menu */
+    if(pluginName == currentModel) return 0;
+
     AbstractRasterModel* instance = rasterManager->instance(pluginName);
     if(!instance) return 0;
 

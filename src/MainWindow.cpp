@@ -92,7 +92,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     openRasterMenuView->update();
 
     /* Save raster map menu */
-    SaveRasterMenuView* saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
+    saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
     saveRasterMenuView->update();
 
     /* Tools menu */
@@ -175,6 +175,9 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     delete _rasterModel;
     _rasterModel = model;
     unlockRasterModel();
+
+    /* Update save raster menu to avoid showing the same plugin twice */
+    saveRasterMenuView->update();
 
     _rasterPackageModel->reload();
     _rasterLayerModel->reload();

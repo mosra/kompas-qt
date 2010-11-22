@@ -44,11 +44,11 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
     addPage(new ZoomPage(this));
     addPage(new AreaPage(this));
     addPage(new LayersPage(this));
-    addPage(new StatisticsPage(this));
     addPage(new MetadataPage(this));
+    addPage(new StatisticsPage(this));
     addPage(new DownloadPage(this));
 
-    /* Modify commit button text */
+    setOptions(NoBackButtonOnStartPage|NoBackButtonOnLastPage);
     setButtonText(CommitButton, tr("Download"));
     setWindowTitle(tr("Save map as..."));
 
@@ -60,7 +60,7 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
 }
 
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("Map area"));
+    setTitle(tr("2/6: Map area"));
     setSubTitle(tr("Select map area which you want to save."));
 
     /* Bold font */
@@ -140,7 +140,7 @@ bool SaveRasterWizard::AreaPage::validatePage() {
 }
 
 SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("Zoom levels"));
+    setTitle(tr("1/6: Zoom levels"));
     setSubTitle(tr("Select zoom levels which you want to save."));
 
     /* Zoom levels */
@@ -279,7 +279,7 @@ bool SaveRasterWizard::ZoomPage::validatePage() {
 }
 
 SaveRasterWizard::LayersPage::LayersPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("Map layers"));
+    setTitle(tr("3/6: Map layers"));
     setSubTitle(tr("Select tiles and overlays to save."));
 
     layersView = new QListView;
@@ -326,8 +326,9 @@ bool SaveRasterWizard::LayersPage::validatePage() {
 }
 
 SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), canDownload(true) {
-    setTitle(tr("Statistics"));
+    setTitle(tr("5/6: Statistics"));
     setSubTitle(tr("Review amount of data to be downloaded, return back and make changes or proceed to creating the package."));
+    setCommitPage(true);
 
     QFont boldFont;
     boldFont.setBold(true);
@@ -406,9 +407,8 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
 }
 
 SaveRasterWizard::MetadataPage::MetadataPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("Metadata"));
-    setSubTitle(tr("Select where to save the package, fill in metadata and proceed to download."));
-    setCommitPage(true);
+    setTitle(tr("4/6: Metadata"));
+    setSubTitle(tr("Select where to save the package and optionally fill in some metadata."));
 
     /* Initialize widgets */
     filename = new QLineEdit;
@@ -457,7 +457,7 @@ void SaveRasterWizard::MetadataPage::saveFileDialog() {
 }
 
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {
-    setTitle(tr("Downloading..."));
+    setTitle(tr("6/6: Downloading..."));
     setSubTitle(tr("The data are now being downloaded and saved to your package."));
 
     saveThread = new SaveRasterThread(this);

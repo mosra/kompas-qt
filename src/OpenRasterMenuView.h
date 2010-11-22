@@ -44,6 +44,7 @@ class OpenRasterMenuView: public AbstractPluginMenuView {
         PluginManager<Core::AbstractRasterModel>* rasterManager;
         QHash<QAction*, QString> items;
 
+        virtual void clearMenu();
         virtual QAction* createMenuAction(const std::string& pluginName);
 };
 

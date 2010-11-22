@@ -20,6 +20,9 @@ using namespace std;
 namespace Map2X { namespace QtGui {
 
 void AbstractPluginMenuView::update() {
+    /* Clear menu before adding new items */
+    clearMenu();
+
     /* Foreach plugin list and create menu items */
     vector<string> plugins = manager->nameList();
 

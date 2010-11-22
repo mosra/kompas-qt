@@ -45,6 +45,7 @@ class SaveRasterMenuView: public AbstractPluginMenuView {
         QHash<QAction*, std::string> actions;
         PluginManager<Core::AbstractRasterModel>* rasterManager;
 
+        virtual void clearMenu();
         virtual QAction* createMenuAction(const std::string& pluginName);
 };
 

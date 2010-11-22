@@ -59,13 +59,13 @@ class AbstractPluginMenuView: public QObject {
         /**
          * @brief Update menu with new items
          *
-         * Goes through all loaded plugins and creates menu items for them via
-         * createMenuAction().
+         * Calls clear(), goes through all loaded plugins and creates menu
+         * items for them via createMenuAction().
          * @attention It has to be called explicitly after instantiation,
          * otherwise the menu will be empty.
          * @todo Connect plugin manager updates with this.
          */
-        virtual void update();
+        void update();
 
     protected slots:
         /**
@@ -80,6 +80,9 @@ class AbstractPluginMenuView: public QObject {
 
     protected:
         AbstractPluginManager* manager;       /**< @brief Plugin manager */
+
+        /** @brief Clear menu */
+        virtual void clearMenu() = 0;
 
         /**
          * @brief Create menu action

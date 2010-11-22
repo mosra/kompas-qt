@@ -51,14 +51,14 @@ class ToolPluginMenuView: public AbstractPluginMenuView {
          */
         ToolPluginMenuView(MainWindow* _mainWindow, PluginManager<AbstractTool>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0): AbstractPluginMenuView(manager, menu, before, parent), toolManager(manager), mainWindow(_mainWindow) {}
 
-        virtual ~ToolPluginMenuView();
-        virtual void update();
+        inline virtual ~ToolPluginMenuView() { qDeleteAll<QList<AbstractTool*> >(items.values()); }
 
     private slots:
         /** @todo Open as modeless dialog */
         virtual void trigger(QAction* action);
 
     private:
+        virtual void clearMenu();
         virtual QAction* createMenuAction(const std::string& pluginName);
 
         PluginManager<AbstractTool>* toolManager;

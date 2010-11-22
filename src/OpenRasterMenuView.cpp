@@ -21,6 +21,11 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
+void OpenRasterMenuView::clearMenu() {
+    qDeleteAll<QList<QAction*> >(items.keys());
+    items.clear();
+}
+
 QAction* OpenRasterMenuView::createMenuAction(const std::string& pluginName) {
     AbstractRasterModel* instance = rasterManager->instance(pluginName);
     if(!instance) return 0;

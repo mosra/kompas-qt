@@ -22,7 +22,7 @@
 #include <QtGui/QDoubleSpinBox>
 #include <QtGui/QMessageBox>
 
-#include "../../Wgs84CoordsEdit.h"
+#include "Wgs84CoordsEdit.h"
 
 using namespace Map2X::Core;
 using namespace Map2X::QtGui;

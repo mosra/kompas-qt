@@ -49,7 +49,16 @@ MainWindow* MainWindow::_instance;
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _rasterModel(0) {
     _instance = this;
 
+    /* Window icon */
+    QIcon icon;
+    icon.addFile(":/logo-16.png");
+    icon.addFile(":/logo-32.png");
+    icon.addFile(":/logo-64.png");
+    icon.addFile(":/logo-128.png");
+    icon.addFile(":/logo-256.png");
+
     setWindowTitle("Map2X");
+    setWindowIcon(icon);
     statusBar();
 
     /* Load default configuration */

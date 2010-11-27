@@ -28,6 +28,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
 #include <QtGui/QProgressBar>
+#include <QtGui/QMessageBox>
 
 #include "MainWindow.h"
 #include "RasterLayerModel.h"
@@ -516,6 +517,8 @@ void SaveRasterWizard::DownloadPage::completed() {
     _isComplete = true;
     wizard->button(CancelButton)->setDisabled(true);
     emit completeChanged();
+
+    QMessageBox::information(this, tr("Package completed"), tr("Package is successfully completed."));
 }
 
 void SaveRasterWizard::DownloadPage::error() {
@@ -524,6 +527,8 @@ void SaveRasterWizard::DownloadPage::error() {
     _isComplete = true;
     wizard->button(CancelButton)->setDisabled(true);
     emit completeChanged();
+
+    QMessageBox::critical(this, tr("Packaging error"), tr("Something bad happened during package creation."));
 }
 
 }}

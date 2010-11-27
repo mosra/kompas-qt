@@ -382,11 +382,6 @@ void MainWindow::loadPluginsAsConfigured(const std::string& group, AbstractPlugi
             manager->load(*it);
 }
 
-void MainWindow::moveMap() {
-    /* Move map to some WGS coords */
-    _mapView->setCoords(Wgs84Coords(50.08333, 14.46667));
-}
-
 void MainWindow::pluginDialog() {
     PluginDialog dialog(this);
     dialog.exec();

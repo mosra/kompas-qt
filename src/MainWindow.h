@@ -242,7 +242,6 @@ class MainWindow: public QMainWindow {
         void loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager);
 
     private slots:
-        void moveMap();
         void pluginDialog();
         void configurationDialog();
         void currentCoordinates(const Core::Wgs84Coords& coords);

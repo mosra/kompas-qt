@@ -92,7 +92,6 @@ void MapOptionsDock::setMapView(int id) {
 }
 
 void MapOptionsDock::setActualData() {
-    /* Display actual model name */
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
     /* Raster model is loaded, enable widget */

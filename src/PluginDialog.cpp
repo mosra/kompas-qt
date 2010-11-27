@@ -24,6 +24,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
+#include <QtGui/QMessageBox>
 
 #include "PluginManager.h"
 #include "MainWindow.h"
@@ -127,6 +128,12 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     mapper->addMapping(replaces, PluginModel::Replaces, "text");
     mapper->addMapping(replacedWith, PluginModel::ReplacedWith, "text");
 
+    /* Display errorbox if something bad happened during loading/unloading plugins */
+    connect(manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+            SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+        SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+
     /* On selection change load new row in mapper */
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             mapper, SLOT(setCurrentModelIndex(QModelIndex)));
@@ -199,6 +206,46 @@ void PluginDialog::Tab::setPluginDir() {
         pluginDir->setText(dir);
         emit edited();
     }
+}
+
+void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    QString message;
+    switch(after) {
+        case AbstractPluginManager::NotFound:
+            message = tr("Plugin file cannot be found."); break;
+        case AbstractPluginManager::WrongPluginVersion:
+            message = tr("Wrong version number."); break;
+        case AbstractPluginManager::WrongInterfaceVersion:
+            message = tr("Unsupported interface version."); break;
+        case AbstractPluginManager::WrongMetadataFile:
+            message = tr("Error in metadata file."); break;
+        case AbstractPluginManager::UnresolvedDependency:
+            message = tr("Some plugin dependecy is missing."); break;
+        case AbstractPluginManager::LoadFailed:
+            message = tr("Error while loading plugin binary."); break;
+
+        /* Loaded OK, don't yell at the user */
+        default: return;
+    }
+
+    QMessageBox::warning(this, tr("Cannot load plugin"), tr("Cannot load plugin <strong>%1</strong>:<br/><br/>%2").arg(QString::fromStdString(name)).arg(message));
+}
+
+void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+    QString message;
+    switch(after) {
+        case AbstractPluginManager::UnloadFailed:
+            message = tr("Error while unloading plugin binary."); break;
+        case AbstractPluginManager::IsRequired:
+            message = tr("The plugin is required by another plugin."); break;
+        case AbstractPluginManager::IsUsed:
+            message = tr("The plugin is currently used."); break;
+
+        /* Unloaded OK or is static, don't yell at the user */
+        default: return;
+    }
+
+    QMessageBox::warning(this, tr("Cannot unload plugin"), tr("Cannot unload plugin <strong>%1</strong>:<br /><br/>%2").arg(QString::fromStdString(name)).arg(message));
 }
 
 }}

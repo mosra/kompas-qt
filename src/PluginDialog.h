@@ -20,6 +20,7 @@
  */
 
 #include "AbstractConfigurationDialog.h"
+#include "AbstractPluginManager.h"
 
 class QDialogButtonBox;
 class QTabWidget;
@@ -30,7 +31,6 @@ class QDataWidgetMapper;
 namespace Map2X { namespace QtGui {
 
 class MainWindow;
-class AbstractPluginManager;
 class PluginModel;
 
 /**
@@ -86,6 +86,9 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
 
     private slots:
         virtual void setPluginDir();
+
+        void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
     private:
         MainWindow* mainWindow;

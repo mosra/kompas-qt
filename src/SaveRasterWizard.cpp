@@ -28,13 +28,13 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
 #include <QtGui/QProgressBar>
-#include <QtGui/QMessageBox>
 
 #include "MainWindow.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
 #include "SaveRasterThread.h"
+#include "MessageBox.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -518,7 +518,7 @@ void SaveRasterWizard::DownloadPage::completed() {
     wizard->button(CancelButton)->setDisabled(true);
     emit completeChanged();
 
-    QMessageBox::information(this, tr("Package completed"), tr("Package is successfully completed."));
+    MessageBox::information(this, tr("Package completed"), tr("Package is successfully completed."));
 }
 
 void SaveRasterWizard::DownloadPage::error() {
@@ -528,7 +528,7 @@ void SaveRasterWizard::DownloadPage::error() {
     wizard->button(CancelButton)->setDisabled(true);
     emit completeChanged();
 
-    QMessageBox::critical(this, tr("Packaging error"), tr("Something bad happened during package creation."));
+    MessageBox::critical(this, tr("Packaging error"), tr("Something bad happened during package creation."));
 }
 
 }}

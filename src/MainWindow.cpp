@@ -22,7 +22,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QDockWidget>
 #include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
@@ -38,6 +37,7 @@
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
 #include "SaveRasterWizard.h"
+#include "MessageBox.h"
 
 using namespace std;
 using namespace Map2X::Core;
@@ -255,13 +255,13 @@ void MainWindow::openRaster() {
 
         /* No supporting plugin found */
         if(!firstSupport) {
-            QMessageBox::warning(this, tr("Unsupported file format"), tr("No suitable map plugin was found for this file."));
+            MessageBox::warning(this, tr("Unsupported file format"), tr("No suitable map plugin was found for this file."));
             return;
         }
 
         /* If package cannot be opened, destroy that bitch and go home */
         if(firstSupport->addPackage(filename.toStdString())) {
-            QMessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
+            MessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
             delete firstSupport;
             return;
         }

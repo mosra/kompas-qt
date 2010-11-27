@@ -20,9 +20,9 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QGridLayout>
 #include <QtGui/QDoubleSpinBox>
-#include <QtGui/QMessageBox>
 
 #include "Wgs84CoordsEdit.h"
+#include "MessageBox.h"
 
 using namespace Map2X::Core;
 using namespace Map2X::QtGui;
@@ -63,7 +63,7 @@ void DistanceMeterToolDialog::calculate() {
     double _distance = Wgs84Coords::distance(coordsA->coords(), coordsB->coords());
 
     if(_distance < 0) {
-        QMessageBox information(this);
+        MessageBox information(this);
         information.setIcon(QMessageBox::Information);
         information.setWindowTitle(tr("Mosra & Co. Travel Agency"));
         information.setText(tr("Congratulations! You have chosen a trip around the world."));

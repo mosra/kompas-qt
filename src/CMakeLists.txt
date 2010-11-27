@@ -38,6 +38,7 @@ set(Map2X_Qt_SRCS
     RasterLayerModel.cpp
     RasterOverlayModel.cpp
     RasterZoomModel.cpp
+    MessageBox.cpp
     main.cpp
     Plugins/registerStatic.cpp
 )

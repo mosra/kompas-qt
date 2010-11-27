@@ -18,7 +18,8 @@
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QMessageBox>
+
+#include "MessageBox.h"
 
 namespace Map2X { namespace QtGui {
 
@@ -66,7 +67,7 @@ void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* wid
 }
 
 void AbstractConfigurationDialog::restoreDefaultsWarning() {
-    if(QMessageBox::warning(this, tr("Really restore defaults?"),
+    if(MessageBox::warning(this, tr("Really restore defaults?"),
        tr("Do you really want to restore default configuration? This action is irreversible."),
        QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
         emit restoreDefaults();

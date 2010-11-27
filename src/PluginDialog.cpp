@@ -24,11 +24,11 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
-#include <QtGui/QMessageBox>
 
 #include "PluginManager.h"
 #include "MainWindow.h"
 #include "PluginModel.h"
+#include "MessageBox.h"
 
 using namespace std;
 
@@ -228,7 +228,7 @@ void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::L
         default: return;
     }
 
-    QMessageBox::warning(this, tr("Cannot load plugin"), tr("Cannot load plugin <strong>%1</strong>:<br/><br/>%2").arg(QString::fromStdString(name)).arg(message));
+    MessageBox::warning(this, tr("Cannot load plugin"), tr("Cannot load plugin <strong>%1</strong>:<br/><br/>%2").arg(QString::fromStdString(name)).arg(message));
 }
 
 void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -245,7 +245,7 @@ void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager:
         default: return;
     }
 
-    QMessageBox::warning(this, tr("Cannot unload plugin"), tr("Cannot unload plugin <strong>%1</strong>:<br /><br/>%2").arg(QString::fromStdString(name)).arg(message));
+    MessageBox::warning(this, tr("Cannot unload plugin"), tr("Cannot unload plugin <strong>%1</strong>:<br /><br/>%2").arg(QString::fromStdString(name)).arg(message));
 }
 
 }}

@@ -2,5 +2,8 @@
 <qresource>
     <file>tileNotFound-256.png</file>
     <file>tileLoading-256.png</file>
+    <file>messagebox-information-64.png</file>
+    <file>messagebox-warning-64.png</file>
+    <file>messagebox-error-64.png</file>
 </qresource>
 </RCC>

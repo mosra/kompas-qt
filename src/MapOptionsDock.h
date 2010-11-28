@@ -146,12 +146,10 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
     public:
         /**
          * @brief Constructor
-         * @param _mapView          Map view which displays map from given tile
-         *      model
          * @param parent            Parent object
          */
-        inline EditableRasterOverlayModel(AbstractMapView** _mapView, QObject* parent = 0):
-            QAbstractProxyModel(parent), mapView(_mapView) {}
+        inline EditableRasterOverlayModel(QObject* parent = 0):
+            QAbstractProxyModel(parent) {}
 
         /** @brief Index creation */
         inline virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
@@ -202,8 +200,6 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
         void reload(const QStringList& activeOverlays);
 
     private:
-        AbstractMapView** mapView;
-
         QBitArray loaded;
 };
 

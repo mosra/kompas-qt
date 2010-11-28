@@ -56,7 +56,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterLayers->setModelColumn(RasterPackageModel::Name);
 
     /* Raster overlays list view */
-    rasterOverlayModel = new EditableRasterOverlayModel(MainWindow::instance()->mapView(), this);
+    rasterOverlayModel = new EditableRasterOverlayModel(this);
     rasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
     rasterOverlays = new QListView;
     rasterOverlays->setModel(rasterOverlayModel);
@@ -176,8 +176,10 @@ void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemMod
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::reload() {
-    if(*mapView) {
-        QStringList loadedOverlays = (*mapView)->overlays();
+    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+
+    if(mapView) {
+        QStringList loadedOverlays = mapView->overlays();
         reload(loadedOverlays);
 
     } else {
@@ -214,10 +216,12 @@ Qt::ItemFlags MapOptionsDock::EditableRasterOverlayModel::flags(const QModelInde
 }
 
 bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-    if(index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
+    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+
+    if(mapView && index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
         /* Remove overlay */
         if(loaded.at(index.row())) {
-            if((*mapView)->removeOverlay(data(index).toString())) {
+            if(mapView->removeOverlay(data(index).toString())) {
                 loaded.setBit(index.row(), false);
                 emit dataChanged(index, index);
                 return true;
@@ -225,7 +229,7 @@ bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& inde
 
         /* Add overlay */
         } else {
-            if((*mapView)->addOverlay(data(index).toString())) {
+            if(mapView->addOverlay(data(index).toString())) {
                 loaded.setBit(index.row(), true);
                 emit dataChanged(index, index);
                 return true;

@@ -29,7 +29,7 @@ namespace Map2X { namespace QtGui {
 int TileDataThread::_maxSimultaenousDownloads = 3;
 
 TileDataThread::TileDataThread(QObject* parent): QThread(parent), abort(false) {
-    manager = new QNetworkAccessManager;
+    manager = new QNetworkAccessManager(this);
     connect(this, SIGNAL(download(TileJob*)), this, SLOT(startDownload(TileJob*)));
     connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(finishDownload(QNetworkReply*)));
 }

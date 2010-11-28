@@ -85,9 +85,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
 
-    /* Map view plugin */
-    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
-
     createActions();
     createMenus();
 
@@ -107,6 +104,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Tools menu */
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
     menuView->update();
+
+    /* Load map view plugin */
+    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
     /* Status bar with coordinates */
     coordinateStatus = new QLabel;
@@ -147,37 +147,24 @@ void MainWindow::loadDefaultConfiguration() {
 }
 
 void MainWindow::setMapView(AbstractMapView* view) {
-    /** @todo Allow no map view */
-    if(!view) return;
     if(_mapView) delete _mapView;
-
     _mapView = view;
-    connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
     setCentralWidget(_mapView);
+
+    /* View exists, connect it */
+    if(_mapView) {
+        connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
+        connect(zoomInAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomIn()));
+        connect(zoomOutAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomOut()));
+    }
+
+    emit mapViewChanged();
+
+    displayMapIfUsable();
 }
 
 void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /** @todo Disable Save Raster menu when no writeable format is available at all */
-
-    /* Raster model is available, configure it & enable save menu */
-    if(model) {
-        saveRasterMenu->setDisabled(false);
-        closeRasterAction->setDisabled(false);
-
-        /* Update action in "save raster" menu */
-        saveRasterAction->setText(tr("Offline %0 package").arg(
-            QString::fromStdString(_rasterModelPluginManager->metadata(model->name())->name())
-        ));
-        if(model->features() & AbstractRasterModel::WriteableFormat)
-            saveRasterAction->setDisabled(false);
-        else
-            saveRasterAction->setDisabled(true);
-
-    /* Raster model is not available, disable save menu */
-    } else {
-        saveRasterMenu->setDisabled(true);
-        closeRasterAction->setDisabled(true);
-    }
 
     lockRasterModelForWrite();
     delete _rasterModel;
@@ -193,6 +180,8 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     _rasterZoomModel->reload();
 
     emit rasterModelChanged();
+
+    displayMapIfUsable();
 }
 
 void MainWindow::setOnlineEnabled(bool enabled) {
@@ -206,6 +195,8 @@ void MainWindow::setOnlineEnabled(bool enabled) {
     _rasterZoomModel->reload();
 
     emit rasterModelChanged();
+
+    displayMapIfUsable();
 }
 
 void MainWindow::openRaster() {
@@ -294,6 +285,33 @@ void MainWindow::saveRaster() {
     wizard.exec();
 }
 
+void MainWindow::displayMapIfUsable() {
+    const AbstractRasterModel* model = lockRasterModelForRead();
+    string name = model ? model->name() : "";
+    bool isUsable = model ? model->isUsable() : false;
+    unlockRasterModel();
+
+    if(_mapView && isUsable) {
+        /* Enable menus */
+        saveRasterMenu->setDisabled(false);
+        closeRasterAction->setDisabled(false);
+
+        /* Update action in "save raster" menu */
+        saveRasterAction->setText(tr("Offline %0 package").arg(
+            QString::fromStdString(_rasterModelPluginManager->metadata(name)->name())
+        ));
+        if(model->features() & AbstractRasterModel::WriteableFormat)
+            saveRasterAction->setDisabled(false);
+        else
+            saveRasterAction->setDisabled(true);
+
+    } else {
+        /* Disable menus */
+        saveRasterMenu->setDisabled(true);
+        closeRasterAction->setDisabled(true);
+    }
+}
+
 void MainWindow::createActions() {
     /* Open raster map */
     openRasterAction = new QAction(tr("Open map package"), this);
@@ -319,8 +337,6 @@ void MainWindow::createActions() {
     zoomInAction->setShortcut(Qt::CTRL|Qt::Key_Plus);
     zoomOutAction = new QAction(tr("Zoom out"), this);
     zoomOutAction->setShortcut(Qt::CTRL|Qt::Key_Minus);
-    connect(zoomInAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomIn()));
-    connect(zoomOutAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomOut()));
 
     /* Settings menu */
     pluginDialogAction = new QAction(tr("Plugins"), this);

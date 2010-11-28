@@ -56,10 +56,10 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterLayers->setModelColumn(RasterPackageModel::Name);
 
     /* Raster overlays list view */
-    EditableRasterOverlayModel* editableRasterOverlayModel = new EditableRasterOverlayModel(MainWindow::instance()->mapView(), this);
-    editableRasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
+    rasterOverlayModel = new EditableRasterOverlayModel(MainWindow::instance()->mapView(), this);
+    rasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
     rasterOverlays = new QListView;
-    rasterOverlays->setModel(editableRasterOverlayModel);
+    rasterOverlays->setModel(rasterOverlayModel);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
@@ -76,14 +76,8 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     layout->setRowStretch(6, 1);
     setLayout(layout);
 
-    setActualData();
-
     /* Update data when raster model is changed */
-    connect(MainWindow::instance(), SIGNAL(rasterModelChanged()), SLOT(setActualData()));
-
-    /* Connect comboboxes with model / layer changing */
-    /** @todo Make it non-dependent on one map view */
-    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), *MainWindow::instance()->mapView(), SLOT(setLayer(QString)));
+    connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(connectMapView()));
 }
 
 void MapOptionsDock::setMapView(int id) {
@@ -91,21 +85,16 @@ void MapOptionsDock::setMapView(int id) {
     MainWindow::instance()->setMapView(view);
 }
 
-void MapOptionsDock::setActualData() {
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+void MapOptionsDock::setActualLayer(const QString& layer) {
+    rasterLayers->setCurrentIndex(rasterLayers->findText(layer));
+}
 
-    /* Raster model is loaded, enable widget */
-    if(rasterModel) setDisabled(false);
-
-    /* No raster model loaded, disable widget */
-    else setDisabled(true);
-
-    /* Set actual map layer */
-    rasterLayers->setCurrentIndex(rasterLayers->findText((*MainWindow::instance()->mapView())->layer()));
-
-    /** @todo Actual overlays? */
-
-    MainWindow::instance()->unlockRasterModel();
+void MapOptionsDock::connectMapView() {
+    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+    if(!mapView) return;
+    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), mapView, SLOT(setLayer(QString)));
+    connect(mapView, SIGNAL(layerChanged(QString)), SLOT(setActualLayer(QString)));
+    connect(mapView, SIGNAL(overlaysChanged(QStringList)), rasterOverlayModel, SLOT(reload(QStringList)));
 }
 
 void MapOptionsDock::EditableRasterPackageModel::setSourceModel(QAbstractItemModel* sourceModel) {

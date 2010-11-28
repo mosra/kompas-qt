@@ -143,6 +143,9 @@ class MainWindow: public QMainWindow {
             { return &_mapView; }
 
     signals:
+        /** @brief Map view has been changed to another */
+        void mapViewChanged();
+
         /** @brief Raster model has been changed to another */
         void rasterModelChanged();
 
@@ -240,6 +243,8 @@ class MainWindow: public QMainWindow {
         void createMenus();
 
         void loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager);
+
+        void displayMapIfUsable();
 
     private slots:
         void pluginDialog();

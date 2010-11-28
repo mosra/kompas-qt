@@ -59,11 +59,15 @@ class MapOptionsDock: public QWidget {
         QListView *rasterPackages,
             *rasterOverlays;
 
+        EditableRasterOverlayModel* rasterOverlayModel;
+
     private slots:
         void setMapView(int id);
 
-        /** @brief Update comboboxes to actually used layers etc. */
-        void setActualData();
+        void setActualLayer(const QString& layer);
+
+        /** @brief Connect new map view to this widget */
+        void connectMapView();
 };
 
 class MapOptionsDock::EditableRasterPackageModel: public QAbstractProxyModel {

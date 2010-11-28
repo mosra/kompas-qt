@@ -195,6 +195,7 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
          * overlays are changed.
          */
         void reload();
+        void reload(const QStringList& activeOverlays);
 
     private:
         AbstractMapView** mapView;

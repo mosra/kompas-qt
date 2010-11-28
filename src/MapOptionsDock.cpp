@@ -187,18 +187,24 @@ void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemMod
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::reload() {
-    beginResetModel();
-    loaded.clear();
-
     if(*mapView) {
-        /* Make sure loadedOverlays bitarray is as large as overlays list */
-        loaded.fill(false, sourceModel()->rowCount());
+        QStringList loadedOverlays = (*mapView)->overlays();
+        reload(loadedOverlays);
 
-        QStringList _loaded = (*mapView)->overlays();
-        for(int row = 0; row != sourceModel()->rowCount(); ++row) {
-            if(_loaded.contains(sourceModel()->index(row, 0).data().toString()))
-                loaded.setBit(row, true);
-        }
+    } else {
+        beginResetModel();
+        loaded.fill(false, sourceModel()->rowCount());
+        endResetModel();
+    }
+}
+
+void MapOptionsDock::EditableRasterOverlayModel::reload(const QStringList& loadedOverlays) {
+    beginResetModel();
+
+    loaded.fill(false, sourceModel()->rowCount());
+    for(int row = 0; row != sourceModel()->rowCount(); ++row) {
+        if(loadedOverlays.contains(sourceModel()->index(row, 0).data().toString()))
+            loaded.setBit(row, true);
     }
 
     endResetModel();

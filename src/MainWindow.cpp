@@ -295,6 +295,7 @@ void MainWindow::displayMapIfUsable() {
         /* Enable menus */
         saveRasterMenu->setDisabled(false);
         closeRasterAction->setDisabled(false);
+        mapMenu->setDisabled(false);
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(
@@ -309,6 +310,7 @@ void MainWindow::displayMapIfUsable() {
         /* Disable menus */
         saveRasterMenu->setDisabled(true);
         closeRasterAction->setDisabled(true);
+        mapMenu->setDisabled(true);
     }
 }
 
@@ -369,7 +371,7 @@ void MainWindow::createMenus() {
     fileMenu->addAction(quitAction);
 
     /* Map menu */
-    QMenu* mapMenu = menuBar()->addMenu(tr("Map"));
+    mapMenu = menuBar()->addMenu(tr("Map"));
     mapMenu->addAction(zoomInAction);
     mapMenu->addAction(zoomOutAction);
 

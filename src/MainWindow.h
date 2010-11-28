@@ -233,6 +233,7 @@ class MainWindow: public QMainWindow {
 
         QMenu *openRasterMenu,
             *saveRasterMenu,
+            *mapMenu,
             *toolsMenu;
 
         SaveRasterMenuView* saveRasterMenuView;

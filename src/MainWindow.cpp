@@ -22,6 +22,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QDockWidget>
 #include <QtGui/QFileDialog>
+#include <QtGui/QGridLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QStackedWidget>
 
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
@@ -38,6 +41,9 @@
 #include "RasterZoomModel.h"
 #include "SaveRasterWizard.h"
 #include "MessageBox.h"
+
+#define WELCOME_SCREEN 0
+#define MAP_VIEW 1
 
 using namespace std;
 using namespace Map2X::Core;
@@ -88,7 +94,47 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     createActions();
     createMenus();
 
-    QDockWidget* mapOptionsDock = new QDockWidget;
+    /* Welcome screen, wrapped in another widget so it's nicely centered */
+    QFrame* welcomeScreenFrame = new QFrame;
+    welcomeScreenFrame->setAutoFillBackground(true);
+    QPalette palette;
+    palette.setBrush(QPalette::Window, QBrush(QPixmap(":/welcome-640.png")));
+    welcomeScreenFrame->setPalette(palette);
+
+    QPushButton* restoreSessionButton = new QPushButton(tr("Restore saved session"));
+    restoreSessionButton->setDisabled(true);
+    QPushButton* loadOnlineMapButton = new QPushButton(tr("Load online map"));
+    loadOnlineMapButton->setMenu(openRasterMenu);
+    QPushButton* openRasterButton = new QPushButton(tr("Open map package"));
+    connect(openRasterButton, SIGNAL(clicked(bool)), SLOT(openRaster()));
+
+    QGridLayout* welcomeScreenFrameLayout = new QGridLayout;
+    welcomeScreenFrameLayout->addWidget(new QWidget, 0, 0, 1, 5);
+    welcomeScreenFrameLayout->addWidget(new QWidget, 1, 0);
+    welcomeScreenFrameLayout->addWidget(restoreSessionButton, 1, 1);
+    welcomeScreenFrameLayout->addWidget(loadOnlineMapButton, 1, 2);
+    welcomeScreenFrameLayout->addWidget(openRasterButton, 1, 3);
+    welcomeScreenFrameLayout->addWidget(new QWidget, 1, 4);
+    welcomeScreenFrameLayout->addWidget(new QWidget, 2, 0, 1, 5);
+    welcomeScreenFrameLayout->setColumnMinimumWidth(0, 100);
+    welcomeScreenFrameLayout->setColumnMinimumWidth(4, 100);
+    welcomeScreenFrameLayout->setRowMinimumHeight(0, 300);
+    welcomeScreenFrameLayout->setRowMinimumHeight(2, 50);
+
+    welcomeScreenFrame->setLayout(welcomeScreenFrameLayout);
+    welcomeScreenFrame->setFixedSize(640, 480);
+    QWidget* welcomeScreen = new QWidget;
+    QHBoxLayout* welcomeScreenLayout = new QHBoxLayout;
+    welcomeScreenLayout->addWidget(welcomeScreenFrame);
+    welcomeScreen->setLayout(welcomeScreenLayout);
+
+    /* Stacked widget */
+    centralStackedWidget = new QStackedWidget;
+    centralStackedWidget->addWidget(welcomeScreen);
+    setCentralWidget(centralStackedWidget);
+
+    /* Map options dock */
+    mapOptionsDock = new QDockWidget;
     mapOptionsDock->setWidget(new MapOptionsDock(this));
     mapOptionsDock->setWindowTitle(tr("Map options"));
     addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
@@ -149,7 +195,9 @@ void MainWindow::loadDefaultConfiguration() {
 void MainWindow::setMapView(AbstractMapView* view) {
     if(_mapView) delete _mapView;
     _mapView = view;
-    setCentralWidget(_mapView);
+
+    /* Assign map view to second slot in stacked widget */
+    centralStackedWidget->addWidget(_mapView);
 
     /* View exists, connect it */
     if(_mapView) {
@@ -291,6 +339,7 @@ void MainWindow::displayMapIfUsable() {
     bool isUsable = model ? model->isUsable() : false;
     unlockRasterModel();
 
+    /* Display map view, map options dock */
     if(_mapView && isUsable) {
         /* Enable menus */
         saveRasterMenu->setDisabled(false);
@@ -306,11 +355,20 @@ void MainWindow::displayMapIfUsable() {
         else
             saveRasterAction->setDisabled(true);
 
+        /* Show map view, show map options dock */
+        centralStackedWidget->setCurrentIndex(MAP_VIEW);
+        mapOptionsDock->setHidden(false);
+
+    /* Display welcome screen */
     } else {
         /* Disable menus */
         saveRasterMenu->setDisabled(true);
         closeRasterAction->setDisabled(true);
         mapMenu->setDisabled(true);
+
+        /* Show welcome screen, hide map options dock */
+        centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
+        mapOptionsDock->setHidden(true);
     }
 }
 

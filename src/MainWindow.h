@@ -21,15 +21,18 @@
 
 #include <QtCore/QReadWriteLock>
 #include <QtGui/QMainWindow>
+#include <QtGui/QFrame>
 
 #include "Utility/Configuration.h"
 #include "AbstractMapView.h"
 #include "AbstractTool.h"
 #include "AbstractProjection.h"
 
+class QStackedWidget;
 class QAction;
 class QMenu;
 class QLabel;
+class QDockWidget;
 
 namespace Map2X { namespace QtGui {
 
@@ -238,6 +241,9 @@ class MainWindow: public QMainWindow {
         SaveRasterMenuView* saveRasterMenuView;
 
         QLabel* coordinateStatus;
+
+        QStackedWidget* centralStackedWidget;
+        QDockWidget* mapOptionsDock;
 
         void createActions();
         void createMenus();

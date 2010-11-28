@@ -295,7 +295,7 @@ void MainWindow::saveRaster() {
 
 void MainWindow::createActions() {
     /* Open raster map */
-    openRasterAction = new QAction(tr("Open local package"), this);
+    openRasterAction = new QAction(tr("Open map package"), this);
     connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
 
     /* Save raster map */
@@ -336,11 +336,10 @@ void MainWindow::createActions() {
 void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
+    fileMenu->addAction(openRasterAction);
 
     /* Open raster map menu */
-    openRasterMenu = fileMenu->addMenu(tr("Open map"));
-    openRasterMenu->addAction(openRasterAction);
-    openRasterMenu->addSeparator();
+    openRasterMenu = fileMenu->addMenu(tr("Load online map"));
 
     /* Save raster map menu */
     saveRasterMenu = fileMenu->addMenu(tr("Save map"));

@@ -252,6 +252,7 @@ void MainWindow::openRaster() {
             if(state == AbstractRasterModel::PartiallySupported && !firstSupport)
                 firstSupport = instance;
             else if(state == AbstractRasterModel::FullySupported) {
+                delete firstSupport;
                 firstSupport = instance;
                 break;
 

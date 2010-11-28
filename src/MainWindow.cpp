@@ -268,8 +268,9 @@ void MainWindow::openRaster() {
             return;
         }
 
-        /* If package cannot be opened, destroy that bitch and go home */
-        if(firstSupport->addPackage(filename.toStdString())) {
+        /* If package cannot be opened or is unusable, destroy that bitch and
+           go home */
+        if(firstSupport->addPackage(filename.toStdString()) == -1 || !firstSupport->isUsable()) {
             MessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
             delete firstSupport;
             return;

@@ -136,11 +136,10 @@ class MainWindow: public QMainWindow {
 
         /**
          * @brief Map view
-         * @return Returns double pointer, because the map view class instance
-         * can be replaced with another.
+         * @return Current map view. The pointer should not be stored anywhere
+         *      because it can change after loading another map view plugin.
          */
-        inline AbstractMapView** mapView()
-            { return &_mapView; }
+        inline AbstractMapView* mapView() { return _mapView; }
 
     signals:
         /** @brief Map view has been changed to another */

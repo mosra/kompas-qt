@@ -125,10 +125,10 @@ bool SaveRasterWizard::AreaPage::validatePage() {
 
     /* Tile count for visible area at _current_ zoom */
     } else if(visibleArea->isChecked()) {
-        AbstractMapView* mapView = *MainWindow::instance()->mapView();
+        AbstractMapView* mapView = MainWindow::instance()->mapView();
 
         /* Tile coordinates in visible area, divide them for smallest zoom */
-        TileArea currentArea = (*MainWindow::instance()->mapView())->viewedArea();
+        TileArea currentArea = mapView->viewedArea();
         /** @bug Round it up, so the area is not zero sized when current zoom is big and lowest save zoom is small */
         wizard->area = currentArea/pow(wizard->zoomStep, mapView->zoom()-wizard->zoomLevels[0]);
 
@@ -157,7 +157,7 @@ SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wi
     int minimum = model->zoomLevels().front();
     int maximum = model->zoomLevels().back();
     MainWindow::instance()->unlockRasterModel();
-    int current = (*MainWindow::instance()->mapView())->zoom();
+    int current = MainWindow::instance()->mapView()->zoom();
 
     /* Set maximum, minimum and current zoom value */
     minZoom->setMinimum(minimum);

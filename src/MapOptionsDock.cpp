@@ -90,7 +90,7 @@ void MapOptionsDock::setActualLayer(const QString& layer) {
 }
 
 void MapOptionsDock::connectMapView() {
-    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+    AbstractMapView* mapView = MainWindow::instance()->mapView();
     if(!mapView) return;
     connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), mapView, SLOT(setLayer(QString)));
     connect(mapView, SIGNAL(layerChanged(QString)), SLOT(setActualLayer(QString)));
@@ -176,7 +176,7 @@ void MapOptionsDock::EditableRasterOverlayModel::setSourceModel(QAbstractItemMod
 }
 
 void MapOptionsDock::EditableRasterOverlayModel::reload() {
-    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+    AbstractMapView* mapView = MainWindow::instance()->mapView();
 
     if(mapView) {
         QStringList loadedOverlays = mapView->overlays();
@@ -216,7 +216,7 @@ Qt::ItemFlags MapOptionsDock::EditableRasterOverlayModel::flags(const QModelInde
 }
 
 bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-    AbstractMapView* mapView = *MainWindow::instance()->mapView();
+    AbstractMapView* mapView = MainWindow::instance()->mapView();
 
     if(mapView && index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
         /* Remove overlay */

@@ -293,10 +293,6 @@ void MainWindow::saveRaster() {
     wizard.exec();
 }
 
-void MainWindow::closeRaster() {
-    setRasterModel(0);
-}
-
 void MainWindow::createActions() {
     /* Open raster map */
     openRasterAction = new QAction(tr("Open local package"), this);

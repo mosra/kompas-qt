@@ -197,7 +197,7 @@ class MainWindow: public QMainWindow {
         /**
          * @brief Close raster map
          */
-        void closeRaster();
+        inline void closeRaster() { setRasterModel(0); }
 
     private:
         static MainWindow* _instance;

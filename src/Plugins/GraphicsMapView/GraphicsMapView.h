@@ -83,8 +83,6 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         Core::Coords<unsigned int> tileCount;   /**< @brief Tile count for current view */
         QList<Tile*> tiles;                     /**< @brief All tiles */
 
-        QGraphicsTextItem* informativeText;     /**< @brief Informative text when view is not ready */
-
         QPixmap tileNotFoundImage,              /**< @brief "Tile not found" image */
             tileLoadingImage;                   /**< @brief "Tile loading" image */
 

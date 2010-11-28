@@ -39,7 +39,7 @@ PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::Plugins::GraphicsMapView,
 
 namespace Map2X { namespace Plugins {
 
-GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), informativeText(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Enable mouse tracking */
     setMouseTracking(true);
 
@@ -471,30 +471,10 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
 }
 
 void GraphicsMapView::updateRasterModel() {
+    if(!isReady()) return;
+
     qDeleteAll(tiles);
     tiles.clear();
-
-    /* If the view is not ready, display informative text  */
-    if(!isReady()) {
-        if(!informativeText) {
-            informativeText = new QGraphicsTextItem(0, &map);
-            informativeText->setHtml("<center>" + tr(
-                "<strong>No map to display.</strong><br /><br />"
-                "Please select a map and ensure the map has at least one "
-                "zoom level and layer available."
-            ) + "</center>");
-            informativeText->setTextWidth(256);
-            map.setSceneRect(0, 0, 0, 0);
-            view->centerOn(0, 0);
-        }
-
-        return;
-    }
-
-    if(informativeText) {
-        delete informativeText;
-        informativeText = 0;
-    }
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 

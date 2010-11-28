@@ -158,7 +158,6 @@ void MainWindow::setMapView(AbstractMapView* view) {
 
 void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /** @todo Disable Save Raster menu when no writeable format is available at all */
-    /** @todo If current raster model doesn't have NonCOnvertableFormat, it's shown in the menu twice. */
 
     /* Raster model is available, configure it & enable save menu */
     if(model) {

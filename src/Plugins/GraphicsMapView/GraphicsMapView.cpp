@@ -297,6 +297,7 @@ bool GraphicsMapView::setLayer(const QString& layer) {
         emit getTileData(_layer, _zoom, tile->coords());
     }
 
+    emit layerChanged(_layer);
     return true;
 }
 
@@ -323,6 +324,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
         emit getTileData(overlay, _zoom, tile->coords());
     }
 
+    emit overlaysChanged(_overlays);
     return true;
 }
 
@@ -335,6 +337,7 @@ bool GraphicsMapView::removeOverlay(const QString& overlay) {
     foreach(Tile* tile, tiles)
         tile->removeLayer(layerNumber+1);
 
+    emit overlaysChanged(_overlays);
     return true;
 }
 
@@ -503,15 +506,18 @@ void GraphicsMapView::updateRasterModel() {
 
     /* Reset zoom, if the model doesn't have current */
     /** @todo Reset to closest available zoom */
-    if(::find(z.begin(), z.end(), _zoom) == z.end()) _zoom = z[0];
+
+    if(::find(z.begin(), z.end(), _zoom) == z.end())
+        zoomTo(z[0]);
 
     /* Reset map layer, if the model doesn't have current */
-    if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end()) _layer = QString::fromStdString(l[0]);
+    if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end())
+        setLayer(QString::fromStdString(l[0]));
 
     /* Reset map overlays, if the model doesn't have current */
     for(int i = _overlays.size()-1; i >= 0; --i) {
         if(::find(o.begin(), o.end(), _overlays[i].toStdString()) == o.end())
-            _overlays.removeAt(i);
+            removeOverlay(_overlays[i]);
     }
 
     /** @todo Is this check really needed? Why don't just reset everything to defaults? */

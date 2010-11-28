@@ -62,7 +62,8 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * @param layer     Layer
          * @return Whether the layer exists and can be set.
          *
-         * Sets map layer from list provided by tile model.
+         * Sets map layer from list provided by tile model. Subclasses should
+         * emit layerChanged() signal on success.
          */
         virtual bool setLayer(const QString& layer) = 0;
 
@@ -77,7 +78,8 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * @param layer     Overlay
          * @return Whether the overlay exists and can be added.
          *
-         * Adds overlay to map from list provided by tile model.
+         * Adds overlay to map from list provided by tile model. Subclasses
+         * should emit overlaysChanged() signal on success.
          */
         virtual bool addOverlay(const QString& layer) = 0;
 
@@ -86,6 +88,8 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * @param overlay   Overlay
          * @return If the overlay was added and can be removed, returns true.
          *      Otherwise returns false.
+         *
+         * Subclasses should emit overlaysChanged() signal on success.
          */
         virtual bool removeOverlay(const QString& overlay) = 0;
 
@@ -198,6 +202,18 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * These coordinates are displayed in status bar.
          */
         void currentCoordinates(const Core::Wgs84Coords& coords);
+
+        /**
+         * @brief Layer changed
+         * @param layer     Current layer name
+         */
+        void layerChanged(const QString& layer);
+
+        /**
+         * @brief Overlays changed
+         * @param overlays  List of currently loaded overlays
+         */
+        void overlaysChanged(const QStringList& overlays);
 
     protected slots:
         /**

@@ -15,7 +15,6 @@
 
 #include "GraphicsMapView.h"
 
-#include <cmath>
 #include <vector>
 #include <algorithm>
 #include <QtCore/QTimer>
@@ -31,6 +30,7 @@
 #include "Tile.h"
 
 using namespace std;
+using namespace Map2X::Utility;
 using namespace Map2X::Core;
 using namespace Map2X::QtGui;
 
@@ -71,7 +71,6 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
-    double multiplier = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether we can zoom in */
@@ -87,7 +86,7 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom in, update map area */
-    multiplier *= *it-_zoom;
+    unsigned int multiplier = 2*(*it-_zoom);
     _zoom = *it;
     updateMapArea();
 
@@ -109,7 +108,6 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
-    double divisor = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether we can zoom out */
@@ -125,7 +123,7 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom out, update map area */
-    divisor *= _zoom-*it;
+    unsigned int divisor = 2*(_zoom-*it);
     _zoom = *it;
     updateMapArea();
 
@@ -147,7 +145,6 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
-    double multiplier = rasterModel->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 
     /* Check whether given zoom exists */
@@ -162,8 +159,8 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom, update map area */
-    if(zoom-_zoom < 0) multiplier = 1/(multiplier*(_zoom-zoom));
-    else multiplier *= zoom-_zoom;
+    if(zoom-_zoom < 0) coords /= 2*(_zoom-zoom);
+    else coords *= 2*(zoom-_zoom);
     _zoom = zoom;
     updateMapArea();
 
@@ -172,7 +169,7 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     tiles.clear();
 
     /* Center on divided position, count with 'pos' distance from center */
-    view->centerOn(coords*multiplier-move);
+    view->centerOn(coords-move);
 
     /* Load new tiles */
     updateTilePositions();
@@ -199,8 +196,8 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     }
 
     Wgs84Coords ret = rasterModel->projection()->toWgs84(Coords<double>(
-        center.x()/(pow(rasterModel->zoomStep(), _zoom)*rasterModel->tileSize().x),
-        center.y()/(pow(rasterModel->zoomStep(), _zoom)*rasterModel->tileSize().y)
+        center.x()/(pow2(_zoom)*rasterModel->tileSize().x),
+        center.y()/(pow2(_zoom)*rasterModel->tileSize().y)
     ));
 
     MainWindow::instance()->unlockRasterModel();
@@ -265,8 +262,8 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     Coords<double> rc = rasterModel->projection()->fromWgs84(coords);
 
     /* Center map to that coordinates (moved by 'pos' distance from center) */
-    view->centerOn(rc.x*pow(rasterModel->zoomStep(), _zoom)*rasterModel->tileSize().x-x,
-                   rc.y*pow(rasterModel->zoomStep(), _zoom)*rasterModel->tileSize().y-y);
+    view->centerOn(rc.x*pow2(_zoom)*rasterModel->tileSize().x-x,
+                   rc.y*pow2(_zoom)*rasterModel->tileSize().y-y);
 
     MainWindow::instance()->unlockRasterModel();
 
@@ -364,7 +361,7 @@ void GraphicsMapView::updateMapArea() {
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
     /* Compute tile area */
-    unsigned int multiplier = pow(rasterModel->zoomStep(), _zoom-rasterModel->zoomLevels()[0]);
+    unsigned int multiplier = pow2(_zoom-rasterModel->zoomLevels()[0]);
 
     /* Resize map to area */
     map.setSceneRect(rasterModel->area().x*rasterModel->tileSize().x*multiplier,
@@ -389,7 +386,7 @@ void GraphicsMapView::updateTileCount() {
         view->visibleRegion().boundingRect().height()));
 
     /* If map area is smaller than view area, set tile count to map area */
-    unsigned int multiplier = pow(rasterModel->zoomStep(), _zoom-rasterModel->zoomLevels()[0]);
+    unsigned int multiplier = pow2(_zoom-rasterModel->zoomLevels()[0]);
     if(tileCount.x > rasterModel->area().w*multiplier) tileCount.x = rasterModel->area().w*multiplier;
     if(tileCount.y > rasterModel->area().h*multiplier) tileCount.y = rasterModel->area().h*multiplier;
 
@@ -404,7 +401,7 @@ void GraphicsMapView::updateTilePositions() {
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
 
     QPointF viewed = view->mapToScene(0, 0);
-    TileArea area = rasterModel->area()*pow(rasterModel->zoomStep(), _zoom-rasterModel->zoomLevels()[0]);
+    TileArea area = rasterModel->area()*pow2(_zoom-rasterModel->zoomLevels()[0]);
 
     /* Ensure positive coordinates */
     if(viewed.x() < 0) viewed.setX(0);

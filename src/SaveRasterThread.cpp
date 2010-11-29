@@ -15,7 +15,6 @@
 
 #include "SaveRasterThread.h"
 
-#include <cmath>
 #include <QtCore/QMetaType>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
@@ -24,6 +23,7 @@
 #include "PluginManager.h"
 
 using namespace std;
+using namespace Map2X::Utility;
 using namespace Map2X::Core;
 
 Q_DECLARE_METATYPE(std::string)
@@ -42,7 +42,7 @@ SaveRasterThread::~SaveRasterThread() {
     wait();
 }
 
-bool SaveRasterThread::initializePackage(const string& model, const string& filename, const TileSize& tileSize, const vector<Zoom>& _zoomLevels, double _zoomStep, const TileArea& _area, const vector<string>& _layers, const vector<string>& overlays) {
+bool SaveRasterThread::initializePackage(const string& model, const string& filename, const TileSize& tileSize, const vector<Zoom>& _zoomLevels, const TileArea& _area, const vector<string>& _layers, const vector<string>& overlays) {
     /* Cleanup previous */
     if(destinationModel) {
         delete destinationModel;
@@ -57,12 +57,11 @@ bool SaveRasterThread::initializePackage(const string& model, const string& file
         return false;
 
     /* Initialize package */
-    if(!destinationModel->initializePackage(filename, tileSize, _zoomLevels, _zoomStep, _area, _layers, overlays))
+    if(!destinationModel->initializePackage(filename, tileSize, _zoomLevels, _area, _layers, overlays))
         return false;
 
     /* Save area, zoom levels, merged layers and overlays */
     zoomLevels = _zoomLevels;
-    zoomStep = _zoomStep;
     area = _area;
     layers = _layers;
     layers.insert(layers.end(), overlays.begin(), overlays.end());
@@ -76,7 +75,7 @@ void SaveRasterThread::run() {
     /* Compute tile count for all zoom levels */
     quint64 totalZoom = 0;
     for(vector<Zoom>::const_iterator zit = zoomLevels.begin(); zit != zoomLevels.end(); ++zit) {
-        TileArea currentArea = area*pow(zoomStep, *zit-zoomLevels[0]);
+        TileArea currentArea = area*pow2(*zit-zoomLevels[0]);
         totalZoom += static_cast<quint64>(currentArea.w)*currentArea.h;
     }
     totalZoom *= layers.size();
@@ -87,7 +86,7 @@ void SaveRasterThread::run() {
         Zoom zoom(*zit);
 
         /* Compute tile area for this level */
-        TileArea currentArea = area*pow(zoomStep, zoom-zoomLevels[0]);
+        TileArea currentArea = area*pow2(zoom-zoomLevels[0]);
 
         quint64 currentAreaSize = static_cast<quint64>(currentArea.w)*currentArea.h;
 

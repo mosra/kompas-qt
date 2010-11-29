@@ -62,7 +62,6 @@ class SaveRasterWizard: public QWizard {
         std::string model;
 
         Core::TileSize tileSize;        /**< @brief Tile size of source model */
-        double zoomStep;                /**< @brief Zoom step of source model */
         Core::TileArea area;            /**< @brief Tile area to download */
 
         /**

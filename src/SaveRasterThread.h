@@ -33,7 +33,7 @@ class SaveRasterThread: public QThread {
 
         virtual ~SaveRasterThread();
 
-        bool initializePackage(const std::string& model, const std::string& filename, const Core::TileSize& tileSize, const std::vector<Core::Zoom>& _zoomLevels, double _zoomStep, const Core::TileArea& _area, const std::vector<std::string>& _layers, const std::vector<std::string>& overlays);
+        bool initializePackage(const std::string& model, const std::string& filename, const Core::TileSize& tileSize, const std::vector<Core::Zoom>& _zoomLevels, const Core::TileArea& _area, const std::vector<std::string>& _layers, const std::vector<std::string>& overlays);
 
         inline bool setPackageAttribute(Core::AbstractRasterModel::PackageAttribute type, const std::string& data) {
             if(!destinationModel) return false;
@@ -64,7 +64,6 @@ class SaveRasterThread: public QThread {
 
         Core::AbstractRasterModel* destinationModel;
 
-        double zoomStep;
         std::vector<Core::Zoom> zoomLevels;
         Core::TileArea area;
         std::vector<std::string> layers;

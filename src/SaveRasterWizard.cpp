@@ -15,7 +15,6 @@
 
 #include "SaveRasterWizard.h"
 
-#include <cmath>
 #include <algorithm>
 #include <QtCore/QVariant>
 #include <QtGui/QGroupBox>
@@ -37,6 +36,7 @@
 #include "MessageBox.h"
 
 using namespace std;
+using namespace Map2X::Utility;
 using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
@@ -53,10 +53,9 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
     setButtonText(CommitButton, tr("Download"));
     setWindowTitle(tr("Save map as..."));
 
-    /* Save zoom step and tile size */
+    /* Save tile size */
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
     tileSize = model->tileSize();
-    zoomStep = model->zoomStep();
     MainWindow::instance()->unlockRasterModel();
 }
 
@@ -121,7 +120,7 @@ bool SaveRasterWizard::AreaPage::validatePage() {
         TileArea minimalArea = rasterModel->area();
         MainWindow::instance()->unlockRasterModel();
 
-        wizard->area = minimalArea*pow(wizard->zoomStep, wizard->zoomLevels[0]-minAvailableZoom);
+        wizard->area = minimalArea*pow2(wizard->zoomLevels[0]-minAvailableZoom);
 
     /* Tile count for visible area at _current_ zoom */
     } else if(visibleArea->isChecked()) {
@@ -130,7 +129,7 @@ bool SaveRasterWizard::AreaPage::validatePage() {
         /* Tile coordinates in visible area, divide them for smallest zoom */
         TileArea currentArea = mapView->viewedArea();
         /** @bug Round it up, so the area is not zero sized when current zoom is big and lowest save zoom is small */
-        wizard->area = currentArea/pow(wizard->zoomStep, mapView->zoom()-wizard->zoomLevels[0]);
+        wizard->area = currentArea/pow2(mapView->zoom()-wizard->zoomLevels[0]);
 
     /* Tile count for selected area at _current_ zoom */
     } else {
@@ -370,7 +369,7 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
     /* Tile count for all zoom levels */
     quint64 _tileCountOneLayer = 0;
     for(vector<Zoom>::const_iterator it = wizard->zoomLevels.begin(); it != wizard->zoomLevels.end(); ++it) {
-        TileArea a = wizard->area*pow(wizard->zoomStep, *it-wizard->zoomLevels[0]);
+        TileArea a = wizard->area*pow2(*it-wizard->zoomLevels[0]);
         _tileCountOneLayer += static_cast<quint64>(a.w)*a.h;
     }
 
@@ -489,7 +488,7 @@ void SaveRasterWizard::DownloadPage::initializePage() {
 
     updateStatus(0, 0, "", 0, 0, 0);
 
-    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, wizard->zoomStep, wizard->area, wizard->layers, wizard->overlays))
+    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, wizard->area, wizard->layers, wizard->overlays))
         filename->setText(tr("Failed to initialize package %0").arg(QString::fromStdString(wizard->filename)));
 
     if(!wizard->name.empty())

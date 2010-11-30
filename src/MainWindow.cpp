@@ -151,12 +151,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
     menuView->update();
 
-    /* Load map view plugin */
-    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
-
     /* Status bar with coordinates */
     coordinateStatus = new QLabel;
     statusBar()->addPermanentWidget(coordinateStatus);
+
+    /* Load map view plugin */
+    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
     resize(800, 600);
 }
@@ -359,6 +359,9 @@ void MainWindow::displayMapIfUsable() {
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
         mapOptionsDock->setHidden(false);
 
+        /* Show coordinate status */
+        coordinateStatus->setHidden(false);
+
     /* Display welcome screen */
     } else {
         /* Disable menus */
@@ -369,6 +372,9 @@ void MainWindow::displayMapIfUsable() {
         /* Show welcome screen, hide map options dock */
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
         mapOptionsDock->setHidden(true);
+
+        /* Don't show zeros in coordinate status */
+        coordinateStatus->setHidden(true);
     }
 }
 

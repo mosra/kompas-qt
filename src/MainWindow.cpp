@@ -471,7 +471,10 @@ void MainWindow::configurationDialog() {
 }
 
 void MainWindow::currentCoordinates(const Map2X::Core::Wgs84Coords& coords) {
-    coordinateStatus->setText(QString::fromStdString(coords.toString(1)));
+    if(!coords.isValid())
+        coordinateStatus->setText("");
+    else
+        coordinateStatus->setText(QString::fromStdString(coords.toString(1)));
 }
 
 }}

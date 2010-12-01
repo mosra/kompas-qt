@@ -24,6 +24,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPushButton>
+#include <QtGui/QToolButton>
 #include <QtGui/QStackedWidget>
 
 #include "MainWindowConfigure.h"
@@ -101,24 +102,40 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     palette.setBrush(QPalette::Window, QBrush(QPixmap(":/welcome-640.png")));
     welcomeScreenFrame->setPalette(palette);
 
-    QPushButton* restoreSessionButton = new QPushButton(tr("Restore saved session"));
-    restoreSessionButton->setDisabled(true);
-    QPushButton* loadOnlineMapButton = new QPushButton(tr("Load online map"));
-    loadOnlineMapButton->setMenu(openRasterMenu);
-    QPushButton* openRasterButton = new QPushButton(tr("Open map package"));
-    connect(openRasterButton, SIGNAL(clicked(bool)), SLOT(openRaster()));
+    QToolButton* openSessionButton = new QToolButton(this);
+    openSessionButton->setDefaultAction(openSessionAction);
+    openSessionButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    openSessionButton->setAutoRaise(true);
+    openSessionButton->setIconSize(QSize(64, 64));
+    openSessionButton->setFixedHeight(96);
+
+    QToolButton* openRasterButton = new QToolButton(this);
+    openRasterButton->setDefaultAction(openRasterAction);
+    openRasterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    openRasterButton->setAutoRaise(true);
+    openRasterButton->setIconSize(QSize(64, 64));
+    openRasterButton->setFixedHeight(96);
+
+    QToolButton* openOnlineButton = new QToolButton(this);
+    openOnlineButton->setDefaultAction(openOnlineAction);
+    openOnlineButton->setPopupMode(QToolButton::InstantPopup);
+    openOnlineButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    openOnlineButton->setAutoRaise(true);
+    openOnlineButton->setIconSize(QSize(64, 64));
+    openOnlineButton->setFixedHeight(96);
 
     QGridLayout* welcomeScreenFrameLayout = new QGridLayout;
     welcomeScreenFrameLayout->addWidget(new QWidget, 0, 0, 1, 5);
     welcomeScreenFrameLayout->addWidget(new QWidget, 1, 0);
-    welcomeScreenFrameLayout->addWidget(restoreSessionButton, 1, 1);
-    welcomeScreenFrameLayout->addWidget(loadOnlineMapButton, 1, 2);
-    welcomeScreenFrameLayout->addWidget(openRasterButton, 1, 3);
+    welcomeScreenFrameLayout->addWidget(openSessionButton, 1, 1);
+    welcomeScreenFrameLayout->addWidget(openRasterButton, 1, 2);
+    welcomeScreenFrameLayout->addWidget(openOnlineButton, 1, 3);
     welcomeScreenFrameLayout->addWidget(new QWidget, 1, 4);
     welcomeScreenFrameLayout->addWidget(new QWidget, 2, 0, 1, 5);
     welcomeScreenFrameLayout->setColumnMinimumWidth(0, 100);
     welcomeScreenFrameLayout->setColumnMinimumWidth(4, 100);
-    welcomeScreenFrameLayout->setRowMinimumHeight(0, 300);
+    welcomeScreenFrameLayout->setRowMinimumHeight(0, 310);
+    welcomeScreenFrameLayout->setRowMinimumHeight(1, 120);
     welcomeScreenFrameLayout->setRowMinimumHeight(2, 50);
 
     welcomeScreenFrame->setLayout(welcomeScreenFrameLayout);
@@ -379,21 +396,28 @@ void MainWindow::displayMapIfUsable() {
 }
 
 void MainWindow::createActions() {
+    /* Open session */
+    openSessionAction = new QAction(QIcon(":/open-session-64.png"), tr("Restore saved session"), this);
+    openSessionAction->setDisabled(true);
+
     /* Open raster map */
-    openRasterAction = new QAction(tr("Open map package"), this);
+    openRasterAction = new QAction(QIcon(":/open-package-64.png"), tr("Open map package"), this);
     connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
+
+    /* Open online map */
+    openOnlineAction = new QAction(QIcon(":/open-online-64.png"), tr("Load online map"), this);
 
     /* Save raster map */
     saveRasterAction = new QAction(this);
     connect(saveRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
 
     /* Close raster map */
-    closeRasterAction = new QAction(tr("Close map"), this);
+    closeRasterAction = new QAction(QIcon(tr(":/close-16.png")), tr("Close map"), this);
     closeRasterAction->setDisabled(true);
     connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
 
     /* Quit application */
-    quitAction = new QAction(tr("Quit"), this);
+    quitAction = new QAction(QIcon(":/exit-16.png"), tr("Quit"), this);
     quitAction->setShortcut(QKeySequence::Quit);
     connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
 
@@ -405,7 +429,7 @@ void MainWindow::createActions() {
     zoomOutAction->setShortcut(Qt::CTRL|Qt::Key_Minus);
 
     /* Settings menu */
-    pluginDialogAction = new QAction(tr("Plugins"), this);
+    pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
     configurationDialogAction = new QAction(tr("Configure Map2X"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
@@ -419,10 +443,13 @@ void MainWindow::createActions() {
 void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
+    fileMenu->addAction(openSessionAction);
     fileMenu->addAction(openRasterAction);
+    fileMenu->addAction(openOnlineAction);
 
     /* Open raster map menu */
-    openRasterMenu = fileMenu->addMenu(tr("Load online map"));
+    openRasterMenu = new QMenu(this);
+    openOnlineAction->setMenu(openRasterMenu);
 
     /* Save raster map menu */
     saveRasterMenu = fileMenu->addMenu(tr("Save map"));

@@ -175,7 +175,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load map view plugin */
     setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
-    resize(800, 600);
+    resize(960, 700);
 }
 
 MainWindow::~MainWindow() {

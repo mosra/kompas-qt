@@ -24,6 +24,7 @@
 
 class QSpinBox;
 class QComboBox;
+class QLineEdit;
 
 namespace Map2X { namespace QtGui {
 
@@ -58,9 +59,13 @@ class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
         virtual void restoreDefaults();
         virtual void save();
 
+    private slots:
+        void selectPackageDir();
+
     private:
         QComboBox* mapViewPlugin;
         QSpinBox* maxSimultaenousDownloads;
+        QLineEdit* packageDir;
 };
 
 }}

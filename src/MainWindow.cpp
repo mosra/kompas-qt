@@ -205,6 +205,10 @@ void MainWindow::loadDefaultConfiguration() {
     unsigned int maxSimultaenousDownloads = 3;
     _configuration.group("map")->value("maxSimultaenousDownloads", &maxSimultaenousDownloads);
 
+    /* Paths */
+    string packageDir = ""; /** @todo Directory::home() */
+    _configuration.group("paths")->value<string>("packages", &packageDir);
+
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);
 }

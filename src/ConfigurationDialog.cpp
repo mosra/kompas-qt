@@ -20,6 +20,9 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QSpinBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QToolButton>
+#include <QtGui/QFileDialog>
 
 #include "PluginManager.h"
 #include "PluginModel.h"
@@ -49,9 +52,22 @@ ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): Abstrac
     maxSimultaenousDownloads->setMinimum(1);
     maxSimultaenousDownloads->setMaximum(5);
 
+    /* Package directory with selecting button */
+    packageDir = new QLineEdit;
+    QToolButton* packageDirButton = new QToolButton;
+    packageDirButton->setIcon(style()->standardIcon(QStyle::SP_DialogOpenButton));
+    packageDirButton->setAutoRaise(true);
+    connect(packageDirButton, SIGNAL(clicked(bool)), SLOT(selectPackageDir()));
+
     /* Emit signal when edited */
     connect(mapViewPlugin, SIGNAL(currentIndexChanged(int)), SIGNAL(edited()));
     connect(maxSimultaenousDownloads, SIGNAL(valueChanged(int)), SIGNAL(edited()));
+    connect(packageDir, SIGNAL(textChanged(QString)), SIGNAL(edited()));
+
+    /* Package directory layout */
+    QHBoxLayout* packageDirLayout = new QHBoxLayout;
+    packageDirLayout->addWidget(packageDir);
+    packageDirLayout->addWidget(packageDirButton);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
@@ -59,7 +75,9 @@ ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): Abstrac
     layout->addWidget(mapViewPlugin, 0, 1);
     layout->addWidget(new QLabel(tr("Max simultaenous downloads:")), 1, 0);
     layout->addWidget(maxSimultaenousDownloads, 1, 1);
-    layout->addWidget(new QWidget, 4, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Map package directory:")), 2, 0);
+    layout->addLayout(packageDirLayout, 2, 1);
+    layout->addWidget(new QWidget, 3, 0, 1, 2);
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(4, 1);
     setLayout(layout);
@@ -73,11 +91,14 @@ void ConfigurationDialog::Widget::reset() {
         MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
     maxSimultaenousDownloads->setValue(
         MainWindow::instance()->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
+    packageDir->setText(QString::fromStdString(
+        MainWindow::instance()->configuration()->group("paths")->value<string>("packages")));
 }
 
 void ConfigurationDialog::Widget::restoreDefaults() {
     MainWindow::instance()->configuration()->group("map")->removeValue("viewPlugin");
     MainWindow::instance()->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
+    MainWindow::instance()->configuration()->group("paths")->removeValue("packages");
     MainWindow::instance()->loadDefaultConfiguration();
 
     reset();
@@ -88,6 +109,15 @@ void ConfigurationDialog::Widget::save() {
         mapViewPlugin->currentText().toStdString());
     MainWindow::instance()->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
         maxSimultaenousDownloads->value());
+    MainWindow::instance()->configuration()->group("paths")->setValue<string>("packages",
+        packageDir->text().toStdString());
+}
+
+void ConfigurationDialog::Widget::selectPackageDir() {
+    QString selected = QFileDialog::getExistingDirectory(this, tr("Select package directory"), packageDir->text());
+    if(selected.isEmpty()) return;
+
+    packageDir->setText(selected);
 }
 
 }}

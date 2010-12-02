@@ -21,14 +21,10 @@
 
 #include "AbstractConfigurationWidget.h"
 
-class QCheckBox;
 class QSpinBox;
 class QComboBox;
 
 namespace Map2X { namespace QtGui {
-
-class Wgs84CoordsEdit;
-class MainWindow;
 
 /** @brief Widget in main configuration dialog */
 class ConfigurationWidget: public AbstractConfigurationWidget {
@@ -37,11 +33,10 @@ class ConfigurationWidget: public AbstractConfigurationWidget {
     public:
         /**
          * @brief Constructor
-         * @param _mainWindow       Pointer to main window
          * @param parent            Parent widget
          * @param f                 Window flags
          */
-        ConfigurationWidget(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        ConfigurationWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         virtual void reset();
@@ -49,7 +44,6 @@ class ConfigurationWidget: public AbstractConfigurationWidget {
         virtual void save();
 
     private:
-        MainWindow* mainWindow;
         QComboBox* mapViewPlugin;
         QSpinBox* maxSimultaenousDownloads;
 };

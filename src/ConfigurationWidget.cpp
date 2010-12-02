@@ -32,11 +32,11 @@ using namespace Map2X::Core;
 
 namespace Map2X { namespace QtGui {
 
-ConfigurationWidget::ConfigurationWidget(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow) {
+ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
     /* Map view plugin */
     mapViewPlugin = new QComboBox;
     mapViewPlugin->setModel(new PluginModel(
-        mainWindow->mapViewPluginManager(), PluginModel::LoadedOnly, this));
+        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this));
     mapViewPlugin->setModelColumn(PluginModel::Plugin);
 
     /* Maximal count of simultaenous downloads */
@@ -65,23 +65,23 @@ ConfigurationWidget::ConfigurationWidget(MainWindow* _mainWindow, QWidget* paren
 
 void ConfigurationWidget::reset() {
     mapViewPlugin->setCurrentIndex(mapViewPlugin->findText(QString::fromStdString(
-        mainWindow->configuration()->group("map")->value<string>("viewPlugin"))));
+        MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
     maxSimultaenousDownloads->setValue(
-        mainWindow->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
+        MainWindow::instance()->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
 }
 
 void ConfigurationWidget::restoreDefaults() {
-    mainWindow->configuration()->group("map")->removeValue("viewPlugin");
-    mainWindow->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
-    mainWindow->loadDefaultConfiguration();
+    MainWindow::instance()->configuration()->group("map")->removeValue("viewPlugin");
+    MainWindow::instance()->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
+    MainWindow::instance()->loadDefaultConfiguration();
 
     reset();
 }
 
 void ConfigurationWidget::save() {
-    mainWindow->configuration()->group("map")->setValue<string>("viewPlugin",
+    MainWindow::instance()->configuration()->group("map")->setValue<string>("viewPlugin",
         mapViewPlugin->currentText().toStdString());
-    mainWindow->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
+    MainWindow::instance()->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
         maxSimultaenousDownloads->value());
 }
 

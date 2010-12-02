@@ -454,7 +454,7 @@ bool SaveRasterWizard::MetadataPage::validatePage() {
 }
 
 void SaveRasterWizard::MetadataPage::saveFileDialog() {
-    filename->setText(QFileDialog::getSaveFileName(this, tr("Save package as...")));
+    filename->setText(QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages"))));
 }
 
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {

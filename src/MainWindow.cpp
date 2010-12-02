@@ -269,7 +269,7 @@ void MainWindow::setOnlineEnabled(bool enabled) {
 }
 
 void MainWindow::openRaster() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"), QString::fromStdString(_configuration.group("paths")->value<string>("packages")));
     if(filename.isEmpty()) return;
 
     /* Try to open the package with current model */

@@ -16,6 +16,10 @@
 #include "AbstractMapView.h"
 
 #include <QtCore/QMetaType>
+#include <QtGui/QMenu>
+#include <QtGui/QContextMenuEvent>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
 
 #include "TileDataThread.h"
 #include "MainWindow.h"
@@ -26,6 +30,13 @@ namespace Map2X { namespace QtGui {
 
 AbstractMapView::AbstractMapView(Map2X::PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin) {
     tileDataThread = new TileDataThread(this);
+
+    /* Context menu */
+    QMenu* coordinatesMenu = new QMenu(this);
+    coordinatesMenu->addAction(tr("Copy to clipboard"), this, SLOT(copyCoordsToClipboard()));
+    contextMenu = new QMenu(this);
+    coordinatesAction = contextMenu->addAction("");
+    coordinatesAction->setMenu(coordinatesMenu);
 
     qRegisterMetaType<Core::Zoom>("Core::Zoom");
     qRegisterMetaType<Core::TileCoords>("Core::TileCoords");
@@ -42,6 +53,27 @@ AbstractMapView::AbstractMapView(Map2X::PluginManager::AbstractPluginManager* ma
             SLOT(tileNotFound(QString,Core::Zoom,Core::TileCoords)));
 
     tileDataThread->start();
+}
+
+void AbstractMapView::contextMenuEvent(QContextMenuEvent* event) {
+    Wgs84Coords c = coords(event->pos());
+    if(!c.isValid()) return;
+
+    /* Save coordinates (in full precision) for Copy to clipboard action */
+    lastCoordsForClipboard = QString::fromStdString(c.toString());
+
+    /* Set coordinate action text and show menu */
+    coordinatesAction->setText(tr("Coordinates: %0").arg(QString::fromStdString(c.toString(0))));
+    contextMenu->move(mapToGlobal(event->pos()));
+    contextMenu->show();
+}
+
+void AbstractMapView::copyCoordsToClipboard() {
+    if(lastCoordsForClipboard.isEmpty()) return;
+
+    qApp->clipboard()->setText(lastCoordsForClipboard);
+
+    lastCoordsForClipboard.clear();
 }
 
 }}

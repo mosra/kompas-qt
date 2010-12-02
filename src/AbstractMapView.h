@@ -24,6 +24,9 @@
 #include "AbsoluteArea.h"
 #include "AbstractRasterModel.h"
 
+class QAction;
+class QMenu;
+
 namespace Map2X { namespace QtGui {
 
 class TileDataThread;
@@ -182,6 +185,8 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
         /*@}*/
 
     protected:
+        virtual void contextMenuEvent(QContextMenuEvent* event);
+
         TileDataThread* tileDataThread;         /**< @brief Thread for downloading tile data */
 
     signals:
@@ -240,6 +245,14 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
          * @param coords    Tile coordinates
          */
         virtual void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) = 0;
+
+    private slots:
+        void copyCoordsToClipboard();
+
+    private:
+        QMenu* contextMenu;
+        QAction* coordinatesAction;
+        QString lastCoordsForClipboard;
 };
 
 }}

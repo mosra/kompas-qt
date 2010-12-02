@@ -20,6 +20,10 @@
  */
 
 #include "AbstractConfigurationDialog.h"
+#include "AbstractConfigurationWidget.h"
+
+class QSpinBox;
+class QComboBox;
 
 namespace Map2X { namespace QtGui {
 
@@ -32,6 +36,31 @@ class ConfigurationDialog: public AbstractConfigurationDialog {
          * @param f                 Flags
          */
         ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
+
+    protected:
+        class Widget;
+};
+
+/** @brief Widget in main configuration dialog */
+class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
+    Q_OBJECT
+
+    public:
+        /**
+         * @brief Constructor
+         * @param parent            Parent widget
+         * @param f                 Window flags
+         */
+        Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+    public slots:
+        virtual void reset();
+        virtual void restoreDefaults();
+        virtual void save();
+
+    private:
+        QComboBox* mapViewPlugin;
+        QSpinBox* maxSimultaenousDownloads;
 };
 
 }}

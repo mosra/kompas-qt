@@ -15,17 +15,79 @@
 
 #include "ConfigurationDialog.h"
 
+#include <string>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QSpinBox>
+
+#include "PluginManager.h"
+#include "PluginModel.h"
 #include "MainWindow.h"
-#include "ConfigurationWidget.h"
+
+using namespace std;
 
 namespace Map2X { namespace QtGui {
 
 ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractConfigurationDialog(mainWindow, f) {
-    ConfigurationWidget* widget = new ConfigurationWidget(this);
+    Widget* widget = new Widget(this);
     connectWidget(widget);
     setCentralWidget(widget);
     setWindowTitle(tr("Map2X configuration"));
     resize(480, 240);
+}
+
+ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
+    /* Map view plugin */
+    mapViewPlugin = new QComboBox;
+    mapViewPlugin->setModel(new PluginModel(
+        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this));
+    mapViewPlugin->setModelColumn(PluginModel::Plugin);
+
+    /* Maximal count of simultaenous downloads */
+    maxSimultaenousDownloads = new QSpinBox;
+    maxSimultaenousDownloads->setMinimum(1);
+    maxSimultaenousDownloads->setMaximum(5);
+
+    /* Emit signal when edited */
+    connect(mapViewPlugin, SIGNAL(currentIndexChanged(int)), SIGNAL(edited()));
+    connect(maxSimultaenousDownloads, SIGNAL(valueChanged(int)), SIGNAL(edited()));
+
+    /* Layout */
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(new QLabel(tr("Map view plugin:")), 0, 0);
+    layout->addWidget(mapViewPlugin, 0, 1);
+    layout->addWidget(new QLabel(tr("Max simultaenous downloads:")), 1, 0);
+    layout->addWidget(maxSimultaenousDownloads, 1, 1);
+    layout->addWidget(new QWidget, 4, 0, 1, 2);
+    layout->setColumnStretch(1, 1);
+    layout->setRowStretch(4, 1);
+    setLayout(layout);
+
+    /* Fill in values */
+    reset();
+}
+
+void ConfigurationDialog::Widget::reset() {
+    mapViewPlugin->setCurrentIndex(mapViewPlugin->findText(QString::fromStdString(
+        MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
+    maxSimultaenousDownloads->setValue(
+        MainWindow::instance()->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
+}
+
+void ConfigurationDialog::Widget::restoreDefaults() {
+    MainWindow::instance()->configuration()->group("map")->removeValue("viewPlugin");
+    MainWindow::instance()->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
+    MainWindow::instance()->loadDefaultConfiguration();
+
+    reset();
+}
+
+void ConfigurationDialog::Widget::save() {
+    MainWindow::instance()->configuration()->group("map")->setValue<string>("viewPlugin",
+        mapViewPlugin->currentText().toStdString());
+    MainWindow::instance()->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
+        maxSimultaenousDownloads->value());
 }
 
 }}

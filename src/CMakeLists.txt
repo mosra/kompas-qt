@@ -25,7 +25,6 @@ set(Map2X_Qt_SRCS
     PluginModel.cpp
     PluginDialog.cpp
     ConfigurationDialog.cpp
-    ConfigurationWidget.cpp
     Wgs84CoordsEdit.cpp
     AbstractPluginMenuView.cpp
     ToolPluginMenuView.cpp
@@ -52,7 +51,7 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     AbstractPluginManager.h
     PluginModel.h
     PluginDialog.h
-    ConfigurationWidget.h
+    ConfigurationDialog.h
     AbstractPluginMenuView.h
     SaveRasterWizard.h
     SaveRasterThread.h

@@ -20,9 +20,13 @@ using namespace std;
 namespace Map2X { namespace QtGui {
 
 AbstractPluginMenuView::AbstractPluginMenuView(AbstractPluginManager* _manager, QMenu* _menu, QAction* _before, QObject* parent): QObject(parent), manager(_manager), menu(_menu), before(_before) {
+    /* Update menu after plugin changes */
     connect(_manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)), this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
     connect(_manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
     this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+
+    /* Trigger an action after clicking the menu */
+    connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(trigger(QAction*)));
 }
 
 void AbstractPluginMenuView::tryUpdate(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -47,9 +51,6 @@ void AbstractPluginMenuView::update() {
         if(QAction* action = createMenuAction(*it))
             menu->insertAction(before, action);
     }
-
-    /* Trigger an action after clicking the menu */
-    connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(trigger(QAction*)));
 }
 
 }}

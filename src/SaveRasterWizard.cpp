@@ -15,8 +15,8 @@
 
 #include "SaveRasterWizard.h"
 
+#include <cmath>
 #include <algorithm>
-#include <QtCore/QVariant>
 #include <QtGui/QGroupBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -57,6 +57,22 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
     tileSize = model->tileSize();
     MainWindow::instance()->unlockRasterModel();
+}
+
+TileArea SaveRasterWizard::area() const {
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    TileArea area = model->area()*pow2(zoomLevels[0]-model->zoomLevels()[0]);
+    MainWindow::instance()->unlockRasterModel();
+
+    /* Tile area at minimal zoom */
+    TileArea ta(
+        area.x+absoluteArea.x1*area.w,
+        area.y+absoluteArea.y1*area.h,
+        ceil((absoluteArea.x2-absoluteArea.x1)*area.w),
+        ceil((absoluteArea.y2-absoluteArea.y1)*area.h)
+    );
+
+    return ta;
 }
 
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
@@ -114,22 +130,15 @@ SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wi
 
 bool SaveRasterWizard::AreaPage::validatePage() {
     /* Tile count for whole map at _lowest possible_ zoom */
-    if(wholeMap->isChecked()) {
-        const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-        Zoom minAvailableZoom = rasterModel->zoomLevels()[0];
-        TileArea minimalArea = rasterModel->area();
-        MainWindow::instance()->unlockRasterModel();
-
-        wizard->area = minimalArea*pow2(wizard->zoomLevels[0]-minAvailableZoom);
+    if(wholeMap->isChecked())
+        wizard->absoluteArea = AbsoluteArea<double>(0, 0, 1, 1);
 
     /* Tile count for visible area at _current_ zoom */
-    } else if(visibleArea->isChecked()) {
+    else if(visibleArea->isChecked()) {
         AbstractMapView* mapView = MainWindow::instance()->mapView();
 
         /* Tile coordinates in visible area, divide them for smallest zoom */
-        TileArea currentArea = mapView->viewedArea();
-        /** @bug Round it up, so the area is not zero sized when current zoom is big and lowest save zoom is small */
-        wizard->area = currentArea/pow2(mapView->zoom()-wizard->zoomLevels[0]);
+        wizard->absoluteArea = mapView->viewedArea();
 
     /* Tile count for selected area at _current_ zoom */
     } else {
@@ -363,13 +372,16 @@ SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWi
 }
 
 void SaveRasterWizard::StatisticsPage::initializePage() {
-    tileCountMinZoom->setText(QString::number(wizard->area.w*wizard->area.h));
+    /* Compute area at lowest zoom level */
+    TileArea area = wizard->area();
+
+    tileCountMinZoom->setText(QString::number(area.w*area.h));
         zoomLevelCount->setText(QString::number(wizard->zoomLevels.size()));
 
     /* Tile count for all zoom levels */
     quint64 _tileCountOneLayer = 0;
     for(vector<Zoom>::const_iterator it = wizard->zoomLevels.begin(); it != wizard->zoomLevels.end(); ++it) {
-        TileArea a = wizard->area*pow2(*it-wizard->zoomLevels[0]);
+        TileArea a = area*pow2(*it-wizard->zoomLevels[0]);
         _tileCountOneLayer += static_cast<quint64>(a.w)*a.h;
     }
 
@@ -486,9 +498,12 @@ SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizard
 void SaveRasterWizard::DownloadPage::initializePage() {
     filename->setText(tr("Initializing package %0 ...").arg(QString::fromStdString(wizard->filename)));
 
+    /* Compute area at lowest zoom level */
+    TileArea area = wizard->area();
+
     updateStatus(0, 0, "", 0, 0, 0);
 
-    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, wizard->area, wizard->layers, wizard->overlays))
+    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, area, wizard->layers, wizard->overlays))
         filename->setText(tr("Failed to initialize package %0").arg(QString::fromStdString(wizard->filename)));
 
     if(!wizard->name.empty())

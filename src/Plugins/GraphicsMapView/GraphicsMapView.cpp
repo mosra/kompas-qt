@@ -205,7 +205,7 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     return ret;
 }
 
-TileArea GraphicsMapView::viewedArea(const QRect& area) {
+AbsoluteArea<double> GraphicsMapView::viewedArea(const QRect& area) {
     QRect sceneArea;
     if(area.isNull()) {
         sceneArea.setTopLeft(view->mapToScene(visibleRegion().boundingRect().topLeft()).toPoint());
@@ -217,24 +217,25 @@ TileArea GraphicsMapView::viewedArea(const QRect& area) {
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     TileSize tileSize = rasterModel->tileSize();
+    TileArea a = rasterModel->area()*tileSize*pow2(_zoom-rasterModel->zoomLevels()[0]);
     MainWindow::instance()->unlockRasterModel();
 
     /* Fix cases where scene is smaller than viewed area */
     if(sceneArea.left() < 0) {
         sceneArea.setLeft(0);
-        sceneArea.setRight(tileSize.x*tileCount.x-1);
+        sceneArea.setRight(tileSize.x*tileCount.x);
     }
     if(sceneArea.top() < 0) {
         sceneArea.setTop(0);
-        sceneArea.setBottom(tileSize.y*tileCount.y-1);
+        sceneArea.setBottom(tileSize.y*tileCount.y);
     }
 
-    TileArea a;
-    a.x = sceneArea.left()/tileSize.x;
-    a.y = sceneArea.top()/tileSize.y;
-    a.w = sceneArea.right()/tileSize.x-a.x+1;
-    a.h = sceneArea.bottom()/tileSize.y-a.y+1;
-    return a;
+    return AbsoluteArea<double>(
+        static_cast<double>(sceneArea.left()-a.x)/a.w,
+        static_cast<double>(sceneArea.top()-a.y)/a.h,
+        static_cast<double>(sceneArea.right()-a.x)/a.w,
+        static_cast<double>(sceneArea.bottom()-a.y)/a.h
+    );
 }
 
 bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {

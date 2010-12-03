@@ -23,6 +23,7 @@
 #include <QtGui/QSpinBox>
 
 #include "AbstractRasterModel.h"
+#include "AbsoluteArea.h"
 
 class QListView;
 class QRadioButton;
@@ -62,7 +63,7 @@ class SaveRasterWizard: public QWizard {
         std::string model;
 
         Core::TileSize tileSize;        /**< @brief Tile size of source model */
-        Core::TileArea area;            /**< @brief Tile area to download */
+        Core::AbsoluteArea<double> absoluteArea; /**< @brief Area to download */
 
         /**
          * @brief List of zoom levels to save
@@ -76,6 +77,14 @@ class SaveRasterWizard: public QWizard {
             name,                       /**< @brief Package name */
             description,                /**< @brief Package description */
             packager;                   /**< @brief Packager name */
+
+        /**
+         * @brief Tile area at minimal zoom
+         *
+         * Computed from absoluteArea, model area, model minimal zoom and
+         * zoomLevels.
+         */
+        Core::TileArea area() const;
 };
 
 /**

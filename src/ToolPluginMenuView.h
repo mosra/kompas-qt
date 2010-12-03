@@ -54,7 +54,6 @@ class ToolPluginMenuView: public AbstractPluginMenuView {
         inline virtual ~ToolPluginMenuView() { qDeleteAll<QList<AbstractTool*> >(items.values()); }
 
     private slots:
-        /** @todo Open as modeless dialog */
         virtual void trigger(QAction* action);
 
     private:

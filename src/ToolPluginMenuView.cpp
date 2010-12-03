@@ -26,8 +26,7 @@ namespace Map2X { namespace QtGui {
 void ToolPluginMenuView::trigger(QAction* action) {
     /* Instantiate dialog */
     AbstractToolDialog* dialog = items.value(action)->create(mainWindow, mainWindow);
-    dialog->exec();
-    delete dialog;
+    dialog->show();
 }
 
 void ToolPluginMenuView::clearMenu() {

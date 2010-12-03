@@ -38,7 +38,7 @@ class AbstractToolDialog: public QDialog {
          * @param parent            Parent widget
          * @param f                 Window flags
          */
-        inline AbstractToolDialog(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0): QDialog(parent, f), mainWindow(_mainWindow) {}
+        inline AbstractToolDialog(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0): QDialog(parent, f), mainWindow(_mainWindow) { setAttribute(Qt::WA_DeleteOnClose); }
 
     protected:
         MainWindow* mainWindow;     /**< @brief Pointer to MainWindow */

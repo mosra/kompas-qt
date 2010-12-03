@@ -47,6 +47,14 @@ class RasterOverlayModel: public QAbstractListModel {
         /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
+        /**
+         * @brief Find overlay
+         * @param overlay   Overlay name
+         * @return Index of the overlay or invalid index, if the overlay was
+         * not found.
+         */
+        QModelIndex find(const QString& layer);
+
     public slots:
         /**
          * @brief Reload data

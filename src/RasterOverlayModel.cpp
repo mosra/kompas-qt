@@ -47,4 +47,8 @@ QVariant RasterOverlayModel::data(const QModelIndex& index, int role) const {
     return overlays.at(index.row());
 }
 
+QModelIndex RasterOverlayModel::find(const QString& overlay) {
+    return index(overlays.indexOf(overlay), 0);
+}
+
 }}

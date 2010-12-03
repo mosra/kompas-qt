@@ -47,6 +47,14 @@ class RasterLayerModel: public QAbstractListModel {
         /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
+        /**
+         * @brief Find layer
+         * @param layer     Layer name
+         * @return Index of the layer or invalid index, if the layer was not
+         * found.
+         */
+        QModelIndex find(const QString& layer);
+
     public slots:
         /**
          * @brief Reload data

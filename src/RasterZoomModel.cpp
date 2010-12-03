@@ -47,4 +47,8 @@ QVariant RasterZoomModel::data(const QModelIndex& index, int role) const {
     return z.at(index.row());
 }
 
+QModelIndex RasterZoomModel::find(Zoom zoom) {
+    return index(z.indexOf(zoom), 0);
+}
+
 }}

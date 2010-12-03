@@ -47,4 +47,8 @@ QVariant RasterLayerModel::data(const QModelIndex& index, int role) const {
     return layers.at(index.row());
 }
 
+QModelIndex RasterLayerModel::find(const QString& layer) {
+    return index(layers.indexOf(layer), 0);
+}
+
 }}

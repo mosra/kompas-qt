@@ -49,6 +49,14 @@ class RasterZoomModel: public QAbstractListModel {
         /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
+        /**
+         * @brief Find zoom level
+         * @param zoom      Zoom level
+         * @return Index of the zoom level or invalid index, if the zoom level
+         * was not found.
+         */
+        QModelIndex find(Core::Zoom zoom);
+
     public slots:
         /**
          * @brief Reload data

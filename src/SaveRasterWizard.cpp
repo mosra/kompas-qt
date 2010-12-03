@@ -150,19 +150,28 @@ SaveRasterWizard::ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizard
     setTitle(tr("2/5: Map contents"));
     setSubTitle(tr("Select zoom levels, layers and overlays to save."));
 
+    MainWindow* m = MainWindow::instance();
+    AbstractMapView* view = m->mapView();
+
     zoomLevelsView = new QListView;
     zoomLevelsView->setSelectionMode(QAbstractItemView::MultiSelection);
-    zoomLevelsView->setModel(MainWindow::instance()->rasterZoomModel());
+    zoomLevelsView->setModel(m->rasterZoomModel());
     connect(zoomLevelsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     layersView = new QListView;
     layersView->setSelectionMode(QAbstractItemView::MultiSelection);
-    layersView->setModel(MainWindow::instance()->rasterLayerModel());
+    layersView->setModel(m->rasterLayerModel());
     connect(layersView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     overlaysView = new QListView;
     overlaysView->setSelectionMode(QAbstractItemView::MultiSelection);
-    overlaysView->setModel(MainWindow::instance()->rasterOverlayModel());
+    overlaysView->setModel(m->rasterOverlayModel());
+
+    /* Select current zoom and layers for convenience */
+    zoomLevelsView->selectionModel()->select(m->rasterZoomModel()->find(view->zoom()), QItemSelectionModel::Select);
+    layersView->selectionModel()->select(m->rasterLayerModel()->find(view->layer()), QItemSelectionModel::Select);
+    foreach(const QString& overlay, view->overlays())
+        overlaysView->selectionModel()->select(m->rasterOverlayModel()->find(overlay), QItemSelectionModel::Select);
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Zoom levels:")), 0, 0);

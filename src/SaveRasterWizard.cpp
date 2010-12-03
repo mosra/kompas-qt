@@ -33,6 +33,7 @@
 #include "RasterZoomModel.h"
 #include "SaveRasterThread.h"
 #include "MessageBox.h"
+#include "PluginManager.h"
 
 using namespace std;
 using namespace Map2X::Utility;
@@ -55,6 +56,45 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
     tileSize = model->tileSize();
     MainWindow::instance()->unlockRasterModel();
+}
+
+int SaveRasterWizard::exec() {
+    /* Tile size and features of source model. Set ConvertableCoords feature
+        only if the map has valid projection */
+    const AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForRead();
+    int sourceFeatures = sourceModel->features() & (sourceModel->projection() ?
+        AbstractRasterModel::ConvertableCoords :
+        ~AbstractRasterModel::ConvertableCoords);
+    MainWindow::instance()->unlockRasterModel();
+
+    /* Features of destination model */
+    AbstractRasterModel* destinationModel = MainWindow::instance()->rasterModelPluginManager()->instance(model);
+    int destinationFeatures;
+    if(!destinationModel) destinationFeatures = sourceFeatures; /* will fail in download page too, so don't bother */
+    else destinationFeatures = destinationModel->features();
+    delete destinationModel;
+
+    /* Check what features are missing in destination model */
+    QString log;
+    for(int i = 0; i != 32; ++i) {
+        int feature = 1 << i;
+
+        /* If feature doesn't exist in source model or is present in destination
+            model, go to next feature */
+        if(!(feature & sourceFeatures) || (feature & destinationFeatures))
+            continue;
+
+        switch(feature) {
+            case AbstractRasterModel::ConvertableCoords:
+                log += QString("<li><strong>%0</strong> - %1</li>").arg(tr("No GPS coordinates support")).arg(tr("you won't be able to measure distances.")); break;
+        }
+    }
+
+    if(!log.isEmpty()) {
+        if(MessageBox::question(this, tr("Data loss warning"), tr("You are saving to a format which doesn't support all features provided by the map:<ul>%0</ul>Do you want to continue?").arg(log), QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes) != QMessageBox::Yes) return QWizard::Rejected;
+    }
+
+    return QWizard::exec();
 }
 
 TileArea SaveRasterWizard::area() const {

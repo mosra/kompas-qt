@@ -48,6 +48,15 @@ class SaveRasterWizard: public QWizard {
          */
         SaveRasterWizard(const std::string& _model, QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
+    public slots:
+        /**
+         * @brief Show the dialog
+         *
+         * Checks whether destination model supports all features provided from
+         * source model, if not, asks user whether to continue.
+         */
+        int exec();
+
     protected:
         class AreaPage;
         class ContentsPage;

@@ -22,7 +22,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QRadioButton>
 #include <QtGui/QPushButton>
-#include <QtGui/QSpinBox>
 #include <QtGui/QListWidget>
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
@@ -42,9 +41,8 @@ using namespace Map2X::Core;
 namespace Map2X { namespace QtGui {
 
 SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model) {
-    addPage(new ZoomPage(this));
     addPage(new AreaPage(this));
-    addPage(new LayersPage(this));
+    addPage(new ContentsPage(this));
     addPage(new MetadataPage(this));
     addPage(new StatisticsPage(this));
     addPage(new DownloadPage(this));
@@ -76,7 +74,7 @@ TileArea SaveRasterWizard::area() const {
 }
 
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("2/6: Map area"));
+    setTitle(tr("1/5: Map area"));
     setSubTitle(tr("Select map area which you want to save."));
 
     /* Bold font */
@@ -148,148 +146,14 @@ bool SaveRasterWizard::AreaPage::validatePage() {
     return true;
 }
 
-SaveRasterWizard::ZoomPage::ZoomPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("1/6: Zoom levels"));
-    setSubTitle(tr("Select zoom levels which you want to save."));
+SaveRasterWizard::ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
+    setTitle(tr("2/5: Map contents"));
+    setSubTitle(tr("Select zoom levels, layers and overlays to save."));
 
-    /* Zoom levels */
-    minZoom = new QSpinBox;
-    maxZoom = new QSpinBox;
-    QLabel* zoomLabel = new QLabel(tr("Each more detailed zoom level will "
-        "increase package size (and download time) five times."));
-    zoomLabel->setWordWrap(true);
-    zoomLabel->setAlignment(Qt::AlignJustify);
-
-    /* Limits for zoom, current zoom */
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    int minimum = model->zoomLevels().front();
-    int maximum = model->zoomLevels().back();
-    MainWindow::instance()->unlockRasterModel();
-    int current = MainWindow::instance()->mapView()->zoom();
-
-    /* Set maximum, minimum and current zoom value */
-    minZoom->setMinimum(minimum);
-    maxZoom->setMinimum(minimum);
-    minZoom->setMaximum(maximum);
-    maxZoom->setMaximum(maximum);
-    minZoom->setValue(current);
-    maxZoom->setValue(current);
-
-    /* Zoom range checks */
-    connect(minZoom, SIGNAL(valueChanged(int)), SLOT(checkMinValue(int)));
-    connect(maxZoom, SIGNAL(valueChanged(int)), SLOT(checkMaxValue(int)));
-
-    QGridLayout* basicLayout = new QGridLayout;
-    basicLayout->addWidget(new QLabel(tr("Minimal zoom:")), 0, 0);
-    basicLayout->addWidget(minZoom, 0, 1);
-    basicLayout->addWidget(new QLabel(tr("Maximal zoom:")), 1, 0);
-    basicLayout->addWidget(maxZoom, 1, 1);
-    basicLayout->addWidget(zoomLabel, 2, 0, 1, 2);
-    basic = new QGroupBox;
-    basic->setFlat(true);
-    basic->setLayout(basicLayout);
-
-    /* List view for all zoom levels */
     zoomLevelsView = new QListView;
-    zoomLevelsView->setModel(MainWindow::instance()->rasterZoomModel());
     zoomLevelsView->setSelectionMode(QAbstractItemView::MultiSelection);
+    zoomLevelsView->setModel(MainWindow::instance()->rasterZoomModel());
     connect(zoomLevelsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
-
-    QHBoxLayout* advancedLayout = new QHBoxLayout;
-    advancedLayout->addWidget(zoomLevelsView);
-    advanced = new QGroupBox;
-    advanced->setFlat(true);
-    advanced->setDisabled(true);
-    advanced->setLayout(advancedLayout);
-
-    basicButton = new QRadioButton(tr("Basic: select zoom range"));
-    basicButton->setChecked(true);
-    advancedButton = new QRadioButton(tr("Advanced: select zoom levels"));
-    advancedButton->setChecked(false);
-    connect(basicButton, SIGNAL(toggled(bool)), SLOT(switchGroups()));
-    connect(advancedButton, SIGNAL(toggled(bool)), SLOT(switchGroups()));
-
-    QGridLayout* layout = new QGridLayout;
-    layout->addWidget(basicButton, 0, 0);
-    layout->addWidget(advancedButton, 0, 1);
-    layout->addWidget(basic, 1, 0);
-    layout->addWidget(advanced, 1, 1);
-
-    setLayout(layout);
-}
-
-void SaveRasterWizard::ZoomPage::switchGroups() {
-    /* Enable basic (zoom range) */
-    if(basicButton->isChecked()) {
-        basic->setEnabled(true);
-        advanced->setDisabled(true);
-
-        /* Set zoom range to first and last selected zoom level in advanced */
-        QModelIndexList selection = zoomLevelsView->selectionModel()->selectedRows();
-
-        /* Don't change anything if nothing selected or if user didn't change
-           anything in advanced section */
-        if(selection.isEmpty()) return;
-
-        /* Get first and last selected index */
-        int min = maxZoom->value();
-        int max = minZoom->value();
-        foreach(const QModelIndex& index, selection) {
-            int value = index.data().toInt();
-            if(value < min) min = value;
-            if(value > max) max = value;
-        }
-
-        minZoom->setValue(min);
-        maxZoom->setValue(max);
-
-    /* Enable advanced (zoom levels) */
-    } else {
-        basic->setDisabled(true);
-        advanced->setEnabled(true);
-
-        QItemSelectionModel* selection = zoomLevelsView->selectionModel();
-
-        selection->select(QItemSelection(
-            zoomLevelsView->model()->index(minZoom->value()-minZoom->minimum(), 0),
-            zoomLevelsView->model()->index(maxZoom->value()-maxZoom->minimum(), 0)
-        ), QItemSelectionModel::ClearAndSelect);
-    }
-}
-
-bool SaveRasterWizard::ZoomPage::isComplete() const {
-    if(advancedButton->isChecked() && zoomLevelsView->selectionModel()->selectedIndexes().isEmpty())
-        return false;
-
-    return true;
-}
-
-bool SaveRasterWizard::ZoomPage::validatePage() {
-    wizard->zoomLevels.clear();
-
-    /* Save zoom range */
-    if(basicButton->isChecked()) {
-        for(int i = minZoom->value(); i <= maxZoom->value(); ++i)
-            wizard->zoomLevels.push_back(i);
-
-    /* Save each selected level */
-    } else {
-        QModelIndexList list = zoomLevelsView->selectionModel()->selectedIndexes();
-        if(list.isEmpty()) return false;
-
-        foreach(const QModelIndex& index, list)
-            wizard->zoomLevels.push_back(index.data().toUInt());
-
-        /* Sort the list ascending */
-        sort(wizard->zoomLevels.begin(), wizard->zoomLevels.end());
-    }
-
-    return true;
-}
-
-SaveRasterWizard::LayersPage::LayersPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("3/6: Map layers"));
-    setSubTitle(tr("Select tiles and overlays to save."));
 
     layersView = new QListView;
     layersView->setSelectionMode(QAbstractItemView::MultiSelection);
@@ -301,24 +165,36 @@ SaveRasterWizard::LayersPage::LayersPage(SaveRasterWizard* _wizard): QWizardPage
     overlaysView->setModel(MainWindow::instance()->rasterOverlayModel());
 
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Layers:")), 0, 0);
-    layout->addWidget(new QLabel(tr("Overlays:")), 0, 1);
-    layout->addWidget(layersView, 1, 0);
-    layout->addWidget(overlaysView, 1, 1);
+    layout->addWidget(new QLabel(tr("Zoom levels:")), 0, 0);
+    layout->addWidget(new QLabel(tr("Layers:")), 0, 1);
+    layout->addWidget(new QLabel(tr("Overlays:")), 0, 2);
+    layout->addWidget(zoomLevelsView, 1, 0);
+    layout->addWidget(layersView, 1, 1);
+    layout->addWidget(overlaysView, 1, 2);
 
     setLayout(layout);
 }
 
-bool SaveRasterWizard::LayersPage::isComplete() const {
-    if(layersView->selectionModel()->selectedIndexes().isEmpty())
+bool SaveRasterWizard::ContentsPage::isComplete() const {
+    if(zoomLevelsView->selectionModel()->selectedIndexes().isEmpty() || layersView->selectionModel()->selectedIndexes().isEmpty())
         return false;
 
     return true;
 }
 
-bool SaveRasterWizard::LayersPage::validatePage() {
+bool SaveRasterWizard::ContentsPage::validatePage() {
+    wizard->zoomLevels.clear();
     wizard->layers.clear();
     wizard->overlays.clear();
+
+    /* Zoom levels */
+    QModelIndexList zoomLevelsList = zoomLevelsView->selectionModel()->selectedIndexes();
+    if(zoomLevelsList.isEmpty()) return false;
+    foreach(const QModelIndex& index, zoomLevelsList)
+        wizard->zoomLevels.push_back(index.data().toUInt());
+
+    /* Sort zoom levels ascending */
+    sort(wizard->zoomLevels.begin(), wizard->zoomLevels.end());
 
     /* Save layers */
     QModelIndexList layerList = layersView->selectionModel()->selectedIndexes();
@@ -335,7 +211,7 @@ bool SaveRasterWizard::LayersPage::validatePage() {
 }
 
 SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), canDownload(true) {
-    setTitle(tr("5/6: Statistics"));
+    setTitle(tr("4/5: Statistics"));
     setSubTitle(tr("Review amount of data to be downloaded, return back and make changes or proceed to creating the package."));
     setCommitPage(true);
 
@@ -419,7 +295,7 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
 }
 
 SaveRasterWizard::MetadataPage::MetadataPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
-    setTitle(tr("4/6: Metadata"));
+    setTitle(tr("3/5: Metadata"));
     setSubTitle(tr("Select where to save the package and optionally fill in some metadata."));
 
     /* Initialize widgets */
@@ -469,7 +345,7 @@ void SaveRasterWizard::MetadataPage::saveFileDialog() {
 }
 
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {
-    setTitle(tr("6/6: Downloading..."));
+    setTitle(tr("5/5: Downloading..."));
     setSubTitle(tr("The data are now being downloaded and saved to your package."));
 
     saveThread = new SaveRasterThread(this);

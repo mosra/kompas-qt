@@ -50,8 +50,7 @@ class SaveRasterWizard: public QWizard {
 
     protected:
         class AreaPage;
-        class ZoomPage;
-        class LayersPage;
+        class ContentsPage;
         class SavePage;
         class StatisticsPage;
         class MetadataPage;
@@ -119,80 +118,29 @@ class SaveRasterWizard::AreaPage: public QWizardPage {
 };
 
 /**
- * @brief Zoom selection wizard page
+ * @brief Map contents wizard page
  *
- * Provides selection of zoom levels as a range or by selecting particular zoom
- * levels.
+ * Provides three listviews for selecting zoom levels, layers and overlays.
  */
-class SaveRasterWizard::ZoomPage: public QWizardPage {
-    Q_OBJECT
-
+class SaveRasterWizard::ContentsPage: public QWizardPage {
     public:
         /**
          * @brief Constructor
          * @param _wizard       Wizard instance
          */
-        ZoomPage(SaveRasterWizard* _wizard);
+        ContentsPage(SaveRasterWizard* _wizard);
 
         /**
          * @brief Whether the page is complete
-         * @return True if at least one zoom level is selected
+         * @return True if at least one zoom level and layer is selected.
          */
         virtual bool isComplete() const;
 
         /**
          * @brief Page validator
          *
-         * Saves selected zoom levels into SaveRasterWizard::zoomLevels.
-         */
-        virtual bool validatePage();
-
-    private slots:
-        inline void checkMinValue(int value) {
-            if(maxZoom->value() < minZoom->value())
-                maxZoom->setValue(minZoom->value());
-        }
-        inline void checkMaxValue(int value) {
-            if(minZoom->value() > maxZoom->value())
-                minZoom->setValue(maxZoom->value());
-        }
-        void switchGroups();
-
-    private:
-        SaveRasterWizard* wizard;
-
-        QSpinBox *minZoom,
-            *maxZoom;
-        QGroupBox *basic,
-            *advanced;
-        QRadioButton *basicButton,
-            *advancedButton;
-        QListView *zoomLevelsView;
-};
-
-/**
- * @brief Layer and overlay selection wizard page
- *
- * Provides two listviews for selecting layers and overlays.
- */
-class SaveRasterWizard::LayersPage: public QWizardPage {
-    public:
-        /**
-         * @brief Constructor
-         * @param _wizard       Wizard instance
-         */
-        LayersPage(SaveRasterWizard* _wizard);
-
-        /**
-         * @brief Whether the page is complete
-         * @return True if at least one layer is selected.
-         */
-        virtual bool isComplete() const;
-
-        /**
-         * @brief Page validator
-         *
-         * Saves selected layers into SaveRasterWizard::layers and overlays into
+         * Saves selected zoom levels into SaveRasterWizard::zoomLevels,
+         * layers into SaveRasterWizard::layers and overlays into
          * SaveRasterWizard::overlays.
          */
         virtual bool validatePage();
@@ -200,7 +148,8 @@ class SaveRasterWizard::LayersPage: public QWizardPage {
     private:
         SaveRasterWizard* wizard;
 
-        QListView *layersView,
+        QListView *zoomLevelsView,
+            *layersView,
             *overlaysView;
 };
 

@@ -142,6 +142,9 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     connect(pluginDir, SIGNAL(textEdited(QString)), this, SIGNAL(edited()));
     connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
 
+    /* Plugin dir change requires application restart */
+    connect(pluginDir, SIGNAL(textChanged(QString)), this, SIGNAL(restartRequired()));
+
     /* Layout for plugin dir lineedit and button */
     QHBoxLayout* pluginDirLayout = new QHBoxLayout;
     pluginDirLayout->addWidget(pluginDir, 1);

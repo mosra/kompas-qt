@@ -25,8 +25,6 @@ namespace Kompas { namespace QtGui {
 
 /**
  * @brief Abstract configuration widget
- *
- * @todo Signal if editing requires restart
  */
 class AbstractConfigurationWidget: public QWidget {
     Q_OBJECT
@@ -47,6 +45,7 @@ class AbstractConfigurationWidget: public QWidget {
 
     signals:
         void edited(bool = true);           /**< @brief Emitted when the data are changed */
+        void restartRequired(bool required = true); /**< @brief Emitted when data which require restart are changed */
 };
 
 }}

@@ -74,6 +74,15 @@ class AbstractConfigurationDialog: public QDialog {
          */
         void connectWidget(AbstractConfigurationWidget* widget);
 
+    public slots:
+        /**
+         * @brief Require application restart
+         *
+         * Sets required restart. After saving the dialog an messagebox is
+         * shown, which recommends restarting application.
+         */
+        inline void requireRestart(bool require = true) { restartRequired = require; }
+
     signals:
         /**
          * @brief Restore default values
@@ -86,6 +95,7 @@ class AbstractConfigurationDialog: public QDialog {
 
     private slots:
         void restoreDefaultsWarning();
+        void restartRequiredWarning();
 
     private:
         QDialogButtonBox* buttons;
@@ -94,6 +104,8 @@ class AbstractConfigurationDialog: public QDialog {
             *saveButton,
             *cancelButton;
         QVBoxLayout* _layout;
+
+        bool restartRequired;
 };
 
 }}

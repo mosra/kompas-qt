@@ -23,7 +23,7 @@
 
 namespace Kompas { namespace QtGui {
 
-AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
+AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f), restartRequired(false) {
     /* Buttons */
     buttons = new QDialogButtonBox;
     restoreDefaultsButton = buttons->addButton(QDialogButtonBox::RestoreDefaults);
@@ -34,6 +34,7 @@ AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::Wi
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
     connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
+    connect(saveButton, SIGNAL(clicked(bool)), SLOT(restartRequiredWarning()));
 
     /* Save and reset button is enabled only after editing, disable back after
         resets */
@@ -61,6 +62,7 @@ void AbstractConfigurationDialog::setCentralLayout(QLayout* layout) {
 void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* widget) {
     connect(widget, SIGNAL(edited(bool)), resetButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
+    connect(widget, SIGNAL(restartRequired(bool)), SLOT(requireRestart(bool)));
     connect(this, SIGNAL(accepted()), widget, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), widget, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), widget, SLOT(reset()));
@@ -71,6 +73,13 @@ void AbstractConfigurationDialog::restoreDefaultsWarning() {
        tr("Do you really want to restore default configuration? This action is irreversible."),
        QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
         emit restoreDefaults();
+}
+
+void AbstractConfigurationDialog::restartRequiredWarning() {
+    if(!restartRequired) return;
+
+    MessageBox::warning(this, tr("Application restart required"),
+        tr("Some changes would need application restart to work properly."));
 }
 
 }}

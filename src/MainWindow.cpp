@@ -42,6 +42,7 @@
 #include "RasterZoomModel.h"
 #include "SaveRasterWizard.h"
 #include "MessageBox.h"
+#include "AboutDialog.h"
 
 #define WELCOME_SCREEN 0
 #define MAP_VIEW 1
@@ -438,6 +439,11 @@ void MainWindow::createActions() {
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
 
+    /* About */
+    aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
+    aboutAction->setStatusTip(tr("Show information about this application"));
+    connect(aboutAction, SIGNAL(triggered(bool)), SLOT(aboutDialog()));
+
     /* About Qt */
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
@@ -480,6 +486,7 @@ void MainWindow::createMenus() {
 
     /* Help menu */
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
+    helpMenu->addAction(aboutAction);
     helpMenu->addAction(aboutQtAction);
 }
 
@@ -498,6 +505,11 @@ void MainWindow::pluginDialog() {
 
 void MainWindow::configurationDialog() {
     ConfigurationDialog dialog(this);
+    dialog.exec();
+}
+
+void MainWindow::aboutDialog() {
+    AboutDialog dialog(this);
     dialog.exec();
 }
 

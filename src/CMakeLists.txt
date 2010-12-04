@@ -18,6 +18,7 @@ include_directories(${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_
 add_subdirectory(Plugins)
 
 set(Kompas_Qt_SRCS
+    AboutDialog.cpp
     MainWindow.cpp
     AbstractMapView.cpp
     TileDataThread.cpp

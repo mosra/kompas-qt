@@ -204,6 +204,9 @@ class MainWindow: public QMainWindow {
          */
         inline void closeRaster() { setRasterModel(0); }
 
+        /** @brief About dialog */
+        void aboutDialog();
+
     private:
         static MainWindow* _instance;
 
@@ -233,6 +236,7 @@ class MainWindow: public QMainWindow {
             *zoomOutAction,
             *pluginDialogAction,
             *configurationDialogAction,
+            *aboutAction,
             *aboutQtAction;
 
         QMenu *openRasterMenu,

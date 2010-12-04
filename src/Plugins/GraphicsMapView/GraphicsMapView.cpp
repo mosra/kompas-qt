@@ -28,6 +28,7 @@
 #include "AbstractProjection.h"
 #include "MapView.h"
 #include "Tile.h"
+#include "TileDataThread.h"
 
 using namespace std;
 using namespace Map2X::Utility;
@@ -292,7 +293,7 @@ bool GraphicsMapView::setLayer(const QString& layer) {
         /* Placeholder for new data */
         tile->setLayer(0);
 
-        emit getTileData(_layer, _zoom, tile->coords());
+        tileDataThread->getTileData(_layer, _zoom, tile->coords());
     }
 
     emit layerChanged(_layer);
@@ -319,7 +320,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
         tile->setLayer(layerNumber);
 
         /* Request new layer data */
-        emit getTileData(overlay, _zoom, tile->coords());
+        tileDataThread->getTileData(overlay, _zoom, tile->coords());
     }
 
     emit overlaysChanged(_overlays);
@@ -448,9 +449,9 @@ void GraphicsMapView::updateTilePositions() {
         tiles.append(tile);
 
         /* Foreach all layers and overlays and request data for them */
-        emit getTileData(_layer, _zoom, coords);
+        tileDataThread->getTileData(_layer, _zoom, coords);
         foreach(const QString& overlay, _overlays)
-            emit getTileData(overlay, _zoom, coords);
+            tileDataThread->getTileData(overlay, _zoom, coords);
     }
 
     MainWindow::instance()->unlockRasterModel();

@@ -96,7 +96,6 @@ class TileDataThread: public QThread {
          */
         virtual void run();
 
-    public slots:
         /**
          * @brief Request for tile data
          * @param layer     Tile layer or overlay name

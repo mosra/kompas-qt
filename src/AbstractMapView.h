@@ -192,16 +192,6 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
 
     signals:
         /**
-         * @brief Request for tile data
-         * @param layer     Tile layer or overlay name
-         * @param z         Zoom
-         * @param coords    Tile coordinates
-         *
-         * Connected to TileDataThread::getTileData().
-         */
-        void getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords);
-
-        /**
          * @brief Coordinates under mouse
          * @param coords    Coordinates
          *

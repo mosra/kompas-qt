@@ -155,6 +155,10 @@ void TileDataThread::startDownload(TileJob job) {
 void TileDataThread::getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
     emit tileLoading(layer, z, coords);
 
+    /* If the job is already in the queue, don't add ít again */
+    foreach(const TileJob& job, queue)
+        if(job.coords == coords && job.layer == layer && job.zoom == z) return;
+
     /* Add tile request to the queue */
     TileJob dl;
     dl.zoom = z;

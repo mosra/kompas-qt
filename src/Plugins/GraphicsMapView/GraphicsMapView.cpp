@@ -78,6 +78,9 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(++it == z.end()) return false;
 
+    /* Abort all jobs from previous zoom */
+    tileDataThread->abort();
+
     /* Get the coordinates before zooming */
     QPointF move;
     if(!pos.isNull())  {
@@ -115,6 +118,9 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
     vector<Zoom>::const_iterator it = ::find(z.begin(), z.end(), _zoom);
     if(it-- == z.begin()) return false;
 
+    /* Abort all jobs from previous zoom */
+    tileDataThread->abort();
+
     /* Get coordinates before we zoom out (so they don't get cropped) */
     QPointF move;
     if(!pos.isNull())  {
@@ -150,6 +156,9 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 
     /* Check whether given zoom exists */
     if(::find(z.begin(), z.end(), zoom) == z.end()) return false;
+
+    /* Abort all jobs from previous zoom */
+    tileDataThread->abort();
 
     /* Get coordinates before we zoom (so they don't get cropped) */
     QPointF move;
@@ -279,6 +288,9 @@ bool GraphicsMapView::setLayer(const QString& layer) {
     if(layer == _layer) return true;
     if(!isReady()) return false;
 
+    /* Abort all jobs with current layer */
+    tileDataThread->abort(_layer);
+
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<string> layers = rasterModel->layers();
     MainWindow::instance()->unlockRasterModel();
@@ -329,6 +341,9 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
 
 bool GraphicsMapView::removeOverlay(const QString& overlay) {
     if(!isReady() ||!_overlays.contains(overlay)) return false;
+
+    /* Abort all jobs with that overlay */
+    tileDataThread->abort(overlay);
 
     int layerNumber = _overlays.indexOf(overlay);
 

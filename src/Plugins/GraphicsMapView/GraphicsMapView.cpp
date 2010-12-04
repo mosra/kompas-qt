@@ -102,7 +102,7 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
     view->centerOn(coords*multiplier-move);
 
     /* Load new tiles */
-    updateTilePositions();
+    updateTileCount();
 
     return true;
 }
@@ -142,7 +142,7 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
     view->centerOn(coords/divisor-move);
 
     /* Load new tiles */
-    updateTilePositions();
+    updateTileCount();
 
     return true;
 }
@@ -182,7 +182,7 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     view->centerOn(coords-move);
 
     /* Load new tiles */
-    updateTilePositions();
+    updateTileCount();
 
     return true;
 }
@@ -279,7 +279,7 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     MainWindow::instance()->unlockRasterModel();
 
     /* Update tile positions */
-    updateTilePositions();
+    updateTileCount();
 
     return true;
 }
@@ -387,9 +387,6 @@ void GraphicsMapView::updateMapArea() {
                      rasterModel->area().h*rasterModel->tileSize().y*multiplier);
 
     MainWindow::instance()->unlockRasterModel();
-
-    /* Update tile count to ensure map area fits in it */
-    updateTileCount();
 }
 
 void GraphicsMapView::updateTileCount() {

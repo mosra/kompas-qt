@@ -1,34 +1,34 @@
-#ifndef Map2X_Plugins_DmsDecimalTool_h
-#define Map2X_Plugins_DmsDecimalTool_h
+#ifndef Kompas_Plugins_DmsDecimalTool_h
+#define Kompas_Plugins_DmsDecimalTool_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
 */
 
 /** @file
- * @brief Class Map2X::Plugins::DmsDecimalTool
+ * @brief Class Kompas::Plugins::DmsDecimalTool
  */
 
 #include "AbstractTool.h"
 #include "DmsDecimalToolDialog.h"
 
-namespace Map2X { namespace Plugins {
+namespace Kompas { namespace Plugins {
 
 /** @brief Converting DMS to decimal and back */
 class DmsDecimalTool: public QtGui::AbstractTool {
     public:
         /** @copydoc QtGui::AbstractTool::AbstractTool */
-        DmsDecimalTool(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
+        DmsDecimalTool(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
         virtual QString menuText() const { return QObject::tr("DMS - Decimal converter"); }
@@ -38,7 +38,7 @@ class DmsDecimalTool: public QtGui::AbstractTool {
 
 }}
 
-PLUGIN_REGISTER_STATIC(DmsDecimalTool, Map2X::Plugins::DmsDecimalTool,
-                       "cz.mosra.Map2X.QtGui.AbstractTool/0.1")
+PLUGIN_REGISTER_STATIC(DmsDecimalTool, Kompas::Plugins::DmsDecimalTool,
+                       "cz.mosra.Kompas.QtGui.AbstractTool/0.1")
 
 #endif

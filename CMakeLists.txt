@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-project(Map2XQt)
+project(KompasQt)
 
 option(BUILD_TESTS "Build unit tests (requires Qt4)." OFF)
 
@@ -16,21 +16,21 @@ if(BUILD_TESTS)
 
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${Map2XQt_SOURCE_DIR}/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KompasQt_SOURCE_DIR}/modules/")
 
-include(Map2XMacros)
+include(KompasMacros)
 
-set_parent_scope(MAP2X_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set_parent_scope(KOMPAS_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-include(FindMap2XQt)
+include(FindKompasQt)
 
 add_subdirectory(modules)
 add_subdirectory(src)
 
-install(DIRECTORY src/ DESTINATION ${MAP2X_QT_INCLUDE_INSTALL_DIR}
+install(DIRECTORY src/ DESTINATION ${KOMPAS_QT_INCLUDE_INSTALL_DIR}
                  FILES_MATCHING PATTERN "*.h"
                  PATTERN "*/Test" EXCLUDE
                  PATTERN src/Plugins EXCLUDE)
-install(DIRECTORY src/Plugins/ DESTINATION ${MAP2X_PLUGINS_INCLUDE_INSTALL_DIR}
+install(DIRECTORY src/Plugins/ DESTINATION ${KOMPAS_PLUGINS_INCLUDE_INSTALL_DIR}
                 FILES_MATCHING PATTERN "*.h"
                 PATTERN "*/Test" EXCLUDE)

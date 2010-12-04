@@ -1,22 +1,22 @@
-#ifndef Map2X_QtGui_AbstractMapView_h
-#define Map2X_QtGui_AbstractMapView_h
+#ifndef Kompas_QtGui_AbstractMapView_h
+#define Kompas_QtGui_AbstractMapView_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
 */
 
 /** @file
- * @brief Class Map2X::QtGui::AbstractMapView
+ * @brief Class Kompas::QtGui::AbstractMapView
  */
 
 #include <QtGui/QWidget>
@@ -27,16 +27,16 @@
 class QAction;
 class QMenu;
 
-namespace Map2X { namespace QtGui {
+namespace Kompas { namespace QtGui {
 
 class TileDataThread;
 
 /** @brief Abstract class for map viewer widget plugins */
-class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
+class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
     Q_OBJECT
 
     #ifndef QT_MOC_RUN
-    PLUGIN_INTERFACE("cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
+    PLUGIN_INTERFACE("cz.mosra.Kompas.QtGui.AbstractMapView/0.1")
     #endif
 
     public:
@@ -46,7 +46,7 @@ class AbstractMapView: public QWidget, Map2X::PluginManager::Plugin {
         };
 
         /** @copydoc PluginManager::Plugin::Plugin */
-        AbstractMapView(Map2X::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        AbstractMapView(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         /** @{ @name Map data functions */
 

@@ -1,4 +1,4 @@
-/** @class Map2X::QtGui::AbstractPluginMenuView
+/** @class Kompas::QtGui::AbstractPluginMenuView
 @section AbstractPluginMenuView_subclassing Subclassing example: Export menu
 We have some file format plugins and we want to create an Export menu for all
 of them. Some of them are for reading only, so we have to filter them out.
@@ -21,7 +21,7 @@ which have to be implemented:
 @code
 class ExportMenuView: public AbstractPluginMenuView {
     public:
-        ToolPluginMenuView(Map2X::PluginManager::PluginManager<AbstractFormat>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
+        ToolPluginMenuView(Kompas::PluginManager::PluginManager<AbstractFormat>* manager, QMenu* menu, QAction* before = 0, QObject* parent = 0):
             AbstractPluginMenuView(manager, menu, before, parent), formatManager(manager) {}
 
         void update();
@@ -33,7 +33,7 @@ class ExportMenuView: public AbstractPluginMenuView {
         QAction* createMenuAction(const std::string& pluginName);
 
     private:
-        Map2X::PluginManager::PluginManager<AbstractFormat>* formatManager;
+        Kompas::PluginManager::PluginManager<AbstractFormat>* formatManager;
         QHash<QAction*, std::string> items;
 };
 @endcode

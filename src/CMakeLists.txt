@@ -1,23 +1,23 @@
 add_definitions(-Wall -pedantic)
 
 find_package(Qt4 REQUIRED)
-find_package(Map2XCore REQUIRED)
+find_package(KompasCore REQUIRED)
 
 # TODO: This will work only under user who compiled that
 if(UNIX)
-    set(CONFIGURATION_FILE "$ENV{HOME}/.map2x.conf")
+    set(CONFIGURATION_FILE "$ENV{HOME}/.kompas.conf")
 elseif(WIN32)
-    set(CONFIGURATION_FILE "$ENV{AppData}/map2x.conf")
+    set(CONFIGURATION_FILE "$ENV{AppData}/kompas.conf")
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
 
-include_directories(${MAP2X_CORE_INCLUDE_DIR} ${MAP2X_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(Plugins)
 
-set(Map2X_Qt_SRCS
+set(Kompas_Qt_SRCS
     MainWindow.cpp
     AbstractMapView.cpp
     TileDataThread.cpp
@@ -42,7 +42,7 @@ set(Map2X_Qt_SRCS
     Plugins/registerStatic.cpp
 )
 
-qt4_wrap_cpp(Map2X_Qt_MOC
+qt4_wrap_cpp(Kompas_Qt_MOC
     MainWindow.h
     AbstractMapView.h
     TileDataThread.h
@@ -62,11 +62,11 @@ qt4_wrap_cpp(Map2X_Qt_MOC
     RasterZoomModel.h
 )
 
-qt4_add_resources(Map2X_Qt_QRC
+qt4_add_resources(Kompas_Qt_QRC
     data/data.qrc
 )
 
-add_executable(map2x-qt ${Map2X_Qt_SRCS} ${Map2X_Qt_MOC} ${Map2X_Qt_QRC})
-target_link_libraries(map2x-qt Map2XCore ${Map2XQt_Plugins} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+add_executable(kompas-qt ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
+target_link_libraries(kompas-qt KompasCore ${KompasQt_Plugins} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
-install(TARGETS map2x-qt DESTINATION ${MAP2X_BINARY_INSTALL_DIR})
+install(TARGETS kompas-qt DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})

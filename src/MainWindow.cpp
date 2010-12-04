@@ -1,13 +1,13 @@
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
@@ -47,9 +47,9 @@
 #define MAP_VIEW 1
 
 using namespace std;
-using namespace Map2X::Core;
+using namespace Kompas::Core;
 
-namespace Map2X { namespace QtGui {
+namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     icon.addFile(":/logo-128.png");
     icon.addFile(":/logo-256.png");
 
-    setWindowTitle("Map2X");
+    setWindowTitle("Kompas");
     setWindowIcon(icon);
     statusBar();
 
@@ -434,7 +434,7 @@ void MainWindow::createActions() {
 
     /* Settings menu */
     pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
-    configurationDialogAction = new QAction(tr("Configure Map2X"), this);
+    configurationDialogAction = new QAction(tr("Configure Kompas"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
 
@@ -501,7 +501,7 @@ void MainWindow::configurationDialog() {
     dialog.exec();
 }
 
-void MainWindow::currentCoordinates(const Map2X::Core::Wgs84Coords& coords) {
+void MainWindow::currentCoordinates(const Kompas::Core::Wgs84Coords& coords) {
     if(!coords.isValid())
         coordinateStatus->setText("");
     else

@@ -2,7 +2,7 @@ qt4_wrap_cpp(GraphicsMapView_MOC
     MapView.h
     GraphicsMapView.h
 )
-map2x_add_static_plugin(Map2XQt_Plugins GraphicsMapView GraphicsMapView.conf
+kompas_add_static_plugin(KompasQt_Plugins GraphicsMapView GraphicsMapView.conf
     GraphicsMapView.cpp
     Tile.cpp
     ${GraphicsMapView_MOC}

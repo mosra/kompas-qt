@@ -1,29 +1,29 @@
-#ifndef Map2X_QtGui_AbstractPluginManager_h
-#define Map2X_QtGui_AbstractPluginManager_h
+#ifndef Kompas_QtGui_AbstractPluginManager_h
+#define Kompas_QtGui_AbstractPluginManager_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
 */
 
 /** @file
- * @brief Class Map2X::QtGui::AbstractPluginManager
+ * @brief Class Kompas::QtGui::AbstractPluginManager
  */
 
 #include <QtCore/QObject>
 
 #include "PluginManager/AbstractPluginManager.h"
 
-namespace Map2X { namespace QtGui {
+namespace Kompas { namespace QtGui {
 
 /**
  * @brief Qt version of PluginManager::AbstractPluginManager
@@ -31,7 +31,7 @@ namespace Map2X { namespace QtGui {
  * Instead of PluginManager::AbstractPluginManager provides signal notification
  * when a plugin is loaded or unloaded.
  */
-class AbstractPluginManager: public QObject, public Map2X::PluginManager::AbstractPluginManager {
+class AbstractPluginManager: public QObject, public Kompas::PluginManager::AbstractPluginManager {
     Q_OBJECT
 
     public:
@@ -41,7 +41,7 @@ class AbstractPluginManager: public QObject, public Map2X::PluginManager::Abstra
          * @param parent                Parent object
          * @copydetails PluginManager::AbstractPluginManager::AbstractPluginManager()
          */
-        inline AbstractPluginManager(const std::string& pluginDirectory, QObject* parent = 0): QObject(parent), Map2X::PluginManager::AbstractPluginManager(pluginDirectory) {}
+        inline AbstractPluginManager(const std::string& pluginDirectory, QObject* parent = 0): QObject(parent), Kompas::PluginManager::AbstractPluginManager(pluginDirectory) {}
 
         /**
          * @copydoc PluginManager::AbstractPluginManager::load()
@@ -49,7 +49,7 @@ class AbstractPluginManager: public QObject, public Map2X::PluginManager::Abstra
          */
         inline LoadState load(const std::string& name) {
             LoadState before = loadState(name);
-            LoadState after = Map2X::PluginManager::AbstractPluginManager::load(name);
+            LoadState after = Kompas::PluginManager::AbstractPluginManager::load(name);
             emit loadAttempt(name, before, after);
             return after;
         }
@@ -60,7 +60,7 @@ class AbstractPluginManager: public QObject, public Map2X::PluginManager::Abstra
          */
         inline LoadState unload(const std::string& name) {
             LoadState before = loadState(name);
-            LoadState after = Map2X::PluginManager::AbstractPluginManager::unload(name);
+            LoadState after = Kompas::PluginManager::AbstractPluginManager::unload(name);
             emit unloadAttempt(name, before, after);
             return after;
         }

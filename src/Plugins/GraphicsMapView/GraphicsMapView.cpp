@@ -1,13 +1,13 @@
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
@@ -31,14 +31,14 @@
 #include "TileDataThread.h"
 
 using namespace std;
-using namespace Map2X::Utility;
-using namespace Map2X::Core;
-using namespace Map2X::QtGui;
+using namespace Kompas::Utility;
+using namespace Kompas::Core;
+using namespace Kompas::QtGui;
 
-PLUGIN_REGISTER_STATIC(GraphicsMapView, Map2X::Plugins::GraphicsMapView,
-                       "cz.mosra.Map2X.QtGui.AbstractMapView/0.1")
+PLUGIN_REGISTER_STATIC(GraphicsMapView, Kompas::Plugins::GraphicsMapView,
+                       "cz.mosra.Kompas.QtGui.AbstractMapView/0.1")
 
-namespace Map2X { namespace Plugins {
+namespace Kompas { namespace Plugins {
 
 GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
     /* Enable mouse tracking */

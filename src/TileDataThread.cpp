@@ -1,13 +1,13 @@
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
@@ -23,11 +23,11 @@
 #include "MainWindow.h"
 
 using namespace std;
-using namespace Map2X::Core;
+using namespace Kompas::Core;
 
-Q_DECLARE_METATYPE(Map2X::QtGui::TileDataThread::TileJob)
+Q_DECLARE_METATYPE(Kompas::QtGui::TileDataThread::TileJob)
 
-namespace Map2X { namespace QtGui {
+namespace Kompas { namespace QtGui {
 
 int TileDataThread::_maxSimultaenousDownloads = 3;
 
@@ -35,7 +35,7 @@ TileDataThread::TileDataThread(QObject* parent): QThread(parent), _abort(false) 
     qRegisterMetaType<TileJob>();
 
     manager = new QNetworkAccessManager(this);
-    connect(this, SIGNAL(download(Map2X::QtGui::TileDataThread::TileJob)), this, SLOT(startDownload(Map2X::QtGui::TileDataThread::TileJob)));
+    connect(this, SIGNAL(download(Kompas::QtGui::TileDataThread::TileJob)), this, SLOT(startDownload(Kompas::QtGui::TileDataThread::TileJob)));
     connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(finishDownload(QNetworkReply*)));
 }
 

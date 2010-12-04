@@ -1,18 +1,18 @@
 # Author: mosra <mosra@centrum.cz>
-pkgname=map2x-qt-git
+pkgname=kompas-qt-git
 pkgver=20101013
 pkgrel=1
-pkgdesc="Qt GUI for Map2X navigation system (Git version)"
+pkgdesc="Qt GUI for Kompas navigation system (Git version)"
 arch=('i686' 'x86_64')
-url="http://mosra.cz/blog/map2x.php"
+url="http://mosra.cz/blog/kompas.php"
 license=('LGPLv3')
 makedepends=('cmake' 'git')
-depends=('map2x-core-git')
-provides=('map2x-qt')
-conflicts=('map2x-qt')
+depends=('kompas-core-git')
+provides=('kompas-qt')
+conflicts=('kompas-qt')
 
-_gitroot="git://github.com/mosra/map2x-qt.git"
-_gitname="map2x-qt"
+_gitroot="git://github.com/mosra/kompas-qt.git"
+_gitname="kompas-qt"
 
 build() {
     cd "$srcdir"

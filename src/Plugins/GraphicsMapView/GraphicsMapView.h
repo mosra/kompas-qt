@@ -1,29 +1,29 @@
-#ifndef Map2X_QtGui_GraphicsMapView_h
-#define Map2X_QtGui_GraphicsMapView_h
+#ifndef Kompas_QtGui_GraphicsMapView_h
+#define Kompas_QtGui_GraphicsMapView_h
 /*
     Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
 
-    This file is part of Map2X.
+    This file is part of Kompas.
 
-    Map2X is free software: you can redistribute it and/or modify
+    Kompas is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License version 3
     only, as published by the Free Software Foundation.
 
-    Map2X is distributed in the hope that it will be useful,
+    Kompas is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Lesser General Public License version 3 for more details.
 */
 
 /** @file
- * @brief Class Map2X::Plugins::GraphicsMapView
+ * @brief Class Kompas::Plugins::GraphicsMapView
  */
 
 #include <QtGui/QGraphicsScene>
 
 #include "AbstractMapView.h"
 
-namespace Map2X { namespace Plugins {
+namespace Kompas { namespace Plugins {
 
 class MapView;
 class Tile;
@@ -48,7 +48,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
 
     public:
         /** @copydoc QtGui::AbstractMapView::AbstractMapView */
-        GraphicsMapView(Map2X::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
+        GraphicsMapView(Kompas::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
 
         virtual inline unsigned int zoom() const { return _zoom; }
         virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());
@@ -61,7 +61,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         virtual bool zoomIn(const QPoint& pos = QPoint());
         virtual bool zoomOut(const QPoint& pos = QPoint());
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
-        virtual bool setCoords(const Map2X::Core::Wgs84Coords& coords, const QPoint& pos = QPoint());
+        virtual bool setCoords(const Kompas::Core::Wgs84Coords& coords, const QPoint& pos = QPoint());
         /** @todo Implement ? */
         virtual bool move(Direction direction, unsigned int speed) { return false; }
         virtual bool setLayer(const QString& layer);

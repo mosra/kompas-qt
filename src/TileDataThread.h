@@ -45,6 +45,16 @@ class TileDataThread: public QThread {
     Q_OBJECT
 
     public:
+        struct TileJob {
+            QNetworkReply* reply;
+            QString layer;
+            Core::Zoom zoom;
+            Core::TileCoords coords;
+            bool running;
+
+            TileJob(): reply(0), running(false) {}
+        };
+
         /**
          * @brief Maximum count of simultaenous downloads
          *
@@ -102,6 +112,12 @@ class TileDataThread: public QThread {
          */
         void getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords);
 
+        /**
+         * @brief Abort jobs in queue
+         * @param layer     Layer to abort. If empty, aborts all jobs.
+         */
+        void abort(const QString& layer = "");
+
     signals:
         /**
          * @brief Tile data
@@ -136,19 +152,9 @@ class TileDataThread: public QThread {
     private:
         static int _maxSimultaenousDownloads;
 
-        struct TileJob {
-            QNetworkReply* reply;
-            QString layer;
-            Core::Zoom zoom;
-            Core::TileCoords coords;
-            bool running;
-
-            TileJob(): reply(0), running(false) {}
-        };
-
         QMutex mutex;
         QWaitCondition condition;
-        bool abort;
+        bool _abort;
 
         QNetworkAccessManager* manager;
         QList<TileJob> queue;
@@ -162,10 +168,10 @@ class TileDataThread: public QThread {
          * QNetworkManager somehow doesn't like sharing QNetworkReply between
          * different threads.
          */
-        void download(TileJob* job);
+        void download(const Map2X::QtGui::TileDataThread::TileJob& job);
 
     private slots:
-        void startDownload(TileJob* job);
+        void startDownload(const Map2X::QtGui::TileDataThread::TileJob job);
         void finishDownload(QNetworkReply* reply);
 };
 

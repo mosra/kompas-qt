@@ -61,7 +61,7 @@ void AbstractMapView::contextMenuEvent(QContextMenuEvent* event) {
     lastCoordsForClipboard = QString::fromStdString(c.toString());
 
     /* Set coordinate action text and show menu */
-    coordinatesAction->setText(tr("Coordinates: %0").arg(QString::fromStdString(c.toString(0))));
+    coordinatesAction->setText(tr("Coordinates: %0").arg(QString::fromStdString(c.toString(0, true))));
     contextMenu->move(mapToGlobal(event->pos()));
     contextMenu->show();
 }

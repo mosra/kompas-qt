@@ -505,7 +505,7 @@ void MainWindow::currentCoordinates(const Map2X::Core::Wgs84Coords& coords) {
     if(!coords.isValid())
         coordinateStatus->setText("");
     else
-        coordinateStatus->setText(QString::fromStdString(coords.toString(1)));
+        coordinateStatus->setText(QString::fromStdString(coords.toString(0, true)));
 }
 
 }}

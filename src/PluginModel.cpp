@@ -189,11 +189,10 @@ Qt::ItemFlags PluginModel::flags(const QModelIndex& index) const {
 }
 
 bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-    if(!index.isValid() || index.column() != LoadState || role != Qt::CheckStateRole) return false;
+    if((_flags & LoadedOnly) || !index.isValid() || index.column() != LoadState || role != Qt::CheckStateRole)
+        return false;
 
     string name = nameList[index.row()];
-
-    /** @todo Fix when LoadedOnly flag is set */
 
     /* Static plugins cannot be edited */
     if(manager->loadState(name) == AbstractPluginManager::IsStatic)

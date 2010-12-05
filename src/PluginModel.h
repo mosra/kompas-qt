@@ -19,9 +19,7 @@
  * @brief Class Kompas::QtGui::PluginModel
  */
 
-#include <vector>
 #include <QtCore/QAbstractTableModel>
-#include <QtCore/QStringList>
 
 #include "AbstractPluginManager.h"
 
@@ -29,7 +27,6 @@ namespace Kompas { namespace QtGui {
 
 /**
  * @brief Model for viewing and managing plugins
- * @todo Don't regenerate lists on every data request
  */
 class PluginModel: public QAbstractTableModel {
     Q_OBJECT
@@ -75,7 +72,7 @@ class PluginModel: public QAbstractTableModel {
         int findPlugin(const QString& name) const;
 
         /** @brief Row count */
-        virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return nameList.size(); }
+        virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return plugins.size(); }
 
         /** @brief Column count */
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 10; }
@@ -97,9 +94,25 @@ class PluginModel: public QAbstractTableModel {
         void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
     private:
+        struct PluginMetadata {
+            PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata);
+
+            QString plugin,
+                name,
+                description,
+                authors,
+                version,
+                depends,
+                usedBy,
+                replaces,
+                replacedWith;
+
+            AbstractPluginManager::LoadState loadState;
+        };
+
         AbstractPluginManager* manager;
         int _flags;
-        std::vector<std::string> nameList;
+        QList<PluginMetadata> plugins;
 };
 
 }}

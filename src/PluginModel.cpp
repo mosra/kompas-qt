@@ -15,7 +15,7 @@
 
 #include "PluginModel.h"
 
-#include <algorithm>
+#include <QtCore/QStringList>
 
 #include "PluginManager.h"
 
@@ -33,22 +33,23 @@ PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* pa
 }
 
 void PluginModel::reload() {
-    if(_flags & LoadedOnly) {
-        nameList.clear();
-        vector<string> _nameList = manager->nameList();
+    plugins.clear();
+    vector<string> names = manager->nameList();
 
-        for(vector<string>::const_iterator it = _nameList.begin(); it != _nameList.end(); ++it) {
-            if(manager->loadState(*it) & (AbstractPluginManager::IsStatic|AbstractPluginManager::LoadOk))
-                nameList.push_back(*it);
-        }
+    for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
+        if((_flags & LoadedOnly) && !(manager->loadState(*it) & (AbstractPluginManager::IsStatic|AbstractPluginManager::LoadOk))) continue;
 
-    } else nameList = manager->nameList();
+        plugins.append(PluginMetadata(*it, manager->loadState(*it), manager->metadata(*it)));
+    }
 }
 
 int PluginModel::findPlugin(const QString& name) const {
-    vector<string>::const_iterator it = find(nameList.begin(), nameList.end(), name.toStdString());
-    if(it == nameList.end()) return -1;
-    return it-nameList.begin();
+    int found = -1;
+    for(int i = 0; i != plugins.size(); ++i) if(plugins[i].plugin == name) {
+        found = i;
+        break;
+    }
+    return found;
 }
 
 QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -73,20 +74,17 @@ QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int r
 QVariant PluginModel::data(const QModelIndex& index, int role) const {
     if(!index.isValid() || index.row() < 0 || index.row() >= rowCount()) return QVariant();
 
-    string name = nameList[index.row()];
-    QString qName = QString::fromStdString(name);
+    const PluginMetadata& metadata = plugins[index.row()];
 
     /* Load state */
     if(index.column() == LoadState) {
-        AbstractPluginManager::LoadState state = manager->loadState(name);
-
         if(role == Qt::CheckStateRole) {
-            if(state & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired|AbstractPluginManager::IsStatic))
+            if(metadata.loadState & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired|AbstractPluginManager::IsStatic))
                 return Qt::Checked;
             else
                 return Qt::Unchecked;
 
-        } else if(role == Qt::DisplayRole || role == Qt::EditRole) switch(state) {
+        } else if(role == Qt::DisplayRole || role == Qt::EditRole) switch(metadata.loadState) {
             case AbstractPluginManager::NotFound:
                 return tr("Not found");
             case AbstractPluginManager::WrongPluginVersion:
@@ -113,64 +111,19 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
                 return tr("Is already used");
         }
 
-    /* Plugin "filename" */
-    } else if(index.column() == Plugin && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return qName;
+    } else if(role != Qt::DisplayRole && role != Qt::EditRole) return QVariant();
 
-    /* Plugin name */
-    else if(index.column() == Name && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return QString::fromStdString(manager->metadata(name)->name());
+    else if(index.column() == Plugin)           return metadata.plugin;
+    else if(index.column() == Name)             return metadata.name;
+    else if(index.column() == Description)      return metadata.description;
+    else if(index.column() == Authors)          return metadata.authors;
+    else if(index.column() == Version)          return metadata.version;
+    else if(index.column() == Depends)          return metadata.depends;
+    else if(index.column() == UsedBy)           return metadata.usedBy;
+    else if(index.column() == Replaces)         return metadata.replaces;
+    else if(index.column() == ReplacedWith)     return metadata.replacedWith;
 
-    /* Plugin description */
-    else if(index.column() == Description && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return QString::fromStdString(manager->metadata(name)->description());
-
-    /* Author(s) */
-    else if(index.column() == Authors && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> authors = manager->metadata(name)->authors();
-        for(vector<string>::const_iterator it = authors.begin(); it != authors.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* Plugin version */
-    } else if(index.column() == Version && (role == Qt::DisplayRole || role == Qt::EditRole))
-        return QString::fromStdString(manager->metadata(name)->version());
-
-    /* On what this plugin depends */
-    else if(index.column() == Depends && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> depends = manager->metadata(name)->depends();
-        for(vector<string>::const_iterator it = depends.begin(); it != depends.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* What depends on this plugin */
-    } else if(index.column() == UsedBy && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> usedBy = manager->metadata(name)->usedBy();
-        for(vector<string>::const_iterator it = usedBy.begin(); it != usedBy.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* What this plugin replaces */
-    } else if(index.column() == Replaces && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> replaces = manager->metadata(name)->replaces();
-        for(vector<string>::const_iterator it = replaces.begin(); it != replaces.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* By what can be this plugin replaced */
-    } else if(index.column() == ReplacedWith && (role == Qt::DisplayRole || role == Qt::EditRole)) {
-        QStringList list;
-        vector<string> replacedWith = manager->metadata(name)->replacedWith();
-        for(vector<string>::const_iterator it = replacedWith.begin(); it != replacedWith.end(); ++it)
-            list.append(QString::fromStdString(*it));
-        return list.join(", ");
-
-    /* Something another */
-    } return QVariant();
+    return QVariant();
 }
 
 Qt::ItemFlags PluginModel::flags(const QModelIndex& index) const {
@@ -178,10 +131,8 @@ Qt::ItemFlags PluginModel::flags(const QModelIndex& index) const {
 
     /* Only load state column is checkable */
     if(index.column() == LoadState) {
-        string name = nameList[index.row()];
-
         /* Static plugins are disabled */
-        if(manager->loadState(name) != AbstractPluginManager::IsStatic)
+        if(plugins[index.row()].loadState != AbstractPluginManager::IsStatic)
             return QAbstractTableModel::flags(index)|Qt::ItemIsUserCheckable;
     }
 
@@ -192,22 +143,31 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
     if((_flags & LoadedOnly) || !index.isValid() || index.column() != LoadState || role != Qt::CheckStateRole)
         return false;
 
-    string name = nameList[index.row()];
+    AbstractPluginManager::LoadState loadState = plugins[index.row()].loadState;
+    string name = plugins[index.row()].plugin.toStdString();
 
     /* Static plugins cannot be edited */
-    if(manager->loadState(name) == AbstractPluginManager::IsStatic)
+    if(loadState == AbstractPluginManager::IsStatic)
         return false;
 
     /* Unload plugin */
-    if(manager->loadState(name) & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
-        if(manager->unload(name) != AbstractPluginManager::NotLoaded) return false;
-        return true;
+    if(loadState & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
+        manager->unload(name);
+
+        /* Update load state */
+        if((plugins[index.row()].loadState = manager->loadState(name)) != AbstractPluginManager::NotLoaded)
+            return false;
 
     /* Load plugin */
     } else {
-        if(manager->load(name) != AbstractPluginManager::LoadOk) return false;
-        return true;
+        manager->load(name);
+
+        /* Update load state */
+        if((plugins[index.row()].loadState = manager->loadState(name)) != AbstractPluginManager::LoadOk)
+            return false;
     }
+
+    return true;
 }
 
 void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -217,18 +177,19 @@ void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::Lo
 
         /* Add to list, if displaying only loaded plugins */
         if(_flags & LoadedOnly) {
-            beginInsertRows(QModelIndex(), nameList.size(), nameList.size());
+            beginInsertRows(QModelIndex(), plugins.size(), plugins.size());
             /** @todo Insert to right place (alphabetically sorted) */
-            nameList.push_back(name);
+            plugins.append(PluginMetadata(name, after, manager->metadata(name)));
             endInsertRows();
 
         /* Or just emit signal about data change */
         } else {
             /* Find the name in list */
-            vector<string>::const_iterator it = find(nameList.begin(), nameList.end(), name);
-            if(it == nameList.end()) return;
+            int found = findPlugin(QString::fromStdString(name));
+            if(found == -1) return;
+
             /** @todo Emit dataChanged() for whole row, if metadata changed */
-            emit dataChanged(index(it-nameList.begin(), LoadState), index(it-nameList.begin(), LoadState));
+            emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
     }
 }
@@ -240,18 +201,57 @@ void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::
        !(after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {
 
         /* Find the name in list */
-        vector<string>::iterator it = find(nameList.begin(), nameList.end(), name);
-        if(it == nameList.end()) return;
+        int found = findPlugin(QString::fromStdString(name));
+        if(found == -1) return;
 
-        /* Add to list, if displaying only loaded plugins */
+        /* Remove from list, if displaying only loaded plugins */
         if(_flags & LoadedOnly) {
-            beginRemoveRows(QModelIndex(), it-nameList.begin(), it-nameList.begin());
-            nameList.erase(it);
+            beginRemoveRows(QModelIndex(), found, found);
+            plugins.removeAt(found);
             endRemoveRows();
 
         /* Or just emit signal about data change */
-        } else emit dataChanged(index(it-nameList.begin(), LoadState), index(it-nameList.begin(), LoadState));
+        /** @todo Emit dataChanged() for whole row, if metadata changed */
+        } else emit dataChanged(index(found, LoadState), index(found, LoadState));
     }
+}
+
+PluginModel::PluginMetadata::PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata) {
+    plugin = QString::fromStdString(_plugin);
+    loadState = _loadState;
+    name = QString::fromStdString(metadata->name());
+    description = QString::fromStdString(metadata->description());
+    version = QString::fromStdString(metadata->version());
+
+    QStringList list;
+    vector<string> temp = metadata->authors();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it)
+        list << QString::fromStdString(*it);
+    authors = list.join(", ");
+
+    list.clear();
+    temp = metadata->depends();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it)
+        list << QString::fromStdString(*it);
+    depends = list.join(", ");
+
+    list.clear();
+    temp = metadata->usedBy();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it)
+        list << QString::fromStdString(*it);
+    usedBy = list.join(", ");
+
+    list.clear();
+    temp = metadata->replaces();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it)
+        list << QString::fromStdString(*it);
+    replaces = list.join(", ");
+
+    list.clear();
+    temp = metadata->replacedWith();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it)
+        list << QString::fromStdString(*it);
+    replacedWith = list.join(", ");
 }
 
 }}

@@ -79,23 +79,48 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     pluginDir = new QLineEdit;
     QLabel* categoryDescription = new QLabel(_categoryDescription);
     categoryDescription->setWordWrap(true);
+    loadStateLabel = new QLabel(tr("Load state:"));
+    loadStateLabel->setHidden(true);
     loadState = new QLabel;
+    loadState->setHidden(true);
+    descriptionLabel = new QLabel(tr("Description:"));
+    descriptionLabel->setHidden(true);
     description = new QLabel;
+    description->setHidden(true);
     description->setWordWrap(true);
+    authorsLabel = new QLabel(tr("Authors:"));
+    authorsLabel->setHidden(true);
     authors = new QLabel;
+    authors->setHidden(true);
     authors->setWordWrap(true);
+    dependsLabel = new QLabel(tr("Depends on:"));
+    dependsLabel->setHidden(true);
     depends = new QLabel;
+    depends->setHidden(true);
     depends->setWordWrap(true);
+    usedByLabel = new QLabel(tr("Used by:"));
+    usedByLabel->setHidden(true);
     usedBy = new QLabel;
+    usedBy->setHidden(true);
     usedBy->setWordWrap(true);
+    replacesLabel = new QLabel(tr("Replaces:"));
+    replacesLabel->setHidden(true);
     replaces = new QLabel;
+    replaces->setHidden(true);
     replaces->setWordWrap(true);
+    replacedWithLabel = new QLabel(tr("Can be replaced with:"));
+    replacedWithLabel->setHidden(true);
     replacedWith = new QLabel;
+    replacedWith->setHidden(true);
     replacedWith->setWordWrap(true);
 
     /* Button for selecting plugin dir */
     QPushButton* pluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Select..."));
     connect(pluginDirButton, SIGNAL(clicked(bool)), SLOT(setPluginDir()));
+
+    /* Button for refreshing plugin dir */
+    QPushButton* refreshPluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), tr("Reload"));
+    connect(refreshPluginDirButton, SIGNAL(clicked(bool)), SLOT(refreshPluginDir()));
 
     /* Initialize model and pass it to view */
     model = new PluginModel(manager, 0, this);
@@ -136,10 +161,10 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
 
     /* On selection change load new row in mapper */
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            mapper, SLOT(setCurrentModelIndex(QModelIndex)));
+            SLOT(setCurrentRow(QModelIndex)));
 
     /* Emit signal on edit */
-    connect(pluginDir, SIGNAL(textEdited(QString)), this, SIGNAL(edited()));
+    connect(pluginDir, SIGNAL(textChanged(QString)), this, SIGNAL(edited()));
     connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
 
     /* Plugin dir change requires application restart */
@@ -149,6 +174,7 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     QHBoxLayout* pluginDirLayout = new QHBoxLayout;
     pluginDirLayout->addWidget(pluginDir, 1);
     pluginDirLayout->addWidget(pluginDirButton);
+    pluginDirLayout->addWidget(refreshPluginDirButton);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
@@ -156,19 +182,19 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     layout->addWidget(new QLabel(tr("Plugin directory:")), 1, 0);
     layout->addLayout(pluginDirLayout, 1, 1);
     layout->addWidget(view, 2, 0, 1, 2);
-    layout->addWidget(new QLabel(tr("Load state:")), 3, 0, Qt::AlignTop);
+    layout->addWidget(loadStateLabel, 3, 0, Qt::AlignTop);
     layout->addWidget(loadState, 3, 1);
-    layout->addWidget(new QLabel(tr("Description:")), 4, 0, Qt::AlignTop);
+    layout->addWidget(descriptionLabel, 4, 0, Qt::AlignTop);
     layout->addWidget(description, 4, 1);
-    layout->addWidget(new QLabel(tr("Author(s):")), 5, 0, Qt::AlignTop);
+    layout->addWidget(authorsLabel, 5, 0, Qt::AlignTop);
     layout->addWidget(authors, 5, 1);
-    layout->addWidget(new QLabel(tr("Depends on:")), 6, 0, Qt::AlignTop);
+    layout->addWidget(dependsLabel, 6, 0, Qt::AlignTop);
     layout->addWidget(depends, 6, 1);
-    layout->addWidget(new QLabel(tr("Used by:")), 7, 0, Qt::AlignTop);
+    layout->addWidget(usedByLabel, 7, 0, Qt::AlignTop);
     layout->addWidget(usedBy, 7, 1);
-    layout->addWidget(new QLabel(tr("Replaces:")), 8, 0, Qt::AlignTop);
+    layout->addWidget(replacesLabel, 8, 0, Qt::AlignTop);
     layout->addWidget(replaces, 8, 1);
-    layout->addWidget(new QLabel(tr("Can be replaced with:")), 9, 0, Qt::AlignTop);
+    layout->addWidget(replacedWithLabel, 9, 0, Qt::AlignTop);
     layout->addWidget(replacedWith, 9, 1);
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
@@ -249,6 +275,40 @@ void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager:
     }
 
     MessageBox::warning(this, tr("Cannot unload plugin"), tr("Cannot unload plugin <strong>%1</strong>:<br /><br/>%2").arg(QString::fromStdString(name)).arg(message));
+}
+
+void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
+    mapper->setCurrentModelIndex(index);
+
+    bool hide = false;
+
+    hide = loadState->text().isEmpty() ? true : false;
+    loadStateLabel->setHidden(hide);
+    loadState->setHidden(hide);
+
+    hide = description->text().isEmpty() ? true : false;
+    descriptionLabel->setHidden(hide);
+    description->setHidden(hide);
+
+    hide = authors->text().isEmpty() ? true : false;
+    authorsLabel->setHidden(hide);
+    authors->setHidden(hide);
+
+    hide = depends->text().isEmpty() ? true : false;
+    dependsLabel->setHidden(hide);
+    depends->setHidden(hide);
+
+    hide = usedBy->text().isEmpty() ? true : false;
+    usedBy->setHidden(hide);
+    usedByLabel->setHidden(hide);
+
+    hide = replaces->text().isEmpty() ? true : false;
+    replacesLabel->setHidden(hide);
+    replaces->setHidden(hide);
+
+    hide = replacedWith->text().isEmpty() ? true : false;
+    replacedWithLabel->setHidden(hide);
+    replacedWith->setHidden(hide);
 }
 
 }}

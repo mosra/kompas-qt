@@ -22,6 +22,8 @@
 #include "AbstractConfigurationDialog.h"
 #include "AbstractPluginManager.h"
 
+#include <QtCore/QModelIndex>
+
 class QDialogButtonBox;
 class QTabWidget;
 class QLabel;
@@ -62,7 +64,6 @@ class PluginDialog: public AbstractConfigurationDialog {
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.
- * @todo Display only non empty metadata
  */
 class PluginDialog::Tab: public AbstractConfigurationWidget {
     Q_OBJECT
@@ -90,6 +91,8 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
         void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
         void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
+        void setCurrentRow(const QModelIndex& index);
+
     private:
         MainWindow* mainWindow;
         std::string configurationKey;
@@ -100,13 +103,13 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
 
         QLineEdit* pluginDir;
 
-        QLabel *loadState,
-            *description,
-            *authors,
-            *depends,
-            *usedBy,
-            *replaces,
-            *replacedWith;
+        QLabel *loadStateLabel, *loadState,
+            *descriptionLabel, *description,
+            *authorsLabel, *authors,
+            *dependsLabel, *depends,
+            *usedByLabel, *usedBy,
+            *replacesLabel, *replaces,
+            *replacedWithLabel, *replacedWith;
 };
 
 }}

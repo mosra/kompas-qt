@@ -3,13 +3,6 @@ add_definitions(-Wall -pedantic)
 find_package(Qt4 REQUIRED)
 find_package(KompasCore REQUIRED)
 
-# TODO: This will work only under user who compiled that
-if(UNIX)
-    set(CONFIGURATION_FILE "$ENV{HOME}/.kompas.conf")
-elseif(WIN32)
-    set(CONFIGURATION_FILE "$ENV{AppData}/kompas.conf")
-endif()
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
 

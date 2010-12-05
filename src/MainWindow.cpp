@@ -27,6 +27,7 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QStackedWidget>
 
+#include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
 #include "PluginDialog.h"
@@ -48,13 +49,14 @@
 #define MAP_VIEW 1
 
 using namespace std;
+using namespace Kompas::Utility;
 using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(CONFIGURATION_FILE), _mapView(0), _rasterModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _mapView(0), _rasterModel(0) {
     _instance = this;
 
     /* Window icon */
@@ -207,7 +209,7 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("map")->value("maxSimultaenousDownloads", &maxSimultaenousDownloads);
 
     /* Paths */
-    string packageDir = ""; /** @todo Directory::home() */
+    string packageDir = Directory::home();
     _configuration.group("paths")->value<string>("packages", &packageDir);
 
     _configuration.setAutomaticGroupCreation(false);

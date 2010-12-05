@@ -31,6 +31,7 @@
 #include "RasterOverlayModel.h"
 #include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
+#include "ZoomSlider.h"
 
 using namespace std;
 using namespace Kompas::Core;
@@ -61,6 +62,9 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterOverlays = new QListView;
     rasterOverlays->setModel(rasterOverlayModel);
 
+    /* Zoom slider */
+    zoomSlider = new ZoomSlider;
+
     /* Layout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Map view:")), 0, 0);
@@ -71,7 +75,8 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     layout->addWidget(rasterLayers, 3, 1);
     layout->addWidget(new QLabel(tr("Overlays:")), 4, 0, 1, 2);
     layout->addWidget(rasterOverlays, 5, 0, 1, 2);
-    layout->addWidget(new QWidget, 6, 0, 1, 2);
+    layout->addWidget(zoomSlider, 6, 0, 1, 2, Qt::AlignHCenter);
+    layout->addWidget(new QWidget, 7, 0, 1, 2);
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(6, 1);
     setLayout(layout);

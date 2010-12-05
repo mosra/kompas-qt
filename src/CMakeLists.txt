@@ -34,6 +34,7 @@ set(Kompas_Qt_SRCS
     MessageBox.cpp
     main.cpp
     Plugins/registerStatic.cpp
+    ZoomSlider.cpp
 )
 
 qt4_wrap_cpp(Kompas_Qt_MOC
@@ -54,6 +55,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     RasterLayerModel.h
     RasterOverlayModel.h
     RasterZoomModel.h
+    ZoomSlider.h
 )
 
 qt4_add_resources(Kompas_Qt_QRC

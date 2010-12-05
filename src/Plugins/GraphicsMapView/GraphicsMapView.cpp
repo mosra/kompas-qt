@@ -150,6 +150,9 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     if(!isReady()) return false;
 
+    /* If we are at the zoom already, nothing to do */
+    if(zoom == _zoom) return true;
+
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
     vector<Zoom> z = rasterModel->zoomLevels();
     MainWindow::instance()->unlockRasterModel();

@@ -104,6 +104,8 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
     /* Load new tiles */
     updateTileCount();
 
+    emit zoomChanged(_zoom);
+
     return true;
 }
 
@@ -143,6 +145,8 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
 
     /* Load new tiles */
     updateTileCount();
+
+    emit zoomChanged(_zoom);
 
     return true;
 }
@@ -186,6 +190,8 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 
     /* Load new tiles */
     updateTileCount();
+
+    emit zoomChanged(_zoom);
 
     return true;
 }

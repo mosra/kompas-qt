@@ -138,6 +138,8 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
          *      cursor. If the position is null, the view should zoom to center
          *      of view widget.
          * @return Whether the map can be zoomed in
+         *
+         * Subclasses should emit zoomChanged() signal on success.
          */
         virtual bool zoomIn(const QPoint& pos = QPoint()) = 0;
 
@@ -148,6 +150,8 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
          *      cursor. If the position is null, the view should zoom to center
          *      of view widget.
          * @return Whether the map can be zoomed out
+         *
+         * Subclasses should emit zoomChanged() signal on success.
          */
         virtual bool zoomOut(const QPoint& pos = QPoint()) = 0;
 
@@ -159,6 +163,8 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
          *      cursor. If the position is null, the view should zoom to center
          *      of view widget.
          * @return Whether the zoom level is available
+         *
+         * Subclasses should emit zoomChanged() signal on success.
          */
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint()) = 0;
 
@@ -198,6 +204,14 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
          * These coordinates are displayed in status bar.
          */
         void currentCoordinates(const Core::Wgs84Coords& coords);
+
+        /**
+         * @brief Zoom level changed
+         * @param zoom      Current zoom level
+         *
+         * @see zoomIn(), zoomOut(), zoomTo()
+         */
+        void zoomChanged(Core::Zoom zoom);
 
         /**
          * @brief Layer changed

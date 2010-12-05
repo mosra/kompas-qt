@@ -172,8 +172,8 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom, update map area */
-    if(zoom-_zoom < 0) coords /= 2*(_zoom-zoom);
-    else coords *= 2*(zoom-_zoom);
+    if(_zoom > zoom) coords /= pow2(_zoom-zoom);
+    else coords *= pow2(zoom-_zoom);
     _zoom = zoom;
     updateMapArea();
 

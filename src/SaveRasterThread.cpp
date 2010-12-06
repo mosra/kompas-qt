@@ -96,10 +96,10 @@ void SaveRasterThread::run() {
             string layer(*lit);
 
             /* Foreach all rows */
-            for(unsigned int row = 0; row != currentArea.w; ++row) {
+            for(unsigned int row = 0; row != currentArea.h; ++row) {
 
                 /* Foreach all columns */
-                for(unsigned int col = 0; col != currentArea.h; ++col) {
+                for(unsigned int col = 0; col != currentArea.w; ++col) {
                     if(abort) return;
 
                     TileCoords coords(currentArea.x+col, currentArea.y+row);

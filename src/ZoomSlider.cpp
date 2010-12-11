@@ -28,6 +28,7 @@ ZoomSlider::ZoomSlider(QWidget* parent): QSlider(parent) {
     setSingleStep(1);
     setPageStep(1);
     setMinimum(0);
+    setMaximum(0);
 
     connect(this, SIGNAL(valueChanged(int)), SLOT(zoomTo(int)));
 
@@ -36,36 +37,52 @@ ZoomSlider::ZoomSlider(QWidget* parent): QSlider(parent) {
 }
 
 void ZoomSlider::updateMapView() {
-    connect(MainWindow::instance()->mapView(), SIGNAL(zoomChanged(Core::Zoom)), SLOT(updateZoom(Core::Zoom)));
+    AbstractMapView* view = MainWindow::instance()->mapView();
+    if(!view) return;
+    connect(view, SIGNAL(zoomChanged(Core::Zoom)), SLOT(updateZoom(Core::Zoom)));
 }
 
 void ZoomSlider::updateRasterModel() {
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    setMaximum(model->zoomLevels().size()-1);
+    if(model) {
+        setMinimum(*model->zoomLevels().begin());
+        setMaximum(*--model->zoomLevels().end());
+    } else {
+        setMinimum(0);
+        setMaximum(0);
+    }
     MainWindow::instance()->unlockRasterModel();
 }
 
 void ZoomSlider::updateZoom(Core::Zoom z) {
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    vector<Zoom> levels = model->zoomLevels();
-    MainWindow::instance()->unlockRasterModel();
-
-    /* Find the zoom in vector */
-    int value = -1;
-    for(size_t i = 0; i != levels.size(); ++i) if(levels[i] == z) {
-        value = i; /** @todo Faster O(log n) searching */
-        break;
-    }
-
-    setValue(value);
+    setValue(static_cast<int>(z));
 }
 
 void ZoomSlider::zoomTo(int value) {
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    Zoom z = model->zoomLevels()[value];
+    set<Zoom> levels;
+    if(model) levels = model->zoomLevels();
     MainWindow::instance()->unlockRasterModel();
 
-    MainWindow::instance()->mapView()->zoomTo(z);
+    Zoom wanted = static_cast<Zoom>(value);
+    set<Zoom>::const_iterator lower = levels.lower_bound(wanted);
+    set<Zoom>::const_iterator upper = levels.upper_bound(wanted);
+
+    if(lower == levels.end() && upper == levels.end()) return;
+
+    /* Wanted zoom exists */
+    if(lower != levels.end() && *lower == wanted) {
+        AbstractMapView* view = MainWindow::instance()->mapView();
+        if(view) view->zoomTo(wanted);
+        return;
+    }
+
+    /* Lower is nearer */
+    if(upper == levels.end() || (lower != levels.end() && wanted - *lower < *upper - wanted))
+        setValue(static_cast<int>(*lower));
+
+    /* Upper is nearer */
+    else setValue(static_cast<int>(*upper));
 }
 
 }}

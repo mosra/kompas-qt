@@ -99,7 +99,7 @@ int SaveRasterWizard::exec() {
 
 TileArea SaveRasterWizard::area() const {
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    TileArea area = model->area()*pow2(zoomLevels[0]-model->zoomLevels()[0]);
+    TileArea area = model->area()*pow2(zoomLevels[0]-*model->zoomLevels().begin());
     MainWindow::instance()->unlockRasterModel();
 
     /* Tile area at minimal zoom */

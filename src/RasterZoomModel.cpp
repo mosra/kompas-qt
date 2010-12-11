@@ -30,8 +30,8 @@ void RasterZoomModel::reload() {
 
     if(rasterModel) {
         /* All available zoom levels */
-        vector<Zoom> _z = rasterModel->zoomLevels();
-        for(vector<Zoom>::const_iterator it = _z.begin(); it != _z.end(); ++it)
+        set<Zoom> _z = rasterModel->zoomLevels();
+        for(set<Zoom>::const_iterator it = _z.begin(); it != _z.end(); ++it)
             z.append(*it);
     }
 

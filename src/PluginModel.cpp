@@ -152,20 +152,12 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
 
     /* Unload plugin */
     if(loadState & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
-        manager->unload(name);
-
-        /* Update load state */
-        if((plugins[index.row()].loadState = manager->loadState(name)) != AbstractPluginManager::NotLoaded)
+        if(manager->unload(name) != AbstractPluginManager::NotLoaded)
             return false;
 
     /* Load plugin */
-    } else {
-        manager->load(name);
-
-        /* Update load state */
-        if((plugins[index.row()].loadState = manager->loadState(name)) != AbstractPluginManager::LoadOk)
-            return false;
-    }
+    } else if(manager->load(name) != AbstractPluginManager::LoadOk)
+        return false;
 
     return true;
 }
@@ -187,6 +179,9 @@ void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::Lo
             /* Find the name in list */
             int found = findPlugin(QString::fromStdString(name));
             if(found == -1) return;
+
+            /* Update plugin state */
+            plugins[found].loadState = manager->loadState(name);
 
             /** @todo Emit dataChanged() for whole row, if metadata changed */
             emit dataChanged(index(found, LoadState), index(found, LoadState));
@@ -211,8 +206,13 @@ void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::
             endRemoveRows();
 
         /* Or just emit signal about data change */
-        /** @todo Emit dataChanged() for whole row, if metadata changed */
-        } else emit dataChanged(index(found, LoadState), index(found, LoadState));
+        } else {
+            /* Update plugin state */
+            plugins[found].loadState = manager->loadState(name);
+
+            /** @todo Emit dataChanged() for whole row, if metadata changed */
+            emit dataChanged(index(found, LoadState), index(found, LoadState));
+        }
     }
 }
 

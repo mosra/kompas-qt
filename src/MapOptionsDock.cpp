@@ -225,21 +225,9 @@ bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& inde
 
     if(mapView && index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
         /* Remove overlay */
-        if(loaded.at(index.row())) {
-            if(mapView->removeOverlay(data(index).toString())) {
-                loaded.setBit(index.row(), false);
-                emit dataChanged(index, index);
-                return true;
-            }
-
-        /* Add overlay */
-        } else {
-            if(mapView->addOverlay(data(index).toString())) {
-                loaded.setBit(index.row(), true);
-                emit dataChanged(index, index);
-                return true;
-            }
-        }
+        if((loaded.at(index.row()) && mapView->removeOverlay(data(index).toString())) ||
+          (!loaded.at(index.row()) && mapView->addOverlay(data(index).toString())))
+            return true;
     }
 
     return QAbstractProxyModel::setData(index, value, role);

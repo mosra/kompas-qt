@@ -495,35 +495,26 @@ void GraphicsMapView::updateRasterModel() {
 
     qDeleteAll(tiles);
     tiles.clear();
+    map.setSceneRect(0, 0, 0, 0);
+    _zoom = pow2(31); /* << something impossible, so zoomTo won't skip on z == _zoom */
+    _layer.clear();
+    _overlays.clear();
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-
-    vector<Zoom> z = rasterModel->zoomLevels();
-    vector<string> l = rasterModel->layers();
-    vector<string> o = rasterModel->overlays();
-
+    Zoom z = *rasterModel->zoomLevels().begin();
+    QString layer = QString::fromStdString(rasterModel->layers()[0]);
+    QString _copyright = QString::fromStdString(rasterModel->copyright());
     MainWindow::instance()->unlockRasterModel();
 
-    /* Reset zoom, if the model doesn't have current */
-    /** @todo Reset to closest available zoom */
-
-    if(::find(z.begin(), z.end(), _zoom) == z.end())
-        zoomTo(z[0]);
-
-    /* Reset map layer, if the model doesn't have current */
-    if(::find(l.begin(), l.end(), _layer.toStdString()) == l.end())
-        setLayer(QString::fromStdString(l[0]));
-
-    /* Reset map overlays, if the model doesn't have current */
-    for(int i = _overlays.size()-1; i >= 0; --i) {
-        if(::find(o.begin(), o.end(), _overlays[i].toStdString()) == o.end())
-            removeOverlay(_overlays[i]);
-    }
-
-    /** @todo Is this check really needed? Why don't just reset everything to defaults? */
-
     updateMapArea();
-    updateTileCount();
+
+
+    setLayer(layer);
+    zoomTo(z);
+
+    QRectF rect = map.sceneRect();
+    view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);
+
 }
 
 }}

@@ -372,7 +372,7 @@ void MainWindow::displayMapIfUsable() {
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(
-            QString::fromStdString(_rasterModelPluginManager->metadata(name)->name())
+            QString::fromStdString(*_rasterModelPluginManager->metadata(name)->name())
         ));
         if(model->features() & AbstractRasterModel::WriteableFormat)
             saveRasterAction->setDisabled(false);

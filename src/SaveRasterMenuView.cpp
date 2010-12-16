@@ -46,7 +46,7 @@ QAction* SaveRasterMenuView::createMenuAction(const std::string& pluginName) {
     }
     delete instance;
 
-    QAction* a = new QAction(QString::fromStdString(rasterManager->metadata(pluginName)->name()), this);
+    QAction* a = new QAction(QString::fromStdString(*rasterManager->metadata(pluginName)->name()), this);
     actions.insert(a, pluginName);
     return a;
 }

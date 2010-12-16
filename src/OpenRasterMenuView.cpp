@@ -37,7 +37,7 @@ QAction* OpenRasterMenuView::createMenuAction(const std::string& pluginName) {
     }
     delete instance;
 
-    QAction* action = new QAction(QString::fromStdString(rasterManager->metadata(pluginName)->name()), this);
+    QAction* action = new QAction(QString::fromStdString(*rasterManager->metadata(pluginName)->name()), this);
     items.insert(action, QString::fromStdString(pluginName));
 
     return action;

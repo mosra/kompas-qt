@@ -114,8 +114,8 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
     } else if(role != Qt::DisplayRole && role != Qt::EditRole) return QVariant();
 
     else if(index.column() == Plugin)           return metadata.plugin;
-    else if(index.column() == Name)             return metadata.name;
-    else if(index.column() == Description)      return metadata.description;
+    else if(index.column() == Name)             return QString::fromStdString(*metadata.name);
+    else if(index.column() == Description)      return QString::fromStdString(*metadata.description);
     else if(index.column() == Authors)          return metadata.authors;
     else if(index.column() == Version)          return metadata.version;
     else if(index.column() == Depends)          return metadata.depends;
@@ -219,8 +219,8 @@ void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::
 PluginModel::PluginMetadata::PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata) {
     plugin = QString::fromStdString(_plugin);
     loadState = _loadState;
-    name = QString::fromStdString(metadata->name());
-    description = QString::fromStdString(metadata->description());
+    name = metadata->name();
+    description = metadata->description();
     version = QString::fromStdString(metadata->version());
 
     QStringList list;

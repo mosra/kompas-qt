@@ -97,9 +97,9 @@ class PluginModel: public QAbstractTableModel {
         struct PluginMetadata {
             PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata);
 
+            const std::string *name,
+                *description;
             QString plugin,
-                name,
-                description,
                 authors,
                 version,
                 depends,

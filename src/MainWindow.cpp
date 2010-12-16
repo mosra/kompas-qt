@@ -500,8 +500,8 @@ void MainWindow::loadPluginsAsConfigured(const std::string& group, AbstractPlugi
 }
 
 void MainWindow::pluginDialog() {
-    PluginDialog dialog(this);
-    dialog.exec();
+    PluginDialog* dialog = new PluginDialog(this);
+    dialog->show();
 }
 
 void MainWindow::configurationDialog() {
@@ -510,8 +510,8 @@ void MainWindow::configurationDialog() {
 }
 
 void MainWindow::aboutDialog() {
-    AboutDialog dialog(this);
-    dialog.exec();
+    AboutDialog* dialog = new AboutDialog(this);
+    dialog->show();
 }
 
 void MainWindow::currentCoordinates(const Kompas::Core::Wgs84Coords& coords) {

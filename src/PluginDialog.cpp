@@ -72,6 +72,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractC
     setCentralWidget(tabs);
     setWindowTitle("Plugins");
     resize(640, 400);
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {

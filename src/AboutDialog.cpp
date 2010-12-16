@@ -62,6 +62,7 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
 
     setWindowTitle(tr("About Kompas"));
     setFixedSize(320, 280);
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 }}

@@ -358,7 +358,7 @@ void MainWindow::saveRaster() {
 
 void MainWindow::displayMapIfUsable() {
     const AbstractRasterModel* model = lockRasterModelForRead();
-    string name = model ? model->name() : "";
+    QString name = model ? QString::fromStdString(*model->metadata()->name()) : "";
     bool isUsable = model ? model->isUsable() : false;
     unlockRasterModel();
 
@@ -370,9 +370,7 @@ void MainWindow::displayMapIfUsable() {
         mapMenu->setDisabled(false);
 
         /* Update action in "save raster" menu */
-        saveRasterAction->setText(tr("Offline %0 package").arg(
-            QString::fromStdString(*_rasterModelPluginManager->metadata(name)->name())
-        ));
+        saveRasterAction->setText(tr("Offline %0 package").arg(name));
         if(model->features() & AbstractRasterModel::WriteableFormat)
             saveRasterAction->setDisabled(false);
         else

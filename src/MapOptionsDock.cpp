@@ -135,7 +135,7 @@ void MapOptionsDock::EditableRasterPackageModel::reload() {
 
     /* Else show it and enable/disable it */
     } else {
-        rasterModelName = QString::fromStdString(*MainWindow::instance()->rasterModelPluginManager()->metadata(model->name())->name());
+        rasterModelName = QString::fromStdString(*model->metadata()->name());
 
         if(model->online())     online = Enabled;
         else                    online = Disabled;

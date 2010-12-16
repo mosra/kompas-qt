@@ -50,6 +50,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     editableRasterPackageModel->setSourceModel(MainWindow::instance()->rasterPackageModel());
     rasterPackages = new QListView;
     rasterPackages->setModel(editableRasterPackageModel);
+    rasterPackages->setFixedHeight(100);
 
     /* Raster layers combobox */
     rasterLayers = new QComboBox;
@@ -63,6 +64,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterOverlays = new QListView;
     rasterOverlays->setModel(rasterOverlayModel);
     rasterOverlays->setModelColumn(RasterOverlayModel::Translated);
+    rasterOverlays->setFixedHeight(100);
 
     /* Zoom slider */
     zoomSlider = new ZoomSlider;
@@ -82,6 +84,8 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     layout->setColumnStretch(1, 1);
     layout->setRowStretch(6, 1);
     setLayout(layout);
+
+    setFixedWidth(200);
 
     /* Update data when raster model is changed */
     connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(connectMapView()));

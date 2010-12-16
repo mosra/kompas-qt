@@ -1,6 +1,5 @@
 add_definitions(-Wall -pedantic)
 
-find_package(Qt4 REQUIRED)
 find_package(KompasCore REQUIRED)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake

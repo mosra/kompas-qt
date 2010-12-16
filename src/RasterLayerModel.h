@@ -19,7 +19,7 @@
  * @brief Class Kompas::QtGui::RasterLayerModel
  */
 
-#include <QtCore/QAbstractListModel>
+#include <QtCore/QAbstractTableModel>
 #include <QtCore/QStringList>
 
 namespace Kompas { namespace QtGui {
@@ -27,18 +27,27 @@ namespace Kompas { namespace QtGui {
 /**
  * @brief Model for tile layers
  *
- * Single-column model which displays all available layers of given tile model.
+ * Displays all available layers of current tile model.
  */
-class RasterLayerModel: public QAbstractListModel {
+class RasterLayerModel: public QAbstractTableModel {
     Q_OBJECT
 
     public:
+        /** @brief Columns */
+        enum Column {
+            Name,       /**< @brief Layer name */
+            Translated  /**< @brief Translated layer name */
+        };
+
         /**
          * @brief Constructor
          * @param parent            Parent object
          */
         inline RasterLayerModel(QObject* parent = 0):
-            QAbstractListModel(parent) { reload(); }
+            QAbstractTableModel(parent) { reload(); }
+
+        /** @brief Column count */
+        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 2; }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
@@ -64,7 +73,12 @@ class RasterLayerModel: public QAbstractListModel {
         void reload();
 
     private:
-        QStringList layers;
+        struct Layer {
+            QString name;
+            const std::string* translated;
+        };
+
+        QList<Layer> layers;
 };
 
 }}

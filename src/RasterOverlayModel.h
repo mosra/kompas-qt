@@ -19,26 +19,35 @@
  * @brief Class Kompas::QtGui::RasterOverlayModel
  */
 
-#include <QtCore/QAbstractListModel>
-#include <QtCore/QStringList>
+#include <QtCore/QAbstractTableModel>
+#include <QtCore/QList>
 
 namespace Kompas { namespace QtGui {
 
 /**
  * @brief Model for tile overlays
  *
- * Single-column model which displays all available overlayss of given tile model.
+ * Displays all available overlays of current tile model.
  */
-class RasterOverlayModel: public QAbstractListModel {
+class RasterOverlayModel: public QAbstractTableModel {
     Q_OBJECT
 
     public:
+        /** @brief Columns */
+        enum Column {
+            Name,       /**< @brief Overlay name */
+            Translated  /**< @brief Translated overlay name */
+        };
+
         /**
          * @brief Constructor
          * @param parent            Parent object
          */
         inline RasterOverlayModel(QObject* parent = 0):
-            QAbstractListModel(parent) { reload(); }
+            QAbstractTableModel(parent) { reload(); }
+
+        /** @brief Column count */
+        inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 2; }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
@@ -64,7 +73,12 @@ class RasterOverlayModel: public QAbstractListModel {
         void reload();
 
     private:
-        QStringList overlays;
+        struct Overlay {
+            QString name;
+            const std::string* translated;
+        };
+
+        QList<Overlay> overlays;
 };
 
 }}

@@ -26,13 +26,17 @@ void RasterLayerModel::reload() {
     beginResetModel();
     layers.clear();
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForWrite();
 
     if(rasterModel) {
         /* All available layers */
         vector<string> _layers = rasterModel->layers();
-        for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it)
-            layers.append(QString::fromStdString(*it));
+        for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it) {
+            Layer l;
+            l.name = QString::fromStdString(*it);
+            l.translated = rasterModel->layerName(*it);
+            layers.append(l);
+        }
     }
 
     MainWindow::instance()->unlockRasterModel();
@@ -41,14 +45,24 @@ void RasterLayerModel::reload() {
 }
 
 QVariant RasterLayerModel::data(const QModelIndex& index, int role) const {
-    if(!index.isValid() || index.column() != 0 || index.row() >= rowCount() || role != Qt::DisplayRole)
+    if(!index.isValid() || index.column() > 1 || index.row() >= rowCount() || role != Qt::DisplayRole)
         return QVariant();
 
-    return layers.at(index.row());
+    const Layer& l = layers.at(index.row());
+
+    switch(index.column()) {
+        case Name: return l.name;
+        case Translated: return QString::fromStdString(*l.translated);
+    }
+
+    return QVariant();
 }
 
 QModelIndex RasterLayerModel::find(const QString& layer) {
-    return index(layers.indexOf(layer), 0);
+    for(int i = 0; i != layers.size(); ++i) if(layers[i].name == layer)
+        return index(i, 0);
+
+    return QModelIndex();
 }
 
 }}

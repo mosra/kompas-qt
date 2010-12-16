@@ -68,6 +68,8 @@ class MapOptionsDock: public QWidget {
 
         void setActualLayer(const QString& layer);
 
+        void setActualLayer(int layer);
+
         /** @brief Connect new map view to this widget */
         void connectMapView();
 };
@@ -173,7 +175,7 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
 
         /** @brief Column count */
         inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
-            { return 1; }
+            { return sourceModel()->columnCount(); }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const

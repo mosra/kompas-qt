@@ -201,11 +201,13 @@ SaveRasterWizard::ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizard
     layersView = new QListView;
     layersView->setSelectionMode(QAbstractItemView::MultiSelection);
     layersView->setModel(m->rasterLayerModel());
+    layersView->setModelColumn(RasterLayerModel::Translated);
     connect(layersView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     overlaysView = new QListView;
     overlaysView->setSelectionMode(QAbstractItemView::MultiSelection);
     overlaysView->setModel(m->rasterOverlayModel());
+    overlaysView->setModelColumn(RasterOverlayModel::Translated);
 
     /* Select current zoom and layers for convenience */
     zoomLevelsView->selectionModel()->select(m->rasterZoomModel()->find(view->zoom()), QItemSelectionModel::Select);

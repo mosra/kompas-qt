@@ -54,12 +54,15 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     /* Raster layers combobox */
     rasterLayers = new QComboBox;
     rasterLayers->setModel(MainWindow::instance()->rasterLayerModel());
+    rasterLayers->setModelColumn(RasterLayerModel::Translated);
+    connect(rasterLayers, SIGNAL(currentIndexChanged(int)), SLOT(setActualLayer(int)));
 
     /* Raster overlays list view */
     rasterOverlayModel = new EditableRasterOverlayModel(this);
     rasterOverlayModel->setSourceModel(MainWindow::instance()->rasterOverlayModel());
     rasterOverlays = new QListView;
     rasterOverlays->setModel(rasterOverlayModel);
+    rasterOverlays->setModelColumn(RasterOverlayModel::Translated);
 
     /* Zoom slider */
     zoomSlider = new ZoomSlider;
@@ -90,13 +93,19 @@ void MapOptionsDock::setMapView(int id) {
 }
 
 void MapOptionsDock::setActualLayer(const QString& layer) {
-    rasterLayers->setCurrentIndex(rasterLayers->findText(layer));
+    rasterLayers->setCurrentIndex(MainWindow::instance()->rasterLayerModel()->find(layer).row());
+}
+
+void MapOptionsDock::setActualLayer(int id) {
+    AbstractMapView* mapView = MainWindow::instance()->mapView();
+    if(!mapView) return;
+
+    mapView->setLayer(MainWindow::instance()->rasterLayerModel()->index(id, RasterLayerModel::Name).data().toString());
 }
 
 void MapOptionsDock::connectMapView() {
     AbstractMapView* mapView = MainWindow::instance()->mapView();
     if(!mapView) return;
-    connect(rasterLayers, SIGNAL(currentIndexChanged(QString)), mapView, SLOT(setLayer(QString)));
     connect(mapView, SIGNAL(layerChanged(QString)), SLOT(setActualLayer(QString)));
     connect(mapView, SIGNAL(overlaysChanged(QStringList)), rasterOverlayModel, SLOT(reload(QStringList)));
 }
@@ -206,14 +215,14 @@ void MapOptionsDock::EditableRasterOverlayModel::reload(const QStringList& loade
 }
 
 QVariant MapOptionsDock::EditableRasterOverlayModel::data(const QModelIndex& index, int role) const {
-    if(role == Qt::CheckStateRole && index.isValid() && index.column() == 0 && index.row() < rowCount())
+    if(role == Qt::CheckStateRole && index.isValid() && index.column() == RasterOverlayModel::Translated && index.row() < rowCount())
         return loaded.at(index.row()) ? Qt::Checked : Qt::Unchecked;
 
     return QAbstractProxyModel::data(index, role);
 }
 
 Qt::ItemFlags MapOptionsDock::EditableRasterOverlayModel::flags(const QModelIndex& index) const {
-    if(index.isValid() && index.column() == 0 && index.row() < rowCount())
+    if(index.isValid() && index.column() == RasterOverlayModel::Translated && index.row() < rowCount())
         return QAbstractProxyModel::flags(index)|Qt::ItemIsUserCheckable;
 
     return QAbstractProxyModel::flags(index);
@@ -222,10 +231,10 @@ Qt::ItemFlags MapOptionsDock::EditableRasterOverlayModel::flags(const QModelInde
 bool MapOptionsDock::EditableRasterOverlayModel::setData(const QModelIndex& index, const QVariant& value, int role) {
     AbstractMapView* mapView = MainWindow::instance()->mapView();
 
-    if(mapView && index.isValid() && index.column() == 0 && index.row() < rowCount() && role == Qt::CheckStateRole) {
+    if(mapView && index.isValid() && index.column() == RasterOverlayModel::Translated && index.row() < rowCount() && role == Qt::CheckStateRole) {
         /* Remove overlay */
-        if((loaded.at(index.row()) && mapView->removeOverlay(data(index).toString())) ||
-          (!loaded.at(index.row()) && mapView->addOverlay(data(index).toString())))
+        if((loaded.at(index.row()) && mapView->removeOverlay(data(index.sibling(index.row(), RasterOverlayModel::Name)).toString())) ||
+          (!loaded.at(index.row()) && mapView->addOverlay(data(index.sibling(index.row(), RasterOverlayModel::Name)).toString())))
             return true;
     }
 

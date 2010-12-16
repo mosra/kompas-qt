@@ -32,7 +32,6 @@ class DistanceMeterTool: public QtGui::AbstractTool {
         DistanceMeterTool(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
-        virtual QString menuText() const { return QObject::tr("Distance meter"); }
         virtual QtGui::AbstractToolDialog* create(QtGui::MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
             { return new DistanceMeterToolDialog(mainWindow, parent, f); }
 };

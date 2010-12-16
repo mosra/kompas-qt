@@ -42,7 +42,10 @@ class AbstractTool: public Kompas::PluginManager::Plugin {
             Plugin(manager, plugin) {}
 
         /** @brief Menu item text */
-        virtual QString menuText() const = 0;
+        QString menuText() const {
+            if(metadata()) return QString::fromStdString(*metadata()->name());
+            else return "";
+        }
 
         /** @brief Menu item icon */
         virtual QIcon menuIcon() const { return QIcon(); }

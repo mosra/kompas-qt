@@ -32,11 +32,6 @@ class Tile;
  * @brief Map viewer using QGraphicsView
  *
  * @todo Tile loading and tile not found images for all tile sizes
- * @todo Better handling of resize event - map is loaded twice at startup!
- * @todo Remove reload() and replace with yet existing functions
- * @todo Sometimes laaaarge pause before map tile is loaded (why?)
- * @todo Non-crashing state when no model, no zoom or no layer is set
- * @todo Discard all downloads when changing whole tile data
  */
 class GraphicsMapView: public QtGui::AbstractMapView {
     Q_OBJECT

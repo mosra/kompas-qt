@@ -54,7 +54,6 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     /* Raster layers combobox */
     rasterLayers = new QComboBox;
     rasterLayers->setModel(MainWindow::instance()->rasterLayerModel());
-    rasterLayers->setModelColumn(RasterPackageModel::Name);
 
     /* Raster overlays list view */
     rasterOverlayModel = new EditableRasterOverlayModel(this);

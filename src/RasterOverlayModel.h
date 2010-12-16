@@ -53,7 +53,7 @@ class RasterOverlayModel: public QAbstractListModel {
          * @return Index of the overlay or invalid index, if the overlay was
          * not found.
          */
-        QModelIndex find(const QString& layer);
+        QModelIndex find(const QString& overlay);
 
     public slots:
         /**

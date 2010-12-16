@@ -30,16 +30,32 @@ namespace Kompas { namespace QtGui {
  */
 class MessageBox: public QMessageBox {
     public:
-        static StandardButton information(QWidget* parent, const QString& title, const QString& text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton);
-        static StandardButton question(QWidget* parent, const QString& title, const QString& text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton);
-        static StandardButton warning(QWidget* parent, const QString& title, const QString& text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton);
-        static StandardButton critical(QWidget* parent, const QString& title, const QString& text, StandardButtons buttons = Ok, StandardButton defaultButton = NoButton);
+        /** @brief Information messagebox */
+        static QMessageBox::StandardButton information(QWidget* parent, const QString& title, const QString& text, QMessageBox::StandardButtons buttons = Ok, QMessageBox::StandardButton defaultButton = NoButton);
 
-        inline MessageBox(Icon icon, const QString& title, const QString& text, StandardButtons buttons = NoButton, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint): QMessageBox(icon, title, text, buttons, parent, flags) { setIcon(icon); }
+        /** @brief Question messagebox */
+        static QMessageBox::StandardButton question(QWidget* parent, const QString& title, const QString& text, QMessageBox::StandardButtons buttons = Ok, QMessageBox::StandardButton defaultButton = NoButton);
 
+        /** @brief Warning messagebox */
+        static QMessageBox::StandardButton warning(QWidget* parent, const QString& title, const QString& text, QMessageBox::StandardButtons buttons = Ok, QMessageBox::StandardButton defaultButton = NoButton);
+
+        /** @brief Critical messagebox */
+        static QMessageBox::StandardButton critical(QWidget* parent, const QString& title, const QString& text, QMessageBox::StandardButtons buttons = Ok, QMessageBox::StandardButton defaultButton = NoButton);
+
+        /** @brief Constructor */
+        inline MessageBox(QMessageBox::Icon icon, const QString& title, const QString& text, QMessageBox::StandardButtons buttons = NoButton, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Dialog|Qt::MSWindowsFixedSizeDialogHint): QMessageBox(icon, title, text, buttons, parent, flags) { setIcon(icon); }
+
+        /**
+         * @brief Default constructor
+         * @param   parent      Parent widget
+         */
         inline MessageBox(QWidget* parent = 0): QMessageBox(parent) {}
 
-        void setIcon(Icon icon);
+        /**
+         * @brief Set custom icon
+         * @param   icon        Icon
+         */
+        void setIcon(QMessageBox::Icon icon);
 };
 
 }}

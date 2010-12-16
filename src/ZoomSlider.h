@@ -15,20 +15,44 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Kompas::QtGui::ZoomSlider
+ */
+
 #include <QtGui/QSlider>
 
 #include "AbstractRasterModel.h"
 
 namespace Kompas { namespace QtGui {
 
+/**
+ * @brief Zoom slider
+ *
+ * Connected with current map view, allows setting current zoom level.
+ */
 class ZoomSlider: public QSlider {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent        Parent widget
+         */
         ZoomSlider(QWidget* parent = 0);
 
     public slots:
+        /**
+         * @brief Update map view
+         *
+         * Reconnects itself to new map view.
+         */
         void updateMapView();
+
+        /**
+         * @brief Update raster model
+         *
+         * Sets boundaries according to new raster model.
+         */
         void updateRasterModel();
 
     private slots:

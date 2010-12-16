@@ -23,22 +23,35 @@
 
 namespace Kompas { namespace QtGui {
 
+/**
+ * @brief Model for raster packages
+ */
 class RasterPackageModel: public QAbstractTableModel {
     Q_OBJECT
 
     public:
+        /** @brief Columns */
         enum Column {
-            Name,
-            Description,
-            Packager
+            Name,           /**< @brief Package name */
+            Description,    /**< @brief Package description */
+            Packager        /**< @brief Packager name */
         };
 
+        /**
+         * @brief Constructor
+         * @param parent            Parent object
+         */
         inline RasterPackageModel(QObject* parent = 0): QAbstractTableModel(parent) {}
 
+        /** @brief Column count */
         inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
             { return 3; }
+
+        /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return packages.count(); }
+
+        /** @brief Data read access */
         virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     public slots:

@@ -72,10 +72,20 @@ class MapOptionsDock: public QWidget {
         void connectMapView();
 };
 
+/**
+ * @brief Editable raster package model
+ *
+ * Used exclusively in MapOptionsDock, allows viewing currently opened packages
+ * and, if current model supports it, enabling/disabling online maps.
+ */
 class MapOptionsDock::EditableRasterPackageModel: public QAbstractProxyModel {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent            Parent object
+         */
         inline EditableRasterPackageModel(QObject* parent = 0):
             QAbstractProxyModel(parent), online(NotSupported) {}
 
@@ -199,6 +209,11 @@ class MapOptionsDock::EditableRasterOverlayModel: public QAbstractProxyModel {
          * overlays are changed.
          */
         void reload();
+
+        /**
+         * @brief Reload currently active overlays
+         * @param activeOverlays    Currently active overlays
+         */
         void reload(const QStringList& activeOverlays);
 
     private:

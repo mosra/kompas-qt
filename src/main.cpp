@@ -20,7 +20,6 @@
 #include <QtGui/QApplication>
 
 #include "MainWindow.h"
-#include "PluginManager/PluginManager.h"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);

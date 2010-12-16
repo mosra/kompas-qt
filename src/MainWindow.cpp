@@ -88,7 +88,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _rasterOverlayModel = new RasterOverlayModel(this);
     _rasterZoomModel = new RasterZoomModel(this);
 
-    /** @todo Do that in splash */
     loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
     loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
     loadPluginsAsConfigured("tools", _toolPluginManager);

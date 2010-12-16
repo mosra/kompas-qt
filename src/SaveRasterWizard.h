@@ -42,7 +42,7 @@ class SaveRasterWizard: public QWizard {
     public:
         /**
          * @brief Constructor
-         * @param model         Model to which save
+         * @param _model        Model to which save
          * @param parent        Parent widget
          * @param flags         Window flags
          */
@@ -259,8 +259,17 @@ class SaveRasterWizard::DownloadPage: public QWizardPage {
          */
         DownloadPage(SaveRasterWizard* _wizard);
 
+        /**
+         * @brief Page initializer
+         *
+         * Starts downloading immediately.
+         */
         virtual void initializePage();
 
+        /**
+         * @brief Whether the page is complete
+         * @return True if download is finished
+         */
         inline virtual bool isComplete() const { return _isComplete; }
 
     private slots:

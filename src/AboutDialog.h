@@ -28,6 +28,11 @@ namespace Kompas { namespace QtGui {
  */
 class AboutDialog: public QDialog {
     public:
+        /**
+         * @brief Constructor
+         * @param parent    Parent widget
+         * @param f         Window flags
+         */
         AboutDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 };
 

@@ -192,6 +192,13 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
         /*@}*/
 
     protected:
+        /**
+         * @brief Context menu event
+         *
+         * If current model supports coordinate conversion, on right click
+         * displays context menu which allows copying current coordinates to
+         * clipboard.
+         */
         virtual void contextMenuEvent(QContextMenuEvent* event);
 
         TileDataThread* tileDataThread;         /**< @brief Thread for downloading tile data */
@@ -216,12 +223,16 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
         /**
          * @brief Layer changed
          * @param layer     Current layer name
+         *
+         * @see setLayer()
          */
         void layerChanged(const QString& layer);
 
         /**
          * @brief Overlays changed
          * @param overlays  List of currently loaded overlays
+         *
+         * @see addOverlay(), removeOverlay()
          */
         void overlaysChanged(const QStringList& overlays);
 

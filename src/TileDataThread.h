@@ -38,21 +38,22 @@ namespace Kompas { namespace QtGui {
  * Getting tile data from local files in done in separated thread, if the data
  * aren't available locally and model has enabled online
  * @todo Passing downloaded tile back to model
- * @todo Cleanup, better removing of finushed jobs (without large foreach)
  * @todo Generalize for all data?
  */
 class TileDataThread: public QThread {
     Q_OBJECT
 
     public:
+        /** @brief Job for tile data */
         struct TileJob {
-            QNetworkReply* reply;
-            QString layer;
-            Core::Zoom zoom;
-            Core::TileCoords coords;
-            bool running;
+            QNetworkReply* reply;       /**< @brief Network reply (if the tile is being downloaded) */
+            QString layer;              /**< @brief Tile layer */
+            Core::Zoom zoom;            /**< @brief Tile zoom */
+            Core::TileCoords coords;    /**< @brief Tile coordinates */
+            bool running;               /**< @brief Whether tile download is in progress */
 
-            TileJob(): reply(0), running(false) {}
+            /** @brief Constructor */
+            inline TileJob(): reply(0), running(false) {}
         };
 
         /**

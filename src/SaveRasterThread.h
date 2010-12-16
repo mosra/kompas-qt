@@ -15,6 +15,10 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
+/** @file
+ * @brief Class Kompas::QtGui::SaveRasterThread
+ */
+
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
 #include <QtCore/QWaitCondition>
@@ -25,29 +29,58 @@
 
 namespace Kompas { namespace QtGui {
 
+/** @brief Thread for saving raster package */
 class SaveRasterThread: public QThread {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent    Parent object
+         */
         SaveRasterThread(QObject* parent = 0);
 
+        /** @brief Destructor */
         virtual ~SaveRasterThread();
 
-        bool initializePackage(const std::string& model, const std::string& filename, const Core::TileSize& tileSize, const std::vector<Core::Zoom>& _zoomLevels, const Core::TileArea& _area, const std::vector<std::string>& _layers, const std::vector<std::string>& overlays);
+        /** @copydoc Core::AbstractRasterModel::initializePackage()
+         * @param model     Model plugin name
+         */
+        bool initializePackage(const std::string& model, const std::string& filename, const Core::TileSize& tileSize, const std::vector<Core::Zoom>& zoomLevels, const Core::TileArea& area, const std::vector<std::string>& layers, const std::vector<std::string>& overlays);
 
+        /** @copydoc Core::AbstractRasterModel::setPackageAttribute() */
         inline bool setPackageAttribute(Core::AbstractRasterModel::PackageAttribute type, const std::string& data) {
             if(!destinationModel) return false;
             return destinationModel->setPackageAttribute(type, data);
         }
 
+        /** @brief Run the thread */
         void run();
 
     signals:
+        /**
+         * @brief Completion state changed
+         * @param currentZoom           Current zoom level
+         * @param currentZoomNumber     Relative to total zoom level count
+         * @param currentLayer          Current layer
+         * @param currentLayerNumber    Relative to total layer count
+         * @param totalCompleted        Percent completed total
+         * @param currentZoomLayerCompleted Percent completed for current zoom
+         *      and layer pair
+         */
         void completeChanged(Core::Zoom currentZoom, int currentZoomNumber, const std::string& currentLayer, int currentLayerNumber, int totalCompleted, int currentZoomLayerCompleted);
 
+        /** @brief Error occured */
         void error();
+
+        /** @brief Saving completed */
         void completed();
 
+        /**
+         * @brief Internal download signal
+         *
+         * Connected to startDownload().
+         */
         void download(const std::string& layer, Core::Zoom zoom, const Core::TileCoords& coords);
 
     private slots:

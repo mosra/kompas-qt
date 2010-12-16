@@ -27,7 +27,9 @@ namespace Kompas { namespace QtGui {
 
 /* The same code as in Kompas::PluginManager::PluginManager */
 #define KOMPAS_SKIP_PLUGINMANAGER_NAMESPACE
+#ifndef DOXYGEN_GENERATING_OUTPUT
 #include "PluginManager/PluginManager.h"
+#endif
 
 /* Only for doxygen documentation */
 #ifdef DOXYGEN_GENERATING_OUTPUT
@@ -49,9 +51,6 @@ template<class T> class PluginManager: public AbstractPluginManager {
 
         /** @copydoc PluginManager::PluginManager::instance() */
         T* instance(const std::string& name);
-
-        /** @copydoc PluginManager::PluginManager::nameOfInstance() */
-        std::string nameOfInstance(const T* instance);
 };
 #endif
 

@@ -39,7 +39,6 @@ class PluginModel;
  * @brief Plugin settings dialog
  *
  * Provides viewing and managing plugins.
- * @todo Settings for plugin dir, autoloading of all, ...
  */
 class PluginDialog: public AbstractConfigurationDialog {
     Q_OBJECT

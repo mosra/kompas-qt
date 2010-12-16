@@ -18,7 +18,7 @@
 #include <QtCore/QLocale>
 #include <QtCore/QLibraryInfo>
 #include <QtGui/QApplication>
-
+#include "Utility/Translator.h"
 #include "MainWindow.h"
 
 int main(int argc, char** argv) {
@@ -31,6 +31,7 @@ int main(int argc, char** argv) {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
     /* Localizations */
+    Kompas::Utility::Translator::setLocale(QLocale::system().name().toStdString());
     QTranslator translatorQt, translator;
     translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     app.installTranslator(&translatorQt);

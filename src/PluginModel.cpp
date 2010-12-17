@@ -59,7 +59,7 @@ QVariant PluginModel::headerData(int section, Qt::Orientation orientation, int r
             case Plugin:        return tr("Plugin");
             case Name:          return tr("Name");
             case Description:   return tr("Description");
-            case Authors:       return tr("Author(s)");
+            case Authors:       return tr("Authors");
             case Version:       return tr("Version");
             case Depends:       return tr("Depends on");
             case UsedBy:        return tr("Used by");

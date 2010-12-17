@@ -35,6 +35,7 @@ set(Kompas_Qt_SRCS
 )
 
 qt4_wrap_cpp(Kompas_Qt_MOC
+    AboutDialog.h
     MainWindow.h
     AbstractMapView.h
     TileDataThread.h
@@ -52,6 +53,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     RasterLayerModel.h
     RasterOverlayModel.h
     RasterZoomModel.h
+    Wgs84CoordsEdit.h
     ZoomSlider.h
 )
 

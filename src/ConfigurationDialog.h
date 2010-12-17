@@ -30,6 +30,8 @@ namespace Kompas { namespace QtGui {
 
 /** @brief Main configuration dialog */
 class ConfigurationDialog: public AbstractConfigurationDialog {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor

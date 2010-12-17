@@ -28,8 +28,8 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
         "<a href=\"http://mosra.cz/blog/kompas.php\">http://mosra.cz/blog/kompas.php</a><br />"
         "%2")
         .arg("0.1")
-        .arg("Portable navigation system.")
-        .arg("Licensed under GNU LGPL version 3."));
+        .arg(tr("Portable navigation system."))
+        .arg(tr("Licensed under GNU LGPL version 3.")));
     brief->setAlignment(Qt::AlignTop);
     brief->setWordWrap(true);
     brief->setOpenExternalLinks(true);
@@ -37,8 +37,8 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
     QString item("%0<div style=\"margin-left: 20px;\"><a href=\"mailto:%1\">%1</a><br />%2</div><br />");
 
     QLabel* authors = new QLabel(
-        item.arg("Vladimír Vondruš").arg("mosra@centrum.cz").arg("Main developer, © 2007-2010.") +
-        item.arg("Jan Dupal").arg("dupal.j@seznam.cz").arg("Coordinate conversion algorithms, tool plugins."));
+        item.arg("Vladimír Vondruš").arg("mosra@centrum.cz").arg(tr("Main developer, © 2007-2010.")) +
+        item.arg("Jan Dupal").arg("dupal.j@seznam.cz").arg(tr("Coordinate conversion algorithms, tool plugins.")));
     authors->setAlignment(Qt::AlignTop);
     authors->setWordWrap(true);
     authors->setOpenExternalLinks(true);
@@ -56,7 +56,7 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(icon, 0, 0);
     layout->addWidget(brief, 0, 1);
-    layout->addWidget(new QLabel(tr("<br />Authors:")), 1, 0, 1, 2);
+    layout->addWidget(new QLabel(QString("<br />%0").arg(tr("Authors:"))), 1, 0, 1, 2);
     layout->addWidget(scrollArea, 2, 0, 1, 2);
     setLayout(layout);
 

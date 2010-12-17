@@ -70,7 +70,7 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractC
     connectWidget(toolsTab);
 
     setCentralWidget(tabs);
-    setWindowTitle("Plugins");
+    setWindowTitle(tr("Plugins"));
     resize(640, 400);
     setAttribute(Qt::WA_DeleteOnClose);
 }
@@ -258,7 +258,7 @@ void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::L
         default: return;
     }
 
-    MessageBox::warning(this, tr("Cannot load plugin"), tr("Cannot load plugin <strong>%1</strong>:<br/><br/>%2").arg(QString::fromStdString(name)).arg(message));
+    MessageBox::warning(this, tr("Cannot load plugin"), QString("%0 <strong>%1</strong>:<br/><br/>%2").arg(tr("Cannot load plugin")).arg(QString::fromStdString(name)).arg(message));
 }
 
 void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -275,7 +275,7 @@ void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager:
         default: return;
     }
 
-    MessageBox::warning(this, tr("Cannot unload plugin"), tr("Cannot unload plugin <strong>%1</strong>:<br /><br/>%2").arg(QString::fromStdString(name)).arg(message));
+    MessageBox::warning(this, tr("Cannot unload plugin"), QString("%0 <strong>%1</strong>:<br /><br/>%2").arg(tr("Cannot unload plugin")).arg(QString::fromStdString(name)).arg(message));
 }
 
 void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {

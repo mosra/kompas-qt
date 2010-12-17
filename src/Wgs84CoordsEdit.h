@@ -27,6 +27,8 @@ namespace Kompas { namespace QtGui {
 
 /** @brief Edit box for Wgs84Coords */
 class Wgs84CoordsEdit: public QLineEdit {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor

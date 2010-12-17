@@ -27,6 +27,8 @@ namespace Kompas { namespace QtGui {
  * @brief About dialog
  */
 class AboutDialog: public QDialog {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor

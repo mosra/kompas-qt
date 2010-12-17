@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     icon.addFile(":/logo-128.png");
     icon.addFile(":/logo-256.png");
 
-    setWindowTitle("Kompas");
+    setWindowTitle(tr("Kompas"));
     setWindowIcon(icon);
     statusBar();
 
@@ -416,7 +416,7 @@ void MainWindow::createActions() {
     connect(saveRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
 
     /* Close raster map */
-    closeRasterAction = new QAction(QIcon(tr(":/close-16.png")), tr("Close map"), this);
+    closeRasterAction = new QAction(QIcon(":/close-16.png"), tr("Close map"), this);
     closeRasterAction->setDisabled(true);
     connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
 

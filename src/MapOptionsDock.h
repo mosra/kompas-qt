@@ -36,6 +36,7 @@ class PluginModel;
 class RasterOverlayModel;
 class RasterLayerModel;
 class AbstractMapView;
+class MovingWidget;
 class ZoomSlider;
 
 /** @brief Dock widget with map options */
@@ -59,6 +60,7 @@ class MapOptionsDock: public QWidget {
         QComboBox *rasterLayers;
         QListView *rasterPackages,
             *rasterOverlays;
+        MovingWidget* movingWidget;
         ZoomSlider* zoomSlider;
 
         EditableRasterOverlayModel* rasterOverlayModel;

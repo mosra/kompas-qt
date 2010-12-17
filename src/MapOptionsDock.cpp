@@ -31,6 +31,7 @@
 #include "RasterOverlayModel.h"
 #include "AbstractRasterModel.h"
 #include "AbstractMapView.h"
+#include "MovingWidget.h"
 #include "ZoomSlider.h"
 
 using namespace std;
@@ -66,6 +67,9 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterOverlays->setModelColumn(RasterOverlayModel::Translated);
     rasterOverlays->setFixedHeight(100);
 
+    /* Moving widget */
+    movingWidget = new MovingWidget;
+
     /* Zoom slider */
     zoomSlider = new ZoomSlider;
 
@@ -79,10 +83,10 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     layout->addWidget(rasterLayers, 3, 1);
     layout->addWidget(new QLabel(tr("Overlays:")), 4, 0, 1, 2);
     layout->addWidget(rasterOverlays, 5, 0, 1, 2);
-    layout->addWidget(zoomSlider, 6, 0, 1, 2, Qt::AlignHCenter);
-    layout->addWidget(new QWidget, 7, 0, 1, 2);
+    layout->addWidget(movingWidget, 6, 0, 1, 2, Qt::AlignCenter);
+    layout->addWidget(zoomSlider, 7, 0, 1, 2, Qt::AlignHCenter);
     layout->setColumnStretch(1, 1);
-    layout->setRowStretch(6, 1);
+    layout->setRowStretch(7, 1);
     setLayout(layout);
 
     setFixedWidth(200);

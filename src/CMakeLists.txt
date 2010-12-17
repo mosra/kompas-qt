@@ -24,6 +24,7 @@ set(Kompas_Qt_SRCS
     SaveRasterWizard.cpp
     SaveRasterThread.cpp
     MapOptionsDock.cpp
+    MovingWidget.cpp
     RasterPackageModel.cpp
     RasterLayerModel.cpp
     RasterOverlayModel.cpp
@@ -49,6 +50,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     SaveRasterWizard.h
     SaveRasterThread.h
     MapOptionsDock.h
+    MovingWidget.h
     RasterPackageModel.h
     RasterLayerModel.h
     RasterOverlayModel.h

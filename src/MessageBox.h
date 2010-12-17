@@ -21,6 +21,10 @@
 
 #include <QtGui/QMessageBox>
 
+#ifdef _WIN32
+    #undef MessageBox   /* I HATE you, Windoze */
+#endif
+
 namespace Kompas { namespace QtGui {
 
 /**

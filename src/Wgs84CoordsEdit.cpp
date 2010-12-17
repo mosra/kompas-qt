@@ -21,11 +21,36 @@ using namespace Kompas::Core;
 namespace Kompas { namespace QtGui {
 
 void Wgs84CoordsEdit::init() {
-    /* Input mask */
-    setInputMask(tr(">00°00'00.000\"A 000°00'00.000\"A"));
+    /* After finished editing try to convert the text to Wgs84Coords */
+    connect(this, SIGNAL(textChanged(QString)), SLOT(checkValidity()));
+    connect(this, SIGNAL(editingFinished()), SLOT(convert()));
 
-    /* Default text */
-    setText(tr("0°0'0.0\"N 0°0'0.0\"E"));
+    /* Save default box color */
+    defaultColor = palette().color(QPalette::Base);
+
+    /** @todo Localized NWES? */
+    setText(QString::fromStdString(Wgs84Coords().toString(3, true)));
+}
+
+void Wgs84CoordsEdit::checkValidity() {
+    QPalette p = palette();
+
+    Wgs84Coords c(text().toStdString());
+
+    if(!c.isValid())
+        p.setColor(QPalette::Base, QColor("#ffcccc"));
+    else if(QString::fromStdString(c.toString(3, true)) != text())
+        p.setColor(QPalette::Base, QColor("#ffffcc"));
+    else
+        p.setColor(QPalette::Base, defaultColor);
+
+    setPalette(p);
+}
+
+void Wgs84CoordsEdit::convert() {
+    Wgs84Coords c(text().toStdString());
+
+    if(c.isValid()) setText(QString::fromStdString(c.toString(3, true)));
 }
 
 }}

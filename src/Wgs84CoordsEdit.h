@@ -68,8 +68,14 @@ class Wgs84CoordsEdit: public QLineEdit {
             setText(QString::fromStdString(coords.toString()));
         }
 
+    private slots:
+        void checkValidity();
+        void convert();
+
     private:
         void init();
+
+        QColor defaultColor;
 };
 
 }}

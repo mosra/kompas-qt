@@ -57,8 +57,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         virtual bool zoomOut(const QPoint& pos = QPoint());
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
         virtual bool setCoords(const Kompas::Core::Wgs84Coords& coords, const QPoint& pos = QPoint());
-        /** @todo Implement ? */
-        virtual bool move(Direction direction, unsigned int speed) { return false; }
+        virtual bool move(int x, int y);
         virtual bool setLayer(const QString& layer);
         virtual bool addOverlay(const QString& overlay);
         virtual bool removeOverlay(const QString& overlay);

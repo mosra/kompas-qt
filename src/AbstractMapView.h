@@ -40,11 +40,6 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
     #endif
 
     public:
-        /** @brief Direction for moving map */
-        enum Direction {
-            Top, TopLeft, Left, BottomLeft, Bottom, BottimRight, Right, TopRight
-        };
-
         /** @copydoc PluginManager::Plugin::Plugin */
         AbstractMapView(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
@@ -182,12 +177,12 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
         virtual bool setCoords(const Core::Wgs84Coords& coords, const QPoint& pos = QPoint()) = 0;
 
         /**
-         * @brief Move map in given direction
-         * @param direction Direction
-         * @param speed     Speed in pps (pixels per second)
+         * @brief Move map
+         * @param x         X length
+         * @param y         Y length
          * @return Whether the map can be moved (whether map area is available)
          */
-        virtual bool move(Direction direction, unsigned int speed) = 0;
+        virtual bool move(int x, int y) = 0;
 
         /*@}*/
 

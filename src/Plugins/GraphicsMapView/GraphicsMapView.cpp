@@ -23,6 +23,7 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QScrollBar>
 
 #include "MainWindow.h"
 #include "AbstractProjection.h"
@@ -289,6 +290,14 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
 
     /* Update tile positions */
     updateTileCount();
+
+    return true;
+}
+
+bool GraphicsMapView::move(int x, int y) {
+    view->horizontalScrollBar()->setValue(view->horizontalScrollBar()->value()+x);
+    view->verticalScrollBar()->setValue(view->verticalScrollBar()->value()+y);
+    updateTilePositions();
 
     return true;
 }

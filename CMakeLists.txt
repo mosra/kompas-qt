@@ -18,6 +18,7 @@ set_parent_scope(KOMPAS_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 include(FindKompasQt)
 
+add_subdirectory(l10n)
 add_subdirectory(modules)
 add_subdirectory(src)
 

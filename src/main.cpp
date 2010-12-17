@@ -20,6 +20,7 @@
 #include <QtGui/QApplication>
 #include "Utility/Translator.h"
 #include "MainWindow.h"
+#include "MainWindowConfigure.h"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
@@ -34,7 +35,9 @@ int main(int argc, char** argv) {
     Kompas::Utility::Translator::setLocale(QLocale::system().name().toStdString());
     QTranslator translatorQt, translator;
     translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    translator.load(QLocale::system().name(), TRANSLATION_DIR);
     app.installTranslator(&translatorQt);
+    app.installTranslator(&translator);
 
     /* Main window */
     Kompas::QtGui::MainWindow w;

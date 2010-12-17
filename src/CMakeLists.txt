@@ -1,7 +1,5 @@
 add_definitions(-Wall -pedantic)
 
-find_package(KompasCore REQUIRED)
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
 

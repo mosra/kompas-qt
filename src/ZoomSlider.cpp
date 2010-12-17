@@ -44,10 +44,12 @@ void ZoomSlider::updateMapView() {
 
 void ZoomSlider::updateRasterModel() {
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    if(model) {
+    if(model && model->zoomLevels().size() > 1) {
+        setDisabled(false);
         setMinimum(*model->zoomLevels().begin());
         setMaximum(*--model->zoomLevels().end());
     } else {
+        setDisabled(true);
         setMinimum(0);
         setMaximum(0);
     }

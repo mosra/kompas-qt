@@ -21,9 +21,9 @@
 
 #include <QtGui/QDialog>
 
-namespace Kompas { namespace QtGui {
+#include "AbstractTool.h"
 
-class MainWindow;
+namespace Kompas { namespace QtGui {
 
 /**
  * @brief Abstract tool dialog
@@ -34,14 +34,17 @@ class AbstractToolDialog: public QDialog {
     public:
         /**
          * @brief Constructor
-         * @param _mainWindow       Pointer to main window
+         * @param _tool             Pointer to tool which created this window
          * @param parent            Parent widget
          * @param f                 Window flags
          */
-        inline AbstractToolDialog(MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0): QDialog(parent, f), mainWindow(_mainWindow) { setAttribute(Qt::WA_DeleteOnClose); }
+        inline AbstractToolDialog(const AbstractTool* _tool, QWidget* parent = 0, Qt::WindowFlags f = 0): QDialog(parent, f), tool(_tool) {
+            setAttribute(Qt::WA_DeleteOnClose);
+            if(tool && tool->metadata()) setWindowTitle(QString::fromStdString(*tool->metadata()->name()));
+        }
 
     protected:
-        MainWindow* mainWindow;     /**< @brief Pointer to MainWindow */
+        const AbstractTool* tool;     /**< @brief Pointer to tool which created this window */
 };
 
 }}

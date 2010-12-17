@@ -27,7 +27,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins {
 
-DmsDecimalToolDialog::DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_mainWindow, parent, f) {
+DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
     /* Initialize labels */
     coords = new Wgs84CoordsEdit;
     latitude = new QDoubleSpinBox;
@@ -58,7 +58,6 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(MainWindow* _mainWindow, QWidget* par
     layout->setColumnStretch(1, 1);
     setLayout(layout);
 
-    setWindowTitle(tr("DMS - Decimal converter"));
     setMinimumWidth(320);
 }
 

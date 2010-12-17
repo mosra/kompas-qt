@@ -18,6 +18,7 @@
 #include <QtGui/QAction>
 
 #include "PluginManager.h"
+#include "AbstractToolDialog.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ namespace Kompas { namespace QtGui {
 
 void ToolPluginMenuView::trigger(QAction* action) {
     /* Instantiate dialog */
-    AbstractToolDialog* dialog = items.value(action)->create(mainWindow, mainWindow);
+    AbstractToolDialog* dialog = items.value(action)->create(mainWindow);
     dialog->show();
 }
 

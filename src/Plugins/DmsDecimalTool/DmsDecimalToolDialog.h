@@ -37,7 +37,7 @@ class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
 
     public:
         /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
-        DmsDecimalToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DmsDecimalToolDialog(const QtGui::AbstractTool* _tool, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void toDecimal();

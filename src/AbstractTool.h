@@ -24,9 +24,9 @@
 #include <QtCore/QString>
 #include <QtGui/QIcon>
 
-#include "AbstractToolDialog.h"
-
 namespace Kompas { namespace QtGui {
+
+class AbstractToolDialog;
 
 /**
  * @brief Abstract tool
@@ -52,13 +52,12 @@ class AbstractTool: public Kompas::PluginManager::Plugin {
 
         /**
          * @brief Dialog instance
-         * @param mainWindow    Pointer to main window
          * @param parent        Parent widget
          * @param f             Window flags
          * @return New instance of tool dialog. Proper object deletion is left
          * on caller.
          */
-        virtual AbstractToolDialog* create(MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const = 0;
+        virtual AbstractToolDialog* create(QWidget* parent = 0, Qt::WindowFlags f = 0) const = 0;
 };
 
 }}

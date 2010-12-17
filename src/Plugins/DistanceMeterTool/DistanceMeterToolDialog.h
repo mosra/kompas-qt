@@ -37,7 +37,7 @@ class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
 
     public:
         /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
-        DistanceMeterToolDialog(QtGui::MainWindow* _mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DistanceMeterToolDialog(const QtGui::AbstractTool* _tool, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void calculate();

@@ -31,8 +31,8 @@ class DmsDecimalTool: public QtGui::AbstractTool {
         DmsDecimalTool(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""):
             AbstractTool(manager, plugin) {}
 
-        virtual QtGui::AbstractToolDialog* create(QtGui::MainWindow* mainWindow, QWidget* parent = 0, Qt::WindowFlags f = 0) const
-            { return new DmsDecimalToolDialog(mainWindow, parent, f); }
+        virtual QtGui::AbstractToolDialog* create(QWidget* parent = 0, Qt::WindowFlags f = 0) const
+            { return new DmsDecimalToolDialog(this, parent, f); }
 };
 
 }}

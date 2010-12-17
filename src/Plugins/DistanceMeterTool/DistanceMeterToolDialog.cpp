@@ -29,7 +29,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins {
 
-DistanceMeterToolDialog::DistanceMeterToolDialog(MainWindow* _mainWindow, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_mainWindow, parent, f) {
+DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
     /* Initialize labels */
     coordsA = new Wgs84CoordsEdit;
     coordsB = new Wgs84CoordsEdit;
@@ -55,7 +55,6 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(MainWindow* _mainWindow, QWidge
     layout->setColumnStretch(1, 1);
     setLayout(layout);
 
-    setWindowTitle(tr("Distance meter"));
     setMinimumWidth(320);
 }
 

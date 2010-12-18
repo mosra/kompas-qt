@@ -102,6 +102,8 @@ class SaveRasterWizard: public QWizard {
  * @see SaveRasterWizard::AreaType
  */
 class SaveRasterWizard::AreaPage: public QWizardPage {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor
@@ -132,6 +134,8 @@ class SaveRasterWizard::AreaPage: public QWizardPage {
  * Provides three listviews for selecting zoom levels, layers and overlays.
  */
 class SaveRasterWizard::ContentsPage: public QWizardPage {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor
@@ -168,6 +172,8 @@ class SaveRasterWizard::ContentsPage: public QWizardPage {
  * Displays total tile count and estimated package size.
  */
 class SaveRasterWizard::StatisticsPage: public QWizardPage {
+    Q_OBJECT
+
     public:
         /**
          * @brief Constructor

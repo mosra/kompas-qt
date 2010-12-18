@@ -171,137 +171,137 @@
 <context>
     <name>Kompas::QtGui::MainWindow</name>
     <message>
-        <location filename="../src/MainWindow.cpp" line="70"/>
+        <location filename="../src/MainWindow.cpp" line="71"/>
         <source>Kompas</source>
         <translation>Kompas</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="158"/>
+        <location filename="../src/MainWindow.cpp" line="159"/>
         <source>Map options</source>
         <translation>Nastavení mapy</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="274"/>
+        <location filename="../src/MainWindow.cpp" line="275"/>
         <source>Select map file</source>
         <translation>Vyberte mapový soubor</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="329"/>
+        <location filename="../src/MainWindow.cpp" line="333"/>
         <source>Unsupported file format</source>
         <translation>Nepodporovaný formát souboru</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="329"/>
+        <location filename="../src/MainWindow.cpp" line="333"/>
         <source>No suitable map plugin was found for this file.</source>
         <translation>Pro tento soubor nebyl nalezen žádný vhodný mapový plugin.</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="336"/>
+        <location filename="../src/MainWindow.cpp" line="340"/>
         <source>Cannot open file</source>
         <translation>Nelze otevřít soubor</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="336"/>
+        <location filename="../src/MainWindow.cpp" line="340"/>
         <source>The package cannot be loaded.</source>
         <translation>Balíček nelze otevřít.</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="373"/>
+        <location filename="../src/MainWindow.cpp" line="377"/>
         <source>Offline %0 package</source>
         <translation>Offline balíček %0</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="404"/>
+        <location filename="../src/MainWindow.cpp" line="411"/>
         <source>Restore saved session</source>
         <translation>Obnovit uloženou relaci</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="408"/>
+        <location filename="../src/MainWindow.cpp" line="418"/>
         <source>Open map package</source>
         <translation>Otevřít mapový balíček</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="412"/>
+        <location filename="../src/MainWindow.cpp" line="425"/>
         <source>Load online map</source>
         <translation>Načíst online mapu</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="419"/>
+        <location filename="../src/MainWindow.cpp" line="432"/>
         <source>Close map</source>
         <translation>Zavřít mapu</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="424"/>
+        <location filename="../src/MainWindow.cpp" line="437"/>
         <source>Quit</source>
         <translation>Ukončit</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="430"/>
+        <location filename="../src/MainWindow.cpp" line="443"/>
         <source>Zoom in</source>
         <translation>Přiblížit</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="432"/>
+        <location filename="../src/MainWindow.cpp" line="445"/>
         <source>Zoom out</source>
         <translation>Oddálit</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="436"/>
+        <location filename="../src/MainWindow.cpp" line="449"/>
         <source>Plugins</source>
         <translation>Pluginy</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="437"/>
+        <location filename="../src/MainWindow.cpp" line="450"/>
         <source>Configure Kompas</source>
         <translation>Nastavit Kompas</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="442"/>
+        <location filename="../src/MainWindow.cpp" line="455"/>
         <source>About Kompas</source>
         <translation>O Kompasu</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="443"/>
+        <location filename="../src/MainWindow.cpp" line="456"/>
         <source>Show information about this application</source>
         <translation>Zobrazit informace o této aplikaci</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="447"/>
+        <location filename="../src/MainWindow.cpp" line="460"/>
         <source>About Qt</source>
         <translation>O Qt</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="448"/>
+        <location filename="../src/MainWindow.cpp" line="461"/>
         <source>Show information about Qt</source>
         <translation>Zobrazit informaci o Qt</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="454"/>
+        <location filename="../src/MainWindow.cpp" line="467"/>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="464"/>
+        <location filename="../src/MainWindow.cpp" line="477"/>
         <source>Save map</source>
         <translation>Uložit mapu</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="474"/>
+        <location filename="../src/MainWindow.cpp" line="487"/>
         <source>Map</source>
         <translation>Mapa</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="479"/>
+        <location filename="../src/MainWindow.cpp" line="492"/>
         <source>Tools</source>
         <translation>Nástroje</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="482"/>
+        <location filename="../src/MainWindow.cpp" line="495"/>
         <source>Settings</source>
         <translation>Nastavení</translation>
     </message>
     <message>
-        <location filename="../src/MainWindow.cpp" line="487"/>
+        <location filename="../src/MainWindow.cpp" line="500"/>
         <source>Help</source>
         <translation>Nápověda</translation>
     </message>
@@ -309,22 +309,22 @@
 <context>
     <name>Kompas::QtGui::MapOptionsDock</name>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="74"/>
+        <location filename="../src/MapOptionsDock.cpp" line="78"/>
         <source>Map view:</source>
         <translation>Zobrazení mapy:</translation>
     </message>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="76"/>
+        <location filename="../src/MapOptionsDock.cpp" line="80"/>
         <source>Maps:</source>
         <translation>Mapy:</translation>
     </message>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="78"/>
+        <location filename="../src/MapOptionsDock.cpp" line="82"/>
         <source>Map layer:</source>
         <translation>Vrstva mapy:</translation>
     </message>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="80"/>
+        <location filename="../src/MapOptionsDock.cpp" line="84"/>
         <source>Overlays:</source>
         <translation>Překrytí:</translation>
     </message>
@@ -332,7 +332,7 @@
 <context>
     <name>Kompas::QtGui::MapOptionsDock::EditableRasterPackageModel</name>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="155"/>
+        <location filename="../src/MapOptionsDock.cpp" line="159"/>
         <source>Online %0</source>
         <translation>Online %0</translation>
     </message>
@@ -614,220 +614,196 @@
 <context>
     <name>Kompas::QtGui::SaveRasterWizard</name>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="52"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="53"/>
         <source>Download</source>
         <translation>Download</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="53"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="54"/>
         <source>Save map as...</source>
         <translation>Uložit mapu jako...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="89"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="90"/>
         <source>No GPS coordinates support</source>
         <translation>Žádná podpora pro GPS souřadnice</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="89"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="90"/>
         <source>you won&apos;t be able to measure distances.</source>
         <translation>nebudete moci měřit vzdálenosti.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="94"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="95"/>
         <source>Data loss warning</source>
         <translation>Možná ztrátu dat</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="94"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="95"/>
         <source>You are saving to a format which doesn&apos;t support all features provided by the map:&lt;ul&gt;%0&lt;/ul&gt;Do you want to continue?</source>
         <translation>Ukládate do formátu, který nepodporuje všechny vlastnosti mapy:&lt;ul&gt;%0&lt;/ul&gt;Chcete pokračovat?</translation>
     </message>
+</context>
+<context>
+    <name>Kompas::QtGui::SaveRasterWizard::AreaPage</name>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="117"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="118"/>
         <source>1/5: Map area</source>
         <translation>1 z 5: Oblast mapy</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="118"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="119"/>
         <source>Select map area which you want to save.</source>
         <translation>Vyberte oblast mapy, kterou chcete uložit.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="125"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="126"/>
         <source>Whole map</source>
         <translation>Celá mapa</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="127"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="128"/>
         <source>&lt;strong&gt;Be careful&lt;/strong&gt;, if you are trying to save map of whole world, select only a few small zoom levels, otherwise the download could take forever, it won&apos;t fit onto your hard drive and your IP will be banned from using that map server ever again.</source>
         <translation>&lt;strong&gt;Buďte opatrní&lt;/strong&gt;, jestli se pokoušíte uložit mapu celého světa, vyberte si jen pár malých stupňů zoomu, jinak bude stahování trvat věčně, nejspíše se vám to nevejde na disk a vaší IP adrese bude znemožněno vůbec někdy ještě používat tento mapový server.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="134"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="135"/>
         <source>Visible area</source>
         <translation>Viditelná oblast</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="137"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="138"/>
         <source>There could be some margin outside the visible area because map is divided into tiles -  whole tile will be downloaded even if only small portion of it is visible.</source>
         <translation>Staženo bude trochu více než viditelná oblast, protože mapa je rozdělená na dlaždice - celá dlaždice bude stažena i přesto, že je vidět jen její malá část.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="142"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="143"/>
         <source>Custom area</source>
         <translation>Uživatelem vybraná oblast</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="145"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="146"/>
         <source>Select...</source>
         <translation>Vybrat...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="148"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="149"/>
         <source>This is good if you want to have the smallest package size without unneccessary margins.</source>
         <translation>Použijte tuto volbu, pokud chcete mít co nejmenší velikost mapového balíčku bez zbytečných okrajů.</translation>
     </message>
+</context>
+<context>
+    <name>Kompas::QtGui::SaveRasterWizard::ContentsPage</name>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="190"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="191"/>
         <source>2/5: Map contents</source>
         <translation>2 z 5: Obsah mapy</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="191"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="192"/>
         <source>Select zoom levels, layers and overlays to save.</source>
         <translation>Vyberte stupně zoomu, vrstvy a překrytí, které chcete uložit.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="219"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="225"/>
         <source>Zoom levels:</source>
         <translation>Stupně zoomu:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="220"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="226"/>
         <source>Layers:</source>
         <translation>Vrstvy:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="221"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="227"/>
         <source>Overlays:</source>
         <translation>Překrytí:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="265"/>
-        <source>4/5: Statistics</source>
-        <translation>4 z 5: Statistika</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="266"/>
-        <source>Review amount of data to be downloaded, return back and make changes or proceed to creating the package.</source>
-        <translation>Zkontrolujte množství dat, které bude staženo, vraťte se zpět a proveďte změny, nebo pokračujte k vytváření balíčku.</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="284"/>
-        <source>Tile count in lowest zoom level:</source>
-        <translation>Počet dlaždic při nejmenším zoomu:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="286"/>
-        <source>Number of zoom levels:</source>
-        <translation>Počet stupňů zoomu:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="288"/>
-        <source>Tile count for one layer:</source>
-        <translation>Počet dlaždic na jednu vrstvu:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="290"/>
-        <source>Number of layers:</source>
-        <translation>Počet vrstev:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="292"/>
-        <source>Total tile count:</source>
-        <translation>Celkový počet dlaždic:</translation>
-    </message>
-    <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="294"/>
-        <source>Estimated download size (10 kB for one tile):</source>
-        <translation>Přibližná velikost stahování (10 kB na jednu dlaždici):</translation>
     </message>
 </context>
 <context>
     <name>Kompas::QtGui::SaveRasterWizard::DownloadPage</name>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="399"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="405"/>
         <source>5/5: Downloading...</source>
         <translation>5 z 5: Stahování...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="400"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="406"/>
         <source>The data are now being downloaded and saved to your package.</source>
         <translation>Probíhá stahování dat a jejich ukládání do vašeho balíčku.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="417"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="423"/>
         <source>Total progress:</source>
         <translation>Celkový průběh:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="419"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="425"/>
         <source>Current layer/zoom progress:</source>
         <translation>Průběh pro aktuální vrstvu a zoom:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="426"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="432"/>
         <source>Initializing package %0 ...</source>
         <translation>Inicializace balíčku %0 ...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="434"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="440"/>
         <source>Failed to initialize package %0</source>
         <translation>Nepodařilo se inicializovat balíček %0</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="447"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="454"/>
+        <source>Download in progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="454"/>
+        <source>Package creation is in progress. Do you really want to cancel the operation?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="461"/>
         <source>Downloading and saving data ...</source>
         <translation>Stahování a ukládání dat ...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="449"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="463"/>
         <source>Current zoom: %0 (%1/%2)</source>
         <translation>Aktuální zoom: %0 (%1/%2)</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="450"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="464"/>
         <source>Current layer: %0 (%1/%2)</source>
         <translation>Aktuální vrstva: %0 (%1/%2)</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="456"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="470"/>
         <source>Package completed.</source>
         <translation>Balíček dokončen.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="462"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="476"/>
         <source>Package completed</source>
         <translation>Balíček dokončen</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="462"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="476"/>
         <source>Package is successfully completed.</source>
         <translation>Balíček byl úspěšně dokončen.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="466"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="480"/>
         <source>Error while creating package.</source>
         <translation>Chyba při vytváření balíčku.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="472"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="486"/>
         <source>Packaging error</source>
         <translation>Chyba při vytváření balíčku</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="472"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="486"/>
         <source>Something bad happened during package creation.</source>
         <translation>Při vytváření balíčku nastala chyba.</translation>
     </message>
@@ -835,57 +811,87 @@
 <context>
     <name>Kompas::QtGui::SaveRasterWizard::MetadataPage</name>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="349"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="355"/>
         <source>3/5: Metadata</source>
         <translation>3 z 5: Metadata</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="350"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="356"/>
         <source>Select where to save the package and optionally fill in some metadata.</source>
         <translation>Vyberte kam se má uložit balíček a případně vyplňte informace o balíčku.</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="358"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="364"/>
         <source>Select...</source>
         <translation>Vybrat...</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="366"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="372"/>
         <source>Save to:</source>
         <translation>Uložit do:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="368"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="374"/>
         <source>Package name:</source>
         <translation>Název balíčku:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="370"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="376"/>
         <source>Description:</source>
         <translation>Popis:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="372"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="378"/>
         <source>Packager:</source>
         <translation>Zabalil:</translation>
     </message>
     <message>
-        <location filename="../src/SaveRasterWizard.cpp" line="395"/>
+        <location filename="../src/SaveRasterWizard.cpp" line="401"/>
         <source>Save package as...</source>
         <translation>Uložit balíček jako...</translation>
     </message>
 </context>
 <context>
-    <name>Kompas::QtGui::Wgs84CoordsEdit</name>
+    <name>Kompas::QtGui::SaveRasterWizard::StatisticsPage</name>
     <message>
-        <location filename="../src/Wgs84CoordsEdit.cpp" line="25"/>
-        <source>&gt;00°00&apos;00.000&quot;A 000°00&apos;00.000&quot;A</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/SaveRasterWizard.cpp" line="271"/>
+        <source>4/5: Statistics</source>
+        <translation>4 z 5: Statistika</translation>
     </message>
     <message>
-        <location filename="../src/Wgs84CoordsEdit.cpp" line="28"/>
-        <source>0°0&apos;0.0&quot;N 0°0&apos;0.0&quot;E</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/SaveRasterWizard.cpp" line="272"/>
+        <source>Review amount of data to be downloaded, return back and make changes or proceed to creating the package.</source>
+        <translation>Zkontrolujte množství dat, které bude staženo, vraťte se zpět a proveďte změny, nebo pokračujte k vytváření balíčku.</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="290"/>
+        <source>Tile count in lowest zoom level:</source>
+        <translation>Počet dlaždic při nejmenším zoomu:</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="292"/>
+        <source>Number of zoom levels:</source>
+        <translation>Počet stupňů zoomu:</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="294"/>
+        <source>Tile count for one layer:</source>
+        <translation>Počet dlaždic na jednu vrstvu:</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="296"/>
+        <source>Number of layers:</source>
+        <translation>Počet vrstev:</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="298"/>
+        <source>Total tile count:</source>
+        <translation>Celkový počet dlaždic:</translation>
+    </message>
+    <message>
+        <location filename="../src/SaveRasterWizard.cpp" line="300"/>
+        <source>Estimated download size (10 kB for one tile):</source>
+        <translation>Přibližná velikost stahování (10 kB na jednu dlaždici):</translation>
     </message>
 </context>
 </TS>

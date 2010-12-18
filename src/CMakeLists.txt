@@ -67,3 +67,17 @@ add_executable(kompas-qt ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
 target_link_libraries(kompas-qt KompasCore ${KompasQt_Plugins} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
 install(TARGETS kompas-qt DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
+
+# Include also runtime libs for Win32 (remaining are bundled in Core)
+if(WIN32)
+    kompas_bundle_dlls(${KOMPAS_LIBRARY_INSTALL_DIR}
+        libgcc_s_dw2-1.dll
+        QtCore4.dll
+        QtGui4.dll
+        QtNetwork4.dll
+        imageformats/qgif4.dll
+        imageformats/qjpeg4.dll
+        imageformats/qtiff4.dll
+        PATHS ${DLL_SEARCH_PATH}
+    )
+endif()

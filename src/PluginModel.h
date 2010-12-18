@@ -60,9 +60,6 @@ class PluginModel: public QAbstractTableModel {
          */
         PluginModel(AbstractPluginManager* _manager, int flags = 0, QObject* parent = 0);
 
-        /** @brief Reload data from PluginManager */
-        void reload();
-
         /**
          * @brief Find plugin with specific name
          * @param name          Plugin name
@@ -89,9 +86,15 @@ class PluginModel: public QAbstractTableModel {
         /** @brief Data write access */
         virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
+    public slots:
+        /** @brief Reload data from PluginManager */
+        void reload();
+
     private slots:
         void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
         void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void reloadPluginMetadata(const std::string& name);
+        void removePlugin(const std::string& name);
 
     private:
         struct PluginMetadata {

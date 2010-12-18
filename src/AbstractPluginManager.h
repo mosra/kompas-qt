@@ -29,7 +29,7 @@ namespace Kompas { namespace QtGui {
  * @brief Qt version of PluginManager::AbstractPluginManager
  *
  * Instead of PluginManager::AbstractPluginManager provides signal notification
- * when a plugin is loaded or unloaded.
+ * when a plugin is loaded, unloaded or reloaded.
  */
 class AbstractPluginManager: public QObject, public Kompas::PluginManager::AbstractPluginManager {
     Q_OBJECT
@@ -65,12 +65,40 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
             return after;
         }
 
+    public slots:
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::reloadPluginDirectory()
+         * Emits pluginDirectoryReloaded().
+         */
+        inline virtual void reloadPluginDirectory() {
+            Kompas::PluginManager::AbstractPluginManager::reloadPluginDirectory();
+            emit pluginDirectoryReloaded();
+        }
+
+    protected:
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::reloadPluginMetadata()
+         * If the plugin disappears, emits pluginDisappeared().
+         */
+        virtual bool reloadPluginMetadata(std::map<std::string, PluginObject*>::iterator it) {
+            if(!Kompas::PluginManager::AbstractPluginManager::reloadPluginMetadata(it)) {
+                emit pluginDisappeared(it->first);
+                return false;
+            }
+            emit pluginMetadataReloaded(it->first);
+            return true;
+        }
+
     signals:
         /**
          * @brief Plugin load attempt
          * @param name      Plugin name
          * @param before    State before load attempt
          * @param after     State after load attempt
+         *
+         * @note Before plugin load the metadata are fully reloaded. Also this
+         * signal can be emitted after the plugin disappeared, in that case
+         * plugin with this name doesn't exist anymore.
          */
         void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
@@ -79,8 +107,29 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @param name      Plugin name
          * @param before    State before unload attempt
          * @param after     State after unload attempt
+         *
+         * @note After plugin unload the metadata are fully reloaded. Also this
+         * signal can be emitted after the plugin disappeared, in that case
+         * plugin with this name doesn't exist anymore.
          */
         void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+
+        /**
+         * @brief Plugin directory was reloaded
+         */
+        void pluginDirectoryReloaded();
+
+        /**
+         * @brief Plugin was reloaded
+         */
+        void pluginMetadataReloaded(const std::string& name);
+
+        /**
+         * @brief Plugin disappeared
+         *
+         * Emitted when plugin binary is not found on plugin reload attempt.
+         */
+        void pluginDisappeared(const std::string& name);
 };
 
 }}

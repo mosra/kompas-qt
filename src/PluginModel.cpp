@@ -24,15 +24,27 @@ using namespace std;
 namespace Kompas { namespace QtGui {
 
 PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* parent): QAbstractTableModel(parent), manager(_manager), _flags(flags) {
-    connect(manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+    connect(manager,
+            SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
             SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
-    connect(manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+    connect(manager,
+            SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
             SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(manager,
+            SIGNAL(pluginMetadataReloaded(std::string)),
+            SLOT(reloadPluginMetadata(std::string)));
+    connect(manager,
+            SIGNAL(pluginDisappeared(std::string)),
+            SLOT(removePlugin(std::string)));
+    connect(manager,
+            SIGNAL(pluginDirectoryReloaded()),
+            SLOT(reload()));
 
     reload();
 }
 
 void PluginModel::reload() {
+    beginResetModel();
     plugins.clear();
     vector<string> names = manager->nameList();
 
@@ -41,6 +53,7 @@ void PluginModel::reload() {
 
         plugins.append(PluginMetadata(*it, manager->loadState(*it), manager->metadata(*it)));
     }
+    endResetModel();
 }
 
 int PluginModel::findPlugin(const QString& name) const {
@@ -109,7 +122,8 @@ QVariant PluginModel::data(const QModelIndex& index, int role) const {
                 return tr("Static plugin");
             case AbstractPluginManager::IsUsed:
                 return tr("Is already used");
-        }
+
+        } else if(role == Qt::UserRole) return metadata.loadState;
 
     } else if(role != Qt::DisplayRole && role != Qt::EditRole) return QVariant();
 
@@ -182,8 +196,6 @@ void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::Lo
 
             /* Update plugin state */
             plugins[found].loadState = manager->loadState(name);
-
-            /** @todo Emit dataChanged() for whole row, if metadata changed */
             emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
     }
@@ -209,10 +221,31 @@ void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::
         } else {
             /* Update plugin state */
             plugins[found].loadState = manager->loadState(name);
-
-            /** @todo Emit dataChanged() for whole row, if metadata changed */
             emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
+    }
+}
+
+void PluginModel::reloadPluginMetadata(const std::string& name) {
+    /* Find the name in list */
+    int found = findPlugin(QString::fromStdString(name));
+    if(found == -1) return;
+
+    /* Update plugin metadata */
+    plugins.replace(found, PluginMetadata(name, manager->loadState(name), manager->metadata(name)));
+    emit dataChanged(index(found, 0), index(found, columnCount()-1));
+}
+
+void PluginModel::removePlugin(const std::string& name) {
+    /* Find the name in list */
+    int found = findPlugin(QString::fromStdString(name));
+    if(found == -1) return;
+
+    /* Remove from list, if displaying only loaded plugins */
+    if(_flags & LoadedOnly) {
+        beginRemoveRows(QModelIndex(), found, found);
+        plugins.removeAt(found);
+        endRemoveRows();
     }
 }
 

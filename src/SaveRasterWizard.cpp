@@ -211,9 +211,14 @@ SaveRasterWizard::ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizard
 
     /* Select current zoom and layers for convenience */
     zoomLevelsView->selectionModel()->select(m->rasterZoomModel()->find(view->zoom()), QItemSelectionModel::Select);
-    layersView->selectionModel()->select(m->rasterLayerModel()->find(view->layer()), QItemSelectionModel::Select);
-    foreach(const QString& overlay, view->overlays())
-        overlaysView->selectionModel()->select(m->rasterOverlayModel()->find(overlay), QItemSelectionModel::Select);
+
+    QModelIndex current = m->rasterLayerModel()->find(view->layer());
+    layersView->selectionModel()->select(current.sibling(current.row(), RasterLayerModel::Translated), QItemSelectionModel::Select);
+
+    foreach(const QString& overlay, view->overlays()) {
+        current = m->rasterOverlayModel()->find(overlay);
+        overlaysView->selectionModel()->select(current.sibling(current.row(), RasterLayerModel::Translated), QItemSelectionModel::Select);
+    }
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Zoom levels:")), 0, 0);
@@ -251,12 +256,12 @@ bool SaveRasterWizard::ContentsPage::validatePage() {
     QModelIndexList layerList = layersView->selectionModel()->selectedIndexes();
     if(layerList.isEmpty()) return false;
     foreach(const QModelIndex& index, layerList)
-        wizard->layers.push_back(index.data().toString().toStdString());
+        wizard->layers.push_back(index.sibling(index.row(), RasterLayerModel::Name).data().toString().toStdString());
 
     /* Save overlays */
     QModelIndexList overlayList = overlaysView->selectionModel()->selectedIndexes();
     foreach(const QModelIndex& index, overlayList)
-        wizard->overlays.push_back(index.data().toString().toStdString());
+        wizard->overlays.push_back(index.sibling(index.row(), RasterOverlayModel::Name).data().toString().toStdString());
 
     return true;
 }

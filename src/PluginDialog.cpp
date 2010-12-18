@@ -119,9 +119,14 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     QPushButton* pluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Select..."));
     connect(pluginDirButton, SIGNAL(clicked(bool)), SLOT(setPluginDir()));
 
-    /* Button for refreshing plugin dir */
-    QPushButton* refreshPluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), tr("Reload"));
-    connect(refreshPluginDirButton, SIGNAL(clicked(bool)), SLOT(refreshPluginDir()));
+    /* Button for reloading plugin dir */
+    QPushButton* reloadPluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), tr("Reload"));
+    connect(reloadPluginDirButton, SIGNAL(clicked(bool)), SLOT(reloadPluginDirectory()));
+
+    /* Button for reloading particular plugin */
+    reloadPluginButton = new QPushButton(style()->standardIcon(QStyle::SP_BrowserReload), tr("Reload plugin"));
+    reloadPluginButton->setHidden(true);
+    connect(reloadPluginButton, SIGNAL(clicked(bool)), SLOT(reloadCurrentPlugin()));
 
     /* Initialize model and pass it to view */
     model = new PluginModel(manager, 0, this);
@@ -168,35 +173,33 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     connect(pluginDir, SIGNAL(textChanged(QString)), this, SIGNAL(edited()));
     connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
 
-    /* Plugin dir change requires application restart */
-    connect(pluginDir, SIGNAL(textChanged(QString)), this, SIGNAL(restartRequired()));
-
     /* Layout for plugin dir lineedit and button */
     QHBoxLayout* pluginDirLayout = new QHBoxLayout;
     pluginDirLayout->addWidget(pluginDir, 1);
     pluginDirLayout->addWidget(pluginDirButton);
-    pluginDirLayout->addWidget(refreshPluginDirButton);
+    pluginDirLayout->addWidget(reloadPluginDirButton);
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(categoryDescription, 0, 0, 1, 2);
+    layout->addWidget(categoryDescription, 0, 0, 1, 3);
     layout->addWidget(new QLabel(tr("Plugin directory:")), 1, 0);
-    layout->addLayout(pluginDirLayout, 1, 1);
-    layout->addWidget(view, 2, 0, 1, 2);
-    layout->addWidget(loadStateLabel, 3, 0, Qt::AlignTop);
-    layout->addWidget(loadState, 3, 1);
+    layout->addLayout(pluginDirLayout, 1, 1, 1, 2);
+    layout->addWidget(view, 2, 0, 1, 3);
+    layout->addWidget(loadStateLabel, 3, 0, Qt::AlignBottom);
+    layout->addWidget(loadState, 3, 1, Qt::AlignBottom);
+    layout->addWidget(reloadPluginButton, 3, 2);
     layout->addWidget(descriptionLabel, 4, 0, Qt::AlignTop);
-    layout->addWidget(description, 4, 1);
+    layout->addWidget(description, 4, 1, 1, 2);
     layout->addWidget(authorsLabel, 5, 0, Qt::AlignTop);
-    layout->addWidget(authors, 5, 1);
+    layout->addWidget(authors, 5, 1, 1, 2);
     layout->addWidget(dependsLabel, 6, 0, Qt::AlignTop);
-    layout->addWidget(depends, 6, 1);
+    layout->addWidget(depends, 6, 1, 1, 2);
     layout->addWidget(usedByLabel, 7, 0, Qt::AlignTop);
-    layout->addWidget(usedBy, 7, 1);
+    layout->addWidget(usedBy, 7, 1, 1, 2);
     layout->addWidget(replacesLabel, 8, 0, Qt::AlignTop);
-    layout->addWidget(replaces, 8, 1);
+    layout->addWidget(replaces, 8, 1, 1, 2);
     layout->addWidget(replacedWithLabel, 9, 0, Qt::AlignTop);
-    layout->addWidget(replacedWith, 9, 1);
+    layout->addWidget(replacedWith, 9, 1, 1, 2);
     layout->setRowStretch(2, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);
@@ -206,6 +209,10 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
 }
 
 void PluginDialog::Tab::save() {
+    /* Update plugin dir if it is not the same as in PluginManager */
+    if(pluginDir->text() != QString::fromStdString(manager->pluginDirectory()))
+        manager->setPluginDirectory(pluginDir->text().toStdString());
+
     mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<string>("__dir", pluginDir->text().toStdString());
 
     for(int i = 0; i != model->rowCount(); ++i) {
@@ -235,7 +242,12 @@ void PluginDialog::Tab::setPluginDir() {
     if(!dir.isEmpty()) {
         pluginDir->setText(dir);
         emit edited();
+        manager->setPluginDirectory(dir.toStdString());
     }
+}
+
+void PluginDialog::Tab::reloadPluginDirectory() {
+    manager->setPluginDirectory(pluginDir->text().toStdString());
 }
 
 void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -281,6 +293,13 @@ void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager:
 void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
     mapper->setCurrentModelIndex(index);
 
+    reloadPluginButton->setHidden(false);
+
+    if(index.sibling(index.row(), PluginModel::LoadState).data(Qt::UserRole).toInt() == AbstractPluginManager::IsStatic)
+        reloadPluginButton->setDisabled(true);
+    else
+        reloadPluginButton->setDisabled(false);
+
     bool hide = false;
 
     hide = loadState->text().isEmpty() ? true : false;
@@ -310,6 +329,10 @@ void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
     hide = replacedWith->text().isEmpty() ? true : false;
     replacedWithLabel->setHidden(hide);
     replacedWith->setHidden(hide);
+}
+
+void PluginDialog::Tab::reloadCurrentPlugin() {
+    manager->reload(model->index(mapper->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
 }
 
 }}

@@ -29,6 +29,7 @@ class QTabWidget;
 class QLabel;
 class QLineEdit;
 class QDataWidgetMapper;
+class QPushButton;
 
 namespace Kompas { namespace QtGui {
 
@@ -87,10 +88,13 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
     private slots:
         virtual void setPluginDir();
 
+        void reloadPluginDirectory();
+
         void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
         void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
         void setCurrentRow(const QModelIndex& index);
+        void reloadCurrentPlugin();
 
     private:
         MainWindow* mainWindow;
@@ -99,6 +103,7 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
         AbstractPluginManager* manager;
         PluginModel* model;
         QDataWidgetMapper* mapper;
+        QPushButton* reloadPluginButton;
 
         QLineEdit* pluginDir;
 

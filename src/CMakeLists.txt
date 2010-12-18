@@ -1,4 +1,4 @@
-add_definitions(-Wall -pedantic)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
@@ -62,6 +62,15 @@ qt4_wrap_cpp(Kompas_Qt_MOC
 qt4_add_resources(Kompas_Qt_QRC
     data/data.qrc
 )
+
+# Diable console window, executable icon for WIN32
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows -Wl,-subsystem,windows")
+
+    enable_language(RC)
+    set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff <FLAGS> -o <OBJECT> -i <SOURCE>")
+    set(Kompas_Qt_SRCS ${Kompas_Qt_SRCS} data/win-icon.rc)
+endif(WIN32)
 
 add_executable(kompas-qt ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
 target_link_libraries(kompas-qt KompasCore ${KompasQt_Plugins} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})

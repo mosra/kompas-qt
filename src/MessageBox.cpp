@@ -48,9 +48,8 @@ QMessageBox::StandardButton MessageBox::critical(QWidget* parent, const QString&
 
 void MessageBox::setIcon(QMessageBox::Icon icon) {
     switch(icon) {
-        /** @todo Do a Question icon */
-//      case Question:
-//          setIconPixmap(QPixmap(":/messagebox-question-64.png")); break;
+        case Question:
+            setIconPixmap(QPixmap(":/messagebox-question-64.png")); break;
         case Information:
             setIconPixmap(QPixmap(":/messagebox-information-64.png")); break;
         case Warning:

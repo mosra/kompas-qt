@@ -138,6 +138,7 @@ void SaveRasterWizard::done(int result) {
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
     setTitle(tr("1/5: Map area"));
     setSubTitle(tr("Select map area which you want to save."));
+    setPixmap(LogoPixmap, QPixmap(":/progress1-48.png"));
 
     /* Bold font */
     QFont boldFont;
@@ -211,6 +212,7 @@ bool SaveRasterWizard::AreaPage::validatePage() {
 SaveRasterWizard::ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
     setTitle(tr("2/5: Map contents"));
     setSubTitle(tr("Select zoom levels, layers and overlays to save."));
+    setPixmap(LogoPixmap, QPixmap(":/progress2-48.png"));
 
     MainWindow* m = MainWindow::instance();
     AbstractMapView* view = m->mapView();
@@ -291,6 +293,7 @@ bool SaveRasterWizard::ContentsPage::validatePage() {
 SaveRasterWizard::StatisticsPage::StatisticsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), canDownload(true) {
     setTitle(tr("4/5: Statistics"));
     setSubTitle(tr("Review amount of data to be downloaded, return back and make changes or proceed to creating the package."));
+    setPixmap(LogoPixmap, QPixmap(":/progress4-48.png"));
     setCommitPage(true);
 
     QFont boldFont;
@@ -375,6 +378,7 @@ void SaveRasterWizard::StatisticsPage::initializePage() {
 SaveRasterWizard::MetadataPage::MetadataPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
     setTitle(tr("3/5: Metadata"));
     setSubTitle(tr("Select where to save the package and optionally fill in some metadata."));
+    setPixmap(LogoPixmap, QPixmap(":/progress3-48.png"));
 
     /* Initialize widgets */
     filename = new QLineEdit;
@@ -480,6 +484,7 @@ bool SaveRasterWizard::MetadataPage::checkSaveFile(const QString& filename) {
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {
     setTitle(tr("5/5: Downloading..."));
     setSubTitle(tr("The data are now being downloaded and saved to your package."));
+    setPixmap(LogoPixmap, QPixmap(":/progress5-48.png"));
 
     saveThread = new SaveRasterThread(this);
     connect(saveThread, SIGNAL(completeChanged(Core::Zoom,int,std::string,int,int,int)), SLOT(updateStatus(Core::Zoom,int,std::string,int,int,int)));

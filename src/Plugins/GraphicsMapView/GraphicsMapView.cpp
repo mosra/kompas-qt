@@ -523,6 +523,7 @@ void GraphicsMapView::updateRasterModel() {
 
     QRectF rect = map.sceneRect();
     view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);
+    updateTilePositions();
 
 }
 

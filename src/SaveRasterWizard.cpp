@@ -116,6 +116,14 @@ TileArea SaveRasterWizard::area() const {
     return ta;
 }
 
+void SaveRasterWizard::done(int result) {
+    /* If cancelling unfinished download, display question messagebox */
+    if(result == Rejected && currentId() == 4 && !currentPage()->isComplete() && MessageBox::question(this, tr("Download in progress"), tr("Package creation is in progress. Do you really want to cancel the operation?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) != QMessageBox::Yes)
+        return;
+
+    QWizard::done(result);
+}
+
 SaveRasterWizard::AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard) {
     setTitle(tr("1/5: Map area"));
     setSubTitle(tr("Select map area which you want to save."));

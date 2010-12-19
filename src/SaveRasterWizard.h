@@ -93,6 +93,8 @@ class SaveRasterWizard: public QWizard {
          * zoomLevels.
          */
         Core::TileArea area() const;
+
+        virtual void done(int result);
 };
 
 /**

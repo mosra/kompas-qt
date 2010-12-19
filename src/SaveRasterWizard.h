@@ -65,11 +65,10 @@ class SaveRasterWizard: public QWizard {
         class MetadataPage;
         class DownloadPage;
 
-        /**
-         * @brief Raster model name which save to
-         */
-        std::string model;
+        std::string model;              /**< @brief Destination model */
+        std::string modelName;          /**< @brief Translated model name */
         int features;                   /**< @brief Features of destination model */
+        std::vector<std::string> extensions; /**< @brief File extensions of destination model */
 
         Core::TileSize tileSize;        /**< @brief Tile size of source model */
         Core::AbsoluteArea<double> absoluteArea; /**< @brief Area to download */

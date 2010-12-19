@@ -271,7 +271,38 @@ void MainWindow::setOnlineEnabled(bool enabled) {
 }
 
 void MainWindow::openRaster() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"), QString::fromStdString(_configuration.group("paths")->value<string>("packages")));
+    /* Compose filter from all loaded plugins */
+    QString filter;
+    vector<string> plugins = _rasterModelPluginManager->nameList();
+    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+        /* Skip not loaded plugins */
+        if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
+            continue;
+
+        /* Instance of the model */
+        AbstractRasterModel* instance = _rasterModelPluginManager->instance(*it);
+        if(!instance) continue;
+
+        vector<string> extensions = instance->fileExtensions();
+        if(extensions.empty()) {
+            delete instance;
+            continue;
+        }
+
+        filter += QString::fromStdString(*instance->metadata()->name()) + " (";
+
+        for(vector<string>::const_iterator it = extensions.begin(); it != extensions.end(); ++it) {
+            filter += QString::fromStdString(*it) + " ";
+        }
+
+        filter = filter.left(filter.length()-1) + ");;";
+
+        delete instance;
+    }
+
+    filter += tr("All files (*)");
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"), QString::fromStdString(_configuration.group("paths")->value<string>("packages")), filter);
     if(filename.isEmpty()) return;
 
     /* Try to open the package with current model */

@@ -70,7 +70,11 @@ int SaveRasterWizard::exec() {
     /* Features of destination model */
     AbstractRasterModel* destinationModel = MainWindow::instance()->rasterModelPluginManager()->instance(model);
     if(!destinationModel) features = sourceFeatures; /* will fail in download page too, so don't bother */
-    else features = destinationModel->features();
+    else {
+        modelName = *destinationModel->metadata()->name();
+        features = destinationModel->features();
+        extensions = destinationModel->fileExtensions();
+    }
     delete destinationModel;
 
     /* Check what features are missing in destination model */
@@ -396,7 +400,17 @@ bool SaveRasterWizard::MetadataPage::validatePage() {
 }
 
 void SaveRasterWizard::MetadataPage::saveFileDialog() {
-    QString _filename = QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages")));
+    /* Compose file extension filter, if available */
+    QString extensions;
+    if(!wizard->extensions.empty()) {
+        extensions = QString::fromStdString(wizard->modelName) + " (";
+        for(vector<string>::const_iterator it = wizard->extensions.begin(); it != wizard->extensions.end(); ++it)
+            extensions += QString::fromStdString(*it) + ' ';
+        extensions = extensions.left(extensions.length()-1) + ");;";
+    }
+    extensions += tr("All files") +  " (*)";
+
+    QString _filename = QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages")), extensions);
 
     if(_filename.isEmpty()) return;
 

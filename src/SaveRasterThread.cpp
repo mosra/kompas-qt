@@ -38,7 +38,11 @@ SaveRasterThread::SaveRasterThread(QObject* parent): QThread(parent), abort(fals
 }
 
 SaveRasterThread::~SaveRasterThread() {
+    /* Schedule thread to abort and wake it up, if it waits for download to finish */
     abort = true;
+    condition.wakeOne();
+
+    /* Wait for thread to finish */
     wait();
 }
 

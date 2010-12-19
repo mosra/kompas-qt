@@ -69,7 +69,7 @@ void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* wid
 }
 
 void AbstractConfigurationDialog::restoreDefaultsWarning() {
-    if(MessageBox::warning(this, tr("Really restore defaults?"),
+    if(MessageBox::question(this, tr("Really restore defaults?"),
        tr("Do you really want to restore default configuration? This action is irreversible."),
        QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
         emit restoreDefaults();

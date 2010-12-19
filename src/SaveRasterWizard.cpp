@@ -407,7 +407,7 @@ bool SaveRasterWizard::MetadataPage::validatePage() {
     return true;
 }
 
-void SaveRasterWizard::MetadataPage::saveFileDialog() {
+void SaveRasterWizard::MetadataPage::saveFileDialog(QString path) {
     /* Compose file extension filter, if available */
     QString extensions;
     if(!wizard->extensions.empty()) {
@@ -418,12 +418,20 @@ void SaveRasterWizard::MetadataPage::saveFileDialog() {
     }
     extensions += tr("All files") +  " (*)";
 
-    QString _filename = QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages")), extensions);
+    /* Path where to open the dialog */
+    if(path.isEmpty()) {
+        if(filename->text().isEmpty())
+            path = QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages"));
+        else
+            path = QFileInfo(filename->text()).absoluteDir().canonicalPath();
+    }
+
+    QString _filename = QFileDialog::getSaveFileName(this, tr("Save package as..."), path, extensions);
 
     if(_filename.isEmpty()) return;
 
     if(checkSaveFile(_filename)) filename->setText(_filename);
-    else saveFileDialog();
+    else saveFileDialog(QFileInfo(_filename).absoluteDir().canonicalPath());
 }
 
 bool SaveRasterWizard::MetadataPage::checkSaveFile(const QString& filename) {

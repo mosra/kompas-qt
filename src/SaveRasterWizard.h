@@ -241,7 +241,7 @@ class SaveRasterWizard::MetadataPage: public QWizardPage {
         virtual bool validatePage();
 
     private slots:
-        void saveFileDialog();
+        void saveFileDialog(QString path = "");
 
     private:
         SaveRasterWizard* wizard;

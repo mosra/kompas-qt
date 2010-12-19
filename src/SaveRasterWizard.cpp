@@ -41,7 +41,7 @@ using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
-SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model) {
+SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model), features(0) {
     addPage(new AreaPage(this));
     addPage(new ContentsPage(this));
     addPage(new MetadataPage(this));
@@ -69,9 +69,8 @@ int SaveRasterWizard::exec() {
 
     /* Features of destination model */
     AbstractRasterModel* destinationModel = MainWindow::instance()->rasterModelPluginManager()->instance(model);
-    int destinationFeatures;
-    if(!destinationModel) destinationFeatures = sourceFeatures; /* will fail in download page too, so don't bother */
-    else destinationFeatures = destinationModel->features();
+    if(!destinationModel) features = sourceFeatures; /* will fail in download page too, so don't bother */
+    else features = destinationModel->features();
     delete destinationModel;
 
     /* Check what features are missing in destination model */
@@ -81,7 +80,7 @@ int SaveRasterWizard::exec() {
 
         /* If feature doesn't exist in source model or is present in destination
             model, go to next feature */
-        if(!(feature & sourceFeatures) || (feature & destinationFeatures))
+        if(!(feature & sourceFeatures) || (feature & features))
             continue;
 
         switch(feature) {
@@ -386,7 +385,7 @@ bool SaveRasterWizard::MetadataPage::isComplete() const {
 }
 
 bool SaveRasterWizard::MetadataPage::validatePage() {
-    if(filename->text().isEmpty()) return false;
+    if(!checkSaveFile(filename->text())) return false;
 
     wizard->filename = filename->text().toStdString();
     wizard->name = name->text().toStdString();
@@ -397,7 +396,44 @@ bool SaveRasterWizard::MetadataPage::validatePage() {
 }
 
 void SaveRasterWizard::MetadataPage::saveFileDialog() {
-    filename->setText(QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages"))));
+    QString _filename = QFileDialog::getSaveFileName(this, tr("Save package as..."), QString::fromStdString(MainWindow::instance()->configuration()->group("paths")->value<string>("packages")));
+
+    if(_filename.isEmpty()) return;
+
+    if(checkSaveFile(_filename)) filename->setText(_filename);
+    else saveFileDialog();
+}
+
+bool SaveRasterWizard::MetadataPage::checkSaveFile(const QString& filename) {
+    if(filename.isEmpty()) return false;
+
+    /* If the filename is the same as filename of any opened packages in source model, show error messagebox */
+    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    bool is = false;
+    for(int i = 0; i != model->packageCount(); ++i) if(filename == QString::fromStdString(model->packageAttribute(i, Kompas::Core::AbstractRasterModel::Filename))) {
+        is = true;
+        break;
+    }
+    MainWindow::instance()->unlockRasterModel();
+
+    if(is) {
+        MessageBox::warning(this, tr("Saving to currently opened file"), tr("You selected file which is currently opened. Please select another file to avoid data loss."));
+        return false;
+    }
+
+    /* If the format is multi-file, check that we are saving to clean directory */
+    if(wizard->features & AbstractRasterModel::MultipleFileFormat) {
+        QDir d(QFileInfo(filename).absoluteDir());
+        QStringList l = d.entryList(QDir::AllEntries|QDir::NoDotAndDotDot);
+
+        /* If the dir contains any file which isn't the saving file, error */
+        if(l.count() > 1 || (l.count() == 1 && d.absoluteFilePath(l[0]) != filename)) {
+            MessageBox::warning(this, tr("Empty directory needed"), tr("The package will be saved to multiple files. Please select empty directory to avoid data loss."));
+            return false;
+        }
+    }
+
+    return true;
 }
 
 SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wizard), _isComplete(false) {

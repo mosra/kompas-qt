@@ -44,6 +44,12 @@ SaveRasterThread::~SaveRasterThread() {
 
     /* Wait for thread to finish */
     wait();
+
+    /* If the package is not done, finalize it to make it kind of usable */
+    if(destinationModel) {
+        destinationModel->finalizePackage();
+        delete destinationModel;
+    }
 }
 
 bool SaveRasterThread::initializePackage(const string& model, const string& filename, const TileSize& tileSize, const vector<Zoom>& _zoomLevels, const TileArea& _area, const vector<string>& _layers, const vector<string>& overlays) {
@@ -141,6 +147,8 @@ void SaveRasterThread::run() {
     }
 
     destinationModel->finalizePackage();
+    delete destinationModel;
+    destinationModel = 0;
     emit completed();
 }
 

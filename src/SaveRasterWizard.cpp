@@ -501,8 +501,18 @@ void SaveRasterWizard::DownloadPage::initializePage() {
 void SaveRasterWizard::DownloadPage::updateStatus(Zoom _currentZoom, int currentZoomNumber, const string& _currentLayer, int currentLayerNumber, int _totalCompleted, int _currentZoomLayerCompleted) {
     filename->setText(tr("Downloading and saving data ..."));
 
+    /* Get translated layer name */
+    QString layer;
+    QModelIndex found = MainWindow::instance()->rasterLayerModel()->find(QString::fromStdString(_currentLayer));
+    if(found.isValid()) layer = found.sibling(found.row(), RasterLayerModel::Translated).data().toString();
+    else {
+        found = MainWindow::instance()->rasterOverlayModel()->find(QString::fromStdString(_currentLayer));
+        if(found.isValid()) layer = found.sibling(found.row(), RasterOverlayModel::Translated).data().toString();
+        else layer = QString::fromStdString(_currentLayer);
+    }
+
     currentZoom->setText(tr("Current zoom: %0 (%1/%2)").arg(_currentZoom).arg(currentZoomNumber).arg(wizard->zoomLevels.size()));
-    currentLayer->setText(tr("Current layer: %0 (%1/%2)").arg(QString::fromStdString(_currentLayer)).arg(currentLayerNumber).arg(wizard->layers.size()+wizard->overlays.size()));
+    currentLayer->setText(tr("Current layer: %0 (%1/%2)").arg(layer).arg(currentLayerNumber).arg(wizard->layers.size()+wizard->overlays.size()));
     totalCompleted->setValue(_totalCompleted);
     currentZoomLayerCompleted->setValue(_currentZoomLayerCompleted);
 }

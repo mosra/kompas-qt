@@ -225,8 +225,6 @@ void MainWindow::setMapView(AbstractMapView* view) {
     /* View exists, connect it */
     if(_mapView) {
         connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
-        connect(zoomInAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomIn()));
-        connect(zoomOutAction, SIGNAL(triggered(bool)), _mapView, SLOT(zoomOut()));
     }
 
     emit mapViewChanged();
@@ -398,7 +396,6 @@ void MainWindow::displayMapIfUsable() {
         /* Enable menus */
         saveRasterMenu->setDisabled(false);
         closeRasterAction->setDisabled(false);
-        mapMenu->setDisabled(false);
 
         /* Update action in "save raster" menu */
         saveRasterAction->setText(tr("Offline %0 package").arg(name));
@@ -419,7 +416,6 @@ void MainWindow::displayMapIfUsable() {
         /* Disable menus */
         saveRasterMenu->setDisabled(true);
         closeRasterAction->setDisabled(true);
-        mapMenu->setDisabled(true);
 
         /* Show welcome screen, hide map options dock */
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
@@ -455,13 +451,6 @@ void MainWindow::createActions() {
     quitAction = new QAction(QIcon(":/exit-16.png"), tr("Quit"), this);
     quitAction->setShortcut(QKeySequence::Quit);
     connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
-
-    /* Move map */
-    /** @todo Disable when zooming in/out is not possible */
-    zoomInAction = new QAction(tr("Zoom in"), this);
-    zoomInAction->setShortcut(Qt::CTRL|Qt::Key_Plus);
-    zoomOutAction = new QAction(tr("Zoom out"), this);
-    zoomOutAction->setShortcut(Qt::CTRL|Qt::Key_Minus);
 
     /* Settings menu */
     pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
@@ -500,11 +489,6 @@ void MainWindow::createMenus() {
     fileMenu->addAction(closeRasterAction);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAction);
-
-    /* Map menu */
-    mapMenu = menuBar()->addMenu(tr("Map"));
-    mapMenu->addAction(zoomInAction);
-    mapMenu->addAction(zoomOutAction);
 
     /* Tools menu */
     toolsMenu = menuBar()->addMenu(tr("Tools"));

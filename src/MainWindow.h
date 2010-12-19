@@ -232,8 +232,6 @@ class MainWindow: public QMainWindow {
             *saveRasterAction,
             *closeRasterAction,
             *quitAction,
-            *zoomInAction,
-            *zoomOutAction,
             *pluginDialogAction,
             *configurationDialogAction,
             *aboutAction,
@@ -241,7 +239,6 @@ class MainWindow: public QMainWindow {
 
         QMenu *openRasterMenu,
             *saveRasterMenu,
-            *mapMenu,
             *toolsMenu;
 
         SaveRasterMenuView* saveRasterMenuView;

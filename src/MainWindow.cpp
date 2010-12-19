@@ -490,7 +490,7 @@ void MainWindow::createMenus() {
     openOnlineAction->setMenu(openRasterMenu);
 
     /* Save raster map menu */
-    saveRasterMenu = fileMenu->addMenu(tr("Save map"));
+    saveRasterMenu = fileMenu->addMenu(QIcon(":/save-16.png"), tr("Save map"));
     saveRasterMenu->addAction(saveRasterAction);
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);

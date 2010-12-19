@@ -41,11 +41,13 @@ ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags
 }
 
 ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
+    /* Map view model */
+    mapViewModel = new PluginModel(MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this);
+
     /* Map view plugin */
     mapViewPlugin = new QComboBox;
-    mapViewPlugin->setModel(new PluginModel(
-        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this));
-    mapViewPlugin->setModelColumn(PluginModel::Plugin);
+    mapViewPlugin->setModel(mapViewModel);
+    mapViewPlugin->setModelColumn(PluginModel::Name);
 
     /* Maximal count of simultaenous downloads */
     maxSimultaenousDownloads = new QSpinBox;
@@ -87,7 +89,7 @@ ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): Abstrac
 }
 
 void ConfigurationDialog::Widget::reset() {
-    mapViewPlugin->setCurrentIndex(mapViewPlugin->findText(QString::fromStdString(
+    mapViewPlugin->setCurrentIndex(mapViewModel->findPlugin(QString::fromStdString(
         MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
     maxSimultaenousDownloads->setValue(
         MainWindow::instance()->configuration()->group("map")->value<int>("maxSimultaenousDownloads"));
@@ -106,7 +108,7 @@ void ConfigurationDialog::Widget::restoreDefaults() {
 
 void ConfigurationDialog::Widget::save() {
     MainWindow::instance()->configuration()->group("map")->setValue<string>("viewPlugin",
-        mapViewPlugin->currentText().toStdString());
+        mapViewModel->index(mapViewPlugin->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
     MainWindow::instance()->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
         maxSimultaenousDownloads->value());
     MainWindow::instance()->configuration()->group("paths")->setValue<string>("packages",

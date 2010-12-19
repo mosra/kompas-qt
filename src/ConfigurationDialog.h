@@ -28,6 +28,8 @@ class QLineEdit;
 
 namespace Kompas { namespace QtGui {
 
+class PluginModel;
+
 /** @brief Main configuration dialog */
 class ConfigurationDialog: public AbstractConfigurationDialog {
     Q_OBJECT
@@ -66,6 +68,7 @@ class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
 
     private:
         QComboBox* mapViewPlugin;
+        PluginModel* mapViewModel;
         QSpinBox* maxSimultaenousDownloads;
         QLineEdit* packageDir;
 };

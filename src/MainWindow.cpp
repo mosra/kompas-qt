@@ -428,15 +428,24 @@ void MainWindow::displayMapIfUsable() {
 
 void MainWindow::createActions() {
     /* Open session */
-    openSessionAction = new QAction(QIcon(":/open-session-64.png"), tr("Restore saved session"), this);
+    QIcon openSessionIcon;
+    openSessionIcon.addFile(":/open-session-16.png");
+    openSessionIcon.addFile(":/open-session-64.png");
+    openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
     openSessionAction->setDisabled(true);
 
     /* Open raster map */
-    openRasterAction = new QAction(QIcon(":/open-package-64.png"), tr("Open map package"), this);
+    QIcon openPackageIcon;
+    openPackageIcon.addFile(":/open-package-16.png");
+    openPackageIcon.addFile(":/open-package-64.png");
+    openRasterAction = new QAction(openPackageIcon, tr("Open map package"), this);
     connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
 
     /* Open online map */
-    openOnlineAction = new QAction(QIcon(":/open-online-64.png"), tr("Load online map"), this);
+    QIcon openOnlineIcon;
+    openOnlineIcon.addFile(":/open-online-16.png");
+    openOnlineIcon.addFile(":/open-online-64.png");
+    openOnlineAction = new QAction(openOnlineIcon, tr("Load online map"), this);
 
     /* Save raster map */
     saveRasterAction = new QAction(this);

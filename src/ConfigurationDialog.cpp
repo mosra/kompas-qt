@@ -57,7 +57,7 @@ ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): Abstrac
     /* Package directory with selecting button */
     packageDir = new QLineEdit;
     QToolButton* packageDirButton = new QToolButton;
-    packageDirButton->setIcon(style()->standardIcon(QStyle::SP_DialogOpenButton));
+    packageDirButton->setIcon(QIcon(":/open-16.png"));
     packageDirButton->setAutoRaise(true);
     connect(packageDirButton, SIGNAL(clicked(bool)), SLOT(selectPackageDir()));
 

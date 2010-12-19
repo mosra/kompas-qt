@@ -382,7 +382,7 @@ SaveRasterWizard::MetadataPage::MetadataPage(SaveRasterWizard* _wizard): QWizard
     name = new QLineEdit;
     description = new QLineEdit;
     packager = new QLineEdit;
-    QPushButton* fileButton = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Select..."));
+    QPushButton* fileButton = new QPushButton(QIcon(":/open-16.png"), tr("Select..."));
     connect(fileButton, SIGNAL(clicked(bool)), SLOT(saveFileDialog()));
 
     QHBoxLayout* fileLayout = new QHBoxLayout;

@@ -116,7 +116,7 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     replacedWith->setWordWrap(true);
 
     /* Button for selecting plugin dir */
-    QPushButton* pluginDirButton = new QPushButton(style()->standardIcon(QStyle::SP_DirOpenIcon), tr("Select..."));
+    QPushButton* pluginDirButton = new QPushButton(QIcon(":/open-16.png"), tr("Select..."));
     connect(pluginDirButton, SIGNAL(clicked(bool)), SLOT(setPluginDir()));
 
     /* Button for reloading plugin dir */

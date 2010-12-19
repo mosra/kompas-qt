@@ -35,7 +35,10 @@ namespace Kompas { namespace QtGui {
 
 class SaveRasterThread;
 
-/** @brief Wizard for saving raster maps */
+/**
+ * @brief Wizard for saving raster maps
+ * @todo @c VERSION-0.2 Final package size
+ */
 class SaveRasterWizard: public QWizard {
     Q_OBJECT
 

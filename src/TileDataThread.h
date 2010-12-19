@@ -37,7 +37,7 @@ namespace Kompas { namespace QtGui {
  *
  * Getting tile data from local files in done in separated thread, if the data
  * aren't available locally and model has enabled online
- * @todo Passing downloaded tile back to model
+ * @todo @c VERSION-0.2 Passing downloaded tile back to model
  * @todo Generalize for all data?
  */
 class TileDataThread: public QThread {

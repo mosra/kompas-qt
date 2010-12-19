@@ -203,7 +203,7 @@ bool SaveRasterWizard::AreaPage::validatePage() {
 
     /* Tile count for selected area at _current_ zoom */
     } else {
-        /** @todo CustomArea to be implemented... */
+        /** @todo @c VERSION-0.2 CustomArea to be implemented... */
     }
 
     return true;

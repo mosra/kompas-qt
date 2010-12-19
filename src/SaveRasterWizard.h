@@ -86,6 +86,8 @@ class SaveRasterWizard: public QWizard {
             description,                /**< @brief Package description */
             packager;                   /**< @brief Packager name */
 
+        bool openWhenFinished;          /**< @brief Whether to open the package when finished */
+
         /**
          * @brief Tile area at minimal zoom
          *
@@ -287,6 +289,8 @@ class SaveRasterWizard::DownloadPage: public QWizardPage {
 
         void completed();
         void error();
+
+        inline void setOpenWhenFinished(bool open) { wizard->openWhenFinished = open; }
 
     private:
         SaveRasterWizard* wizard;

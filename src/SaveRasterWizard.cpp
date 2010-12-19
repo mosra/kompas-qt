@@ -26,6 +26,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
 #include <QtGui/QProgressBar>
+#include <QtGui/QCheckBox>
 
 #include "MainWindow.h"
 #include "RasterLayerModel.h"
@@ -41,7 +42,7 @@ using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
-SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model), features(0) {
+SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::WindowFlags flags): QWizard(parent, flags), model(_model), features(0), openWhenFinished(false) {
     addPage(new AreaPage(this));
     addPage(new ContentsPage(this));
     addPage(new MetadataPage(this));
@@ -120,6 +121,16 @@ void SaveRasterWizard::done(int result) {
     /* If cancelling unfinished download, display question messagebox */
     if(result == Rejected && currentId() == 4 && !currentPage()->isComplete() && MessageBox::question(this, tr("Download in progress"), tr("Package creation is in progress. Do you really want to cancel the operation?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) != QMessageBox::Yes)
         return;
+
+    /* Open the package, if set */
+    if(result == Accepted && openWhenFinished == true) {
+        AbstractRasterModel* m = MainWindow::instance()->rasterModelPluginManager()->instance(model);
+
+        if(m->addPackage(filename) == -1)
+            delete m;
+        else
+            MainWindow::instance()->setRasterModel(m);
+    }
 
     QWizard::done(result);
 }
@@ -481,6 +492,10 @@ SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizard
     totalCompleted = new QProgressBar;
     currentZoomLayerCompleted = new QProgressBar;
 
+    QCheckBox* openWhenFinished = new QCheckBox(tr("Open the package when finished"));
+    openWhenFinished->setChecked(wizard->openWhenFinished);
+    connect(openWhenFinished, SIGNAL(toggled(bool)), SLOT(setOpenWhenFinished(bool)));
+
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(filename, 0, 0, 1, 2);
     layout->addWidget(currentZoom, 1, 0);
@@ -489,7 +504,9 @@ SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizard
     layout->addWidget(totalCompleted, 3, 0, 1, 2);
     layout->addWidget(new QLabel(tr("Current layer/zoom progress:")), 4, 0, 1, 2);
     layout->addWidget(currentZoomLayerCompleted, 5, 0, 1, 2);
+    layout->addWidget(openWhenFinished, 6, 0, 1, 2);
     layout->setRowMinimumHeight(1, 48);
+    layout->setRowMinimumHeight(6, 48);
     setLayout(layout);
 }
 

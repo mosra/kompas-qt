@@ -52,7 +52,9 @@ QVariant RasterLayerModel::data(const QModelIndex& index, int role) const {
 
     switch(index.column()) {
         case Name: return l.name;
-        case Translated: return QString::fromStdString(*l.translated);
+        case Translated:
+            if(l.translated->empty()) return l.name;
+            return QString::fromStdString(*l.translated);
     }
 
     return QVariant();

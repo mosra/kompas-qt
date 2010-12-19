@@ -52,7 +52,9 @@ QVariant RasterOverlayModel::data(const QModelIndex& index, int role) const {
 
     switch(index.column()) {
         case Name: return o.name;
-        case Translated: return QString::fromStdString(*o.translated);
+        case Translated:
+            if(o.translated->empty()) return o.name;
+            else return QString::fromStdString(*o.translated);
     }
 
     return QVariant();

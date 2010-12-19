@@ -146,7 +146,9 @@ Qt::ItemFlags PluginModel::flags(const QModelIndex& index) const {
     /* Only load state column is checkable */
     if(index.column() == LoadState) {
         /* Static plugins are disabled */
-        if(plugins[index.row()].loadState != AbstractPluginManager::IsStatic)
+        if(plugins[index.row()].loadState == AbstractPluginManager::IsStatic)
+            return (QAbstractTableModel::flags(index)|Qt::ItemIsUserCheckable)&(~Qt::ItemIsEnabled);
+        else
             return QAbstractTableModel::flags(index)|Qt::ItemIsUserCheckable;
     }
 

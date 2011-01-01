@@ -316,6 +316,7 @@ void MainWindow::openRaster() {
     } else {
         std::ifstream i(filename.toUtf8().constData());
         AbstractRasterModel* firstSupport = 0;
+        int state = AbstractRasterModel::NotSupported;
 
         vector<string> plugins = _rasterModelPluginManager->nameList();
         for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
@@ -336,13 +337,13 @@ void MainWindow::openRaster() {
             /* Rewind file and try to recognize it */
             i.clear();
             i.seekg(0, ios::beg);
-            int state = instance->recognizeFile(filename.toStdString(), i);
+            state = instance->recognizeFile(filename.toStdString(), i);
 
             /* Try to get full supporting plugin, if not found, go with first
                 partially supporting. */
             if(state == AbstractRasterModel::PartiallySupported && !firstSupport)
                 firstSupport = instance;
-            else if(state == AbstractRasterModel::FullySupported) {
+            else if(state == AbstractRasterModel::FullySupported || state == AbstractRasterModel::DeprecatedSupport) {
                 delete firstSupport;
                 firstSupport = instance;
                 break;
@@ -369,6 +370,11 @@ void MainWindow::openRaster() {
 
         /* Replace current raster model with new */
         setRasterModel(firstSupport);
+
+        /* Package format is deprecated */
+        if(state == AbstractRasterModel::DeprecatedSupport) {
+            MessageBox::warning(this, tr("Deprecated file format"), tr("The package has deprecated format that probably won't be supported in future versions. Please save the package to a newer format."));
+        }
     }
 }
 

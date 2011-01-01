@@ -33,6 +33,7 @@ class RasterPackageModel: public QAbstractTableModel {
         /** @brief Columns */
         enum Column {
             Name,           /**< @brief Package name */
+            Filename,       /**< @brief Package filename */
             Description,    /**< @brief Package description */
             Packager        /**< @brief Packager name */
         };
@@ -45,7 +46,7 @@ class RasterPackageModel: public QAbstractTableModel {
 
         /** @brief Column count */
         inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
-            { return 3; }
+            { return 4; }
 
         /** @brief Row count */
         inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
@@ -64,7 +65,8 @@ class RasterPackageModel: public QAbstractTableModel {
 
     private:
         struct Package {
-            QString name,
+            QString filename,
+                    name,
                     description,
                     packager;
         };

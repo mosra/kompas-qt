@@ -30,6 +30,7 @@ void RasterPackageModel::reload() {
     /* All packages */
     if(rasterModel) for(int i = 0; i != rasterModel->packageCount(); ++i) {
         Package p;
+        p.filename = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Filename));
         p.name = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Name));
         p.description = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Description));
         p.packager = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Packager));
@@ -46,8 +47,13 @@ QVariant RasterPackageModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 
     switch(index.column()) {
+        case Filename:
+            return packages.at(index.row()).filename;
         case Name:
-            return packages.at(index.row()).name;
+            if(packages.at(index.row()).name.isEmpty())
+                return packages.at(index.row()).filename;
+            else
+                return packages.at(index.row()).name;
         case Description:
             return packages.at(index.row()).description;
         case Packager:

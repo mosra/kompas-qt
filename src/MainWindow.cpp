@@ -219,11 +219,11 @@ void MainWindow::setMapView(AbstractMapView* view) {
     if(_mapView) delete _mapView;
     _mapView = view;
 
-    /* Assign map view to second slot in stacked widget */
-    centralStackedWidget->addWidget(_mapView);
-
-    /* View exists, connect it */
+    /* View exists */
     if(_mapView) {
+        /* Assign map view to second slot in stacked widget */
+        centralStackedWidget->addWidget(_mapView);
+
         connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
     }
 

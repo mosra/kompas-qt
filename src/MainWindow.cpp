@@ -271,7 +271,7 @@ void MainWindow::setOnlineEnabled(bool enabled) {
 void MainWindow::openRaster() {
     /* Compose filter from all loaded plugins */
     QString filter;
-    vector<string> plugins = _rasterModelPluginManager->nameList();
+    vector<string> plugins = _rasterModelPluginManager->pluginList();
     for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
         /* Skip not loaded plugins */
         if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
@@ -318,7 +318,7 @@ void MainWindow::openRaster() {
         AbstractRasterModel* firstSupport = 0;
         int state = AbstractRasterModel::NotSupported;
 
-        vector<string> plugins = _rasterModelPluginManager->nameList();
+        vector<string> plugins = _rasterModelPluginManager->pluginList();
         for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
             /* Skip not loaded plugins */
             if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
@@ -379,15 +379,15 @@ void MainWindow::openRaster() {
 }
 
 void MainWindow::saveRaster() {
-    string name;
+    string plugin;
 
     lockRasterModelForRead();
-    if(_rasterModel) name = _rasterModel->name();
+    if(_rasterModel) plugin = _rasterModel->plugin();
     unlockRasterModel();
 
-    if(name.empty()) return;
+    if(plugin.empty()) return;
 
-    SaveRasterWizard wizard(name);
+    SaveRasterWizard wizard(plugin);
     wizard.exec();
 }
 
@@ -520,9 +520,9 @@ void MainWindow::createMenus() {
 }
 
 void MainWindow::loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager) {
-    vector<string> names = manager->nameList();
+    vector<string> plugins = manager->pluginList();
 
-    for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it)
+    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it)
         if(configuration()->group("plugins")->group(group)->value<bool>(*it))
             manager->load(*it);
 }

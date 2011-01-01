@@ -41,7 +41,7 @@ void AbstractPluginMenuView::update() {
     clearMenu();
 
     /* Foreach plugin list and create menu items */
-    vector<string> plugins = manager->nameList();
+    vector<string> plugins = manager->pluginList();
 
     for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
         /* Skip not loaded plugins */

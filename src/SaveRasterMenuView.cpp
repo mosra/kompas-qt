@@ -27,7 +27,7 @@ void SaveRasterMenuView::clearMenu() {
 
     /* Get current raster map plugin name */
     const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    if(model)   currentModel = model->name();
+    if(model)   currentModel = model->plugin();
     else        currentModel.clear();
     MainWindow::instance()->unlockRasterModel();
 }

@@ -47,10 +47,10 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @copydoc PluginManager::AbstractPluginManager::load()
          * Emits loadAttempt().
          */
-        inline LoadState load(const std::string& name) {
-            LoadState before = loadState(name);
-            LoadState after = Kompas::PluginManager::AbstractPluginManager::load(name);
-            emit loadAttempt(name, before, after);
+        inline LoadState load(const std::string& _plugin) {
+            LoadState before = loadState(_plugin);
+            LoadState after = Kompas::PluginManager::AbstractPluginManager::load(_plugin);
+            emit loadAttempt(_plugin, before, after);
             return after;
         }
 
@@ -58,10 +58,10 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @copydoc PluginManager::AbstractPluginManager::unload()
          * Emits unloadAttempt().
          */
-        inline LoadState unload(const std::string& name) {
-            LoadState before = loadState(name);
-            LoadState after = Kompas::PluginManager::AbstractPluginManager::unload(name);
-            emit unloadAttempt(name, before, after);
+        inline LoadState unload(const std::string& _plugin) {
+            LoadState before = loadState(_plugin);
+            LoadState after = Kompas::PluginManager::AbstractPluginManager::unload(_plugin);
+            emit unloadAttempt(_plugin, before, after);
             return after;
         }
 
@@ -92,7 +92,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
     signals:
         /**
          * @brief Plugin load attempt
-         * @param name      Plugin name
+         * @param plugin    Plugin
          * @param before    State before load attempt
          * @param after     State after load attempt
          *
@@ -100,11 +100,11 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * signal can be emitted after the plugin disappeared, in that case
          * plugin with this name doesn't exist anymore.
          */
-        void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
         /**
          * @brief Plugin unload attempt
-         * @param name      Plugin name
+         * @param plugin    Plugin
          * @param before    State before unload attempt
          * @param after     State after unload attempt
          *
@@ -112,7 +112,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * signal can be emitted after the plugin disappeared, in that case
          * plugin with this name doesn't exist anymore.
          */
-        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
 
         /**
          * @brief Plugin directory was reloaded
@@ -122,14 +122,14 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
         /**
          * @brief Plugin was reloaded
          */
-        void pluginMetadataReloaded(const std::string& name);
+        void pluginMetadataReloaded(const std::string& plugin);
 
         /**
          * @brief Plugin disappeared
          *
          * Emitted when plugin binary is not found on plugin reload attempt.
          */
-        void pluginDisappeared(const std::string& name);
+        void pluginDisappeared(const std::string& plugin);
 };
 
 }}

@@ -62,11 +62,11 @@ class PluginModel: public QAbstractTableModel {
 
         /**
          * @brief Find plugin with specific name
-         * @param name          Plugin name
+         * @param plugin        Plugin
          * @return Row index of given plugin or -1 if the plugin is not found
          *      in this model.
          */
-        int findPlugin(const QString& name) const;
+        int findPlugin(const QString& plugin) const;
 
         /** @brief Row count */
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return plugins.size(); }
@@ -91,10 +91,10 @@ class PluginModel: public QAbstractTableModel {
         void reload();
 
     private slots:
-        void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
-        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
-        void reloadPluginMetadata(const std::string& name);
-        void removePlugin(const std::string& name);
+        void loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void reloadPluginMetadata(const std::string& plugin);
+        void removePlugin(const std::string& plugin);
 
     private:
         struct PluginMetadata {

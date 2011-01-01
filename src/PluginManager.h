@@ -50,7 +50,7 @@ template<class T> class PluginManager: public AbstractPluginManager {
         std::string pluginInterface();
 
         /** @copydoc PluginManager::PluginManager::instance() */
-        T* instance(const std::string& name);
+        T* instance(const std::string& _plugin);
 };
 #endif
 

@@ -46,9 +46,9 @@ PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* pa
 void PluginModel::reload() {
     beginResetModel();
     plugins.clear();
-    vector<string> names = manager->nameList();
+    vector<string> _plugins = manager->pluginList();
 
-    for(vector<string>::const_iterator it = names.begin(); it != names.end(); ++it) {
+    for(vector<string>::const_iterator it = _plugins.begin(); it != _plugins.end(); ++it) {
         if((_flags & LoadedOnly) && !(manager->loadState(*it) & (AbstractPluginManager::IsStatic|AbstractPluginManager::LoadOk))) continue;
 
         plugins.append(PluginMetadata(*it, manager->loadState(*it), manager->metadata(*it)));
@@ -160,7 +160,7 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
         return false;
 
     AbstractPluginManager::LoadState loadState = plugins[index.row()].loadState;
-    string name = plugins[index.row()].plugin.toStdString();
+    string plugin = plugins[index.row()].plugin.toStdString();
 
     /* Static plugins cannot be edited */
     if(loadState == AbstractPluginManager::IsStatic)
@@ -168,17 +168,17 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
 
     /* Unload plugin */
     if(loadState & (AbstractPluginManager::LoadOk|AbstractPluginManager::UnloadFailed|AbstractPluginManager::IsRequired)) {
-        if(manager->unload(name) != AbstractPluginManager::NotLoaded)
+        if(manager->unload(plugin) != AbstractPluginManager::NotLoaded)
             return false;
 
     /* Load plugin */
-    } else if(manager->load(name) != AbstractPluginManager::LoadOk)
+    } else if(manager->load(plugin) != AbstractPluginManager::LoadOk)
         return false;
 
     return true;
 }
 
-void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginModel::loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
     /* Plugin was loaded */
     if(!(before & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)) &&
        (after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {
@@ -187,30 +187,30 @@ void PluginModel::loadAttempt(const std::string& name, AbstractPluginManager::Lo
         if(_flags & LoadedOnly) {
             beginInsertRows(QModelIndex(), plugins.size(), plugins.size());
             /** @todo Insert to right place (alphabetically sorted) */
-            plugins.append(PluginMetadata(name, after, manager->metadata(name)));
+            plugins.append(PluginMetadata(plugin, after, manager->metadata(plugin)));
             endInsertRows();
 
         /* Or just emit signal about data change */
         } else {
             /* Find the name in list */
-            int found = findPlugin(QString::fromStdString(name));
+            int found = findPlugin(QString::fromStdString(plugin));
             if(found == -1) return;
 
             /* Update plugin state */
-            plugins[found].loadState = manager->loadState(name);
+            plugins[found].loadState = manager->loadState(plugin);
             emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
     }
 }
 
-void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginModel::unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
     /** @bug When trying to unload used plugin the plugin is removed from LoadedOnly model! ... check all states */
     /* Plugin was unloaded */
     if((before & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)) &&
        !(after & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) {
 
         /* Find the name in list */
-        int found = findPlugin(QString::fromStdString(name));
+        int found = findPlugin(QString::fromStdString(plugin));
         if(found == -1) return;
 
         /* Remove from list, if displaying only loaded plugins */
@@ -222,25 +222,25 @@ void PluginModel::unloadAttempt(const std::string& name, AbstractPluginManager::
         /* Or just emit signal about data change */
         } else {
             /* Update plugin state */
-            plugins[found].loadState = manager->loadState(name);
+            plugins[found].loadState = manager->loadState(plugin);
             emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
     }
 }
 
-void PluginModel::reloadPluginMetadata(const std::string& name) {
+void PluginModel::reloadPluginMetadata(const std::string& plugin) {
     /* Find the name in list */
-    int found = findPlugin(QString::fromStdString(name));
+    int found = findPlugin(QString::fromStdString(plugin));
     if(found == -1) return;
 
     /* Update plugin metadata */
-    plugins.replace(found, PluginMetadata(name, manager->loadState(name), manager->metadata(name)));
+    plugins.replace(found, PluginMetadata(plugin, manager->loadState(plugin), manager->metadata(plugin)));
     emit dataChanged(index(found, 0), index(found, columnCount()-1));
 }
 
-void PluginModel::removePlugin(const std::string& name) {
+void PluginModel::removePlugin(const std::string& plugin) {
     /* Find the name in list */
-    int found = findPlugin(QString::fromStdString(name));
+    int found = findPlugin(QString::fromStdString(plugin));
     if(found == -1) return;
 
     /* Remove from list, if displaying only loaded plugins */

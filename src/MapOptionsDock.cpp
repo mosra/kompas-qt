@@ -40,10 +40,13 @@ using namespace Kompas::Core;
 namespace Kompas { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
+    PluginModel* mapViewModel = new PluginModel(
+        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this);
     mapView = new QComboBox;
-    mapView->setModel(new PluginModel(
-        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this));
+    mapView->setModel(mapViewModel);
     mapView->setModelColumn(PluginModel::Name);
+    mapView->setCurrentIndex(mapViewModel->findPlugin(QString::fromStdString(
+        MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
     connect(mapView, SIGNAL(currentIndexChanged(int)), SLOT(setMapView(int)));
 
     /* Raster packages list view */

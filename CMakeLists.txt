@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 
 project(KompasQt)
 
+# Version
+set(KOMPAS_QT_VERSION 0.1)
+
 find_package(Qt4 REQUIRED)
 
 option(BUILD_TESTS "Build unit tests." OFF)

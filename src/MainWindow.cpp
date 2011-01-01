@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     icon.addFile(":/logo-128.png");
     icon.addFile(":/logo-256.png");
 
-    setWindowTitle(tr("Kompas"));
+    setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
     setWindowIcon(icon);
     statusBar();
 

@@ -19,6 +19,8 @@
 #include <QtGui/QLabel>
 #include <QtGui/QScrollArea>
 
+#include "MainWindowConfigure.h"
+
 namespace Kompas { namespace QtGui {
 
 AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
@@ -27,7 +29,7 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
         "%1<br /><br />"
         "<a href=\"http://mosra.cz/blog/kompas.php\">http://mosra.cz/blog/kompas.php</a><br />"
         "%2")
-        .arg("0.1")
+        .arg(KOMPAS_QT_VERSION)
         .arg(tr("Portable navigation system."))
         .arg(tr("Licensed under GNU LGPL version 3.")));
     brief->setAlignment(Qt::AlignTop);

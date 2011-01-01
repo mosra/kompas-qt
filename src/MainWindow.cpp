@@ -463,7 +463,7 @@ void MainWindow::createActions() {
 
     /* Settings menu */
     pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
-    configurationDialogAction = new QAction(tr("Configure Kompas"), this);
+    configurationDialogAction = new QAction(QIcon(":/settings-16.png"), tr("Configure Kompas"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
 

@@ -194,6 +194,16 @@ void MainWindow::loadDefaultConfiguration() {
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
     string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
     string toolPluginDir = PLUGIN_TOOL_DIR;
+
+    /* On Win32 add program directory to the dirs to make them absolute */
+    #ifdef _WIN32
+    string programPath = QApplication::applicationDirPath().toStdString();
+    mapViewPluginDir = programPath + mapViewPluginDir;
+    projectionPluginDir = programPath + projectionPluginDir;
+    rasterModelPluginDir = programPath + rasterModelPluginDir;
+    toolPluginDir = programPath + toolPluginDir;
+    #endif
+
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);

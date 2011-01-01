@@ -34,8 +34,16 @@ int main(int argc, char** argv) {
     /* Localizations */
     Kompas::Utility::Translator::setLocale(QLocale::system().name().toStdString());
     QTranslator translatorQt, translator;
+
+    #ifndef _WIN32
     translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     translator.load(QLocale::system().name(), TRANSLATION_DIR);
+    #else
+    /* On Win32 make the dir absolute */
+    translatorQt.load("qt_" + QLocale::system().name(), QApplication::applicationDirPath() + TRANSLATION_DIR);
+    translator.load(QLocale::system().name(), QApplication::applicationDirPath() + TRANSLATION_DIR);
+    #endif
+
     app.installTranslator(&translatorQt);
     app.installTranslator(&translator);
 

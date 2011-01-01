@@ -99,6 +99,8 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
 }
 
 void MapOptionsDock::setMapView(int id) {
+    if(id == -1) return;
+
     AbstractMapView* view = MainWindow::instance()->mapViewPluginManager()->instance(mapView->model()->index(id, PluginModel::Plugin).data().toString().toStdString());
     MainWindow::instance()->setMapView(view);
 }

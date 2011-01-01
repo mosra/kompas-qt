@@ -40,6 +40,7 @@ class PluginModel;
  * @brief Plugin settings dialog
  *
  * Provides viewing and managing plugins.
+ * @bug Crash while reloading mapview plugin dir
  */
 class PluginDialog: public AbstractConfigurationDialog {
     Q_OBJECT

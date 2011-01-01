@@ -525,6 +525,7 @@ void GraphicsMapView::updateRasterModel() {
     view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);
     updateTilePositions();
 
+    /** @todo @c VERSION-0.1.1 Stay on previous coordinates, nearest zoom level (previous model needed)  */
 }
 
 }}

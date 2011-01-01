@@ -45,7 +45,10 @@ class RasterOverlayModel;
 class RasterZoomModel;
 class SaveRasterMenuView;
 
-/** @brief %Kompas main window */
+/**
+ * @brief %Kompas main window
+ * @todo @c VERSION-0.2 Session management
+ */
 class MainWindow: public QMainWindow {
     Q_OBJECT
 

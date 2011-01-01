@@ -25,10 +25,18 @@ class QPushButton;
 
 namespace Kompas { namespace QtGui {
 
+/**
+ * @brief Useless widget for moving the map with frantic mouse clicking
+ */
 class MovingWidget: public QWidget {
     Q_OBJECT
 
     public:
+        /**
+         * @brief Constructor
+         * @param parent        Parent widget
+         * @param f             Window flags
+         */
         MovingWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:

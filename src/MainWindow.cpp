@@ -233,7 +233,7 @@ void MainWindow::setMapView(AbstractMapView* view) {
 }
 
 void MainWindow::setRasterModel(AbstractRasterModel* model) {
-    /** @todo Disable Save Raster menu when no writeable format is available at all */
+    /** @todo @c VERSION-0.1.1 Disable Save Raster menu when no writeable format is available at all */
 
     lockRasterModelForWrite();
     delete _rasterModel;
@@ -304,7 +304,9 @@ void MainWindow::openRaster() {
     if(filename.isEmpty()) return;
 
     /* Try to open the package with current model */
+    /** @todo Disable online maps? */
     if(_rasterModel && _rasterModel->addPackage(filename.toStdString()) != -1) {
+        /** @todo Open only if better plugin doesn't exist */
         _rasterPackageModel->reload();
         _rasterLayerModel->reload();
         _rasterOverlayModel->reload();

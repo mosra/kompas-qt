@@ -1,7 +1,7 @@
 #ifndef Kompas_QtGui_PluginModel_h
 #define Kompas_QtGui_PluginModel_H
 /*
-    Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
     This file is part of Kompas.
 

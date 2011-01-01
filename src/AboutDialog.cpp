@@ -1,5 +1,5 @@
 /*
-    Copyright © 2007, 2008, 2009, 2010 Vladimír Vondruš <mosra@centrum.cz>
+    Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
     This file is part of Kompas.
 
@@ -39,7 +39,7 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
     QString item("%0<div style=\"margin-left: 20px;\"><a href=\"mailto:%1\">%1</a><br />%2</div><br />");
 
     QLabel* authors = new QLabel(
-        item.arg("Vladimír Vondruš").arg("mosra@centrum.cz").arg(tr("Main developer, © 2007-2010.")) +
+        item.arg("Vladimír Vondruš").arg("mosra@centrum.cz").arg(tr("Main developer, © %0")).arg("2007-2011") +
         item.arg("Jan Dupal").arg("dupal.j@seznam.cz").arg(tr("Coordinate conversion algorithms, tool plugins.")));
     authors->setAlignment(Qt::AlignTop);
     authors->setWordWrap(true);

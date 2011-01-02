@@ -505,10 +505,10 @@ SaveRasterWizard::DownloadPage::DownloadPage(SaveRasterWizard* _wizard): QWizard
     layout->addWidget(filename, 0, 0, 1, 2);
     layout->addWidget(currentZoom, 1, 0);
     layout->addWidget(currentLayer, 1, 1);
-    layout->addWidget(new QLabel(tr("Total progress:")), 2, 0, 1, 2);
-    layout->addWidget(totalCompleted, 3, 0, 1, 2);
-    layout->addWidget(new QLabel(tr("Current layer/zoom progress:")), 4, 0, 1, 2);
-    layout->addWidget(currentZoomLayerCompleted, 5, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Current layer/zoom progress:")), 2, 0, 1, 2);
+    layout->addWidget(currentZoomLayerCompleted, 3, 0, 1, 2);
+    layout->addWidget(new QLabel(tr("Total progress:")), 4, 0, 1, 2);
+    layout->addWidget(totalCompleted, 5, 0, 1, 2);
     layout->addWidget(openWhenFinished, 6, 0, 1, 2);
     layout->setRowMinimumHeight(1, 48);
     layout->setRowMinimumHeight(6, 48);

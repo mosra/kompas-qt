@@ -2,7 +2,7 @@
 pkgname=kompas-qt-git
 pkgver=20110102
 pkgrel=1
-pkgdesc="Qt GUI for Kompas navigation system (Git version)"
+pkgdesc="Qt GUI for Kompas navigation software (Git version)"
 arch=('i686' 'x86_64')
 url="http://mosra.cz/blog/kompas.php"
 license=('LGPLv3')

@@ -1,0 +1,26 @@
+# Author: mosra <mosra@centrum.cz>
+pkgname=kompas-qt
+pkgver=0.1
+pkgrel=1
+pkgdesc="Qt GUI for Kompas navigation software"
+arch=('i686' 'x86_64')
+url="http://mosra.cz/blog/kompas.php"
+license=('LGPLv3')
+makedepends=('cmake')
+depends=('kompas-core')
+conflicts=('kompas-qt-git')
+source=("https://github.com/mosra/${pkgname}/tarball/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('3b04a3936b413c1f6bcaa740e2cd981d')
+
+build() {
+    mkdir -p "${srcdir}/build"
+    cd "${srcdir}/build"
+
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ../mosra-${pkgname}-*
+    make
+}
+
+package() {
+    cd "$srcdir/build"
+    make DESTDIR="$pkgdir/" install
+}

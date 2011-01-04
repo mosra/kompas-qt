@@ -91,7 +91,7 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom in, update map area */
-    unsigned int multiplier = 2*(*it-_zoom);
+    unsigned int multiplier = pow2(*it-_zoom);
     _zoom = *it;
     updateMapArea();
 
@@ -133,7 +133,7 @@ bool GraphicsMapView::zoomOut(const QPoint& pos) {
     QPointF coords = view->mapToScene(view->width()/2, view->height()/2)+move;
 
     /* Zoom out, update map area */
-    unsigned int divisor = 2*(_zoom-*it);
+    unsigned int divisor = pow2(_zoom-*it);
     _zoom = *it;
     updateMapArea();
 

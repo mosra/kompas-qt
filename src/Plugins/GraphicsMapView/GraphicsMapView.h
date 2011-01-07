@@ -81,14 +81,6 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         QPixmap tileNotFoundImage,              /**< @brief "Tile not found" image */
             tileLoadingImage;                   /**< @brief "Tile loading" image */
 
-        /**
-         * @brief Whether the view is ready for displaying
-         *
-         * View is ready when is visible, has an tile model assigned and the
-         * tile model has at least one zoom level and one map layer.
-         */
-        bool isReady();
-
     private slots:
 
         /**

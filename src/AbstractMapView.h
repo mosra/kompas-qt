@@ -196,6 +196,16 @@ class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
          */
         virtual void contextMenuEvent(QContextMenuEvent* event);
 
+        /**
+         * @brief Whether the view is ready for displaying
+         *
+         * View is ready when has an raster model assigned and the raster model
+         * has non-zero area, at least one zoom level and one map layer.
+         *
+         * @see AbstractRasterModel::isUsable()
+         */
+        bool isReady();
+
         TileDataThread* tileDataThread;         /**< @brief Thread for downloading tile data */
 
     signals:

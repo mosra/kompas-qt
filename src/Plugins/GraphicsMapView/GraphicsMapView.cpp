@@ -382,14 +382,6 @@ void GraphicsMapView::mouseMoveEvent(QMouseEvent* event) {
     }
 }
 
-bool GraphicsMapView::isReady() {
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    bool is = rasterModel && rasterModel->isUsable();
-    MainWindow::instance()->unlockRasterModel();
-
-    return is;
-}
-
 void GraphicsMapView::updateMapArea() {
     if(!isReady()) return;
 

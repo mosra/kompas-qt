@@ -5,6 +5,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
 
 include_directories(${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
+add_subdirectory(data)
 add_subdirectory(Plugins)
 
 set(Kompas_Qt_SRCS

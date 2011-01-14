@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Kompas
+GenericName=Navigation software
+Comment=Online and offline map viewer
+Exec=kompas-qt
+Icon=kompas
+Categories=Education;Graphics;Network;Geography;Qt
+Terminal=false
+
+GenericName[cs]=Navigační software
+Comment[cs]=Prohlížeč online a offline map

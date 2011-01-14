@@ -1,0 +1,5 @@
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    foreach(size 16 32 48 64 128 256)
+        install(FILES logo-${size}.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/${size}x${size}/apps RENAME kompas.png)
+    endforeach()
+endif()

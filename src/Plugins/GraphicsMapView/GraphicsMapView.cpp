@@ -431,9 +431,11 @@ void GraphicsMapView::updateTilePositions() {
     if(!isReady() || !isVisible()) return;
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    TileArea area = rasterModel->area()*pow2(_zoom-*rasterModel->zoomLevels().begin());
+    TileSize tileSize = rasterModel->tileSize();
+    MainWindow::instance()->unlockRasterModel();
 
     QPointF viewed = view->mapToScene(0, 0);
-    TileArea area = rasterModel->area()*pow2(_zoom-*rasterModel->zoomLevels().begin());
 
     /* Ensure positive coordinates */
     if(viewed.x() < 0) viewed.setX(0);
@@ -441,8 +443,8 @@ void GraphicsMapView::updateTilePositions() {
 
     /* Origin of viewed tiles */
     Coords<unsigned int> tilesOrigin(
-        static_cast<unsigned int>(viewed.x()/rasterModel->tileSize().x),
-        static_cast<unsigned int>(viewed.y()/rasterModel->tileSize().y));
+        static_cast<unsigned int>(viewed.x()/tileSize.x),
+        static_cast<unsigned int>(viewed.y()/tileSize.y));
 
     /* Ensure coordinates fit into map area */
     if(tilesOrigin.x < area.x)
@@ -475,7 +477,7 @@ void GraphicsMapView::updateTilePositions() {
 
         /* Create new tile at given position */
         Tile* tile = new Tile(coords, 0, &map);
-        tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*rasterModel->tileSize().y);
+        tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*tileSize.y);
         tiles.append(tile);
 
         /* Foreach all layers and overlays and request data for them */
@@ -483,8 +485,6 @@ void GraphicsMapView::updateTilePositions() {
         foreach(const QString& overlay, _overlays)
             tileDataThread->getTileData(overlay, _zoom, coords);
     }
-
-    MainWindow::instance()->unlockRasterModel();
 }
 
 void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {

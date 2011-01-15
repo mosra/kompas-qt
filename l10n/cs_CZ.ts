@@ -320,19 +320,14 @@
     </message>
     <message>
         <location filename="../src/MapOptionsDock.cpp" line="85"/>
-        <source>Map layer:</source>
-        <translation>Vrstva mapy:</translation>
-    </message>
-    <message>
-        <location filename="../src/MapOptionsDock.cpp" line="87"/>
-        <source>Overlays:</source>
-        <translation>Překrytí:</translation>
+        <source>Map layer, overlays:</source>
+        <translation>Vrstva mapy, překrytí:</translation>
     </message>
 </context>
 <context>
     <name>Kompas::QtGui::MapOptionsDock::EditableRasterPackageModel</name>
     <message>
-        <location filename="../src/MapOptionsDock.cpp" line="164"/>
+        <location filename="../src/MapOptionsDock.cpp" line="161"/>
         <source>Online %0</source>
         <translation>Online %0</translation>
     </message>

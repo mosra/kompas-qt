@@ -122,10 +122,12 @@ class GraphicsMapView: public QtGui::AbstractMapView {
             tileData(layer, z, coords, pixmap);
         }
         inline virtual void tileLoading(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
-            tileData(layer, z, coords, tileLoadingImage);
+            /* Don't display loading for overlays */
+            if(layer == _layer) tileData(layer, z, coords, tileLoadingImage);
         }
         virtual void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
-            tileData(layer, z, coords, tileNotFoundImage);
+            /* Don't display not found for overlays */
+            if(layer == _layer) tileData(layer, z, coords, tileNotFoundImage);
         }
 
     private:

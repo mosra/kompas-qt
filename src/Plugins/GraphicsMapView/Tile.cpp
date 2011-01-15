@@ -24,6 +24,7 @@ void Tile::setLayer(int layer, const QPixmap& pixmap) {
 
     _layers[layer] = new QGraphicsPixmapItem(pixmap, this, scene());
     _layers[layer]->setZValue(layer);
+    _layers[layer]->setPos((_tileSize.x-pixmap.width())/2, (_tileSize.y-pixmap.height())/2);
 }
 
 void Tile::setLayer(int layer) {

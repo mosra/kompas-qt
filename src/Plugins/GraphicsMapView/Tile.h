@@ -30,12 +30,13 @@ class Tile: public QGraphicsItemGroup {
     public:
         /**
          * @brief Constructor
+         * @param tileSize      Tile size
          * @param coords        Tile coordinates
          * @param parent        Parent item
          * @param scene         Scene
          */
-        Tile(const Core::TileCoords& coords, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0):
-            QGraphicsItemGroup(parent, scene), _coords(coords) {}
+        Tile(const Core::TileSize& tileSize, const Core::TileCoords& coords, QGraphicsItem* parent = 0, QGraphicsScene* scene = 0):
+            QGraphicsItemGroup(parent, scene), _tileSize(tileSize), _coords(coords) {}
 
         /** @brief Tile coordinates */
         inline Core::TileCoords coords() const { return _coords; }
@@ -70,6 +71,7 @@ class Tile: public QGraphicsItemGroup {
         QGraphicsPixmapItem* layer(int layer);
 
     private:
+        Core::TileSize _tileSize;
         Core::TileCoords _coords;
         QList<QGraphicsPixmapItem*> _layers;
 };

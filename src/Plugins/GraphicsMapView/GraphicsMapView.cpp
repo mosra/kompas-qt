@@ -52,6 +52,8 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setScene(&map);
 
+    map.setBackgroundBrush(QColor("#e6e6e6"));
+
     /* Update tile positions on map move */
     connect(view, SIGNAL(mapMoved()), SLOT(updateTilePositions()));
     connect(view, SIGNAL(mapResized()), SLOT(updateTileCount()));
@@ -476,7 +478,7 @@ void GraphicsMapView::updateTilePositions() {
         TileCoords coords(tilesOrigin.x+i%tileCount.x, tilesOrigin.y+i/tileCount.x);
 
         /* Create new tile at given position */
-        Tile* tile = new Tile(coords, 0, &map);
+        Tile* tile = new Tile(tileSize, coords, 0, &map);
         tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*tileSize.y);
         tiles.append(tile);
 

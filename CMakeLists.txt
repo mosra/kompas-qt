@@ -23,6 +23,7 @@ include(FindKompasQt)
 
 add_subdirectory(l10n)
 add_subdirectory(modules)
+add_subdirectory(graphics)
 add_subdirectory(package)
 add_subdirectory(src)
 

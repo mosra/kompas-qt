@@ -5,7 +5,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
 
 include_directories(${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-add_subdirectory(data)
 add_subdirectory(Plugins)
 
 set(Kompas_Qt_SRCS
@@ -61,7 +60,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
 )
 
 qt4_add_resources(Kompas_Qt_QRC
-    data/data.qrc
+    ../graphics/data.qrc
 )
 
 # Diable console window, executable icon for WIN32
@@ -70,7 +69,7 @@ if(WIN32)
 
     enable_language(RC)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff <FLAGS> -o <OBJECT> -i <SOURCE>")
-    set(Kompas_Qt_SRCS ${Kompas_Qt_SRCS} data/win-icon.rc)
+    set(Kompas_Qt_SRCS ${Kompas_Qt_SRCS} ../package/win-icon.rc)
 endif(WIN32)
 
 add_executable(kompas-qt ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})

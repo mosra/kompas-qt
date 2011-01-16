@@ -41,7 +41,7 @@ PLUGIN_REGISTER_STATIC(GraphicsMapView, Kompas::Plugins::GraphicsMapView,
 
 namespace Kompas { namespace Plugins {
 
-GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/tileNotFound-256.png"), tileLoadingImage(":/tileLoading-256.png") {
+GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/notfound-256.png"), tileLoadingImage(":/loading-256.png") {
     /* Enable mouse tracking */
     setMouseTracking(true);
 
@@ -51,6 +51,8 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setScene(&map);
+
+    map.setBackgroundBrush(QColor("#e6e6e6"));
 
     /* Update tile positions on map move */
     connect(view, SIGNAL(mapMoved()), SLOT(updateTilePositions()));
@@ -423,9 +425,11 @@ void GraphicsMapView::updateTilePositions() {
     if(!isReady() || !isVisible()) return;
 
     const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    TileArea area = rasterModel->area()*pow2(_zoom-*rasterModel->zoomLevels().begin());
+    TileSize tileSize = rasterModel->tileSize();
+    MainWindow::instance()->unlockRasterModel();
 
     QPointF viewed = view->mapToScene(0, 0);
-    TileArea area = rasterModel->area()*pow2(_zoom-*rasterModel->zoomLevels().begin());
 
     /* Ensure positive coordinates */
     if(viewed.x() < 0) viewed.setX(0);
@@ -433,8 +437,8 @@ void GraphicsMapView::updateTilePositions() {
 
     /* Origin of viewed tiles */
     Coords<unsigned int> tilesOrigin(
-        static_cast<unsigned int>(viewed.x()/rasterModel->tileSize().x),
-        static_cast<unsigned int>(viewed.y()/rasterModel->tileSize().y));
+        static_cast<unsigned int>(viewed.x()/tileSize.x),
+        static_cast<unsigned int>(viewed.y()/tileSize.y));
 
     /* Ensure coordinates fit into map area */
     if(tilesOrigin.x < area.x)
@@ -466,8 +470,8 @@ void GraphicsMapView::updateTilePositions() {
         TileCoords coords(tilesOrigin.x+i%tileCount.x, tilesOrigin.y+i/tileCount.x);
 
         /* Create new tile at given position */
-        Tile* tile = new Tile(coords, 0, &map);
-        tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*rasterModel->tileSize().y);
+        Tile* tile = new Tile(tileSize, coords, 0, &map);
+        tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*tileSize.y);
         tiles.append(tile);
 
         /* Foreach all layers and overlays and request data for them */
@@ -475,8 +479,6 @@ void GraphicsMapView::updateTilePositions() {
         foreach(const QString& overlay, _overlays)
             tileDataThread->getTileData(overlay, _zoom, coords);
     }
-
-    MainWindow::instance()->unlockRasterModel();
 }
 
 void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data) {

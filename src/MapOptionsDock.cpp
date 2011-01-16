@@ -77,19 +77,16 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     zoomSlider = new ZoomSlider;
 
     /* Layout */
-    QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Map view:")), 0, 0);
-    layout->addWidget(mapView, 0, 1);
-    layout->addWidget(new QLabel(tr("Maps:")), 1, 0, 1, 2);
-    layout->addWidget(rasterPackages, 2, 0, 1, 2);
-    layout->addWidget(new QLabel(tr("Map layer:")), 3, 0);
-    layout->addWidget(rasterLayers, 3, 1);
-    layout->addWidget(new QLabel(tr("Overlays:")), 4, 0, 1, 2);
-    layout->addWidget(rasterOverlays, 5, 0, 1, 2);
-    layout->addWidget(movingWidget, 6, 0, 1, 2, Qt::AlignCenter);
-    layout->addWidget(zoomSlider, 7, 0, 1, 2, Qt::AlignHCenter);
-    layout->setColumnStretch(1, 1);
-    layout->setRowStretch(7, 1);
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(new QLabel(tr("Map view:")));
+    layout->addWidget(mapView);
+    layout->addWidget(new QLabel(tr("Maps:")));
+    layout->addWidget(rasterPackages);
+    layout->addWidget(new QLabel(tr("Map layer, overlays:")));
+    layout->addWidget(rasterLayers);
+    layout->addWidget(rasterOverlays);
+    layout->addWidget(movingWidget, 0, Qt::AlignCenter);
+    layout->addWidget(zoomSlider, 1, Qt::AlignHCenter);
     setLayout(layout);
 
     setFixedWidth(200);

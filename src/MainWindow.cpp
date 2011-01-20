@@ -158,18 +158,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     mapOptionsDock->setWindowTitle(tr("Map options"));
     addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
 
-    /* Open raster map menu */
-    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(_rasterModelPluginManager, openRasterMenu, 0, this);
-    openRasterMenuView->update();
-
-    /* Save raster map menu */
-    saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
-    saveRasterMenuView->update();
-
-    /* Tools menu */
-    ToolPluginMenuView* menuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
-    menuView->update();
-
     /* Status bar with coordinates */
     coordinateStatus = new QLabel;
     statusBar()->addPermanentWidget(coordinateStatus);
@@ -506,12 +494,16 @@ void MainWindow::createMenus() {
     /* Open raster map menu */
     openRasterMenu = new QMenu(this);
     openOnlineAction->setMenu(openRasterMenu);
+    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(_rasterModelPluginManager, openRasterMenu, 0, this);
+    openRasterMenuView->update();
 
     /* Save raster map menu */
     saveRasterMenu = fileMenu->addMenu(QIcon(":/save-16.png"), tr("Save map"));
     saveRasterMenu->addAction(saveRasterAction);
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);
+    saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
+    saveRasterMenuView->update();
 
     fileMenu->addAction(closeRasterAction);
     fileMenu->addSeparator();
@@ -519,6 +511,8 @@ void MainWindow::createMenus() {
 
     /* Tools menu */
     toolsMenu = menuBar()->addMenu(tr("Tools"));
+    ToolPluginMenuView* toolPluginMenuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
+    toolPluginMenuView->update();
 
     /* Settings menu */
     QMenu* settingsMenu = menuBar()->addMenu(tr("Settings"));

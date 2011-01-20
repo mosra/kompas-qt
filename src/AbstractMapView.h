@@ -32,11 +32,11 @@ namespace Kompas { namespace QtGui {
 class TileDataThread;
 
 /** @brief Abstract class for map viewer widget plugins */
-class AbstractMapView: public QWidget, Kompas::PluginManager::Plugin {
+class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
     Q_OBJECT
 
     #ifndef QT_MOC_RUN
-    PLUGIN_INTERFACE("cz.mosra.Kompas.QtGui.AbstractMapView/0.1")
+    PLUGIN_INTERFACE("cz.mosra.Kompas.QtGui.AbstractMapView/0.2")
     #endif
 
     public:

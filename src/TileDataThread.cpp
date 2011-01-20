@@ -155,6 +155,8 @@ void TileDataThread::startDownload(TileJob job) {
 void TileDataThread::getTileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
     emit tileLoading(layer, z, coords);
 
+    QMutexLocker locker(&mutex);
+
     /* If the job is already in the queue, don't add ít again */
     foreach(const TileJob& job, queue)
         if(job.coords == coords && job.layer == layer && job.zoom == z) return;
@@ -165,9 +167,7 @@ void TileDataThread::getTileData(const QString& layer, Core::Zoom z, const Core:
     dl.layer = layer;
     dl.coords = coords;
 
-    mutex.lock();
     queue.append(dl);
-    mutex.unlock();
 
     /* If the thread is not running, start it, otherwise wake up */
     if(!isRunning()) start();

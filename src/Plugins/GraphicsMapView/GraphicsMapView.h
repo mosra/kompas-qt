@@ -31,7 +31,6 @@ class Tile;
 /**
  * @brief Map viewer using QGraphicsView
  *
- * @todo @c VERSION-0.1.1 Redo tile loading and tile not found images, for all sizes
  * @todo @c VERSION-0.1.1 Display copyright
  */
 class GraphicsMapView: public QtGui::AbstractMapView {

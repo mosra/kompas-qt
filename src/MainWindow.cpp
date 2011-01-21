@@ -69,7 +69,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
     setWindowIcon(icon);
-    statusBar();
 
     /* Load default configuration */
     loadDefaultConfiguration();

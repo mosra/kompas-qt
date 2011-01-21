@@ -29,6 +29,8 @@ set(Kompas_Qt_SRCS
     RasterLayerModel.cpp
     RasterOverlayModel.cpp
     RasterZoomModel.cpp
+    SessionManager.cpp
+    SessionMenuView.cpp
     MessageBox.cpp
     main.cpp
     Plugins/registerStatic.cpp
@@ -55,6 +57,8 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     RasterLayerModel.h
     RasterOverlayModel.h
     RasterZoomModel.h
+    SessionManager.h
+    SessionMenuView.h
     Wgs84CoordsEdit.h
     ZoomSlider.h
 )

@@ -26,6 +26,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QToolButton>
 #include <QtGui/QStackedWidget>
+#include <QtGui/QInputDialog>
 
 #include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
@@ -44,6 +45,7 @@
 #include "SaveRasterWizard.h"
 #include "MessageBox.h"
 #include "AboutDialog.h"
+#include "SessionMenuView.h"
 
 #define WELCOME_SCREEN 0
 #define MAP_VIEW 1
@@ -56,7 +58,7 @@ namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _mapView(0), _rasterModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _rasterModel(0) {
     _instance = this;
 
     /* Window icon */
@@ -66,8 +68,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     icon.addFile(":/logo-64.png");
     icon.addFile(":/logo-128.png");
     icon.addFile(":/logo-256.png");
-
-    setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
     setWindowIcon(icon);
 
     /* Load default configuration */
@@ -96,6 +96,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     createActions();
     createMenus();
 
+    /* Sessions */
+    currentSessionChange();
+    connect(&sessionManager, SIGNAL(currentChanged(uint)), SLOT(currentSessionChange()));
+
     /* Welcome screen, wrapped in another widget so it's nicely centered */
     QFrame* welcomeScreenFrame = new QFrame;
     welcomeScreenFrame->setAutoFillBackground(true);
@@ -105,6 +109,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     QToolButton* openSessionButton = new QToolButton(this);
     openSessionButton->setDefaultAction(openSessionAction);
+    openSessionButton->setPopupMode(QToolButton::InstantPopup);
     openSessionButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     openSessionButton->setAutoRaise(true);
     openSessionButton->setIconSize(QSize(64, 64));
@@ -168,6 +173,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 }
 
 MainWindow::~MainWindow() {
+    sessionManager.save();
+
     delete _mapViewPluginManager;
     delete _rasterModelPluginManager;
 }
@@ -437,7 +444,18 @@ void MainWindow::createActions() {
     openSessionIcon.addFile(":/open-session-16.png");
     openSessionIcon.addFile(":/open-session-64.png");
     openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
-    openSessionAction->setDisabled(true);
+
+    /* Create new session */
+    newSessionAction = new QAction(tr("Create new session"), this);
+    connect(newSessionAction, SIGNAL(triggered(bool)), SLOT(newSession()));
+
+    /* Rename current session */
+    renameSessionAction = new QAction(tr("Rename current session"), this);
+    connect(renameSessionAction, SIGNAL(triggered(bool)), SLOT(renameSession()));
+
+    /* Delete current session */
+    deleteSessionAction = new QAction(tr("Delete current session"), this);
+    connect(deleteSessionAction, SIGNAL(triggered(bool)), SLOT(deleteSession()));
 
     /* Open raster map */
     QIcon openPackageIcon;
@@ -487,8 +505,17 @@ void MainWindow::createMenus() {
     /* File menu */
     QMenu* fileMenu = menuBar()->addMenu(tr("File"));
     fileMenu->addAction(openSessionAction);
+    fileMenu->addAction(renameSessionAction);
+    fileMenu->addAction(deleteSessionAction);
     fileMenu->addAction(openRasterAction);
     fileMenu->addAction(openOnlineAction);
+
+    /* Session list menu */
+    sessionMenu = new QMenu(this);
+    openSessionAction->setMenu(sessionMenu);
+    sessionMenu->addAction(newSessionAction);
+    sessionMenu->addSeparator();
+    new SessionMenuView(&sessionManager, sessionMenu, this);
 
     /* Open raster map menu */
     openRasterMenu = new QMenu(this);
@@ -545,6 +572,47 @@ void MainWindow::configurationDialog() {
 void MainWindow::aboutDialog() {
     AboutDialog* dialog = new AboutDialog(this);
     dialog->show();
+}
+
+void MainWindow::currentSessionChange() {
+    /* Window title, disable/enable menu items */
+    if(!sessionManager.isLoaded() || sessionManager.current() == 0) {
+        setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
+        renameSessionAction->setDisabled(true);
+        deleteSessionAction->setDisabled(true);
+    } else {
+        setWindowTitle(QString("[ %1 ] - %0").arg(tr("Kompas")).arg(sessionManager.names()[sessionManager.current()-1]));
+        renameSessionAction->setDisabled(false);
+        deleteSessionAction->setDisabled(false);
+    }
+}
+
+void MainWindow::newSession() {
+    bool ok;
+    QString name = QInputDialog::getText(this, tr("New session"), tr("Enter new session name:"), QLineEdit::Normal, tr("New session"), &ok);
+    if(!ok) return;
+
+    unsigned int id = sessionManager.newSession(name);
+    sessionManager.load(id);
+}
+
+void MainWindow::renameSession() {
+    if(sessionManager.current() == 0) return;
+
+    bool ok;
+    QString name = QInputDialog::getText(this, tr("Rename session"), tr("Enter new session name:"), QLineEdit::Normal, sessionManager.names()[sessionManager.current()-1], &ok);
+    if(!ok) return;
+
+    sessionManager.renameSession(sessionManager.current(), name);
+}
+
+void MainWindow::deleteSession() {
+    if(sessionManager.current() == 0) return;
+
+    if(MessageBox::question(this, tr("Delete session"), tr("Are you sure you want to delete session '%0'?").arg(sessionManager.names()[sessionManager.current()-1]), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) != QMessageBox::Yes) return;
+
+    sessionManager.deleteSession(sessionManager.current());
+    sessionManager.load(0);
 }
 
 void MainWindow::currentCoordinates(const Kompas::Core::Wgs84Coords& coords) {

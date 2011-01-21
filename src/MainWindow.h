@@ -27,6 +27,7 @@
 #include "AbstractMapView.h"
 #include "AbstractTool.h"
 #include "AbstractProjection.h"
+#include "SessionManager.h"
 
 class QStackedWidget;
 class QAction;
@@ -210,10 +211,43 @@ class MainWindow: public QMainWindow {
         /** @brief About dialog */
         void aboutDialog();
 
+        /**
+         * @brief Reflect current session change in the UI
+         *
+         * Changes window title and disables rename/delete items in
+         * session menu if default session is loaded.
+         */
+        void currentSessionChange();
+
+        /**
+         * @brief Create new session
+         *
+         * Shows dialog asking for session name, creates new session and
+         * switches to it.
+         */
+        void newSession();
+
+        /**
+         * @brief Rename current session
+         *
+         * Shows dialog asking for session name. If current session is default
+         * session, does nothing.
+         */
+        void renameSession();
+
+        /**
+         * @brief Delete session
+         *
+         * Ask whether to delete, deletes current session and switches to
+         * default session. If current session is default session, does nothing.
+         */
+        void deleteSession();
+
     private:
         static MainWindow* _instance;
 
         Utility::Configuration _configuration;
+        SessionManager sessionManager;
 
         PluginManager<AbstractMapView>* _mapViewPluginManager;
         PluginManager<Core::AbstractProjection>* _projectionPluginManager;
@@ -230,6 +264,9 @@ class MainWindow: public QMainWindow {
         QReadWriteLock rasterModelLock;
 
         QAction *openSessionAction,
+            *newSessionAction,
+            *deleteSessionAction,
+            *renameSessionAction,
             *openRasterAction,
             *openOnlineAction,
             *saveRasterAction,
@@ -240,7 +277,8 @@ class MainWindow: public QMainWindow {
             *aboutAction,
             *aboutQtAction;
 
-        QMenu *openRasterMenu,
+        QMenu *sessionMenu,
+            *openRasterMenu,
             *saveRasterMenu,
             *toolsMenu;
 

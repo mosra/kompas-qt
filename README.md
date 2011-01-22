@@ -18,6 +18,7 @@ Dependencies
 
  * CMake    - for building
  * Qt
+ * Kompas Core library
 
 Compilation, installation
 -------------------------

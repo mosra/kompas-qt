@@ -511,9 +511,11 @@ void GraphicsMapView::updateRasterModel() {
 
     updateMapArea();
 
-
-    setLayer(layer);
+    /* Zoom and set layer (that emits signals), emit signal about overlays
+       cleared too */
     zoomTo(z);
+    setLayer(layer);
+    emit overlaysChanged(_overlays);
 
     QRectF rect = map.sceneRect();
     view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);

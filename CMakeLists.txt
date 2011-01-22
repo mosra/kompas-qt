@@ -5,6 +5,9 @@ project(KompasQt)
 # Version
 set(KOMPAS_QT_VERSION 0.1.60)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KompasQt_SOURCE_DIR}/modules/")
+
+find_package(KompasCore REQUIRED)
 find_package(Qt4 REQUIRED)
 
 option(BUILD_TESTS "Build unit tests." OFF)
@@ -12,10 +15,6 @@ option(BUILD_TESTS "Build unit tests." OFF)
 if(BUILD_TESTS)
     enable_testing()
 endif()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KompasQt_SOURCE_DIR}/modules/")
-
-include(KompasMacros)
 
 set_parent_scope(KOMPAS_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
 

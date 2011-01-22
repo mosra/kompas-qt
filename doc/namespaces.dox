@@ -1,3 +1,44 @@
 /** @namespace Kompas::QtGui
- * @brief Qt GUI for %Kompas
- */
+@brief Qt GUI
+
+There is an subclassed version of PluginManager class, which emits signals
+after every load / unload attempt, so the other classes and plugin-based menus
+can handle plugin changes properly.
+
+@section QtDataAccess Data access classes
+Abstract interface classes:
+- AbstractPluginMenuView - base class for filling given menu with list of
+  plugins with associated trigger action
+
+Data access and presentation:
+- PluginModel - provides access to plugin metadata, plugin loading and unloading
+- RasterLayerModel, RasterOverlayModel, RasterPackageModel, RasterZoomModel -
+  provides access to map data
+- OpenRasterMenuView - menu with plugins for opening online maps
+- SaveRasterMenuView - menu with plugins for saving map packages
+- ToolPluginMenuView - menu with tool plugins
+- TileDataThread, SaveRasterThread - threads for getting and saving tile data
+- SessionManager, SessionMenuView - classes for managing sessions and displaying
+  them in a menu
+
+@section QtInterface User interface classes
+Abstract interface classes:
+- AbstractConfigurationDialog - base class for all configuration dialogs
+- AbstractConfigurationWidget - base class for widgets contained in
+  configuration dialogs
+
+Classes shaping the UI:
+- MainWindow - the main window, providing menus and statusbar
+- AboutDialog - shows information about the application
+- ConfigurationDialog, ConfigurationWidget, PluginDialog - configuration dialogs
+- MapOptionsDock, MovingWidget, ZoomSlider - dock with map options like used
+  map view plugin, loaded packages, layers and overlays, widgets for moving and
+  zooming the map
+- MessageBox - QMessageBox with custom icons
+- Wgs84CoordsEdit - lineedit specialized for editing coordinates
+
+Plugin interfaces:
+- AbstractMapView - plugins for viewing the map
+- AbstractTool, AbstractToolDialog - plugins for simple tools
+
+*/

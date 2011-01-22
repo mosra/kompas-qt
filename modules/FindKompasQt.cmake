@@ -2,7 +2,7 @@
 #
 # This module depends on Kompas Core and additionaly defines:
 #
-# KOMPAS_QT_FOUND            - True if Kompas Qt was found
+# KOMPASQT_FOUND             - True if Kompas Qt was found
 #
 # KOMPAS_QT_INCLUDE_DIR      - Include dir for Kompas Core
 #
@@ -16,7 +16,7 @@ find_package(KompasCore REQUIRED)
 if (KOMPAS_QT_INCLUDE_DIR)
 
     # Already in cache
-    set(KOMPAS_QT_FOUND TRUE)
+    set(KOMPASQT_FOUND TRUE)
 
 else()
 
@@ -27,7 +27,7 @@ else()
     )
 
     include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args("Kompas Qt" DEFAULT_MSG
+    find_package_handle_standard_args("KompasQt" DEFAULT_MSG
         KOMPAS_QT_INCLUDE_DIR
     )
 

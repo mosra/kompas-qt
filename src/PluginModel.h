@@ -27,6 +27,7 @@ namespace Kompas { namespace QtGui {
 
 /**
  * @brief Model for viewing and managing plugins
+ * @bug Properly handle plugin disappearing
  */
 class PluginModel: public QAbstractTableModel {
     Q_OBJECT

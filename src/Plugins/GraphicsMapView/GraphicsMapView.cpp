@@ -496,6 +496,14 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
 void GraphicsMapView::updateRasterModel() {
     if(!isReady()) return;
 
+    /**
+     * @bug Weird behaviour when enabling / disabling online maps,
+     * unnoticed since commit ba9582a9d46a9534d3da9a265c145dab9a10d719 ?
+     * Another (probably unrelated) problem is that when enabling online map
+     * when there is an package with all the data available, the data are still
+     * loaded!
+     */
+
     qDeleteAll(tiles);
     tiles.clear();
     map.setSceneRect(0, 0, 0, 0);

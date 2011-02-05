@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _rasterZoomModel = new RasterZoomModel(this);
 
     loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
+    loadPluginsAsConfigured("projections", _projectionPluginManager);
     loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
     loadPluginsAsConfigured("tools", _toolPluginManager);
 

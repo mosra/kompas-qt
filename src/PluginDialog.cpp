@@ -45,6 +45,14 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractC
     tabs->addTab(mapViewTab, tr("Map viewers"));
     connectWidget(mapViewTab);
 
+    Tab* celestialBodyTab = new Tab(
+        mainWindow,
+        "celestialBodies",
+        mainWindow->celestialBodyPluginManager(),
+        tr("Celestial bodies, used for distance computing."));
+    tabs->addTab(celestialBodyTab, tr("Celestial bodies"));
+    connectWidget(celestialBodyTab);
+
     Tab* projectionTab = new Tab(
         mainWindow,
         "projections",

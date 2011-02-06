@@ -26,6 +26,7 @@
 #include "Utility/Configuration.h"
 #include "AbstractMapView.h"
 #include "AbstractTool.h"
+#include "AbstractCelestialBody.h"
 #include "AbstractProjection.h"
 #include "SessionManager.h"
 
@@ -78,6 +79,10 @@ class MainWindow: public QMainWindow {
         /** @brief Instance of PluginManager for map view plugins */
         inline PluginManager<AbstractMapView>* mapViewPluginManager()
             { return _mapViewPluginManager; }
+
+        /** @brief Instance of PluginManager for celestial body plugins */
+        inline PluginManager<Core::AbstractCelestialBody>* celestialBodyPluginManager()
+            { return _celestialBodyPluginManager; }
 
         /** @brief Instance of PluginManager for projection plugins */
         inline PluginManager<Core::AbstractProjection>* projectionPluginManager()
@@ -250,6 +255,7 @@ class MainWindow: public QMainWindow {
         SessionManager sessionManager;
 
         PluginManager<AbstractMapView>* _mapViewPluginManager;
+        PluginManager<Core::AbstractCelestialBody>* _celestialBodyPluginManager;
         PluginManager<Core::AbstractProjection>* _projectionPluginManager;
         PluginManager<Core::AbstractRasterModel>* _rasterModelPluginManager;
         PluginManager<AbstractTool>* _toolPluginManager;

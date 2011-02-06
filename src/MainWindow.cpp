@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     _mapViewPluginManager = new PluginManager<AbstractMapView>
         (_configuration.group("plugins")->group("mapViews")->value<string>("__dir"));
+    _celestialBodyPluginManager = new PluginManager<AbstractCelestialBody>
+        (_configuration.group("plugins")->group("celestialBodies")->value<string>("__dir"));
     _projectionPluginManager = new PluginManager<AbstractProjection>
         (_configuration.group("plugins")->group("projections")->value<string>("__dir"));
     _rasterModelPluginManager = new PluginManager<AbstractRasterModel>
@@ -88,6 +90,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     _rasterZoomModel = new RasterZoomModel(this);
 
     loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
+    loadPluginsAsConfigured("celestialBodies", _celestialBodyPluginManager);
     loadPluginsAsConfigured("projections", _projectionPluginManager);
     loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
     loadPluginsAsConfigured("tools", _toolPluginManager);
@@ -186,6 +189,7 @@ void MainWindow::loadDefaultConfiguration() {
 
     /* Plugin dirs */
     string mapViewPluginDir = PLUGIN_MAPVIEW_DIR;
+    string celestialBodyPluginDir = PLUGIN_CELESTIALBODY_DIR;
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
     string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
     string toolPluginDir = PLUGIN_TOOL_DIR;
@@ -194,12 +198,14 @@ void MainWindow::loadDefaultConfiguration() {
     #ifdef _WIN32
     string programPath = QApplication::applicationDirPath().toStdString();
     mapViewPluginDir = programPath + mapViewPluginDir;
+    celestialBodyPluginDir = programPath + celestialBodyPluginDir;
     projectionPluginDir = programPath + projectionPluginDir;
     rasterModelPluginDir = programPath + rasterModelPluginDir;
     toolPluginDir = programPath + toolPluginDir;
     #endif
 
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
+    _configuration.group("plugins")->group("celestialBodies")->value<string>("__dir", &celestialBodyPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);
     _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);

@@ -55,6 +55,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterPackages = new QListView;
     rasterPackages->setModel(editableRasterPackageModel);
     rasterPackages->setFixedHeight(100);
+    rasterPackages->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     /* Raster layers combobox */
     rasterLayers = new QComboBox;
@@ -69,6 +70,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterOverlays->setModel(rasterOverlayModel);
     rasterOverlays->setModelColumn(RasterOverlayModel::Translated);
     rasterOverlays->setFixedHeight(100);
+    rasterOverlays->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     /* Moving widget */
     movingWidget = new MovingWidget;

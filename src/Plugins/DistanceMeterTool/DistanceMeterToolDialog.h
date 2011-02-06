@@ -21,6 +21,7 @@
 
 #include "../../AbstractToolDialog.h"
 
+class QComboBox;
 class QDoubleSpinBox;
 
 namespace Kompas {
@@ -45,6 +46,7 @@ class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
     private:
         QtGui::Wgs84CoordsEdit *coordsA, *coordsB;
         QDoubleSpinBox* distance;
+        QComboBox* celestialBody;
 };
 
 }}

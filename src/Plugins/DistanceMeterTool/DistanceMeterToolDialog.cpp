@@ -20,17 +20,28 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QGridLayout>
 #include <QtGui/QDoubleSpinBox>
+#include <QtGui/QComboBox>
 
 #include "Wgs84CoordsEdit.h"
 #include "MessageBox.h"
+#include "PluginModel.h"
+#include "MainWindow.h"
+#include "PluginManager.h"
 
+using namespace std;
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins {
 
 DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
+    /* Celestial bodies plugin model */
+    PluginModel* model = new PluginModel(MainWindow::instance()->celestialBodyPluginManager(), PluginModel::LoadedOnly, this);
+
     /* Initialize labels */
+    celestialBody = new QComboBox;
+    celestialBody->setModel(model);
+    celestialBody->setModelColumn(PluginModel::Name);
     coordsA = new Wgs84CoordsEdit;
     coordsB = new Wgs84CoordsEdit;
     distance = new QDoubleSpinBox;
@@ -45,13 +56,15 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
 
     /* Layout */
     QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Place A:")), 0, 0);
-    layout->addWidget(coordsA, 0, 1);
-    layout->addWidget(new QLabel(tr("Place B:")), 1, 0);
-    layout->addWidget(coordsB, 1, 1);
-    layout->addWidget(new QLabel(tr("Distance:")), 2, 0);
-    layout->addWidget(distance, 2, 1);
-    layout->addWidget(calculateButton, 3, 1);
+    layout->addWidget(new QLabel(tr("Celestial body:"), 0, 0));
+    layout->addWidget(celestialBody, 0, 1);
+    layout->addWidget(new QLabel(tr("Place A:")), 1, 0);
+    layout->addWidget(coordsA, 1, 1);
+    layout->addWidget(new QLabel(tr("Place B:")), 2, 0);
+    layout->addWidget(coordsB, 2, 1);
+    layout->addWidget(new QLabel(tr("Distance:")), 3, 0);
+    layout->addWidget(distance, 3, 1);
+    layout->addWidget(calculateButton, 4, 1);
     layout->setColumnStretch(1, 1);
     setLayout(layout);
 
@@ -59,7 +72,16 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
 }
 
 void DistanceMeterToolDialog::calculate() {
-    double _distance = Wgs84Coords::distance(coordsA->coords(), coordsB->coords());
+    double _distance = 0;
+
+    /* Celestial body instance */
+    string plugin = celestialBody->model()->index(celestialBody->currentIndex(), PluginModel::Plugin).data().toString().toStdString();
+
+    AbstractCelestialBody* body = MainWindow::instance()->celestialBodyPluginManager()->instance(plugin);
+    if(body) {
+        _distance = body->distance(coordsA->coords(), coordsB->coords());
+        delete body;
+    }
 
     if(_distance < 0) {
         MessageBox information(this);

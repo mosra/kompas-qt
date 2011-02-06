@@ -34,9 +34,9 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
     coordsA = new Wgs84CoordsEdit;
     coordsB = new Wgs84CoordsEdit;
     distance = new QDoubleSpinBox;
-    distance->setDecimals(3);
+    distance->setDecimals(4);
     distance->setReadOnly(true);
-    distance->setSuffix(" m");
+    distance->setSuffix(" km");
     distance->setMaximum(100000000.0);
 
     /* Buttons */
@@ -71,7 +71,7 @@ void DistanceMeterToolDialog::calculate() {
         information.exec();
     }
 
-    distance->setValue(_distance);
+    distance->setValue(_distance/1000);
 }
 
 }}

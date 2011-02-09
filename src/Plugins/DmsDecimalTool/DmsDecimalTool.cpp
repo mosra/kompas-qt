@@ -38,6 +38,6 @@ class DmsDecimalTool: public QtGui::AbstractTool {
 }}
 
 PLUGIN_REGISTER_STATIC(DmsDecimalTool, Kompas::Plugins::DmsDecimalTool,
-                       "cz.mosra.Kompas.QtGui.AbstractTool/0.1")
+                       "cz.mosra.Kompas.QtGui.AbstractTool/0.2")
 
 #endif

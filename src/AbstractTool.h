@@ -34,7 +34,7 @@ class AbstractToolDialog;
  * Base interface for tool plugins.
  */
 class AbstractTool: public Kompas::PluginManager::Plugin {
-    PLUGIN_INTERFACE("cz.mosra.Kompas.QtGui.AbstractTool/0.1")
+    PLUGIN_INTERFACE("cz.mosra.Kompas.QtGui.AbstractTool/0.2")
 
     public:
         /** @copydoc PluginManager::Plugin::Plugin */

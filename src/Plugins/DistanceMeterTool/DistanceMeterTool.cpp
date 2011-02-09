@@ -40,6 +40,6 @@ class DistanceMeterTool: public QtGui::AbstractTool {
 
 PLUGIN_REGISTER_STATIC(DistanceMeterTool,
                        Kompas::Plugins::DistanceMeterTool,
-                       "cz.mosra.Kompas.QtGui.AbstractTool/0.1")
+                       "cz.mosra.Kompas.QtGui.AbstractTool/0.2")
 
 #endif

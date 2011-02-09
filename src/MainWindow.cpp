@@ -247,7 +247,7 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /** @todo @c VERSION-0.1.1 Disable Save Raster menu when no writeable format is available at all */
 
     lockRasterModelForWrite();
-    delete _rasterModel;
+    AbstractRasterModel* oldRasterModel = _rasterModel;
     _rasterModel = model;
     unlockRasterModel();
 
@@ -259,7 +259,8 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     _rasterOverlayModel->reload();
     _rasterZoomModel->reload();
 
-    emit rasterModelChanged();
+    emit rasterModelChanged(oldRasterModel);
+    delete oldRasterModel;
 
     displayMapIfUsable();
 }

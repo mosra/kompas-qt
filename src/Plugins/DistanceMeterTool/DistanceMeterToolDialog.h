@@ -19,7 +19,7 @@
  * @brief Class Kompas::Plugins::DistanceMeterToolDialog
  */
 
-#include "../../AbstractToolDialog.h"
+#include "AbstractToolDialog.h"
 
 class QComboBox;
 class QDoubleSpinBox;

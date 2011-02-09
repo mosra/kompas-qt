@@ -27,6 +27,7 @@
 #include "PluginModel.h"
 #include "MainWindow.h"
 #include "PluginManager.h"
+#include "CurrentCelestialBodyPluginModel.h"
 
 using namespace std;
 using namespace Kompas::Core;
@@ -36,11 +37,13 @@ namespace Kompas { namespace Plugins {
 
 DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
     /* Celestial bodies plugin model */
-    PluginModel* model = new PluginModel(MainWindow::instance()->celestialBodyPluginManager(), PluginModel::LoadedOnly, this);
+    CurrentCelestialBodyPluginModel* proxyModel = new CurrentCelestialBodyPluginModel(this);
+    PluginModel* pluginModel = new PluginModel(MainWindow::instance()->celestialBodyPluginManager(), PluginModel::LoadedOnly, proxyModel);
+    proxyModel->setSourceModel(pluginModel);
 
     /* Initialize labels */
     celestialBody = new QComboBox;
-    celestialBody->setModel(model);
+    celestialBody->setModel(proxyModel);
     celestialBody->setModelColumn(PluginModel::Name);
     coordsA = new Wgs84CoordsEdit;
     coordsB = new Wgs84CoordsEdit;
@@ -69,6 +72,14 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
     setLayout(layout);
 
     setMinimumWidth(320);
+
+    /* Set index to current model */
+    int row = -1;
+    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    if(rasterModel) row = pluginModel->findPlugin(QString::fromStdString(rasterModel->celestialBody()));
+    MainWindow::instance()->unlockRasterModel();
+
+    if(row != -1) celestialBody->setCurrentIndex(row);
 }
 
 void DistanceMeterToolDialog::calculate() {

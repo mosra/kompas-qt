@@ -1,5 +1,5 @@
 #ifndef Kompas_QtGui_PluginModel_h
-#define Kompas_QtGui_PluginModel_H
+#define Kompas_QtGui_PluginModel_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 

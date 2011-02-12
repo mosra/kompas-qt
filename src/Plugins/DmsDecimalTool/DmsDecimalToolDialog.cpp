@@ -34,10 +34,10 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* p
     latitude->setMinimum(-90.0);
     latitude->setMaximum(90);
     latitude->setDecimals(8);
-    longtitude = new QDoubleSpinBox;
-    longtitude->setMinimum(-180.0);
-    longtitude->setMaximum(180.0);
-    longtitude->setDecimals(8);
+    longitude = new QDoubleSpinBox;
+    longitude->setMinimum(-180.0);
+    longitude->setMaximum(180.0);
+    longitude->setDecimals(8);
 
     /* Buttons */
     QPushButton* toDecimalButton = new QPushButton(tr("DMS -> Decimal"));
@@ -52,7 +52,7 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* p
     layout->addWidget(new QLabel(tr("Latitude:")), 1, 0);
     layout->addWidget(latitude, 1, 1);
     layout->addWidget(new QLabel(tr("Longitude:")), 2, 0);
-    layout->addWidget(longtitude, 2, 1);
+    layout->addWidget(longitude, 2, 1);
     layout->addWidget(toDecimalButton, 3, 1);
     layout->addWidget(toDmsButton, 4, 1);
     layout->setColumnStretch(1, 1);
@@ -64,11 +64,11 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* p
 void DmsDecimalToolDialog::toDecimal() {
     Wgs84Coords _coords = coords->coords();
     latitude->setValue(_coords.latitude());
-    longtitude->setValue(_coords.longtitude());
+    longitude->setValue(_coords.longitude());
 }
 
 void DmsDecimalToolDialog::toDms() {
-    coords->setCoords(Wgs84Coords(latitude->value(), longtitude->value()));
+    coords->setCoords(Wgs84Coords(latitude->value(), longitude->value()));
 }
 
 }}

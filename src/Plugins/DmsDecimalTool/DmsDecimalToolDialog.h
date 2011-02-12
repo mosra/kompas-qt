@@ -46,7 +46,7 @@ class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
     private:
         QtGui::Wgs84CoordsEdit* coords;
         QDoubleSpinBox *latitude,
-            *longtitude;
+            *longitude;
 };
 
 }}

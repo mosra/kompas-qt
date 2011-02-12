@@ -22,7 +22,7 @@
 #include <QtGui/QDoubleSpinBox>
 #include <QtGui/QComboBox>
 
-#include "Wgs84CoordsEdit.h"
+#include "LatLonCoordsEdit.h"
 #include "MessageBox.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
@@ -45,8 +45,8 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
     celestialBody = new QComboBox;
     celestialBody->setModel(proxyModel);
     celestialBody->setModelColumn(PluginModel::Name);
-    coordsA = new Wgs84CoordsEdit;
-    coordsB = new Wgs84CoordsEdit;
+    coordsA = new LatLonCoordsEdit;
+    coordsB = new LatLonCoordsEdit;
     distance = new QDoubleSpinBox;
     distance->setDecimals(4);
     distance->setReadOnly(true);

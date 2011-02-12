@@ -311,7 +311,7 @@ class MainWindow: public QMainWindow {
     private slots:
         void pluginDialog();
         void configurationDialog();
-        void currentCoordinates(const Core::Wgs84Coords& coords);
+        void currentCoordinates(const Core::LatLonCoords& coords);
 };
 
 }}

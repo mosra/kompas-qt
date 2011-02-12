@@ -35,7 +35,7 @@ Classes shaping the UI:
   map view plugin, loaded packages, layers and overlays, widgets for moving and
   zooming the map
 - MessageBox - QMessageBox with custom icons
-- Wgs84CoordsEdit - lineedit specialized for editing coordinates
+- LatLonCoordsEdit - lineedit specialized for editing coordinates
 
 Plugin interfaces:
 - AbstractMapView - plugins for viewing the map

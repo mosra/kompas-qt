@@ -16,7 +16,7 @@ set(Kompas_Qt_SRCS
     PluginModel.cpp
     PluginDialog.cpp
     ConfigurationDialog.cpp
-    Wgs84CoordsEdit.cpp
+    LatLonCoordsEdit.cpp
     AbstractPluginMenuView.cpp
     ToolPluginMenuView.cpp
     OpenRasterMenuView.cpp
@@ -59,7 +59,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     RasterZoomModel.h
     SessionManager.h
     SessionMenuView.h
-    Wgs84CoordsEdit.h
+    LatLonCoordsEdit.h
     ZoomSlider.h
 )
 

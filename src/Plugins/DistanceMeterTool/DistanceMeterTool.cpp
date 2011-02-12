@@ -25,7 +25,7 @@
 
 namespace Kompas { namespace Plugins {
 
-/** @brief Measuring distance between two WGS84 coords */
+/** @brief Measuring distance between two lat/lon coords */
 class DistanceMeterTool: public QtGui::AbstractTool {
     public:
         /** @copydoc QtGui::AbstractTool::AbstractTool */

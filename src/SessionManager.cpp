@@ -94,7 +94,7 @@ void SessionManager::load(unsigned int id) {
 
     /* Current coordinates, zoom */
     mapView->zoomTo(g->value<Zoom>("zoom"));
-    mapView->setCoords(g->value<Wgs84Coords>("coordinates"));
+    mapView->setCoords(g->value<LatLonCoords>("coordinates"));
 
     /* Map layer, overlays */
     mapView->setLayer(QString::fromStdString(g->value<string>("layer")));
@@ -128,7 +128,7 @@ void SessionManager::save(unsigned int id) {
     MainWindow::instance()->unlockRasterModel();
 
     /* Current coordinates, zoom */
-    g->setValue<Wgs84Coords>("coordinates", mapView ? mapView->coords() : Wgs84Coords());
+    g->setValue<LatLonCoords>("coordinates", mapView ? mapView->coords() : LatLonCoords());
     g->setValue<Zoom>("zoom", mapView ? mapView->zoom() : 0);
 
     /* Map layer, overlays */

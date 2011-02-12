@@ -20,7 +20,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QDoubleSpinBox>
 
-#include "Wgs84CoordsEdit.h"
+#include "LatLonCoordsEdit.h"
 
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
@@ -29,7 +29,7 @@ namespace Kompas { namespace Plugins {
 
 DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
     /* Initialize labels */
-    coords = new Wgs84CoordsEdit;
+    coords = new LatLonCoordsEdit;
     latitude = new QDoubleSpinBox;
     latitude->setMinimum(-90.0);
     latitude->setMaximum(90);
@@ -62,13 +62,13 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* p
 }
 
 void DmsDecimalToolDialog::toDecimal() {
-    Wgs84Coords _coords = coords->coords();
+    LatLonCoords _coords = coords->coords();
     latitude->setValue(_coords.latitude());
     longitude->setValue(_coords.longitude());
 }
 
 void DmsDecimalToolDialog::toDms() {
-    coords->setCoords(Wgs84Coords(latitude->value(), longitude->value()));
+    coords->setCoords(LatLonCoords(latitude->value(), longitude->value()));
 }
 
 }}

@@ -26,7 +26,7 @@ class QDoubleSpinBox;
 namespace Kompas {
 
 namespace QtGui {
-    class Wgs84CoordsEdit;
+    class LatLonCoordsEdit;
 }
 
 namespace Plugins {
@@ -44,7 +44,7 @@ class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
         void toDms();
 
     private:
-        QtGui::Wgs84CoordsEdit* coords;
+        QtGui::LatLonCoordsEdit* coords;
         QDoubleSpinBox *latitude,
             *longitude;
 };

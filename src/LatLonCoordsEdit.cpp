@@ -13,15 +13,15 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "Wgs84CoordsEdit.h"
+#include "LatLonCoordsEdit.h"
 #include <QtGui/QRegExpValidator>
 
 using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
-void Wgs84CoordsEdit::init() {
-    /* After finished editing try to convert the text to Wgs84Coords */
+void LatLonCoordsEdit::init() {
+    /* After finished editing try to convert the text to LatLonCoords */
     connect(this, SIGNAL(textChanged(QString)), SLOT(checkValidity()));
     connect(this, SIGNAL(editingFinished()), SLOT(convert()));
 
@@ -29,13 +29,13 @@ void Wgs84CoordsEdit::init() {
     defaultColor = palette().color(QPalette::Base);
 
     /** @todo Localized NWES? */
-    setText(QString::fromStdString(Wgs84Coords().toString(3, true)));
+    setText(QString::fromStdString(LatLonCoords().toString(3, true)));
 }
 
-void Wgs84CoordsEdit::checkValidity() {
+void LatLonCoordsEdit::checkValidity() {
     QPalette p = palette();
 
-    Wgs84Coords c(text().toStdString());
+    LatLonCoords c(text().toStdString());
 
     if(!c.isValid())
         p.setColor(QPalette::Base, QColor("#ffcccc"));
@@ -47,8 +47,8 @@ void Wgs84CoordsEdit::checkValidity() {
     setPalette(p);
 }
 
-void Wgs84CoordsEdit::convert() {
-    Wgs84Coords c(text().toStdString());
+void LatLonCoordsEdit::convert() {
+    LatLonCoords c(text().toStdString());
 
     if(c.isValid()) setText(QString::fromStdString(c.toString(3, true)));
 }

@@ -27,12 +27,12 @@ class QDoubleSpinBox;
 namespace Kompas {
 
 namespace QtGui {
-    class Wgs84CoordsEdit;
+    class LatLonCoordsEdit;
 }
 
 namespace Plugins {
 
-/** @brief Measuring distance between two WGS84 coords */
+/** @brief Measuring distance between two lat/lon coords */
 class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
     Q_OBJECT
 
@@ -44,7 +44,7 @@ class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
         void calculate();
 
     private:
-        QtGui::Wgs84CoordsEdit *coordsA, *coordsB;
+        QtGui::LatLonCoordsEdit *coordsA, *coordsB;
         QDoubleSpinBox* distance;
         QComboBox* celestialBody;
 };

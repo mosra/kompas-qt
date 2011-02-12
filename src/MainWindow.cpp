@@ -235,7 +235,7 @@ void MainWindow::setMapView(AbstractMapView* view) {
         /* Assign map view to second slot in stacked widget */
         centralStackedWidget->addWidget(_mapView);
 
-        connect(_mapView, SIGNAL(currentCoordinates(Core::Wgs84Coords)), SLOT(currentCoordinates(Core::Wgs84Coords)));
+        connect(_mapView, SIGNAL(currentCoordinates(Core::LatLonCoords)), SLOT(currentCoordinates(Core::LatLonCoords)));
     }
 
     emit mapViewChanged();
@@ -623,7 +623,7 @@ void MainWindow::deleteSession() {
     sessionManager.load(0);
 }
 
-void MainWindow::currentCoordinates(const Kompas::Core::Wgs84Coords& coords) {
+void MainWindow::currentCoordinates(const Kompas::Core::LatLonCoords& coords) {
     if(!coords.isValid())
         coordinateStatus->setText("");
     else

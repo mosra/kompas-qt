@@ -46,7 +46,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         GraphicsMapView(Kompas::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
 
         virtual inline unsigned int zoom() const { return _zoom; }
-        virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint());
+        virtual Core::LatLonCoords coords(const QPoint& pos = QPoint());
         virtual Core::AbsoluteArea<double> viewedArea(const QRect& area = QRect());
         virtual QString layer() const { return _layer; }
         virtual QStringList overlays() const { return _overlays; }
@@ -56,7 +56,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         virtual bool zoomIn(const QPoint& pos = QPoint());
         virtual bool zoomOut(const QPoint& pos = QPoint());
         virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
-        virtual bool setCoords(const Kompas::Core::Wgs84Coords& coords, const QPoint& pos = QPoint());
+        virtual bool setCoords(const Kompas::Core::LatLonCoords& coords, const QPoint& pos = QPoint());
         virtual bool move(int x, int y);
         virtual bool setLayer(const QString& layer);
         virtual bool addOverlay(const QString& overlay);

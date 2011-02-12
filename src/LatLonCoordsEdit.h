@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_Wgs84CoordsEdit_h
-#define Kompas_QtGui_Wgs84CoordsEdit_h
+#ifndef Kompas_QtGui_LatLonCoordsEdit_h
+#define Kompas_QtGui_LatLonCoordsEdit_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,17 +16,17 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::Wgs84CoordsEdit
+ * @brief Class Kompas::QtGui::LatLonCoordsEdit
  */
 
 #include <QtGui/QLineEdit>
 
-#include "Wgs84Coords.h"
+#include "LatLonCoords.h"
 
 namespace Kompas { namespace QtGui {
 
-/** @brief Edit box for Wgs84Coords */
-class Wgs84CoordsEdit: public QLineEdit {
+/** @brief Edit box for LatLonCoords */
+class LatLonCoordsEdit: public QLineEdit {
     Q_OBJECT
 
     public:
@@ -34,7 +34,7 @@ class Wgs84CoordsEdit: public QLineEdit {
          * @brief Constructor
          * @param parent        Parent widget
          */
-        inline Wgs84CoordsEdit(QWidget* parent = 0):
+        inline LatLonCoordsEdit(QWidget* parent = 0):
             QLineEdit(parent) { init(); }
 
         /**
@@ -44,7 +44,7 @@ class Wgs84CoordsEdit: public QLineEdit {
          *
          * If the string cannot be parsed, no coordinates are set.
          */
-        inline Wgs84CoordsEdit(const QString& coords, QWidget* parent = 0):
+        inline LatLonCoordsEdit(const QString& coords, QWidget* parent = 0):
             QLineEdit(parent) { init(); setText(coords); }
 
         /**
@@ -52,19 +52,19 @@ class Wgs84CoordsEdit: public QLineEdit {
          * @param coords        Coordinates
          * @param parent        Parent widget
          */
-        inline Wgs84CoordsEdit(const Core::Wgs84Coords& coords, QWidget* parent = 0):
+        inline LatLonCoordsEdit(const Core::LatLonCoords& coords, QWidget* parent = 0):
             QLineEdit(parent) { init(); setCoords(coords); }
 
         /** @brief Coordinates */
-        inline Core::Wgs84Coords coords() const {
-            return Core::Wgs84Coords(text().toStdString());
+        inline Core::LatLonCoords coords() const {
+            return Core::LatLonCoords(text().toStdString());
         }
 
         /**
          * @brief Set coordinates
          * @param coords        Coordinates
          */
-        inline void setCoords(const Core::Wgs84Coords& coords) {
+        inline void setCoords(const Core::LatLonCoords& coords) {
             setText(QString::fromStdString(coords.toString()));
         }
 

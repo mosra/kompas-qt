@@ -199,8 +199,8 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     return true;
 }
 
-Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
-    if(!isReady()) return Wgs84Coords();
+LatLonCoords GraphicsMapView::coords(const QPoint& pos) {
+    if(!isReady()) return LatLonCoords();
 
     /* Position where to get coordinates */
     QPointF center;
@@ -214,10 +214,10 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
     /* The model doesn't have projection, return invalid coordinates */
     if(!rasterModel->projection()) {
         MainWindow::instance()->unlockRasterModel();
-        return Wgs84Coords();
+        return LatLonCoords();
     }
 
-    Wgs84Coords ret = rasterModel->projection()->toWgs84(Coords<double>(
+    LatLonCoords ret = rasterModel->projection()->toLatLon(Coords<double>(
         center.x()/(pow2(_zoom)*rasterModel->tileSize().x),
         center.y()/(pow2(_zoom)*rasterModel->tileSize().y)
     ));
@@ -260,7 +260,7 @@ AbsoluteArea<double> GraphicsMapView::viewedArea(const QRect& area) {
     );
 }
 
-bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
+bool GraphicsMapView::setCoords(const LatLonCoords& coords, const QPoint& pos) {
     if(!isReady()) return false;
 
     /* Distance of 'pos' from map center */
@@ -282,7 +282,7 @@ bool GraphicsMapView::setCoords(const Wgs84Coords& coords, const QPoint& pos) {
     }
 
     /* Convert coordinates to raster */
-    Coords<double> rc = rasterModel->projection()->fromWgs84(coords);
+    Coords<double> rc = rasterModel->projection()->fromLatLon(coords);
 
     /* Center map to that coordinates (moved by 'pos' distance from center) */
     view->centerOn(rc.x*pow2(_zoom)*rasterModel->tileSize().x-x,

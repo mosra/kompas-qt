@@ -112,7 +112,7 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
          *      to map view widget. If the position is null, the coordinates
          *      should be taken from center of view widget.
          */
-        virtual Core::Wgs84Coords coords(const QPoint& pos = QPoint()) = 0;
+        virtual Core::LatLonCoords coords(const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Currently viewed area
@@ -174,7 +174,7 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
          *
          * Moves the map so given coordinates are centered in view area.
          */
-        virtual bool setCoords(const Core::Wgs84Coords& coords, const QPoint& pos = QPoint()) = 0;
+        virtual bool setCoords(const Core::LatLonCoords& coords, const QPoint& pos = QPoint()) = 0;
 
         /**
          * @brief Move map
@@ -215,7 +215,7 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
          *
          * These coordinates are displayed in status bar.
          */
-        void currentCoordinates(const Core::Wgs84Coords& coords);
+        void currentCoordinates(const Core::LatLonCoords& coords);
 
         /**
          * @brief Zoom level changed

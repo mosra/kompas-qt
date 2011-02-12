@@ -54,7 +54,7 @@ AbstractMapView::AbstractMapView(Kompas::PluginManager::AbstractPluginManager* m
 }
 
 void AbstractMapView::contextMenuEvent(QContextMenuEvent* event) {
-    Wgs84Coords c = coords(event->pos());
+    LatLonCoords c = coords(event->pos());
     if(!c.isValid()) return;
 
     /* Save coordinates (in full precision) for Copy to clipboard action */

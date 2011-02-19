@@ -6,5 +6,5 @@ kompas_add_static_plugin(KompasQt_Plugins DistanceMeterTool DistanceMeterTool.co
 )
 
 if(WIN32)
-    target_link_libraries(DistanceMeterTool ${KOMPAS_CORE_LIBRARY})
+    target_link_libraries(DistanceMeterTool ${KOMPAS_CORE_LIBRARIES})
 endif()

@@ -7,13 +7,22 @@ Group: Productivity/Graphics/Viewers
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: cmake >= 2.6.0
-BuildRequires: libqt4-devel >= 4.6.0
-BuildRequires: update-desktop-files
 BuildRequires: kompas-core-devel = %{version}
 
-Summary: Qt GUI for Kompas navigation software
+%if %{defined suse_version}
+BuildRequires: update-desktop-files
+BuildRequires: libqt4-devel >= 4.6.0
 Requires: libqt4 >= 4.6.0
 Requires: libqt4-x11 >= 4.6.0
+%endif
+%if %{defined fedora_version}
+BuildRequires: desktop-file-utils
+BuildRequires: qt-devel >= 4.6.0
+Requires: qt >= 4.6.0
+Requires: qt-x11 >= 4.6.0
+%endif
+
+Summary: Qt GUI for Kompas navigation software
 
 %description
 Online and offline map viewer and tools for map conversion and download.
@@ -23,7 +32,12 @@ Group: Development/Libraries/X11
 Summary: Kompas Qt GUI development files
 Requires: %{name} = %{version}
 Requires: kompas-core-devel = %{version}
+%if %{defined suse_version}
 Requires: libqt4-devel >= 4.6.0
+%endif
+%if %{defined fedora_version}
+Requires: qt-devel >= 4.6.0
+%endif
 
 %description devel
 Qt GUI headers needed for developing for Kompas Qt GUI.
@@ -42,7 +56,13 @@ make %{?_smp_mflags}
 %install
 cd build
 make DESTDIR=$RPM_BUILD_ROOT install
+
+%if %{defined suse_version}
 %suse_update_desktop_file Kompas
+%endif
+%if %{defined fedora_version}
+desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/Kompas.desktop
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -7,7 +7,7 @@
 # KOMPAS_CORE_INCLUDE_DIR    - Include dir for Kompas Core
 # KOMPAS_PLUGINS_INCLUDE_DIR - Include dir for Kompas plugins
 #
-# KOMPAS_CORE_LIBRARY        - Kompas Core library
+# KOMPAS_CORE_LIBRARIES      - Kompas Core libraries
 # KOMPAS_RC_EXECUTABLE       - Kompas resource compiler executable
 #
 # KOMPAS_BINARY_INSTALL_DIR              - Binary installation directory
@@ -20,13 +20,15 @@
 # KOMPAS_PLUGINS_PROJECTION_INSTALL_DIR  - Projection plugins installation directory
 #
 
-if (KOMPAS_CORE_INCLUDE_DIR AND KOMPAS_PLUGINS_INCLUDE_DIR AND KOMPAS_CORE_LIBRARY AND KOMPAS_RC_EXECUTABLE)
+if (KOMPAS_CORE_INCLUDE_DIR AND KOMPAS_PLUGINS_INCLUDE_DIR AND KOMPAS_UTILITY_LIBRARY AND KOMPAS_PLUGINMANAGER_LIBRARY AND KOMPAS_CORE_LIBRARY AND KOMPAS_RC_EXECUTABLE)
 
     # Already in cache
     set(KOMPASCORE_FOUND TRUE)
 
 else()
     # Libraries
+    find_library(KOMPAS_UTILITY_LIBRARY KompasUtility)
+    find_library(KOMPAS_PLUGINMANAGER_LIBRARY KompasPluginManager)
     find_library(KOMPAS_CORE_LIBRARY KompasCore)
 
     # RC executable
@@ -46,6 +48,8 @@ else()
     find_package_handle_standard_args("KompasCore" DEFAULT_MSG
         KOMPAS_CORE_INCLUDE_DIR
         KOMPAS_PLUGINS_INCLUDE_DIR
+        KOMPAS_UTILITY_LIBRARY
+        KOMPAS_PLUGINMANAGER_LIBRARY
         KOMPAS_CORE_LIBRARY
         KOMPAS_RC_EXECUTABLE
     )
@@ -70,6 +74,8 @@ if(KOMPASCORE_FOUND)
         set_parent_scope(KOMPAS_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/Kompas)
         set_parent_scope(KOMPAS_DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/kompas)
     endif()
+
+    set_parent_scope(KOMPAS_CORE_LIBRARIES ${KOMPAS_UTILITY_LIBRARY} ${KOMPAS_PLUGINMANAGER_LIBRARY} ${KOMPAS_CORE_LIBRARY})
 
     set_parent_scope(KOMPAS_CORE_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Core)
     set_parent_scope(KOMPAS_PLUGINS_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Plugins)

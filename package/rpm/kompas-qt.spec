@@ -16,7 +16,7 @@ BuildRequires: libqt4-devel >= 4.6.0
 Requires: libqt4 >= 4.6.0
 Requires: libqt4-x11 >= 4.6.0
 %endif
-%if %{defined fedora_version}
+%if %{defined fedora}
 BuildRequires: desktop-file-utils
 BuildRequires: qt-devel >= 4.6.0
 Requires: qt >= 4.6.0
@@ -36,7 +36,7 @@ Requires: kompas-core-devel = %{version}
 %if %{defined suse_version}
 Requires: libqt4-devel >= 4.6.0
 %endif
-%if %{defined fedora_version}
+%if %{defined fedora}
 Requires: qt-devel >= 4.6.0
 %endif
 
@@ -61,7 +61,7 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %if %{defined suse_version}
 %suse_update_desktop_file Kompas
 %endif
-%if %{defined fedora_version}
+%if %{defined fedora}
 desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/Kompas.desktop
 %endif
 

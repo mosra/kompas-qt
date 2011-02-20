@@ -8,6 +8,7 @@ Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: cmake >= 2.6.0
 BuildRequires: kompas-core-devel = %{version}
+Requires: kompas-core = %{version}
 
 %if %{defined suse_version}
 BuildRequires: update-desktop-files

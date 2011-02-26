@@ -22,6 +22,22 @@ BuildRequires: qt-devel >= 4.6.0
 Requires: qt >= 4.6.0
 Requires: qt-x11 >= 4.6.0
 %endif
+%if %{defined mandriva_version}
+Requires(post): update-desktop-database
+# TODO: Better 64/32 bit splitting?
+%ifarch %{ix86}
+BuildRequires: libqt4-devel >= 4.6.0
+Requires: libqtcore4 >= 4.6.0
+Requires: libqtgui4 >= 4.6.0
+Requires: libqtnetwork4 >= 4.6.0
+%endif
+%ifarch x86_64
+BuildRequires: lib64qt4-devel >= 4.6.0
+Requires: lib64qtcore4 >= 4.6.0
+Requires: lib64qtgui4 >= 4.6.0
+Requires: lib64qtnetwork4 >= 4.6.0
+%endif
+%endif
 
 Summary: Qt GUI for Kompas navigation software
 
@@ -38,6 +54,14 @@ Requires: libqt4-devel >= 4.6.0
 %endif
 %if %{defined fedora}
 Requires: qt-devel >= 4.6.0
+%endif
+%if %{defined mandriva_version}
+%ifarch %{ix86}
+Requires: libqt4-devel >= 4.6.0
+%endif
+%ifarch x86_64
+Requires: lib64qt4-devel >= 4.6.0
+%endif
 %endif
 
 %description devel
@@ -63,6 +87,17 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %endif
 %if %{defined fedora}
 desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/Kompas.desktop
+%endif
+
+%if %{defined mandriva_version}
+%post
+#TODO: something similar for other?
+%update_desktop_database
+%update_icon_cache hicolor
+
+%postun
+%clean_desktop_database
+%update_icon_cache hicolor
 %endif
 
 %clean

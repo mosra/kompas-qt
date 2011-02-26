@@ -2,8 +2,12 @@ Name: kompas-qt
 URL: http://mosra.cz/blog/kompas.php
 Version: 0.1.1
 Release: 1
-License: GNU LGPLv3
+License: LGPLv3
+%if %{defined suse_version}
 Group: Productivity/Graphics/Viewers
+%else
+Group: Applications/Multimedia
+%endif
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: cmake >= 2.6.0
@@ -22,6 +26,22 @@ BuildRequires: qt-devel >= 4.6.0
 Requires: qt >= 4.6.0
 Requires: qt-x11 >= 4.6.0
 %endif
+%if %{defined mandriva_version}
+Requires(post): update-desktop-database
+# TODO: Better 64/32 bit splitting?
+%ifarch %{ix86}
+BuildRequires: libqt4-devel >= 4.6.0
+Requires: libqtcore4 >= 4.6.0
+Requires: libqtgui4 >= 4.6.0
+Requires: libqtnetwork4 >= 4.6.0
+%endif
+%ifarch x86_64
+BuildRequires: lib64qt4-devel >= 4.6.0
+Requires: lib64qtcore4 >= 4.6.0
+Requires: lib64qtgui4 >= 4.6.0
+Requires: lib64qtnetwork4 >= 4.6.0
+%endif
+%endif
 
 Summary: Qt GUI for Kompas navigation software
 
@@ -29,7 +49,11 @@ Summary: Qt GUI for Kompas navigation software
 Online and offline map viewer and tools for map conversion and download.
 
 %package devel
+%if %{defined suse_version}
 Group: Development/Libraries/X11
+%else
+Group: Development/Libraries
+%endif
 Summary: Kompas Qt GUI development files
 Requires: %{name} = %{version}
 Requires: kompas-core-devel = %{version}
@@ -38,6 +62,14 @@ Requires: libqt4-devel >= 4.6.0
 %endif
 %if %{defined fedora}
 Requires: qt-devel >= 4.6.0
+%endif
+%if %{defined mandriva_version}
+%ifarch %{ix86}
+Requires: libqt4-devel >= 4.6.0
+%endif
+%ifarch x86_64
+Requires: lib64qt4-devel >= 4.6.0
+%endif
 %endif
 
 %description devel
@@ -57,6 +89,7 @@ make %{?_smp_mflags}
 %install
 cd build
 make DESTDIR=$RPM_BUILD_ROOT install
+strip $RPM_BUILD_ROOT/%{_prefix}/bin/*
 
 %if %{defined suse_version}
 %suse_update_desktop_file Kompas
@@ -65,16 +98,34 @@ make DESTDIR=$RPM_BUILD_ROOT install
 desktop-file-validate $RPM_BUILD_ROOT/%{_datadir}/applications/Kompas.desktop
 %endif
 
+%if %{defined mandriva_version}
+%post
+#TODO: something similar for other?
+%update_desktop_database
+%update_icon_cache hicolor
+
+%postun
+%clean_desktop_database
+%update_icon_cache hicolor
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_prefix}
-%exclude %{_prefix}/include
-%exclude %{_prefix}/share/*/Modules
+%{_prefix}/bin/*
+%{_prefix}/share/kompas
+%{_prefix}/share/applications/*
+%{_prefix}/share/icons/*/*
+%doc COPYING COPYING.LESSER
 
 %files devel
 %defattr(-,root,root,-)
 %{_prefix}/include/Kompas
 %{_prefix}/share/*/Modules
+%doc COPYING COPYING.LESSER
+
+%changelog
+* Sat Feb 26 2011 Vladimír Vondruš <mosra@centrum.cz> - 0.1.1-1
+- Initial release.

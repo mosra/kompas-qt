@@ -3,7 +3,11 @@ URL: http://mosra.cz/blog/kompas.php
 Version: 0.1.1
 Release: 1
 License: LGPLv3
+%if %{defined suse_version}
 Group: Productivity/Graphics/Viewers
+%else
+Group: Applications/Multimedia
+%endif
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: cmake >= 2.6.0
@@ -45,7 +49,11 @@ Summary: Qt GUI for Kompas navigation software
 Online and offline map viewer and tools for map conversion and download.
 
 %package devel
+%if %{defined suse_version}
 Group: Development/Libraries/X11
+%else
+Group: Development/Libraries
+%endif
 Summary: Kompas Qt GUI development files
 Requires: %{name} = %{version}
 Requires: kompas-core-devel = %{version}

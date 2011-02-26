@@ -114,9 +114,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{_prefix}
-%exclude %{_prefix}/include
-%exclude %{_prefix}/share/*/Modules
+%{_prefix}/bin/*
+%{_prefix}/share/kompas
+%{_prefix}/share/applications/*
+%{_prefix}/share/icons/*/*
 
 %files devel
 %defattr(-,root,root,-)

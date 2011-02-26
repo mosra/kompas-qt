@@ -2,7 +2,7 @@ Name: kompas-qt
 URL: http://mosra.cz/blog/kompas.php
 Version: 0.1.1
 Release: 1
-License: GNU LGPLv3
+License: LGPLv3
 Group: Productivity/Graphics/Viewers
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot

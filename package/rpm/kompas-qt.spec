@@ -89,6 +89,7 @@ make %{?_smp_mflags}
 %install
 cd build
 make DESTDIR=$RPM_BUILD_ROOT install
+strip $RPM_BUILD_ROOT/%{_prefix}/bin/*
 
 %if %{defined suse_version}
 %suse_update_desktop_file Kompas

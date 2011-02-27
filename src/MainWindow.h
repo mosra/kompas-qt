@@ -24,11 +24,8 @@
 #include <QtGui/QFrame>
 
 #include "Utility/Configuration.h"
-#include "AbstractMapView.h"
-#include "AbstractTool.h"
-#include "AbstractCelestialBody.h"
-#include "AbstractProjection.h"
 #include "SessionManager.h"
+#include "PluginManagerStore.h"
 
 class QStackedWidget;
 class QAction;
@@ -37,9 +34,6 @@ class QLabel;
 class QDockWidget;
 
 namespace Kompas { namespace QtGui {
-
-class AbstractPluginManager;
-template<class T> class PluginManager;
 
 class RasterPackageModel;
 class RasterLayerModel;
@@ -65,36 +59,16 @@ class MainWindow: public QMainWindow {
          */
         MainWindow(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
-        /**
-         * @brief Destructor
-         *
-         * Destroys all plugin managers.
-         */
+        /** @brief Destructor */
         virtual ~MainWindow();
 
         /** @brief Global application configuration */
         inline Utility::Configuration* configuration()
             { return &_configuration; }
 
-        /** @brief Instance of PluginManager for map view plugins */
-        inline PluginManager<AbstractMapView>* mapViewPluginManager()
-            { return _mapViewPluginManager; }
-
-        /** @brief Instance of PluginManager for celestial body plugins */
-        inline PluginManager<Core::AbstractCelestialBody>* celestialBodyPluginManager()
-            { return _celestialBodyPluginManager; }
-
-        /** @brief Instance of PluginManager for projection plugins */
-        inline PluginManager<Core::AbstractProjection>* projectionPluginManager()
-            { return _projectionPluginManager; }
-
-        /** @brief Instance of PluginManager for tile model plugins */
-        inline PluginManager<Core::AbstractRasterModel>* rasterModelPluginManager()
-            { return _rasterModelPluginManager; }
-
-        /** @brief Instance of PluginManager for tool plugins */
-        inline PluginManager<AbstractTool>* toolPluginManager()
-            { return _toolPluginManager; }
+        /** @brief Plugin manager store */
+        inline PluginManagerStore* pluginManagerStore()
+            { return _pluginManagerStore; }
 
         /** @brief Global raster map package model */
         inline RasterPackageModel* rasterPackageModel()
@@ -260,11 +234,7 @@ class MainWindow: public QMainWindow {
         Utility::Configuration _configuration;
         SessionManager sessionManager;
 
-        PluginManager<AbstractMapView>* _mapViewPluginManager;
-        PluginManager<Core::AbstractCelestialBody>* _celestialBodyPluginManager;
-        PluginManager<Core::AbstractProjection>* _projectionPluginManager;
-        PluginManager<Core::AbstractRasterModel>* _rasterModelPluginManager;
-        PluginManager<AbstractTool>* _toolPluginManager;
+        PluginManagerStore* _pluginManagerStore;
 
         RasterPackageModel* _rasterPackageModel;
         RasterLayerModel* _rasterLayerModel;
@@ -303,8 +273,6 @@ class MainWindow: public QMainWindow {
 
         void createActions();
         void createMenus();
-
-        void loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager);
 
         void displayMapIfUsable();
 

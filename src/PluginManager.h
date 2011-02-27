@@ -40,6 +40,7 @@ namespace Kompas { namespace QtGui {
  * Exactly the same code as PluginManager::PluginManager, but this class
  * depends on QtGui::AbstractPluginManager instead of
  * PluginManager::AbstractPluginManager.
+ * @todo Proper parenting!
  */
 template<class T> class PluginManager: public AbstractPluginManager {
     public:

@@ -32,7 +32,7 @@ using namespace std;
 
 namespace Kompas { namespace QtGui {
 
-ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractConfigurationDialog(mainWindow, f) {
+ConfigurationDialog::ConfigurationDialog(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
     Widget* widget = new Widget(this);
     connectWidget(widget);
     setCentralWidget(widget);
@@ -42,7 +42,7 @@ ConfigurationDialog::ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags
 
 ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
     /* Map view model */
-    mapViewModel = new PluginModel(MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this);
+    mapViewModel = MainWindow::instance()->pluginManagerStore()->mapViews()->loadedOnlyModel();
 
     /* Map view plugin */
     mapViewPlugin = new QComboBox;

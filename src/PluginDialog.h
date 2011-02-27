@@ -20,9 +20,11 @@
  */
 
 #include "AbstractConfigurationDialog.h"
-#include "AbstractPluginManager.h"
 
 #include <QtCore/QModelIndex>
+
+#include "AbstractPluginManager.h"
+#include "PluginManagerStore.h"
 
 class QDialogButtonBox;
 class QTabWidget;
@@ -32,9 +34,6 @@ class QDataWidgetMapper;
 class QPushButton;
 
 namespace Kompas { namespace QtGui {
-
-class MainWindow;
-class PluginModel;
 
 /**
  * @brief Plugin settings dialog
@@ -46,12 +45,8 @@ class PluginDialog: public AbstractConfigurationDialog {
     Q_OBJECT
 
     public:
-        /**
-         * @brief Constructor
-         * @param mainWindow        Pointer to main window
-         * @param f                 Window flags
-         */
-        PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
+        /** @copydoc AbstractConfigurationDialog::AbstractConfigurationDialog */
+        PluginDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     protected:
         class Tab;
@@ -72,14 +67,11 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
     public:
         /**
          * @brief Constructor
-         * @param _mainWindow           Pointer to main window instance
-         * @param _configurationKey     Key name for storing plugin configuration
-         * @param _manager              Pointer to PluginManager
-         * @param _categoryDescription  Description of current plugin category
-         * @param parent                Parent widget
-         * @param f                     Window flags
+         * @param pluginManagerStoreItem    Item of plugin manager store
+         * @param parent                    Parent widget
+         * @param f                         Window flags
          */
-        Tab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         virtual void reset();
@@ -98,11 +90,8 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
         void reloadCurrentPlugin();
 
     private:
-        MainWindow* mainWindow;
-        std::string configurationKey;
+        PluginManagerStore::AbstractItem* _pluginManagerStoreItem;
 
-        AbstractPluginManager* manager;
-        PluginModel* model;
         QDataWidgetMapper* mapper;
         QPushButton* reloadPluginButton;
 

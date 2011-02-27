@@ -35,12 +35,8 @@ class ConfigurationDialog: public AbstractConfigurationDialog {
     Q_OBJECT
 
     public:
-        /**
-         * @brief Constructor
-         * @param mainWindow        Pointer to main window
-         * @param f                 Flags
-         */
-        ConfigurationDialog(MainWindow* mainWindow, Qt::WindowFlags f = 0);
+        /** @copydoc AbstractConfigurationDialog::AbstractConfigurationDialog */
+        ConfigurationDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     protected:
         class Widget;
@@ -51,11 +47,7 @@ class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
     Q_OBJECT
 
     public:
-        /**
-         * @brief Constructor
-         * @param parent            Parent widget
-         * @param f                 Window flags
-         */
+        /** @copydoc AbstractConfigurationWidget::AbstractConfigurationWidget */
         Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:

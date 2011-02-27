@@ -26,6 +26,7 @@ set(Kompas_Qt_SRCS
     SaveRasterThread.cpp
     MapOptionsDock.cpp
     MovingWidget.cpp
+    PluginManagerStore.cpp
     RasterPackageModel.cpp
     RasterLayerModel.cpp
     RasterOverlayModel.cpp

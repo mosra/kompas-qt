@@ -68,7 +68,7 @@ int SaveRasterWizard::exec() {
     MainWindow::instance()->unlockRasterModel();
 
     /* Features of destination model */
-    AbstractRasterModel* destinationModel = MainWindow::instance()->rasterModelPluginManager()->instance(model);
+    AbstractRasterModel* destinationModel = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance(model);
     if(!destinationModel) features = sourceFeatures; /* will fail in download page too, so don't bother */
     else {
         modelName = *destinationModel->metadata()->name();
@@ -123,7 +123,7 @@ void SaveRasterWizard::done(int result) {
 
     /* Open the package, if set */
     if(result == Accepted && openWhenFinished == true) {
-        AbstractRasterModel* m = MainWindow::instance()->rasterModelPluginManager()->instance(model);
+        AbstractRasterModel* m = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance(model);
 
         if(m->addPackage(filename) == -1)
             delete m;

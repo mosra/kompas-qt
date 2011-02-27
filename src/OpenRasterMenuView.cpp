@@ -47,7 +47,7 @@ QAction* OpenRasterMenuView::createMenuAction(const std::string& pluginName) {
 void OpenRasterMenuView::trigger(QAction* action) {
     if(!items.contains(action)) return;
 
-    AbstractRasterModel* model = MainWindow::instance()->rasterModelPluginManager()->instance(items.value(action).toStdString());
+    AbstractRasterModel* model = rasterManager->instance(items.value(action).toStdString());
     model->setOnline(true);
 
     MainWindow::instance()->setRasterModel(model);

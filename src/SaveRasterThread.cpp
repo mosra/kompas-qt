@@ -63,7 +63,7 @@ bool SaveRasterThread::initializePackage(const string& model, const string& file
     }
 
     /* Get model instance */
-    if(!(destinationModel = MainWindow::instance()->rasterModelPluginManager()->instance(model)))
+    if(!(destinationModel = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance(model)))
         return false;
 
     /* Initialize package */

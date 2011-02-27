@@ -34,48 +34,17 @@ using namespace std;
 
 namespace Kompas { namespace QtGui {
 
-PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractConfigurationDialog(mainWindow, f) {
+PluginDialog::PluginDialog(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
     /* Tabs */
     tabs = new QTabWidget;
-    Tab* mapViewTab = new Tab(
-        mainWindow,
-        "mapViews",
-        mainWindow->mapViewPluginManager(),
-        tr("Plugins providing map view area."));
-    tabs->addTab(mapViewTab, tr("Map viewers"));
-    connectWidget(mapViewTab);
 
-    Tab* celestialBodyTab = new Tab(
-        mainWindow,
-        "celestialBodies",
-        mainWindow->celestialBodyPluginManager(),
-        tr("Celestial bodies, used for distance computing."));
-    tabs->addTab(celestialBodyTab, tr("Celestial bodies"));
-    connectWidget(celestialBodyTab);
+    QList<PluginManagerStore::AbstractItem*> items = MainWindow::instance()->pluginManagerStore()->items();
 
-    Tab* projectionTab = new Tab(
-        mainWindow,
-        "projections",
-        mainWindow->projectionPluginManager(),
-        tr("Plugins for map projections."));
-    tabs->addTab(projectionTab, tr("Projections"));
-    connectWidget(projectionTab);
-
-    Tab* rasterModelTab = new Tab(
-        mainWindow,
-        "rasterModels",
-        mainWindow->rasterModelPluginManager(),
-        tr("Plugins for displaying different kinds of raster maps."));
-    tabs->addTab(rasterModelTab, tr("Raster maps"));
-    connectWidget(rasterModelTab);
-
-    Tab* toolsTab = new Tab(
-        mainWindow,
-        "tools",
-        mainWindow->toolPluginManager(),
-        tr("Various utilites for data computing and conversion."));
-    tabs->addTab(toolsTab, tr("Tools"));
-    connectWidget(toolsTab);
+    foreach(PluginManagerStore::AbstractItem* item, items) {
+        Tab* tab = new Tab(item);
+        tabs->addTab(tab, item->name());
+        connectWidget(tab);
+    }
 
     setCentralWidget(tabs);
     setWindowTitle(tr("Plugins"));
@@ -83,10 +52,10 @@ PluginDialog::PluginDialog(MainWindow* mainWindow, Qt::WindowFlags f): AbstractC
     setAttribute(Qt::WA_DeleteOnClose);
 }
 
-PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configurationKey, AbstractPluginManager* _manager, const QString& _categoryDescription, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), mainWindow(_mainWindow), configurationKey(_configurationKey), manager(_manager) {
+PluginDialog::Tab::Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), _pluginManagerStoreItem(pluginManagerStoreItem) {
     /* Initialize labels */
     pluginDir = new QLineEdit;
-    QLabel* categoryDescription = new QLabel(_categoryDescription);
+    QLabel* categoryDescription = new QLabel(_pluginManagerStoreItem->description());
     categoryDescription->setWordWrap(true);
     loadStateLabel = new QLabel(tr("Load state:"));
     loadStateLabel->setHidden(true);
@@ -137,10 +106,9 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     connect(reloadPluginButton, SIGNAL(clicked(bool)), SLOT(reloadCurrentPlugin()));
 
     /* Initialize model and pass it to view */
-    model = new PluginModel(manager, 0, this);
     QTableView* view = new QTableView(this);
     view->verticalHeader()->setDefaultSectionSize(20);
-    view->setModel(model);
+    view->setModel(_pluginManagerStoreItem->model());
     view->setColumnHidden(PluginModel::Description, true);
     view->setColumnHidden(PluginModel::Authors, true);
     view->setColumnHidden(PluginModel::Depends, true);
@@ -158,7 +126,7 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
 
     /* Map data to widgets */
     mapper = new QDataWidgetMapper(this);
-    mapper->setModel(model);
+    mapper->setModel(_pluginManagerStoreItem->model());
     mapper->addMapping(loadState, PluginModel::LoadState, "text");
     mapper->addMapping(description, PluginModel::Description, "text");
     mapper->addMapping(authors, PluginModel::Authors, "text");
@@ -168,10 +136,12 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     mapper->addMapping(replacedWith, PluginModel::ReplacedWith, "text");
 
     /* Display errorbox if something bad happened during loading/unloading plugins */
-    connect(manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+    connect(_pluginManagerStoreItem->manager(),
+            SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
             SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
-    connect(manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-        SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(_pluginManagerStoreItem->manager(),
+            SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
+            SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
 
     /* On selection change load new row in mapper */
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -179,7 +149,8 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
 
     /* Emit signal on edit */
     connect(pluginDir, SIGNAL(textChanged(QString)), this, SIGNAL(edited()));
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
+    connect(_pluginManagerStoreItem->model(),
+            SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SIGNAL(edited()));
 
     /* Layout for plugin dir lineedit and button */
     QHBoxLayout* pluginDirLayout = new QHBoxLayout;
@@ -212,33 +183,29 @@ PluginDialog::Tab::Tab(MainWindow* _mainWindow, const std::string& _configuratio
     layout->setColumnStretch(1, 1);
     setLayout(layout);
 
-    /* Fill in values */
-    reset();
+    /* Fill in plugin dir */
+    pluginDir->setText(QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()));
 }
 
 void PluginDialog::Tab::save() {
     /* Update plugin dir if it is not the same as in PluginManager */
-    if(pluginDir->text() != QString::fromStdString(manager->pluginDirectory()))
-        manager->setPluginDirectory(pluginDir->text().toStdString());
+    if(pluginDir->text() != QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()))
+        _pluginManagerStoreItem->manager()->setPluginDirectory(pluginDir->text().toStdString());
 
-    mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<string>("__dir", pluginDir->text().toStdString());
-
-    for(int i = 0; i != model->rowCount(); ++i) {
-        mainWindow->configuration()->group("plugins")->group(configurationKey)->setValue<bool>(
-            model->index(i, PluginModel::Plugin).data().toString().toStdString(),
-            model->index(i, PluginModel::LoadState).data(Qt::CheckStateRole).toBool());
-    }
+    _pluginManagerStoreItem->pluginDirectoryToConfiguration();
+    _pluginManagerStoreItem->loadedToConfiguration();
 }
 
 void PluginDialog::Tab::reset() {
-    pluginDir->setText(QString::fromStdString(
-        mainWindow->configuration()->group("plugins")->group(configurationKey)->value<string>("__dir")));
+    _pluginManagerStoreItem->pluginDirectoryFromConfiguration();
+    pluginDir->setText(QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()));
+    /** @todo Reset also loaded plugins? */
 }
 
 void PluginDialog::Tab::restoreDefaults() {
     /* Remove current pluginDir value from configuration and set it from defaults */
-    mainWindow->configuration()->group("plugins")->removeGroup(configurationKey);
-    mainWindow->loadDefaultConfiguration();
+    _pluginManagerStoreItem->configurationGroup()->clear();
+    MainWindow::instance()->loadDefaultConfiguration();
 
     /* Load the value from configuration */
     reset();
@@ -250,12 +217,12 @@ void PluginDialog::Tab::setPluginDir() {
     if(!dir.isEmpty()) {
         pluginDir->setText(dir);
         emit edited();
-        manager->setPluginDirectory(dir.toStdString());
+        _pluginManagerStoreItem->manager()->setPluginDirectory(dir.toStdString());
     }
 }
 
 void PluginDialog::Tab::reloadPluginDirectory() {
-    manager->setPluginDirectory(pluginDir->text().toStdString());
+    _pluginManagerStoreItem->manager()->setPluginDirectory(pluginDir->text().toStdString());
 }
 
 void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
@@ -340,7 +307,7 @@ void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
 }
 
 void PluginDialog::Tab::reloadCurrentPlugin() {
-    manager->reload(model->index(mapper->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
+    _pluginManagerStoreItem->manager()->reload(_pluginManagerStoreItem->model()->index(mapper->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
 }
 
 }}

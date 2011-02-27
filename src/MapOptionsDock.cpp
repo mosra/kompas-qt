@@ -40,8 +40,7 @@ using namespace Kompas::Core;
 namespace Kompas { namespace QtGui {
 
 MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
-    PluginModel* mapViewModel = new PluginModel(
-        MainWindow::instance()->mapViewPluginManager(), PluginModel::LoadedOnly, this);
+    PluginModel* mapViewModel = MainWindow::instance()->pluginManagerStore()->mapViews()->loadedOnlyModel();
     mapView = new QComboBox;
     mapView->setModel(mapViewModel);
     mapView->setModelColumn(PluginModel::Name);
@@ -100,7 +99,7 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
 void MapOptionsDock::setMapView(int id) {
     if(id == -1) return;
 
-    AbstractMapView* view = MainWindow::instance()->mapViewPluginManager()->instance(mapView->model()->index(id, PluginModel::Plugin).data().toString().toStdString());
+    AbstractMapView* view = MainWindow::instance()->pluginManagerStore()->mapViews()->manager()->instance(mapView->model()->index(id, PluginModel::Plugin).data().toString().toStdString());
     MainWindow::instance()->setMapView(view);
 }
 

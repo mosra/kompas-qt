@@ -73,27 +73,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load default configuration */
     loadDefaultConfiguration();
 
-    _mapViewPluginManager = new PluginManager<AbstractMapView>
-        (_configuration.group("plugins")->group("mapViews")->value<string>("__dir"));
-    _celestialBodyPluginManager = new PluginManager<AbstractCelestialBody>
-        (_configuration.group("plugins")->group("celestialBodies")->value<string>("__dir"));
-    _projectionPluginManager = new PluginManager<AbstractProjection>
-        (_configuration.group("plugins")->group("projections")->value<string>("__dir"));
-    _rasterModelPluginManager = new PluginManager<AbstractRasterModel>
-        (_configuration.group("plugins")->group("rasterModels")->value<string>("__dir"));
-    _toolPluginManager = new PluginManager<AbstractTool>
-        (_configuration.group("plugins")->group("tools")->value<string>("__dir"));
+    _pluginManagerStore = new PluginManagerStore(_configuration.group("plugins"), this);
 
     _rasterPackageModel = new RasterPackageModel(this);
     _rasterLayerModel = new RasterLayerModel(this);
     _rasterOverlayModel = new RasterOverlayModel(this);
     _rasterZoomModel = new RasterZoomModel(this);
-
-    loadPluginsAsConfigured("mapViews", _mapViewPluginManager);
-    loadPluginsAsConfigured("celestialBodies", _celestialBodyPluginManager);
-    loadPluginsAsConfigured("projections", _projectionPluginManager);
-    loadPluginsAsConfigured("rasterModels", _rasterModelPluginManager);
-    loadPluginsAsConfigured("tools", _toolPluginManager);
 
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
 
@@ -171,16 +156,13 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     statusBar()->addPermanentWidget(coordinateStatus);
 
     /* Load map view plugin */
-    setMapView(_mapViewPluginManager->instance(_configuration.group("map")->value<string>("viewPlugin")));
+    setMapView(_pluginManagerStore->mapViews()->manager()->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
     resize(960, 700);
 }
 
 MainWindow::~MainWindow() {
     sessionManager.save();
-
-    delete _mapViewPluginManager;
-    delete _rasterModelPluginManager;
 }
 
 void MainWindow::loadDefaultConfiguration() {
@@ -281,16 +263,18 @@ void MainWindow::setOnlineEnabled(bool enabled) {
 }
 
 void MainWindow::openRaster() {
+    PluginManager<AbstractRasterModel>* rasterModelPluginManager = _pluginManagerStore->rasterModels()->manager();
+
     /* Compose filter from all loaded plugins */
     QString filter;
-    vector<string> plugins = _rasterModelPluginManager->pluginList();
+    vector<string> plugins = rasterModelPluginManager->pluginList();
     for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
         /* Skip not loaded plugins */
-        if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
+        if(!(rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
             continue;
 
         /* Instance of the model */
-        AbstractRasterModel* instance = _rasterModelPluginManager->instance(*it);
+        AbstractRasterModel* instance = rasterModelPluginManager->instance(*it);
         if(!instance) continue;
 
         vector<string> extensions = instance->fileExtensions();
@@ -332,14 +316,14 @@ void MainWindow::openRaster() {
         AbstractRasterModel* firstSupport = 0;
         int state = AbstractRasterModel::NotSupported;
 
-        vector<string> plugins = _rasterModelPluginManager->pluginList();
+        vector<string> plugins = rasterModelPluginManager->pluginList();
         for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
             /* Skip not loaded plugins */
-            if(!(_rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
+            if(!(rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
                 continue;
 
             /* Instance of the model */
-            AbstractRasterModel* instance = _rasterModelPluginManager->instance(*it);
+            AbstractRasterModel* instance = rasterModelPluginManager->instance(*it);
             if(!instance) continue;
 
             /* Skip models which cannot recognize its file format */
@@ -529,7 +513,7 @@ void MainWindow::createMenus() {
     /* Open raster map menu */
     openRasterMenu = new QMenu(this);
     openOnlineAction->setMenu(openRasterMenu);
-    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(_rasterModelPluginManager, openRasterMenu, 0, this);
+    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(pluginManagerStore()->rasterModels()->manager(), openRasterMenu, 0, this);
     openRasterMenuView->update();
 
     /* Save raster map menu */
@@ -537,7 +521,7 @@ void MainWindow::createMenus() {
     saveRasterMenu->addAction(saveRasterAction);
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);
-    saveRasterMenuView = new SaveRasterMenuView(_rasterModelPluginManager, saveRasterMenu, 0, this);
+    saveRasterMenuView = new SaveRasterMenuView(pluginManagerStore()->rasterModels()->manager(), saveRasterMenu, 0, this);
     saveRasterMenuView->update();
 
     fileMenu->addAction(closeRasterAction);
@@ -546,7 +530,7 @@ void MainWindow::createMenus() {
 
     /* Tools menu */
     toolsMenu = menuBar()->addMenu(tr("Tools"));
-    ToolPluginMenuView* toolPluginMenuView = new ToolPluginMenuView(this, _toolPluginManager, toolsMenu, 0, this);
+    ToolPluginMenuView* toolPluginMenuView = new ToolPluginMenuView(this, pluginManagerStore()->tools()->manager(), toolsMenu, 0, this);
     toolPluginMenuView->update();
 
     /* Settings menu */
@@ -558,14 +542,6 @@ void MainWindow::createMenus() {
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
     helpMenu->addAction(aboutAction);
     helpMenu->addAction(aboutQtAction);
-}
-
-void MainWindow::loadPluginsAsConfigured(const std::string& group, AbstractPluginManager* manager) {
-    vector<string> plugins = manager->pluginList();
-
-    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it)
-        if(configuration()->group("plugins")->group(group)->value<bool>(*it))
-            manager->load(*it);
 }
 
 void MainWindow::pluginDialog() {

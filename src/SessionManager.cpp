@@ -61,7 +61,7 @@ void SessionManager::load(unsigned int id) {
     /* Load map view, if it is not the same as current */
     AbstractMapView* mapView = MainWindow::instance()->mapView();
     if(!mapView || mapView->plugin() != g->value<string>("mapView")) {
-        mapView = MainWindow::instance()->mapViewPluginManager()->instance(g->value<string>("mapView"));
+        mapView = MainWindow::instance()->pluginManagerStore()->mapViews()->manager()->instance(g->value<string>("mapView"));
 
         /* If the map view doesn't exist, cleanup raster model and exit */
         if(!mapView) {
@@ -75,7 +75,7 @@ void SessionManager::load(unsigned int id) {
 
     /* Load raster model (even if it is the same as current, we need clean
        state) */
-    AbstractRasterModel* rasterModel = MainWindow::instance()->rasterModelPluginManager()->instance(g->value<string>("rasterModel"));
+    AbstractRasterModel* rasterModel = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance(g->value<string>("rasterModel"));
 
     /* If no raster model is defined, set it to zero and return */
     if(!rasterModel) {

@@ -159,7 +159,7 @@ class MainWindow: public QMainWindow {
 
         /**
          * @brief Raster model has been changed
-         * @param before    If set, the model is changed to another. Otherwise
+         * @param previous  If set, the model is changed to another. Otherwise
          *      just a new package was loaded or online maps enabled / disabled.
          * @todo @c VERSION-0.2 Emit something else when the model wasn't
          *      changed to another

@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "ConfigurationDialog.h"
+#include "ConfigurationWidget.h"
 
 #include <string>
 #include <QtGui/QComboBox>
@@ -24,23 +24,15 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QFileDialog>
 
-#include "PluginManager.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
 
 using namespace std;
+using namespace Kompas::QtGui;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
-ConfigurationDialog::ConfigurationDialog(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
-    Widget* widget = new Widget(this);
-    connectWidget(widget);
-    setCentralWidget(widget);
-    setWindowTitle(tr("Kompas configuration"));
-    resize(480, 240);
-}
-
-ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
+ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f) {
     /* Map view model */
     mapViewModel = MainWindow::instance()->pluginManagerStore()->mapViews()->loadedOnlyModel();
 
@@ -88,7 +80,7 @@ ConfigurationDialog::Widget::Widget(QWidget* parent, Qt::WindowFlags f): Abstrac
     reset();
 }
 
-void ConfigurationDialog::Widget::reset() {
+void ConfigurationWidget::reset() {
     mapViewPlugin->setCurrentIndex(mapViewModel->findPlugin(QString::fromStdString(
         MainWindow::instance()->configuration()->group("map")->value<string>("viewPlugin"))));
     maxSimultaenousDownloads->setValue(
@@ -97,7 +89,7 @@ void ConfigurationDialog::Widget::reset() {
         MainWindow::instance()->configuration()->group("paths")->value<string>("packages")));
 }
 
-void ConfigurationDialog::Widget::restoreDefaults() {
+void ConfigurationWidget::restoreDefaults() {
     MainWindow::instance()->configuration()->group("map")->removeValue("viewPlugin");
     MainWindow::instance()->configuration()->group("map")->removeValue("maxSimultaenousDownloads");
     MainWindow::instance()->configuration()->group("paths")->removeValue("packages");
@@ -106,7 +98,7 @@ void ConfigurationDialog::Widget::restoreDefaults() {
     reset();
 }
 
-void ConfigurationDialog::Widget::save() {
+void ConfigurationWidget::save() {
     MainWindow::instance()->configuration()->group("map")->setValue<string>("viewPlugin",
         mapViewModel->index(mapViewPlugin->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
     MainWindow::instance()->configuration()->group("map")->setValue<int>("maxSimultaenousDownloads",
@@ -115,11 +107,11 @@ void ConfigurationDialog::Widget::save() {
         packageDir->text().toStdString());
 }
 
-void ConfigurationDialog::Widget::selectPackageDir() {
+void ConfigurationWidget::selectPackageDir() {
     QString selected = QFileDialog::getExistingDirectory(this, tr("Select package directory"), packageDir->text());
     if(selected.isEmpty()) return;
 
     packageDir->setText(selected);
 }
 
-}}
+}}}

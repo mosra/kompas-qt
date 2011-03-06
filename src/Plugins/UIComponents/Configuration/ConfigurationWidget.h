@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_ConfigurationDialog_h
-#define Kompas_QtGui_ConfigurationDialog_h
+#ifndef Kompas_Plugins_UIComponents_ConfigurationWidget_h
+#define Kompas_Plugins_UIComponents_ConfigurationWidget_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,39 +16,30 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::ConfigurationDialog
+ * @brief Class Kompas::Plugins::UIComponents::ConfigurationWidget
  */
 
-#include "AbstractConfigurationDialog.h"
 #include "AbstractConfigurationWidget.h"
 
 class QSpinBox;
 class QComboBox;
 class QLineEdit;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas {
 
-class PluginModel;
+namespace QtGui {
+    class PluginModel;
+}
 
-/** @brief Main configuration dialog */
-class ConfigurationDialog: public AbstractConfigurationDialog {
-    Q_OBJECT
-
-    public:
-        /** @copydoc AbstractConfigurationDialog::AbstractConfigurationDialog */
-        ConfigurationDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-
-    protected:
-        class Widget;
-};
+namespace Plugins { namespace UIComponents {
 
 /** @brief Widget in main configuration dialog */
-class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
+class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
     Q_OBJECT
 
     public:
-        /** @copydoc AbstractConfigurationWidget::AbstractConfigurationWidget */
-        Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        /** @copydoc QtGui::AbstractConfigurationWidget::AbstractConfigurationWidget */
+        ConfigurationWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         virtual void reset();
@@ -60,11 +51,11 @@ class ConfigurationDialog::Widget: public AbstractConfigurationWidget {
 
     private:
         QComboBox* mapViewPlugin;
-        PluginModel* mapViewModel;
+        QtGui::PluginModel* mapViewModel;
         QSpinBox* maxSimultaenousDownloads;
         QLineEdit* packageDir;
 };
 
-}}
+}}}
 
 #endif

@@ -33,7 +33,6 @@
 #include "PluginManager.h"
 #include "PluginDialog.h"
 #include "TileDataThread.h"
-#include "ConfigurationDialog.h"
 #include "ToolPluginMenuView.h"
 #include "SaveRasterMenuView.h"
 #include "OpenRasterMenuView.h"
@@ -491,11 +490,8 @@ void MainWindow::createActions() {
 
     /* Settings menu */
     pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
-    configurationDialogAction = new QAction(QIcon(":/settings-16.png"), tr("Configure Kompas"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
-    connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
     _actions.insert(AbstractUIComponent::Settings, pluginDialogAction);
-    _actions.insert(AbstractUIComponent::Settings, configurationDialogAction);
 
     /* About */
     aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
@@ -597,11 +593,6 @@ void MainWindow::createUI() {
 void MainWindow::pluginDialog() {
     PluginDialog* dialog = new PluginDialog(this);
     dialog->show();
-}
-
-void MainWindow::configurationDialog() {
-    ConfigurationDialog dialog(this);
-    dialog.exec();
 }
 
 void MainWindow::aboutDialog() {

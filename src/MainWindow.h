@@ -257,7 +257,6 @@ class MainWindow: public QMainWindow {
             *saveCurrentRasterAction,
             *closeRasterAction,
             *pluginDialogAction,
-            *configurationDialogAction,
             *aboutAction,
             *aboutQtAction;
 
@@ -283,7 +282,6 @@ class MainWindow: public QMainWindow {
 
     private slots:
         void pluginDialog();
-        void configurationDialog();
         void currentCoordinates(const Core::LatLonCoords& coords);
 };
 

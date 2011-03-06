@@ -405,11 +405,11 @@ void MainWindow::displayMapIfUsable() {
         closeRasterAction->setDisabled(false);
 
         /* Update action in "save raster" menu */
-        saveRasterAction->setText(tr("Offline %0 package").arg(name));
+        saveCurrentRasterAction->setText(tr("Offline %0 package").arg(name));
         if(isWriteable)
-            saveRasterAction->setDisabled(false);
+            saveCurrentRasterAction->setDisabled(false);
         else
-            saveRasterAction->setDisabled(true);
+            saveCurrentRasterAction->setDisabled(true);
 
         /* Show map view, show dock widgets */
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
@@ -443,18 +443,22 @@ void MainWindow::createActions() {
     openSessionIcon.addFile(":/open-session-16.png");
     openSessionIcon.addFile(":/open-session-64.png");
     openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
+    _actions.insert(AbstractUIComponent::Sessions, openSessionAction);
 
     /* Create new session */
     newSessionAction = new QAction(tr("Create new session"), this);
     connect(newSessionAction, SIGNAL(triggered(bool)), SLOT(newSession()));
+    _actions.insert(AbstractUIComponent::Sessions, newSessionAction);
 
     /* Rename current session */
     renameSessionAction = new QAction(tr("Rename current session"), this);
     connect(renameSessionAction, SIGNAL(triggered(bool)), SLOT(renameSession()));
+    _actions.insert(AbstractUIComponent::Sessions, renameSessionAction);
 
     /* Delete current session */
     deleteSessionAction = new QAction(tr("Delete current session"), this);
     connect(deleteSessionAction, SIGNAL(triggered(bool)), SLOT(deleteSession()));
+    _actions.insert(AbstractUIComponent::Sessions, deleteSessionAction);
 
     /* Open raster map */
     QIcon openPackageIcon;
@@ -462,53 +466,51 @@ void MainWindow::createActions() {
     openPackageIcon.addFile(":/open-package-64.png");
     openRasterAction = new QAction(openPackageIcon, tr("Open map package"), this);
     connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
+    _actions.insert(AbstractUIComponent::Maps, openRasterAction);
 
     /* Open online map */
     QIcon openOnlineIcon;
     openOnlineIcon.addFile(":/open-online-16.png");
     openOnlineIcon.addFile(":/open-online-64.png");
     openOnlineAction = new QAction(openOnlineIcon, tr("Load online map"), this);
+    _actions.insert(AbstractUIComponent::Maps, openOnlineAction);
 
     /* Save raster map */
-    saveRasterAction = new QAction(this);
-    connect(saveRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
+    saveRasterAction = new QAction(QIcon(":/save-16.png"), tr("Save map"), this);
+    _actions.insert(AbstractUIComponent::Maps, saveRasterAction);
+
+    /* Save raster map to current model */
+    saveCurrentRasterAction = new QAction(this);
+    connect(saveCurrentRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
 
     /* Close raster map */
     closeRasterAction = new QAction(QIcon(":/close-16.png"), tr("Close map"), this);
     closeRasterAction->setDisabled(true);
     connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
-
-    /* Quit application */
-    quitAction = new QAction(QIcon(":/exit-16.png"), tr("Quit"), this);
-    quitAction->setShortcut(QKeySequence::Quit);
-    connect(quitAction, SIGNAL(triggered(bool)), SLOT(close()));
+    _actions.insert(AbstractUIComponent::Maps, closeRasterAction);
 
     /* Settings menu */
     pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
     configurationDialogAction = new QAction(QIcon(":/settings-16.png"), tr("Configure Kompas"), this);
     connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     connect(configurationDialogAction, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
+    _actions.insert(AbstractUIComponent::Settings, pluginDialogAction);
+    _actions.insert(AbstractUIComponent::Settings, configurationDialogAction);
 
     /* About */
     aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
     aboutAction->setStatusTip(tr("Show information about this application"));
     connect(aboutAction, SIGNAL(triggered(bool)), SLOT(aboutDialog()));
+    _actions.insert(AbstractUIComponent::Help, aboutAction);
 
     /* About Qt */
     aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
     aboutQtAction->setStatusTip(tr("Show information about Qt"));
     connect(aboutQtAction, SIGNAL(triggered(bool)), qApp, SLOT(aboutQt()));
+    _actions.insert(AbstractUIComponent::Help, aboutQtAction);
 }
 
 void MainWindow::createMenus() {
-    /* File menu */
-    QMenu* fileMenu = menuBar()->addMenu(tr("File"));
-    fileMenu->addAction(openSessionAction);
-    fileMenu->addAction(renameSessionAction);
-    fileMenu->addAction(deleteSessionAction);
-    fileMenu->addAction(openRasterAction);
-    fileMenu->addAction(openOnlineAction);
-
     /* Session list menu */
     sessionMenu = new QMenu(this);
     openSessionAction->setMenu(sessionMenu);
@@ -523,31 +525,18 @@ void MainWindow::createMenus() {
     openRasterMenuView->update();
 
     /* Save raster map menu */
-    saveRasterMenu = fileMenu->addMenu(QIcon(":/save-16.png"), tr("Save map"));
-    saveRasterMenu->addAction(saveRasterAction);
+    saveRasterMenu = new QMenu(this);
+    saveRasterAction->setMenu(saveRasterMenu);
+    saveRasterMenu->addAction(saveCurrentRasterAction);
     saveRasterMenu->addSeparator();
     saveRasterMenu->setDisabled(true);
     saveRasterMenuView = new SaveRasterMenuView(pluginManagerStore()->rasterModels()->manager(), saveRasterMenu, 0, this);
     saveRasterMenuView->update();
 
-    fileMenu->addAction(closeRasterAction);
-    fileMenu->addSeparator();
-    fileMenu->addAction(quitAction);
-
     /* Tools menu */
     toolsMenu = menuBar()->addMenu(tr("Tools"));
     ToolPluginMenuView* toolPluginMenuView = new ToolPluginMenuView(this, pluginManagerStore()->tools()->manager(), toolsMenu, 0, this);
     toolPluginMenuView->update();
-
-    /* Settings menu */
-    QMenu* settingsMenu = menuBar()->addMenu(tr("Settings"));
-    settingsMenu->addAction(pluginDialogAction);
-    settingsMenu->addAction(configurationDialogAction);
-
-    /* Help menu */
-    QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
-    helpMenu->addAction(aboutAction);
-    helpMenu->addAction(aboutQtAction);
 }
 
 void MainWindow::createUI() {

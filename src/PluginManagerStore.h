@@ -25,6 +25,7 @@
 #include "AbstractMapView.h"
 #include "AbstractProjection.h"
 #include "AbstractTool.h"
+#include "AbstractUIComponent.h"
 
 namespace Kompas { namespace QtGui {
 
@@ -77,12 +78,17 @@ class PluginManagerStore: public QObject {
         inline Item<AbstractTool>* tools()
             { return _tools; }
 
+        /** @brief UI components plugin manager */
+        inline Item<AbstractUIComponent>* uiComponents()
+            { return _uiComponents; }
+
     private:
         Item<AbstractMapView>* _mapViews;
         Item<Core::AbstractCelestialBody>* _celestialBodies;
         Item<Core::AbstractProjection>* _projections;
         Item<Core::AbstractRasterModel>* _rasterModels;
         Item<AbstractTool>* _tools;
+        Item<AbstractUIComponent>* _uiComponents;
 
         QList<AbstractItem*> _items;
 };

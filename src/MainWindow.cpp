@@ -175,6 +175,7 @@ void MainWindow::loadDefaultConfiguration() {
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
     string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
     string toolPluginDir = PLUGIN_TOOL_DIR;
+    string uiComponentPluginDir = PLUGIN_UICOMPONENT_DIR;
 
     /* On Win32 add program directory to the dirs to make them absolute */
     #ifdef _WIN32
@@ -184,6 +185,7 @@ void MainWindow::loadDefaultConfiguration() {
     projectionPluginDir = programPath + projectionPluginDir;
     rasterModelPluginDir = programPath + rasterModelPluginDir;
     toolPluginDir = programPath + toolPluginDir;
+    uiComponentPluginDir = programPath + uiComponentPluginDir;
     #endif
 
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
@@ -191,6 +193,7 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);
     _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);
+    _configuration.group("plugins")->group("uiComponents")->value<string>("__dir", &uiComponentPluginDir);
 
     /* Plugin for map view */
     string mapViewPlugin = "GraphicsMapView";

@@ -54,6 +54,12 @@ PluginManagerStore::PluginManagerStore(ConfigurationGroup* configurationGroup, Q
         tr("Various additional tools."),
         this);
     _items << _tools;
+    _uiComponents = new Item<AbstractUIComponent>(
+        configurationGroup->group("uiComponents"),
+        tr("User interface components"),
+        tr("Parts of user interface."),
+        this);
+    _items << _uiComponents;
 
     /* Load all plugins as configured */
     foreach(AbstractItem* item, _items)

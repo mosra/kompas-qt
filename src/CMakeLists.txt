@@ -47,6 +47,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     AbstractConfigurationDialog.h
     AbstractConfigurationWidget.h
     AbstractPluginManager.h
+    AbstractUIComponent.h
     PluginModel.h
     PluginDialog.h
     ConfigurationDialog.h

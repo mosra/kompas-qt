@@ -26,20 +26,20 @@ void RasterOverlayModel::reload() {
     beginResetModel();
     overlays.clear();
 
-    AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForWrite();
+    Locker<AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForWrite();
 
-    if(rasterModel) {
+    if(rasterModel()) {
         /* All available layers */
-        vector<string> _overlays = rasterModel->overlays();
+        vector<string> _overlays = rasterModel()->overlays();
         for(vector<string>::const_iterator it = _overlays.begin(); it != _overlays.end(); ++it) {
             Overlay o;
             o.name = QString::fromStdString(*it);
-            o.translated = rasterModel->layerName(*it);
+            o.translated = rasterModel()->layerName(*it);
             overlays.append(o);
         }
     }
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     endResetModel();
 }

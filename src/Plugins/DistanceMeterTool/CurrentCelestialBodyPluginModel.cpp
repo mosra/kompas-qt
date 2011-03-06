@@ -44,9 +44,8 @@ void CurrentCelestialBodyPluginModel::setSourceModel(PluginModel* sourceModel) {
 QVariant CurrentCelestialBodyPluginModel::data(const QModelIndex& index, int role) const {
     /* Mark current celestial body */
     if(role == Qt::DisplayRole && index.column() == PluginModel::Name) {
-        const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-        bool isCurrent = rasterModel && pluginModel->index(index.row(), PluginModel::Plugin).data().toString() == QString::fromStdString(rasterModel->celestialBody());
-        MainWindow::instance()->unlockRasterModel();
+        Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+        bool isCurrent = rasterModel() && pluginModel->index(index.row(), PluginModel::Plugin).data().toString() == QString::fromStdString(rasterModel()->celestialBody());
 
         if(isCurrent)
             return tr("Current (%0)").arg(sourceModel()->data(index, role).toString());
@@ -63,9 +62,8 @@ void CurrentCelestialBodyPluginModel::changeCurrent(const AbstractRasterModel* p
     }
 
     int row = -1;
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    if(rasterModel) row = pluginModel->findPlugin(QString::fromStdString(rasterModel->celestialBody()));
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    if(rasterModel()) row = pluginModel->findPlugin(QString::fromStdString(rasterModel()->celestialBody()));
 
     if(row != -1) emit dataChanged(index(row, PluginModel::Name), index(row, PluginModel::Name));
 }

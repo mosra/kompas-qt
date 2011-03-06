@@ -54,18 +54,16 @@ SaveRasterWizard::SaveRasterWizard(const string& _model, QWidget* parent, Qt::Wi
     setWindowTitle(tr("Save map as..."));
 
     /* Save tile size */
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    tileSize = model->tileSize();
-    MainWindow::instance()->unlockRasterModel();
+    tileSize = MainWindow::instance()->rasterModelForRead()()->tileSize();
 }
 
 int SaveRasterWizard::exec() {
     /* Tile size and features of source model. Set ConvertableCoords feature
         only if the map has valid projection */
-    const AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForRead();
-    int sourceFeatures = sourceModel->features() & ~(sourceModel->projection() ?
+    Locker<const AbstractRasterModel> sourceModel = MainWindow::instance()->rasterModelForRead();
+    int sourceFeatures = sourceModel()->features() & ~(sourceModel()->projection() ?
         0 : AbstractRasterModel::ConvertableCoords);
-    MainWindow::instance()->unlockRasterModel();
+    sourceModel.unlock();
 
     /* Features of destination model */
     AbstractRasterModel* destinationModel = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance(model);
@@ -101,9 +99,8 @@ int SaveRasterWizard::exec() {
 }
 
 TileArea SaveRasterWizard::area() const {
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    TileArea area = model->area()*pow2(zoomLevels[0]-*model->zoomLevels().begin());
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    TileArea area = rasterModel()->area()*pow2(zoomLevels[0]-*rasterModel()->zoomLevels().begin());
 
     /* Tile area at minimal zoom */
     TileArea ta(
@@ -452,13 +449,13 @@ bool SaveRasterWizard::MetadataPage::checkSaveFile(const QString& filename) {
     if(filename.isEmpty()) return false;
 
     /* If the filename is the same as filename of any opened packages in source model, show error messagebox */
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     bool is = false;
-    for(int i = 0; i != model->packageCount(); ++i) if(filename == QString::fromStdString(model->packageAttribute(i, Kompas::Core::AbstractRasterModel::Filename))) {
+    for(int i = 0; i != rasterModel()->packageCount(); ++i) if(filename == QString::fromStdString(rasterModel()->packageAttribute(i, Kompas::Core::AbstractRasterModel::Filename))) {
         is = true;
         break;
     }
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     if(is) {
         MessageBox::warning(this, tr("Saving to currently opened file"), tr("You selected file which is currently opened. Please select another file to avoid data loss."));

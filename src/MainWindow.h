@@ -26,6 +26,7 @@
 #include "Utility/Configuration.h"
 #include "SessionManager.h"
 #include "PluginManagerStore.h"
+#include "Locker.h"
 
 class QStackedWidget;
 class QAction;
@@ -87,37 +88,27 @@ class MainWindow: public QMainWindow {
             { return _rasterZoomModel; }
 
         /**
-         * @brief Get tile model for reading
-         * @return Pointer to tile model
+         * @brief Get raster model for reading
+         * @return Locker with raster model
          *
-         * This functions locks tile model for reading. After usage the model
-         * have to be unlocked with unlockRasterModel().
+         * This functions locks raster model for reading. After usage the model
+         * has to be unlocked either by destroying @ref Locker instance or
+         * calling @ref Locker::unlock().
          */
-        inline const Core::AbstractRasterModel* lockRasterModelForRead() {
-            rasterModelLock.lockForRead();
-            return _rasterModel;
+        inline Locker<const Core::AbstractRasterModel> rasterModelForRead() {
+            return Locker<const Core::AbstractRasterModel>(_rasterModel, &rasterModelLock);
         }
 
         /**
-         * @brief Get tile model for writing
-         * @return Pointer to tile model
+         * @brief Get raster model for writing
+         * @return Locker with raster model
          *
-         * This functions locks tile model for writing. After usage the model
-         * have to be unlocked with unlockRasterModel().
+         * This functions locks raster model for writing. After usage the model
+         * has to be unlocked either by destroying @ref Locker instance or
+         * calling @ref Locker::unlock().
          */
-        inline Core::AbstractRasterModel* lockRasterModelForWrite() {
-            rasterModelLock.lockForWrite();
-            return _rasterModel;
-        }
-
-        /**
-         * @brief Unlock tile model
-         *
-         * Unlocks tile model previously locked with lockRasterModelRead() or
-         * lockRasterModelWrite().
-         */
-        inline void unlockRasterModel() {
-            rasterModelLock.unlock();
+        inline Locker<Core::AbstractRasterModel> rasterModelForWrite() {
+            return Locker<Core::AbstractRasterModel>(_rasterModel, &rasterModelLock);
         }
 
         /**

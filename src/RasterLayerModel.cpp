@@ -26,20 +26,20 @@ void RasterLayerModel::reload() {
     beginResetModel();
     layers.clear();
 
-    AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForWrite();
+    Locker<AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForWrite();
 
-    if(rasterModel) {
+    if(rasterModel()) {
         /* All available layers */
-        vector<string> _layers = rasterModel->layers();
+        vector<string> _layers = rasterModel()->layers();
         for(vector<string>::const_iterator it = _layers.begin(); it != _layers.end(); ++it) {
             Layer l;
             l.name = QString::fromStdString(*it);
-            l.translated = rasterModel->layerName(*it);
+            l.translated = rasterModel()->layerName(*it);
             layers.append(l);
         }
     }
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     endResetModel();
 }

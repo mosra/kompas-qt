@@ -25,19 +25,19 @@ void RasterPackageModel::reload() {
     beginResetModel();
     packages.clear();
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* All packages */
-    if(rasterModel) for(int i = 0; i != rasterModel->packageCount(); ++i) {
+    if(rasterModel()) for(int i = 0; i != rasterModel()->packageCount(); ++i) {
         Package p;
-        p.filename = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Filename));
-        p.name = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Name));
-        p.description = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Description));
-        p.packager = QString::fromStdString(rasterModel->packageAttribute(i, AbstractRasterModel::Packager));
+        p.filename = QString::fromStdString(rasterModel()->packageAttribute(i, AbstractRasterModel::Filename));
+        p.name = QString::fromStdString(rasterModel()->packageAttribute(i, AbstractRasterModel::Name));
+        p.description = QString::fromStdString(rasterModel()->packageAttribute(i, AbstractRasterModel::Description));
+        p.packager = QString::fromStdString(rasterModel()->packageAttribute(i, AbstractRasterModel::Packager));
         packages.append(p);
     }
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     endResetModel();
 }

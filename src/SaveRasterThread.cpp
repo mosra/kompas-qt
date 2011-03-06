@@ -115,9 +115,7 @@ void SaveRasterThread::run() {
                     TileCoords coords(currentArea.x+col, currentArea.y+row);
 
                     /* First try to get tile from file */
-                    AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForWrite();
-                    string data = sourceModel->tileFromPackage(layer, zoom, coords);
-                    MainWindow::instance()->unlockRasterModel();
+                    string data = MainWindow::instance()->rasterModelForWrite()()->tileFromPackage(layer, zoom, coords);
 
                     /* Otherwise download */
                     if(data.empty()) {
@@ -153,9 +151,7 @@ void SaveRasterThread::run() {
 }
 
 void SaveRasterThread::startDownload(const string& layer, Zoom zoom, const TileCoords& coords) {
-    const AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForRead();
-    manager->get(QNetworkRequest(QUrl(QString::fromStdString(sourceModel->tileUrl(layer, zoom, coords)))));
-    MainWindow::instance()->unlockRasterModel();
+    manager->get(QNetworkRequest(QUrl(QString::fromStdString(MainWindow::instance()->rasterModelForRead()()->tileUrl(layer, zoom, coords)))));
 }
 
 void SaveRasterThread::finishDownload(QNetworkReply* reply) {

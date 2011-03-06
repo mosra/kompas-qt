@@ -133,22 +133,20 @@ void MapOptionsDock::EditableRasterPackageModel::setSourceModel(QAbstractItemMod
 void MapOptionsDock::EditableRasterPackageModel::reload() {
     beginResetModel();
 
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* If raster model is not available or it doesn't support raster maps, don't show online maps item */
-    if(!model || !(model->features() & AbstractRasterModel::LoadableFromUrl)) {
+    if(!rasterModel() || !(rasterModel()->features() & AbstractRasterModel::LoadableFromUrl)) {
         rasterModelName.clear();
         online = NotSupported;
 
     /* Else show it and enable/disable it */
     } else {
-        rasterModelName = QString::fromStdString(*model->metadata()->name());
+        rasterModelName = QString::fromStdString(*rasterModel()->metadata()->name());
 
-        if(model->online())     online = Enabled;
+        if(rasterModel()->online())   online = Enabled;
         else                    online = Disabled;
     }
-
-    MainWindow::instance()->unlockRasterModel();
 
     endResetModel();
 }

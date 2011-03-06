@@ -74,9 +74,9 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
 
     /* Set index to current model */
     int row = -1;
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    if(rasterModel) row = MainWindow::instance()->pluginManagerStore()->celestialBodies()->loadedOnlyModel()->findPlugin(QString::fromStdString(rasterModel->celestialBody()));
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    if(rasterModel()) row = MainWindow::instance()->pluginManagerStore()->celestialBodies()->loadedOnlyModel()->findPlugin(QString::fromStdString(rasterModel()->celestialBody()));
+    rasterModel.unlock();
 
     if(row != -1) celestialBody->setCurrentIndex(row);
 }

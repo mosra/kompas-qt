@@ -26,16 +26,16 @@ void RasterZoomModel::reload() {
     beginResetModel();
     z.clear();
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
-    if(rasterModel) {
+    if(rasterModel()) {
         /* All available zoom levels */
-        set<Zoom> _z = rasterModel->zoomLevels();
+        set<Zoom> _z = rasterModel()->zoomLevels();
         for(set<Zoom>::const_iterator it = _z.begin(); it != _z.end(); ++it)
             z.append(*it);
     }
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     endResetModel();
 }

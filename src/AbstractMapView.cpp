@@ -67,11 +67,8 @@ void AbstractMapView::contextMenuEvent(QContextMenuEvent* event) {
 }
 
 bool AbstractMapView::isReady() {
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    bool is = rasterModel && rasterModel->isUsable();
-    MainWindow::instance()->unlockRasterModel();
-
-    return is;
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    return rasterModel() && rasterModel()->isUsable();
 }
 
 void AbstractMapView::copyCoordsToClipboard() {

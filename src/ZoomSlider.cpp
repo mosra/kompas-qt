@@ -43,17 +43,16 @@ void ZoomSlider::updateMapView() {
 }
 
 void ZoomSlider::updateRasterModel() {
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    if(model && model->zoomLevels().size() > 1) {
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    if(rasterModel() && rasterModel()->zoomLevels().size() > 1) {
         setDisabled(false);
-        setMinimum(*model->zoomLevels().begin());
-        setMaximum(*--model->zoomLevels().end());
+        setMinimum(*rasterModel()->zoomLevels().begin());
+        setMaximum(*--rasterModel()->zoomLevels().end());
     } else {
         setDisabled(true);
         setMinimum(0);
         setMaximum(0);
     }
-    MainWindow::instance()->unlockRasterModel();
 }
 
 void ZoomSlider::updateZoom(Core::Zoom z) {
@@ -61,10 +60,10 @@ void ZoomSlider::updateZoom(Core::Zoom z) {
 }
 
 void ZoomSlider::zoomTo(int value) {
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     set<Zoom> levels;
-    if(model) levels = model->zoomLevels();
-    MainWindow::instance()->unlockRasterModel();
+    if(rasterModel()) levels = rasterModel()->zoomLevels();
+    rasterModel.unlock();
 
     Zoom wanted = static_cast<Zoom>(value);
     set<Zoom>::const_iterator lower = levels.lower_bound(wanted);

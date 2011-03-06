@@ -73,9 +73,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
 bool GraphicsMapView::zoomIn(const QPoint& pos) {
     if(!isReady()) return false;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    set<Zoom> z = rasterModel->zoomLevels();
-    MainWindow::instance()->unlockRasterModel();
+    set<Zoom> z = MainWindow::instance()->rasterModelForRead()()->zoomLevels();
 
     /* Check whether we can zoom in */
     set<Zoom>::const_iterator it = z.find(_zoom);
@@ -115,9 +113,7 @@ bool GraphicsMapView::zoomIn(const QPoint& pos) {
 bool GraphicsMapView::zoomOut(const QPoint& pos) {
     if(!isReady()) return false;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    set<Zoom> z = rasterModel->zoomLevels();
-    MainWindow::instance()->unlockRasterModel();
+    set<Zoom> z = MainWindow::instance()->rasterModelForRead()()->zoomLevels();
 
     /* Check whether we can zoom out */
     set<Zoom>::const_iterator it = z.find(_zoom);
@@ -160,9 +156,7 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
     /* If we are at the zoom already, nothing to do */
     if(zoom == _zoom) return true;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    set<Zoom> z = rasterModel->zoomLevels();
-    MainWindow::instance()->unlockRasterModel();
+    set<Zoom> z = MainWindow::instance()->rasterModelForRead()()->zoomLevels();
 
     /* Check whether given zoom exists */
     if(z.find(zoom) == z.end()) return false;
@@ -209,20 +203,15 @@ LatLonCoords GraphicsMapView::coords(const QPoint& pos) {
     else
         center = view->mapToScene(pos);
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* The model doesn't have projection, return invalid coordinates */
-    if(!rasterModel->projection()) {
-        MainWindow::instance()->unlockRasterModel();
-        return LatLonCoords();
-    }
+    if(!rasterModel()->projection()) return LatLonCoords();
 
-    LatLonCoords ret = rasterModel->projection()->toLatLon(Coords<double>(
-        center.x()/(pow2(_zoom)*rasterModel->tileSize().x),
-        center.y()/(pow2(_zoom)*rasterModel->tileSize().y)
+    LatLonCoords ret = rasterModel()->projection()->toLatLon(Coords<double>(
+        center.x()/(pow2(_zoom)*rasterModel()->tileSize().x),
+        center.y()/(pow2(_zoom)*rasterModel()->tileSize().y)
     ));
-
-    MainWindow::instance()->unlockRasterModel();
 
     return ret;
 }
@@ -237,10 +226,10 @@ AbsoluteArea<double> GraphicsMapView::viewedArea(const QRect& area) {
         sceneArea.setBottomRight(view->mapToScene(area.bottomRight()).toPoint());
     }
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    TileSize tileSize = rasterModel->tileSize();
-    TileArea a = rasterModel->area()*tileSize*pow2(_zoom-*rasterModel->zoomLevels().begin());
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    TileSize tileSize = rasterModel()->tileSize();
+    TileArea a = rasterModel()->area()*tileSize*pow2(_zoom-*rasterModel()->zoomLevels().begin());
+    rasterModel.unlock();
 
     /* Fix cases where scene is smaller than viewed area */
     if(sceneArea.left() < 0) {
@@ -273,22 +262,18 @@ bool GraphicsMapView::setCoords(const LatLonCoords& coords, const QPoint& pos) {
         y = pos.y()-view->height()/2;
     }
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* The model doesn't have projection, nothing to do */
-    if(!rasterModel->projection()) {
-        MainWindow::instance()->unlockRasterModel();
-        return false;
-    }
+    if(!rasterModel()->projection()) return false;
 
     /* Convert coordinates to raster */
-    Coords<double> rc = rasterModel->projection()->fromLatLon(coords);
+    Coords<double> rc = rasterModel()->projection()->fromLatLon(coords);
 
     /* Center map to that coordinates (moved by 'pos' distance from center) */
-    view->centerOn(rc.x*pow2(_zoom)*rasterModel->tileSize().x-x,
-                   rc.y*pow2(_zoom)*rasterModel->tileSize().y-y);
-
-    MainWindow::instance()->unlockRasterModel();
+    view->centerOn(rc.x*pow2(_zoom)*rasterModel()->tileSize().x-x,
+                   rc.y*pow2(_zoom)*rasterModel()->tileSize().y-y);
+    rasterModel.unlock();
 
     /* Update tile positions */
     updateTileCount();
@@ -311,9 +296,7 @@ bool GraphicsMapView::setLayer(const QString& layer) {
     /* Abort all jobs with current layer */
     tileDataThread->abort(_layer);
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    vector<string> layers = rasterModel->layers();
-    MainWindow::instance()->unlockRasterModel();
+    vector<string> layers = MainWindow::instance()->rasterModelForRead()()->layers();
 
     /* Check whether given layer exists */
     if(::find(layers.begin(), layers.end(), layer.toStdString()) == layers.end())
@@ -337,9 +320,7 @@ bool GraphicsMapView::addOverlay(const QString& overlay) {
     if(!isReady()) return false;
 
     /* Check whether given overlay exists */
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    vector<string> layers = rasterModel->overlays();
-    MainWindow::instance()->unlockRasterModel();
+    vector<string> layers = MainWindow::instance()->rasterModelForRead()()->overlays();
 
     if(::find(layers.begin(), layers.end(), overlay.toStdString()) == layers.end())
         return false;
@@ -387,36 +368,34 @@ void GraphicsMapView::mouseMoveEvent(QMouseEvent* event) {
 void GraphicsMapView::updateMapArea() {
     if(!isReady()) return;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* Compute tile area */
-    unsigned int multiplier = pow2(_zoom-*rasterModel->zoomLevels().begin());
+    unsigned int multiplier = pow2(_zoom-*rasterModel()->zoomLevels().begin());
 
     /* Resize map to area */
-    map.setSceneRect(rasterModel->area().x*rasterModel->tileSize().x*multiplier,
-                     rasterModel->area().y*rasterModel->tileSize().y*multiplier,
-                     rasterModel->area().w*rasterModel->tileSize().x*multiplier,
-                     rasterModel->area().h*rasterModel->tileSize().y*multiplier);
-
-    MainWindow::instance()->unlockRasterModel();
+    map.setSceneRect(rasterModel()->area().x*rasterModel()->tileSize().x*multiplier,
+                     rasterModel()->area().y*rasterModel()->tileSize().y*multiplier,
+                     rasterModel()->area().w*rasterModel()->tileSize().x*multiplier,
+                     rasterModel()->area().h*rasterModel()->tileSize().y*multiplier);
 }
 
 void GraphicsMapView::updateTileCount() {
     if(!isReady() || !isVisible()) return;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
 
     /* Tile count for actual viewed area */
-    tileCount = rasterModel->tilesInArea(Coords<unsigned int>(
+    tileCount = rasterModel()->tilesInArea(Coords<unsigned int>(
         view->visibleRegion().boundingRect().width(),
         view->visibleRegion().boundingRect().height()));
 
     /* If map area is smaller than view area, set tile count to map area */
-    unsigned int multiplier = pow2(_zoom-*rasterModel->zoomLevels().begin());
-    if(tileCount.x > rasterModel->area().w*multiplier) tileCount.x = rasterModel->area().w*multiplier;
-    if(tileCount.y > rasterModel->area().h*multiplier) tileCount.y = rasterModel->area().h*multiplier;
+    unsigned int multiplier = pow2(_zoom-*rasterModel()->zoomLevels().begin());
+    if(tileCount.x > rasterModel()->area().w*multiplier) tileCount.x = rasterModel()->area().w*multiplier;
+    if(tileCount.y > rasterModel()->area().h*multiplier) tileCount.y = rasterModel()->area().h*multiplier;
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     updateTilePositions();
 }
@@ -424,10 +403,10 @@ void GraphicsMapView::updateTileCount() {
 void GraphicsMapView::updateTilePositions() {
     if(!isReady() || !isVisible()) return;
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    TileArea area = rasterModel->area()*pow2(_zoom-*rasterModel->zoomLevels().begin());
-    TileSize tileSize = rasterModel->tileSize();
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    TileArea area = rasterModel()->area()*pow2(_zoom-*rasterModel()->zoomLevels().begin());
+    TileSize tileSize = rasterModel()->tileSize();
+    rasterModel.unlock();
 
     QPointF viewed = view->mapToScene(0, 0);
 
@@ -511,11 +490,11 @@ void GraphicsMapView::updateRasterModel() {
     _layer.clear();
     _overlays.clear();
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    Zoom z = *rasterModel->zoomLevels().begin();
-    QString layer = QString::fromStdString(rasterModel->layers()[0]);
-    QString _copyright = QString::fromStdString(rasterModel->copyright());
-    MainWindow::instance()->unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    Zoom z = *rasterModel()->zoomLevels().begin();
+    QString layer = QString::fromStdString(rasterModel()->layers()[0]);
+    QString _copyright = QString::fromStdString(rasterModel()->copyright());
+    rasterModel.unlock();
 
     updateMapArea();
 

@@ -80,21 +80,20 @@ void TileDataThread::run() {
         /* Job found, proceed */
         if(runningCount == -1) {
 
-            AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForWrite();
+            Locker<AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForWrite();
 
             /* No model available */
-            if(!rasterModel) {
-                MainWindow::instance()->unlockRasterModel();
+            if(!rasterModel()) {
                 emit tileNotFound(firstPending.layer, firstPending.zoom, firstPending.coords);
                 return;
             }
 
             /* First try to get the data locally */
-            string data = rasterModel->tileFromPackage(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
+            string data = rasterModel()->tileFromPackage(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
             /** @todo @c VERSION-0.2 Get data also from cache */
-            bool online = rasterModel->online();
+            bool online = rasterModel()->online();
 
-            MainWindow::instance()->unlockRasterModel();
+            rasterModel.unlock();
 
             /* If found, emit signal with data */
             if(!data.empty()) {
@@ -145,9 +144,7 @@ void TileDataThread::startDownload(TileJob job) {
     if(position == -1) return;
 
     /* Create request for given tile */
-    const AbstractRasterModel* model = MainWindow::instance()->lockRasterModelForRead();
-    QString url = QString::fromStdString(model->tileUrl(job.layer.toStdString(), job.zoom, job.coords));
-    MainWindow::instance()->unlockRasterModel();
+    QString url = QString::fromStdString(MainWindow::instance()->rasterModelForRead()()->tileUrl(job.layer.toStdString(), job.zoom, job.coords));
 
     queue[position].reply = manager->get(QNetworkRequest(QUrl(url)));
 }

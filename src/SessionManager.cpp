@@ -115,17 +115,17 @@ void SessionManager::save(unsigned int id) {
     AbstractMapView* mapView = MainWindow::instance()->mapView();
     g->setValue<string>("mapView", mapView ? mapView->plugin() : "");
 
-    const AbstractRasterModel* rasterModel = MainWindow::instance()->lockRasterModelForRead();
-    g->setValue<string>("rasterModel", rasterModel ? rasterModel->plugin() : "");
+    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
+    g->setValue<string>("rasterModel", rasterModel() ? rasterModel()->plugin() : "");
 
     /* Online maps, loaded packages */
-    g->setValue<bool>("online", rasterModel ? rasterModel->online() : false);
+    g->setValue<bool>("online", rasterModel() ? rasterModel()->online() : false);
     g->removeAllValues("package");
-    int packageCount = rasterModel ? rasterModel->packageCount() : 0;
+    int packageCount = rasterModel() ? rasterModel()->packageCount() : 0;
     for(int i = 0; i != packageCount; ++i)
-        g->addValue<string>("package", rasterModel->packageAttribute(i, AbstractRasterModel::Filename));
+        g->addValue<string>("package", rasterModel()->packageAttribute(i, AbstractRasterModel::Filename));
 
-    MainWindow::instance()->unlockRasterModel();
+    rasterModel.unlock();
 
     /* Current coordinates, zoom */
     g->setValue<LatLonCoords>("coordinates", mapView ? mapView->coords() : LatLonCoords());

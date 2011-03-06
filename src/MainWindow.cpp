@@ -228,10 +228,10 @@ void MainWindow::setMapView(AbstractMapView* view) {
 void MainWindow::setRasterModel(AbstractRasterModel* model) {
     /** @todo @c VERSION-0.1.1 Disable Save Raster menu when no writeable format is available at all */
 
-    lockRasterModelForWrite();
+    rasterModelLock.lockForWrite();
     AbstractRasterModel* oldRasterModel = _rasterModel;
     _rasterModel = model;
-    unlockRasterModel();
+    rasterModelLock.unlock();
 
     /* Update save raster menu to avoid showing the same plugin twice */
     saveRasterMenuView->update();
@@ -248,9 +248,7 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
 }
 
 void MainWindow::setOnlineEnabled(bool enabled) {
-    lockRasterModelForWrite();
-    _rasterModel->setOnline(enabled);
-    unlockRasterModel();
+    rasterModelForWrite()()->setOnline(enabled);
 
     _rasterPackageModel->reload();
     _rasterLayerModel->reload();
@@ -379,9 +377,9 @@ void MainWindow::openRaster() {
 void MainWindow::saveRaster() {
     string plugin;
 
-    lockRasterModelForRead();
-    if(_rasterModel) plugin = _rasterModel->plugin();
-    unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = rasterModelForRead();
+    if(rasterModel()) plugin = rasterModel()->plugin();
+    rasterModel.unlock();
 
     if(plugin.empty()) return;
 
@@ -390,11 +388,11 @@ void MainWindow::saveRaster() {
 }
 
 void MainWindow::displayMapIfUsable() {
-    const AbstractRasterModel* model = lockRasterModelForRead();
-    QString name = model ? QString::fromStdString(*model->metadata()->name()) : "";
-    bool isUsable = model ? model->isUsable() : false;
-    bool isWriteable = model ? (model->features() & AbstractRasterModel::WriteableFormat) : false;
-    unlockRasterModel();
+    Locker<const AbstractRasterModel> rasterModel = rasterModelForRead();
+    QString name = rasterModel() ? QString::fromStdString(*rasterModel()->metadata()->name()) : "";
+    bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;
+    bool isWriteable = rasterModel() ? (rasterModel()->features() & AbstractRasterModel::WriteableFormat) : false;
+    rasterModel.unlock();
 
     /* Display map view, map options dock */
     if(_mapView && isUsable) {

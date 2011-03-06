@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     createActions();
     createMenus();
+    createUI();
 
     /* Sessions */
     currentSessionChange();
@@ -410,9 +411,11 @@ void MainWindow::displayMapIfUsable() {
         else
             saveRasterAction->setDisabled(true);
 
-        /* Show map view, show map options dock */
+        /* Show map view, show dock widgets */
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
         mapOptionsDock->setHidden(false);
+        foreach(QDockWidget* widget, _dockWidgets)
+            widget->setHidden(false);
 
         /* Show coordinate status */
         coordinateStatus->setHidden(false);
@@ -423,9 +426,11 @@ void MainWindow::displayMapIfUsable() {
         saveRasterMenu->setDisabled(true);
         closeRasterAction->setDisabled(true);
 
-        /* Show welcome screen, hide map options dock */
+        /* Show welcome screen, hide dock widgets */
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
         mapOptionsDock->setHidden(true);
+        foreach(QDockWidget* widget, _dockWidgets)
+            widget->setHidden(true);
 
         /* Don't show zeros in coordinate status */
         coordinateStatus->setHidden(true);
@@ -543,6 +548,61 @@ void MainWindow::createMenus() {
     QMenu* helpMenu = menuBar()->addMenu(tr("Help"));
     helpMenu->addAction(aboutAction);
     helpMenu->addAction(aboutQtAction);
+}
+
+void MainWindow::createUI() {
+    /* Foreach all loaded UI plugins and instance them */
+    PluginManager<AbstractUIComponent>* uiComponentPluginManager = _pluginManagerStore->uiComponents()->manager();
+    vector<string> plugins = uiComponentPluginManager->pluginList();
+    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
+        /* Skip not loaded plugins */
+        if(!(uiComponentPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) continue;
+
+        AbstractUIComponent* instance = uiComponentPluginManager->instance(*it);
+        instance->setParent(this);
+
+        /* Central widget */
+        if(instance->centralWidget()) setCentralWidget(instance->centralWidget());
+
+        /* Dock widget */
+        Qt::DockWidgetArea dockWidgetArea = Qt::RightDockWidgetArea;
+        if(instance->dockWidget(&dockWidgetArea)) {
+            QDockWidget* dock = instance->dockWidget(&dockWidgetArea);
+            _dockWidgets << dock;
+            addDockWidget(dockWidgetArea, dock);
+        }
+
+        /* Menu bar */
+        if(instance->menuBar()) setMenuBar(instance->menuBar());
+
+        /* Tool bar */
+        Qt::ToolBarArea toolBarArea = Qt::TopToolBarArea;
+        if(instance->toolBar(&toolBarArea)) addToolBar(toolBarArea, instance->toolBar(&toolBarArea));
+
+        /* Status bar */
+        if(instance->statusBar()) setStatusBar(instance->statusBar());
+
+        /* Actions */
+        for(int i = 0; i != 6; ++i) {
+            AbstractUIComponent::ActionCategory category = static_cast<AbstractUIComponent::ActionCategory>(i);
+
+            /* Add current actions to component (in QMultiMap are stored in
+               reverse order => backward foreach) */
+            QList<QAction*> actionsOfCategory = _actions.values(category);
+            for(int i = actionsOfCategory.size()-1; i >= 0; --i)
+                instance->actionAdded(category, actionsOfCategory[i]);
+
+            /* Add this component's actions to list and other components */
+            if(instance->actions(category)) {
+                foreach(QAction* action, *instance->actions(category)) {
+                    _actions.insert(category, action);
+                    emit actionAdded(category, action);
+                }
+            }
+        }
+
+        connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
+    }
 }
 
 void MainWindow::pluginDialog() {

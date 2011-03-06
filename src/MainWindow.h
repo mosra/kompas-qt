@@ -19,6 +19,7 @@
  * @brief Class Kompas::QtGui::MainWindow
  */
 
+#include <QtCore/QMultiMap>
 #include <QtCore/QReadWriteLock>
 #include <QtGui/QMainWindow>
 #include <QtGui/QFrame>
@@ -131,6 +132,14 @@ class MainWindow: public QMainWindow {
          */
         void rasterModelChanged(const Core::AbstractRasterModel* previous = 0);
 
+        /**
+         * @brief Action has been added
+         *
+         * All active @ref AbstractUIComponent plugins are connected to this
+         * signal.
+         */
+        void actionAdded(int category, QAction* action);
+
     public slots:
         /**
          * @brief Load default configuration
@@ -236,6 +245,8 @@ class MainWindow: public QMainWindow {
         Core::AbstractRasterModel* _rasterModel;
         QReadWriteLock rasterModelLock;
 
+        QMultiMap<AbstractUIComponent::ActionCategory, QAction*> _actions;
+
         QAction *openSessionAction,
             *newSessionAction,
             *deleteSessionAction,
@@ -262,8 +273,11 @@ class MainWindow: public QMainWindow {
         QStackedWidget* centralStackedWidget;
         QDockWidget* mapOptionsDock;
 
+        QList<QDockWidget*> _dockWidgets;
+
         void createActions();
         void createMenus();
+        void createUI();
 
         void displayMapIfUsable();
 

@@ -63,9 +63,8 @@ int SaveRasterWizard::exec() {
     /* Tile size and features of source model. Set ConvertableCoords feature
         only if the map has valid projection */
     const AbstractRasterModel* sourceModel = MainWindow::instance()->lockRasterModelForRead();
-    int sourceFeatures = sourceModel->features() & (sourceModel->projection() ?
-        AbstractRasterModel::ConvertableCoords :
-        ~AbstractRasterModel::ConvertableCoords);
+    int sourceFeatures = sourceModel->features() & ~(sourceModel->projection() ?
+        0 : AbstractRasterModel::ConvertableCoords);
     MainWindow::instance()->unlockRasterModel();
 
     /* Features of destination model */

@@ -14,7 +14,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "DistanceMeterToolDialog.h"
+#include "DistanceMeterDialog.h"
 
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
@@ -33,9 +33,9 @@ using namespace std;
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
-namespace Kompas { namespace Plugins {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
-DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
+DistanceMeterDialog::DistanceMeterDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
     /* Celestial bodies plugin model */
     CurrentCelestialBodyPluginModel* proxyModel = new CurrentCelestialBodyPluginModel(this);
     proxyModel->setSourceModel(MainWindow::instance()->pluginManagerStore()->celestialBodies()->loadedOnlyModel());
@@ -71,6 +71,7 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
     setLayout(layout);
 
     setMinimumWidth(320);
+    setAttribute(Qt::WA_DeleteOnClose);
 
     /* Set index to current model */
     int row = -1;
@@ -81,7 +82,7 @@ DistanceMeterToolDialog::DistanceMeterToolDialog(const AbstractTool* _tool, QWid
     if(row != -1) celestialBody->setCurrentIndex(row);
 }
 
-void DistanceMeterToolDialog::calculate() {
+void DistanceMeterDialog::calculate() {
     double _distance = 0;
 
     /* Celestial body instance */
@@ -106,4 +107,4 @@ void DistanceMeterToolDialog::calculate() {
     distance->setValue(_distance/1000);
 }
 
-}}
+}}}

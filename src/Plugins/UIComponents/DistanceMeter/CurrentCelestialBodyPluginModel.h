@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_CurrentCelestialBodyPluginModel_h
-#define Kompas_Plugins_CurrentCelestialBodyPluginModel_h
+#ifndef Kompas_Plugins_UIComponents_CurrentCelestialBodyPluginModel_h
+#define Kompas_Plugins_UIComponents_CurrentCelestialBodyPluginModel_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::CurrentCelestialBodyPluginModel
+ * @brief Class Kompas::Plugins::UIComponents::CurrentCelestialBodyPluginModel
  */
 
 #include <QtGui/QAbstractProxyModel>
@@ -31,7 +31,7 @@ namespace QtGui {
     class PluginModel;
 }
 
-namespace Plugins {
+namespace Plugins { namespace UIComponents {
 
 /**
  * @brief Proxy for plugin model which marks currently active celestial body
@@ -88,6 +88,6 @@ class CurrentCelestialBodyPluginModel: public QAbstractProxyModel {
         QtGui::PluginModel* pluginModel;
 };
 
-}}
+}}}
 
 #endif

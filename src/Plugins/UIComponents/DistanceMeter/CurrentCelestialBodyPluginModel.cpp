@@ -21,7 +21,7 @@
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
-namespace Kompas { namespace Plugins {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 CurrentCelestialBodyPluginModel::CurrentCelestialBodyPluginModel(QObject* parent): QAbstractProxyModel(parent) {
     connect(MainWindow::instance(), SIGNAL(rasterModelChanged(const Core::AbstractRasterModel*)), SLOT(changeCurrent(const Core::AbstractRasterModel*)));
@@ -68,4 +68,4 @@ void CurrentCelestialBodyPluginModel::changeCurrent(const AbstractRasterModel* p
     if(row != -1) emit dataChanged(index(row, PluginModel::Name), index(row, PluginModel::Name));
 }
 
-}}
+}}}

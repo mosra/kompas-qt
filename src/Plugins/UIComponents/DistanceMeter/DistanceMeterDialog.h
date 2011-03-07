@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_DistanceMeterToolDialog_h
-#define Kompas_Plugins_DistanceMeterToolDialog_h
+#ifndef Kompas_Plugins_UIComponents_DistanceMeterDialog_h
+#define Kompas_Plugins_UIComponents_DistanceMeterDialog_h
 /*
     Copyright © 2010 Jan Dupal <dupal.j@seznam.cz>
 
@@ -16,10 +16,10 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::DistanceMeterToolDialog
+ * @brief Class Kompas::Plugins::UIComponents::DistanceMeterDialog
  */
 
-#include "AbstractToolDialog.h"
+#include <QtGui/QDialog>
 
 class QComboBox;
 class QDoubleSpinBox;
@@ -30,15 +30,14 @@ namespace QtGui {
     class LatLonCoordsEdit;
 }
 
-namespace Plugins {
+namespace Plugins { namespace UIComponents {
 
 /** @brief Measuring distance between two lat/lon coords */
-class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
+class DistanceMeterDialog: public QDialog {
     Q_OBJECT
 
     public:
-        /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
-        DistanceMeterToolDialog(const QtGui::AbstractTool* _tool, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DistanceMeterDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void calculate();
@@ -49,6 +48,6 @@ class DistanceMeterToolDialog: public QtGui::AbstractToolDialog {
         QComboBox* celestialBody;
 };
 
-}}
+}}}
 
 #endif

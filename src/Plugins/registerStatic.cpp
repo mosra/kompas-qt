@@ -2,7 +2,6 @@
 #include "Utility/utilities.h"
 
 int registerQtStaticPlugins() {
-    PLUGIN_IMPORT(DmsDecimalTool)
     PLUGIN_IMPORT(GraphicsMapView)
 
     PLUGIN_IMPORT(AboutUIComponent)
@@ -10,5 +9,6 @@ int registerQtStaticPlugins() {
     PLUGIN_IMPORT(MenuBarUIComponent)
     PLUGIN_IMPORT(PluginConfigurationUIComponent)
     PLUGIN_IMPORT(DistanceMeterUIComponent)
+    PLUGIN_IMPORT(DmsDecimalConverterUIComponent)
     return 1;
 } AUTOMATIC_INITIALIZER(registerQtStaticPlugins)

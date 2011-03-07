@@ -1,4 +1,3 @@
-add_subdirectory(DmsDecimalTool)
 add_subdirectory(GraphicsMapView)
 
 add_subdirectory(UIComponents)

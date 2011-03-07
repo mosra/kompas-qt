@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "DmsDecimalToolDialog.h"
+#include "DmsDecimalConverterDialog.h"
 
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
@@ -25,9 +25,9 @@
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
-namespace Kompas { namespace Plugins {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
-DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* parent, Qt::WindowFlags f): AbstractToolDialog(_tool, parent, f) {
+DmsDecimalConverterDialog::DmsDecimalConverterDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
     /* Initialize labels */
     coords = new LatLonCoordsEdit;
     latitude = new QDoubleSpinBox;
@@ -59,16 +59,17 @@ DmsDecimalToolDialog::DmsDecimalToolDialog(const AbstractTool* _tool, QWidget* p
     setLayout(layout);
 
     setMinimumWidth(320);
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
-void DmsDecimalToolDialog::toDecimal() {
+void DmsDecimalConverterDialog::toDecimal() {
     LatLonCoords _coords = coords->coords();
     latitude->setValue(_coords.latitude());
     longitude->setValue(_coords.longitude());
 }
 
-void DmsDecimalToolDialog::toDms() {
+void DmsDecimalConverterDialog::toDms() {
     coords->setCoords(LatLonCoords(latitude->value(), longitude->value()));
 }
 
-}}
+}}}

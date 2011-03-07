@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_DmsDecimalToolDialog_h
-#define Kompas_Plugins_DmsDecimalToolDialog_h
+#ifndef Kompas_Plugins_UIComponents_DmsDecimalConverterDialog_h
+#define Kompas_Plugins_UIComponents_DmsDecimalConverterDialog_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,10 +16,10 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::DmsDecimalToolDialog
+ * @brief Class Kompas::Plugins::UIComponents::DmsDecimalConverterDialog
  */
 
-#include "AbstractToolDialog.h"
+#include <QtGui/QDialog>
 
 class QDoubleSpinBox;
 
@@ -29,15 +29,14 @@ namespace QtGui {
     class LatLonCoordsEdit;
 }
 
-namespace Plugins {
+namespace Plugins { namespace UIComponents {
 
 /** @brief Converting DMS to decimal and back */
-class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
+class DmsDecimalConverterDialog: public QDialog {
     Q_OBJECT
 
     public:
-        /** @copydoc QtGui::AbstractToolDialog::AbstractToolDialog */
-        DmsDecimalToolDialog(const QtGui::AbstractTool* _tool, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        DmsDecimalConverterDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
         void toDecimal();
@@ -49,6 +48,6 @@ class DmsDecimalToolDialog: public QtGui::AbstractToolDialog {
             *longitude;
 };
 
-}}
+}}}
 
 #endif

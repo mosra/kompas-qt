@@ -13,7 +13,7 @@
     GNU Lesser General Public License version 3 for more details.
 */
 
-#include "PluginDialog.h"
+#include "PluginTab.h"
 
 #include <QtGui/QTabWidget>
 #include <QtGui/QTableView>
@@ -31,28 +31,11 @@
 #include "MessageBox.h"
 
 using namespace std;
+using namespace Kompas::QtGui;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
-PluginDialog::PluginDialog(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
-    /* Tabs */
-    tabs = new QTabWidget;
-
-    QList<PluginManagerStore::AbstractItem*> items = MainWindow::instance()->pluginManagerStore()->items();
-
-    foreach(PluginManagerStore::AbstractItem* item, items) {
-        Tab* tab = new Tab(item);
-        tabs->addTab(tab, item->name());
-        connectWidget(tab);
-    }
-
-    setCentralWidget(tabs);
-    setWindowTitle(tr("Plugins"));
-    resize(640, 400);
-    setAttribute(Qt::WA_DeleteOnClose);
-}
-
-PluginDialog::Tab::Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), _pluginManagerStoreItem(pluginManagerStoreItem) {
+PluginTab::PluginTab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWidget(parent, f), _pluginManagerStoreItem(pluginManagerStoreItem) {
     /* Initialize labels */
     pluginDir = new QLineEdit;
     QLabel* categoryDescription = new QLabel(_pluginManagerStoreItem->description());
@@ -137,11 +120,11 @@ PluginDialog::Tab::Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem,
 
     /* Display errorbox if something bad happened during loading/unloading plugins */
     connect(_pluginManagerStoreItem->manager(),
-            SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-            SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+            SIGNAL(loadAttempt(std::string,int,int)),
+            SLOT(loadAttempt(std::string,int,int)));
     connect(_pluginManagerStoreItem->manager(),
-            SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-            SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+            SIGNAL(unloadAttempt(std::string,int,int)),
+            SLOT(unloadAttempt(std::string,int,int)));
 
     /* On selection change load new row in mapper */
     connect(view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
@@ -187,7 +170,7 @@ PluginDialog::Tab::Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem,
     pluginDir->setText(QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()));
 }
 
-void PluginDialog::Tab::save() {
+void PluginTab::save() {
     /* Update plugin dir if it is not the same as in PluginManager */
     if(pluginDir->text() != QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()))
         _pluginManagerStoreItem->manager()->setPluginDirectory(pluginDir->text().toStdString());
@@ -196,13 +179,13 @@ void PluginDialog::Tab::save() {
     _pluginManagerStoreItem->loadedToConfiguration();
 }
 
-void PluginDialog::Tab::reset() {
+void PluginTab::reset() {
     _pluginManagerStoreItem->pluginDirectoryFromConfiguration();
     pluginDir->setText(QString::fromStdString(_pluginManagerStoreItem->manager()->pluginDirectory()));
     /** @todo Reset also loaded plugins? */
 }
 
-void PluginDialog::Tab::restoreDefaults() {
+void PluginTab::restoreDefaults() {
     /* Remove current pluginDir value from configuration and set it from defaults */
     _pluginManagerStoreItem->configurationGroup()->clear();
     MainWindow::instance()->loadDefaultConfiguration();
@@ -211,7 +194,7 @@ void PluginDialog::Tab::restoreDefaults() {
     reset();
 }
 
-void PluginDialog::Tab::setPluginDir() {
+void PluginTab::setPluginDir() {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Select plugin dir"), pluginDir->text());
 
     if(!dir.isEmpty()) {
@@ -221,11 +204,11 @@ void PluginDialog::Tab::setPluginDir() {
     }
 }
 
-void PluginDialog::Tab::reloadPluginDirectory() {
+void PluginTab::reloadPluginDirectory() {
     _pluginManagerStoreItem->manager()->setPluginDirectory(pluginDir->text().toStdString());
 }
 
-void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginTab::loadAttempt(const string& name, int before, int after) {
     QString message;
     switch(after) {
         case AbstractPluginManager::NotFound:
@@ -248,7 +231,7 @@ void PluginDialog::Tab::loadAttempt(const string& name, AbstractPluginManager::L
     MessageBox::warning(this, tr("Cannot load plugin"), QString("%0 <strong>%1</strong>:<br/><br/>%2").arg(tr("Cannot load plugin")).arg(QString::fromStdString(name)).arg(message));
 }
 
-void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginTab::unloadAttempt(const string& name, int before, int after) {
     QString message;
     switch(after) {
         case AbstractPluginManager::UnloadFailed:
@@ -265,7 +248,7 @@ void PluginDialog::Tab::unloadAttempt(const string& name, AbstractPluginManager:
     MessageBox::warning(this, tr("Cannot unload plugin"), QString("%0 <strong>%1</strong>:<br /><br/>%2").arg(tr("Cannot unload plugin")).arg(QString::fromStdString(name)).arg(message));
 }
 
-void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
+void PluginTab::setCurrentRow(const QModelIndex& index) {
     mapper->setCurrentModelIndex(index);
 
     reloadPluginButton->setHidden(false);
@@ -306,8 +289,8 @@ void PluginDialog::Tab::setCurrentRow(const QModelIndex& index) {
     replacedWith->setHidden(hide);
 }
 
-void PluginDialog::Tab::reloadCurrentPlugin() {
+void PluginTab::reloadCurrentPlugin() {
     _pluginManagerStoreItem->manager()->reload(_pluginManagerStoreItem->model()->index(mapper->currentIndex(), PluginModel::Plugin).data().toString().toStdString());
 }
 
-}}
+}}}

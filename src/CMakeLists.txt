@@ -15,7 +15,6 @@ set(Kompas_Qt_SRCS
     TileDataThread.cpp
     AbstractConfigurationDialog.cpp
     PluginModel.cpp
-    PluginDialog.cpp
     LatLonCoordsEdit.cpp
     AbstractPluginMenuView.cpp
     ToolPluginMenuView.cpp
@@ -48,7 +47,6 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     AbstractPluginManager.h
     AbstractUIComponent.h
     PluginModel.h
-    PluginDialog.h
     AbstractPluginMenuView.h
     SaveRasterWizard.h
     SaveRasterThread.h

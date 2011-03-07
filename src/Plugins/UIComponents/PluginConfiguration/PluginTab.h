@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_PluginDialog_h
-#define Kompas_QtGui_PluginDialog_h
+#ifndef Kompas_Plugins_UIComponents_PluginTab_h
+#define Kompas_Plugins_UIComponents_PluginTab_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,10 +16,10 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::PluginDialog
+ * @brief Class Kompas::Plugins::UIComponents::PluginTab
  */
 
-#include "AbstractConfigurationDialog.h"
+#include "AbstractConfigurationWidget.h"
 
 #include <QtCore/QModelIndex>
 
@@ -27,41 +27,20 @@
 #include "PluginManagerStore.h"
 
 class QDialogButtonBox;
-class QTabWidget;
 class QLabel;
 class QLineEdit;
 class QDataWidgetMapper;
 class QPushButton;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /**
- * @brief Plugin settings dialog
- *
- * Provides viewing and managing plugins.
- * @bug Crash while reloading mapview plugin dir
- */
-class PluginDialog: public AbstractConfigurationDialog {
-    Q_OBJECT
-
-    public:
-        /** @copydoc AbstractConfigurationDialog::AbstractConfigurationDialog */
-        PluginDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
-
-    protected:
-        class Tab;
-
-    private:
-        QTabWidget* tabs;
-};
-
-/**
- * @brief %Tab in Plugin dialog
+ * @brief Tab in Plugin dialog
  *
  * Shows table with all plugin and after selecting any row detailed information
  * about that plugin.
  */
-class PluginDialog::Tab: public AbstractConfigurationWidget {
+class PluginTab: public QtGui::AbstractConfigurationWidget {
     Q_OBJECT
 
     public:
@@ -71,7 +50,7 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
          * @param parent                    Parent widget
          * @param f                         Window flags
          */
-        Tab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent = 0, Qt::WindowFlags f = 0);
+        PluginTab(QtGui::PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         virtual void reset();
@@ -83,14 +62,14 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
 
         void reloadPluginDirectory();
 
-        void loadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
-        void unloadAttempt(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void loadAttempt(const std::string& name, int before, int after);
+        void unloadAttempt(const std::string& name, int before, int after);
 
         void setCurrentRow(const QModelIndex& index);
         void reloadCurrentPlugin();
 
     private:
-        PluginManagerStore::AbstractItem* _pluginManagerStoreItem;
+        QtGui::PluginManagerStore::AbstractItem* _pluginManagerStoreItem;
 
         QDataWidgetMapper* mapper;
         QPushButton* reloadPluginButton;
@@ -106,6 +85,6 @@ class PluginDialog::Tab: public AbstractConfigurationWidget {
             *replacedWithLabel, *replacedWith;
 };
 
-}}
+}}}
 
 #endif

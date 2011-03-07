@@ -31,7 +31,6 @@
 #include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
-#include "PluginDialog.h"
 #include "TileDataThread.h"
 #include "ToolPluginMenuView.h"
 #include "SaveRasterMenuView.h"
@@ -488,11 +487,6 @@ void MainWindow::createActions() {
     connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
     _actions.insert(AbstractUIComponent::Maps, closeRasterAction);
 
-    /* Settings menu */
-    pluginDialogAction = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
-    connect(pluginDialogAction, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
-    _actions.insert(AbstractUIComponent::Settings, pluginDialogAction);
-
     /* About */
     aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
     aboutAction->setStatusTip(tr("Show information about this application"));
@@ -588,11 +582,6 @@ void MainWindow::createUI() {
 
         connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
     }
-}
-
-void MainWindow::pluginDialog() {
-    PluginDialog* dialog = new PluginDialog(this);
-    dialog->show();
 }
 
 void MainWindow::aboutDialog() {

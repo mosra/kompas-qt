@@ -5,6 +5,7 @@ int registerQtStaticPlugins() {
     PLUGIN_IMPORT(DistanceMeterTool)
     PLUGIN_IMPORT(DmsDecimalTool)
     PLUGIN_IMPORT(GraphicsMapView)
+    PLUGIN_IMPORT(AboutUIComponent)
     PLUGIN_IMPORT(ConfigurationUIComponent)
     PLUGIN_IMPORT(MenuBarUIComponent)
     PLUGIN_IMPORT(PluginConfigurationUIComponent)

@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_AboutDialog_h
-#define Kompas_QtGui_AboutDialog_h
+#ifndef Kompas_Plugins_UIComponents_AboutDialog_h
+#define Kompas_Plugins_UIComponents_AboutDialog_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,12 +16,12 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::AboutDialog
+ * @brief Class Kompas::Plugins::UIComponents::AboutDialog
  */
 
 #include <QtGui/QDialog>
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /**
  * @brief About dialog
@@ -38,6 +38,6 @@ class AboutDialog: public QDialog {
         AboutDialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
 };
 
-}}
+}}}
 
 #endif

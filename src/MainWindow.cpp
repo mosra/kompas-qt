@@ -42,7 +42,6 @@
 #include "RasterZoomModel.h"
 #include "SaveRasterWizard.h"
 #include "MessageBox.h"
-#include "AboutDialog.h"
 #include "SessionMenuView.h"
 
 #define WELCOME_SCREEN 0
@@ -486,18 +485,6 @@ void MainWindow::createActions() {
     closeRasterAction->setDisabled(true);
     connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
     _actions.insert(AbstractUIComponent::Maps, closeRasterAction);
-
-    /* About */
-    aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
-    aboutAction->setStatusTip(tr("Show information about this application"));
-    connect(aboutAction, SIGNAL(triggered(bool)), SLOT(aboutDialog()));
-    _actions.insert(AbstractUIComponent::Help, aboutAction);
-
-    /* About Qt */
-    aboutQtAction = new QAction(QIcon(":/trolltech/qmessagebox/images/qtlogo-64.png"), tr("About Qt"), this);
-    aboutQtAction->setStatusTip(tr("Show information about Qt"));
-    connect(aboutQtAction, SIGNAL(triggered(bool)), qApp, SLOT(aboutQt()));
-    _actions.insert(AbstractUIComponent::Help, aboutQtAction);
 }
 
 void MainWindow::createMenus() {
@@ -582,11 +569,6 @@ void MainWindow::createUI() {
 
         connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
     }
-}
-
-void MainWindow::aboutDialog() {
-    AboutDialog* dialog = new AboutDialog(this);
-    dialog->show();
 }
 
 void MainWindow::currentSessionChange() {

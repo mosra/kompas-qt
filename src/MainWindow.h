@@ -193,9 +193,6 @@ class MainWindow: public QMainWindow {
          */
         inline void closeRaster() { setRasterModel(0); }
 
-        /** @brief About dialog */
-        void aboutDialog();
-
         /**
          * @brief Reflect current session change in the UI
          *
@@ -255,9 +252,7 @@ class MainWindow: public QMainWindow {
             *openOnlineAction,
             *saveRasterAction,
             *saveCurrentRasterAction,
-            *closeRasterAction,
-            *aboutAction,
-            *aboutQtAction;
+            *closeRasterAction;
 
         QMenu *sessionMenu,
             *openRasterMenu,

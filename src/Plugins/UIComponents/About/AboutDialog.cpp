@@ -21,7 +21,7 @@
 
 #include "MainWindowConfigure.h"
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f) {
     QLabel* brief = new QLabel(QString(
@@ -67,4 +67,4 @@ AboutDialog::AboutDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f)
     setAttribute(Qt::WA_DeleteOnClose);
 }
 
-}}
+}}}

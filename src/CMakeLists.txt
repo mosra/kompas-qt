@@ -16,7 +16,6 @@ set(Kompas_Qt_SRCS
     PluginModel.cpp
     LatLonCoordsEdit.cpp
     AbstractPluginMenuView.cpp
-    ToolPluginMenuView.cpp
     OpenRasterMenuView.cpp
     SaveRasterMenuView.cpp
     SaveRasterWizard.cpp

@@ -32,7 +32,6 @@
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
 #include "TileDataThread.h"
-#include "ToolPluginMenuView.h"
 #include "SaveRasterMenuView.h"
 #include "OpenRasterMenuView.h"
 #include "MapOptionsDock.h"
@@ -172,7 +171,6 @@ void MainWindow::loadDefaultConfiguration() {
     string celestialBodyPluginDir = PLUGIN_CELESTIALBODY_DIR;
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
     string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
-    string toolPluginDir = PLUGIN_TOOL_DIR;
     string uiComponentPluginDir = PLUGIN_UICOMPONENT_DIR;
 
     /* On Win32 add program directory to the dirs to make them absolute */
@@ -182,7 +180,6 @@ void MainWindow::loadDefaultConfiguration() {
     celestialBodyPluginDir = programPath + celestialBodyPluginDir;
     projectionPluginDir = programPath + projectionPluginDir;
     rasterModelPluginDir = programPath + rasterModelPluginDir;
-    toolPluginDir = programPath + toolPluginDir;
     uiComponentPluginDir = programPath + uiComponentPluginDir;
     #endif
 
@@ -190,7 +187,6 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("plugins")->group("celestialBodies")->value<string>("__dir", &celestialBodyPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);
-    _configuration.group("plugins")->group("tools")->value<string>("__dir", &toolPluginDir);
     _configuration.group("plugins")->group("uiComponents")->value<string>("__dir", &uiComponentPluginDir);
 
     /* Plugin for map view */
@@ -509,11 +505,6 @@ void MainWindow::createMenus() {
     saveRasterMenu->setDisabled(true);
     saveRasterMenuView = new SaveRasterMenuView(pluginManagerStore()->rasterModels()->manager(), saveRasterMenu, 0, this);
     saveRasterMenuView->update();
-
-    /* Tools menu */
-    toolsMenu = menuBar()->addMenu(tr("Tools"));
-    ToolPluginMenuView* toolPluginMenuView = new ToolPluginMenuView(this, pluginManagerStore()->tools()->manager(), toolsMenu, 0, this);
-    toolPluginMenuView->update();
 }
 
 void MainWindow::createUI() {

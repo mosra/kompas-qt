@@ -48,12 +48,6 @@ PluginManagerStore::PluginManagerStore(ConfigurationGroup* configurationGroup, Q
         tr("Allow opening different formats of raster maps."),
         this);
     _items << _rasterModels;
-    _tools = new Item<AbstractTool>(
-        configurationGroup->group("tools"),
-        tr("Tools"),
-        tr("Various additional tools."),
-        this);
-    _items << _tools;
     _uiComponents = new Item<AbstractUIComponent>(
         configurationGroup->group("uiComponents"),
         tr("User interface components"),

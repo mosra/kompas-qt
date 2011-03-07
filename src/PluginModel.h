@@ -92,8 +92,8 @@ class PluginModel: public QAbstractTableModel {
         void reload();
 
     private slots:
-        void loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
-        void unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void loadAttempt(const std::string& plugin, int before, int after);
+        void unloadAttempt(const std::string& plugin, int before, int after);
         void reloadPluginMetadata(const std::string& plugin);
         void removePlugin(const std::string& plugin);
 

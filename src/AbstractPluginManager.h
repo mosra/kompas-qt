@@ -100,7 +100,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * signal can be emitted after the plugin disappeared, in that case
          * plugin with this name doesn't exist anymore.
          */
-        void loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void loadAttempt(const std::string& plugin, int before, int after);
 
         /**
          * @brief Plugin unload attempt
@@ -112,7 +112,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * signal can be emitted after the plugin disappeared, in that case
          * plugin with this name doesn't exist anymore.
          */
-        void unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void unloadAttempt(const std::string& plugin, int before, int after);
 
         /**
          * @brief Plugin directory was reloaded

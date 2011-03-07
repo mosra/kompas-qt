@@ -184,7 +184,7 @@ class AbstractPluginMenuView: public QObject {
         virtual QAction* createMenuAction(const std::string& pluginName) = 0;
 
     private slots:
-        void tryUpdate(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after);
+        void tryUpdate(const std::string& name, int before, int after);
 
     private:
         QMenu* menu;

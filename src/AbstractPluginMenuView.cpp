@@ -21,15 +21,14 @@ namespace Kompas { namespace QtGui {
 
 AbstractPluginMenuView::AbstractPluginMenuView(AbstractPluginManager* _manager, QMenu* _menu, QAction* _before, QObject* parent): QObject(parent), manager(_manager), menu(_menu), before(_before) {
     /* Update menu after plugin changes */
-    connect(_manager, SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)), this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
-    connect(_manager, SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-    this, SLOT(tryUpdate(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(_manager, SIGNAL(loadAttempt(std::string,int,int)), SLOT(tryUpdate(std::string,int,int)));
+    connect(_manager, SIGNAL(unloadAttempt(std::string,int,int)), SLOT(tryUpdate(std::string,int,int)));
 
     /* Trigger an action after clicking the menu */
     connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(trigger(QAction*)));
 }
 
-void AbstractPluginMenuView::tryUpdate(const std::string& name, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void AbstractPluginMenuView::tryUpdate(const std::string& name, int before, int after) {
     /* State changed between loaded <-> unloaded => update menu. Static plugins
         aren't changing, so don't test them. */
     if((before & AbstractPluginManager::LoadOk) != (after & AbstractPluginManager::LoadOk))

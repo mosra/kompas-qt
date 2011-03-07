@@ -24,12 +24,8 @@ using namespace std;
 namespace Kompas { namespace QtGui {
 
 PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* parent): QAbstractTableModel(parent), manager(_manager), _flags(flags) {
-    connect(manager,
-            SIGNAL(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-            SLOT(loadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
-    connect(manager,
-            SIGNAL(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)),
-            SLOT(unloadAttempt(std::string,AbstractPluginManager::LoadState,AbstractPluginManager::LoadState)));
+    connect(manager, SIGNAL(loadAttempt(std::string,int,int)), SLOT(loadAttempt(std::string,int,int)));
+    connect(manager, SIGNAL(unloadAttempt(std::string,int,int)), SLOT(unloadAttempt(std::string,int,int)));
     connect(manager,
             SIGNAL(pluginMetadataReloaded(std::string)),
             SLOT(reloadPluginMetadata(std::string)));
@@ -179,14 +175,14 @@ bool PluginModel::setData(const QModelIndex& index, const QVariant& value, int r
     return true;
 }
 
-void PluginModel::loadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginModel::loadAttempt(const std::string& plugin, int before, int after) {
     /* Plugin was loaded */
     if(before != AbstractPluginManager::LoadOk && after == AbstractPluginManager::LoadOk) {
         /* Add to list, if displaying only loaded plugins */
         if(_flags & LoadedOnly) {
             beginInsertRows(QModelIndex(), plugins.size(), plugins.size());
             /** @todo Insert to right place (alphabetically sorted) */
-            plugins.append(PluginMetadata(plugin, after, manager->metadata(plugin)));
+            plugins.append(PluginMetadata(plugin, static_cast<AbstractPluginManager::LoadState>(after), manager->metadata(plugin)));
             endInsertRows();
 
         /* Or just emit signal about data change. It must be emitted here,
@@ -198,13 +194,13 @@ void PluginModel::loadAttempt(const std::string& plugin, AbstractPluginManager::
             if(found == -1) return;
 
             /* Update plugin state */
-            plugins[found].loadState = after;
+            plugins[found].loadState = static_cast<AbstractPluginManager::LoadState>(after);
             emit dataChanged(index(found, LoadState), index(found, LoadState));
         }
     }
 }
 
-void PluginModel::unloadAttempt(const std::string& plugin, AbstractPluginManager::LoadState before, AbstractPluginManager::LoadState after) {
+void PluginModel::unloadAttempt(const std::string& plugin, int before, int after) {
     /* Remove from list, if displaying only loaded plugins and the plugin is now unloaded */
     if((_flags & LoadedOnly) && (after & (AbstractPluginManager::NotLoaded|AbstractPluginManager::UnloadFailed|AbstractPluginManager::NotFound))) {
         /* Find the name in list */

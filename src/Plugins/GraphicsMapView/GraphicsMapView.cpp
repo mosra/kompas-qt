@@ -471,7 +471,7 @@ void GraphicsMapView::updateTilePositions() {
 
         /* Create new tile at given position */
         Tile* tile = new Tile(tileSize, coords, 0, &map);
-        tile->setPos(coords.x*rasterModel->tileSize().x, coords.y*tileSize.y);
+        tile->setPos(coords.x*tileSize.x, coords.y*tileSize.y);
         tiles.append(tile);
 
         /* Foreach all layers and overlays and request data for them */

@@ -1,0 +1,23 @@
+Source: kompas-qt
+Priority: optional
+Maintainer: Vladimír Vondruš <mosra@centrum.cz>
+Build-Depends: debhelper (>= 7.0.50~), cmake (>= 2.6.0), libqt4-dev (>= 4.6.0), kompas-core-dev
+Standards-Version: 3.8.4
+Section: x11
+Homepage: http://mosra.cz/blog/kompas.php
+Vcs-Git: git://github.com/mosra/kompas-qt.git
+Vcs-Browser: https://github.com/mosra/kompas-qt
+
+Package: kompas-qt-dev
+Section: libdevel
+Architecture: any
+Depends: libqt4-dev (>= 4.6.0), kompas-core-dev (=${binary:Version}), kompas-qt (=${binary:Version})
+Description: Kompas Qt GUI development files
+ Qt GUI headers needed for developing for Kompas Qt GUI.
+
+Package: kompas-qt
+Section: x11
+Architecture: any
+Depends: libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0), libqt4-network (>= 4.6.0), kompas-core (=${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Qt GUI for Kompas navigation software
+ Online and offline map viewer and tools for map conversion and download.

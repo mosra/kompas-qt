@@ -22,19 +22,26 @@
 #include <QtCore/QMultiMap>
 #include <QtCore/QReadWriteLock>
 #include <QtGui/QMainWindow>
-#include <QtGui/QFrame>
 
 #include "Utility/Configuration.h"
 #include "SessionManager.h"
-#include "PluginManagerStore.h"
+#include "AbstractUIComponent.h"
 #include "Locker.h"
 
 class QStackedWidget;
 class QAction;
 class QMenu;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas {
 
+namespace Core {
+    class AbstractRasterModel;
+}
+
+namespace QtGui {
+
+class AbstractMapView;
+class PluginManagerStore;
 class RasterPackageModel;
 class RasterLayerModel;
 class RasterOverlayModel;

@@ -40,6 +40,7 @@
 #include "DownloadPage.h"
 #include "MetadataPage.h"
 #include "StatisticsPage.h"
+#include "PluginManagerStore.h"
 
 using namespace std;
 using namespace Kompas::Utility;

@@ -20,6 +20,7 @@
 #include "MainWindow.h"
 #include "SaveRasterMenuView.h"
 #include "SaveRasterWizard.h"
+#include "PluginManagerStore.h"
 
 PLUGIN_REGISTER_STATIC(SaveRasterUIComponent,
                        Kompas::Plugins::UIComponents::SaveRasterUIComponent,

@@ -15,22 +15,17 @@
 
 #include "MainWindow.h"
 
-#include <QtGui/QApplication>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStyle>
 #include <QtGui/QStatusBar>
-#include <QtGui/QLabel>
 #include <QtGui/QDockWidget>
 #include <QtGui/QFileDialog>
 #include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
 #include <QtGui/QToolButton>
 #include <QtGui/QStackedWidget>
-#include <QtGui/QInputDialog>
 
 #include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
-#include "PluginManager.h"
 #include "TileDataThread.h"
 #include "OpenRasterMenuView.h"
 #include "RasterPackageModel.h"
@@ -39,6 +34,7 @@
 #include "RasterZoomModel.h"
 #include "MessageBox.h"
 #include "SessionMenuView.h"
+#include "PluginManagerStore.h"
 
 #define WELCOME_SCREEN 0
 #define MAP_VIEW 1

@@ -25,6 +25,7 @@
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
+#include "AbstractMapView.h"
 
 using namespace Kompas::QtGui;
 

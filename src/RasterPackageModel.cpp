@@ -16,6 +16,7 @@
 #include "RasterPackageModel.h"
 
 #include "MainWindow.h"
+#include "AbstractRasterModel.h"
 
 using namespace Kompas::Core;
 

@@ -19,6 +19,7 @@
 #include <QtGui/QLabel>
 
 #include "MainWindow.h"
+#include "AbstractMapView.h"
 
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;

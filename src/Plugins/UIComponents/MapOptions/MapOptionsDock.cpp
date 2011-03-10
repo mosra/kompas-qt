@@ -31,6 +31,7 @@
 #include "PluginManager.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
+#include "PluginManagerStore.h"
 #include "MovingWidget.h"
 #include "ZoomSlider.h"
 

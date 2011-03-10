@@ -16,6 +16,7 @@
 #include "CurrentCelestialBodyPluginModel.h"
 
 #include "MainWindow.h"
+#include "AbstractRasterModel.h"
 #include "PluginModel.h"
 
 using namespace Kompas::Core;

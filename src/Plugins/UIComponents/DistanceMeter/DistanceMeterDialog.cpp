@@ -26,6 +26,7 @@
 #include "MessageBox.h"
 #include "PluginModel.h"
 #include "MainWindow.h"
+#include "PluginManagerStore.h"
 #include "PluginManager.h"
 #include "CurrentCelestialBodyPluginModel.h"
 

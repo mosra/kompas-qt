@@ -21,6 +21,7 @@
 
 #include "MainWindow.h"
 #include "PluginManager.h"
+#include "PluginManagerStore.h"
 
 using namespace std;
 using namespace Kompas::Utility;

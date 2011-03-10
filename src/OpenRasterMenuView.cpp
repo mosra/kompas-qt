@@ -14,7 +14,6 @@
 */
 
 #include "OpenRasterMenuView.h"
-#include "SaveRasterWizard.h"
 #include "MainWindow.h"
 
 using namespace Kompas::Core;

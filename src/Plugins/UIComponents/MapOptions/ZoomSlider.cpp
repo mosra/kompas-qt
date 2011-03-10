@@ -16,6 +16,7 @@
 #include "ZoomSlider.h"
 
 #include "MainWindow.h"
+#include "AbstractMapView.h"
 
 using namespace std;
 using namespace Kompas::Core;

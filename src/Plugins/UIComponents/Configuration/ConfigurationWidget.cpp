@@ -25,6 +25,7 @@
 #include <QtGui/QFileDialog>
 
 #include "PluginModel.h"
+#include "PluginManagerStore.h"
 #include "MainWindow.h"
 
 using namespace std;

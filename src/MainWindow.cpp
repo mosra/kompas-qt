@@ -34,7 +34,6 @@
 #include "TileDataThread.h"
 #include "SaveRasterMenuView.h"
 #include "OpenRasterMenuView.h"
-#include "MapOptionsDock.h"
 #include "RasterPackageModel.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
@@ -141,12 +140,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     centralStackedWidget = new QStackedWidget;
     centralStackedWidget->addWidget(welcomeScreen);
     setCentralWidget(centralStackedWidget);
-
-    /* Map options dock */
-    mapOptionsDock = new QDockWidget;
-    mapOptionsDock->setWidget(new MapOptionsDock(this));
-    mapOptionsDock->setWindowTitle(tr("Map options"));
-    addDockWidget(Qt::RightDockWidgetArea, mapOptionsDock);
 
     /* Status bar with coordinates */
     coordinateStatus = new QLabel;
@@ -406,7 +399,6 @@ void MainWindow::displayMapIfUsable() {
 
         /* Show map view, show dock widgets */
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
-        mapOptionsDock->setHidden(false);
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(false);
 
@@ -421,7 +413,6 @@ void MainWindow::displayMapIfUsable() {
 
         /* Show welcome screen, hide dock widgets */
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
-        mapOptionsDock->setHidden(true);
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(true);
 

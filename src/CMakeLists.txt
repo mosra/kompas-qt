@@ -20,8 +20,6 @@ set(Kompas_Qt_SRCS
     SaveRasterMenuView.cpp
     SaveRasterWizard.cpp
     SaveRasterThread.cpp
-    MapOptionsDock.cpp
-    MovingWidget.cpp
     PluginManagerStore.cpp
     RasterPackageModel.cpp
     RasterLayerModel.cpp
@@ -32,7 +30,6 @@ set(Kompas_Qt_SRCS
     MessageBox.cpp
     main.cpp
     Plugins/registerStatic.cpp
-    ZoomSlider.cpp
 )
 
 qt4_wrap_cpp(Kompas_Qt_MOC
@@ -47,8 +44,6 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     AbstractPluginMenuView.h
     SaveRasterWizard.h
     SaveRasterThread.h
-    MapOptionsDock.h
-    MovingWidget.h
     RasterPackageModel.h
     RasterLayerModel.h
     RasterOverlayModel.h
@@ -56,7 +51,6 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     SessionManager.h
     SessionMenuView.h
     LatLonCoordsEdit.h
-    ZoomSlider.h
 )
 
 qt4_add_resources(Kompas_Qt_QRC

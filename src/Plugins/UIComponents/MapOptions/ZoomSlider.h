@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_ZoomSlider_h
-#define Kompas_QtGui_ZoomSlider_h
+#ifndef Kompas_Plugins_UIComponents_ZoomSlider_h
+#define Kompas_Plugins_UIComponents_ZoomSlider_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,14 +16,14 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::ZoomSlider
+ * @brief Class Kompas::Plugins::UIComponents::ZoomSlider
  */
 
 #include <QtGui/QSlider>
 
 #include "AbstractRasterModel.h"
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /**
  * @brief Zoom slider
@@ -60,6 +60,6 @@ class ZoomSlider: public QSlider {
         void zoomTo(int value);
 };
 
-}}
+}}}
 
 #endif

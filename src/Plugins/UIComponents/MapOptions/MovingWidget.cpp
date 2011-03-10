@@ -22,7 +22,9 @@
 #include "AbstractMapView.h"
 #include "MainWindow.h"
 
-namespace Kompas { namespace QtGui {
+using namespace Kompas::QtGui;
+
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 MovingWidget::MovingWidget(QWidget* parent, Qt::WindowFlags f): QWidget(parent, f) {
     QGridLayout* layout = new QGridLayout;
@@ -62,4 +64,4 @@ void MovingWidget::move() {
     view->move(x, y);
 }
 
-}}
+}}}

@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_MovingWidget_h
-#define Kompas_QtGui_MovingWidget_h
+#ifndef Kompas_Plugins_UIComponents_MovingWidget_h
+#define Kompas_Plugins_UIComponents_MovingWidget_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,14 +16,14 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::MovingWidget
+ * @brief Class Kompas::Plugins::UIComponents::MovingWidget
  */
 
 #include <QtGui/QWidget>
 
 class QPushButton;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /**
  * @brief Useless widget for moving the map with frantic mouse clicking
@@ -40,7 +40,7 @@ class MovingWidget: public QWidget {
         MovingWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     private slots:
-      void move();
+        void move();
 
     private:
         QPushButton *up,
@@ -49,6 +49,6 @@ class MovingWidget: public QWidget {
             *down;
 };
 
-}}
+}}}
 
 #endif

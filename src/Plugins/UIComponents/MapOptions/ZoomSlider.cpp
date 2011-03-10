@@ -19,8 +19,9 @@
 
 using namespace std;
 using namespace Kompas::Core;
+using namespace Kompas::QtGui;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 ZoomSlider::ZoomSlider(QWidget* parent): QSlider(parent) {
     setTickPosition(QSlider::TicksBothSides);
@@ -86,4 +87,4 @@ void ZoomSlider::zoomTo(int value) {
     else setValue(static_cast<int>(*upper));
 }
 
-}}
+}}}

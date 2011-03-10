@@ -33,7 +33,6 @@ class QStackedWidget;
 class QAction;
 class QMenu;
 class QLabel;
-class QDockWidget;
 
 namespace Kompas { namespace QtGui {
 
@@ -263,7 +262,6 @@ class MainWindow: public QMainWindow {
         QLabel* coordinateStatus;
 
         QStackedWidget* centralStackedWidget;
-        QDockWidget* mapOptionsDock;
 
         QList<QDockWidget*> _dockWidgets;
 

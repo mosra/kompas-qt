@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_SaveRasterThread_h
-#define Kompas_QtGui_SaveRasterThread_h
+#ifndef Kompas_Plugins_UIComponents_SaveRasterThread_h
+#define Kompas_Plugins_UIComponents_SaveRasterThread_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::SaveRasterThread
+ * @brief Class Kompas::Plugins::UIComponents::SaveRasterThread
  */
 
 #include <QtCore/QThread>
@@ -27,7 +27,7 @@
 #include "AbstractRasterModel.h"
 #include "MainWindow.h"
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /** @brief Thread for saving raster package */
 class SaveRasterThread: public QThread {
@@ -102,6 +102,6 @@ class SaveRasterThread: public QThread {
         std::vector<std::string> layers;
 };
 
-}}
+}}}
 
 #endif

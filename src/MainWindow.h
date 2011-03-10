@@ -40,7 +40,6 @@ class RasterPackageModel;
 class RasterLayerModel;
 class RasterOverlayModel;
 class RasterZoomModel;
-class SaveRasterMenuView;
 
 /**
  * @brief %Kompas main window
@@ -183,11 +182,6 @@ class MainWindow: public QMainWindow {
         void openRaster();
 
         /**
-         * @brief Save offline package of current raster map
-         */
-        void saveRaster();
-
-        /**
          * @brief Close raster map
          */
         inline void closeRaster() { setRasterModel(0); }
@@ -250,14 +244,10 @@ class MainWindow: public QMainWindow {
             *openRasterAction,
             *openOnlineAction,
             *saveRasterAction,
-            *saveCurrentRasterAction,
             *closeRasterAction;
 
         QMenu *sessionMenu,
-            *openRasterMenu,
-            *saveRasterMenu;
-
-        SaveRasterMenuView* saveRasterMenuView;
+            *openRasterMenu;
 
         QLabel* coordinateStatus;
 

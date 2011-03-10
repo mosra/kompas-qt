@@ -18,8 +18,9 @@
 #include "MainWindow.h"
 
 using namespace Kompas::Core;
+using namespace Kompas::QtGui;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 void SaveRasterMenuView::clearMenu() {
     qDeleteAll<QList<QAction*> >(actions.keys());
@@ -59,4 +60,4 @@ void SaveRasterMenuView::trigger(QAction* action) {
     wizard.exec();
 }
 
-}}
+}}}

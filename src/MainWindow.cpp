@@ -32,13 +32,11 @@
 #include "MainWindowConfigure.h"
 #include "PluginManager.h"
 #include "TileDataThread.h"
-#include "SaveRasterMenuView.h"
 #include "OpenRasterMenuView.h"
 #include "RasterPackageModel.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
-#include "SaveRasterWizard.h"
 #include "MessageBox.h"
 #include "SessionMenuView.h"
 
@@ -223,9 +221,6 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     _rasterModel = model;
     rasterModelLock.unlock();
 
-    /* Update save raster menu to avoid showing the same plugin twice */
-    saveRasterMenuView->update();
-
     _rasterPackageModel->reload();
     _rasterLayerModel->reload();
     _rasterOverlayModel->reload();
@@ -364,38 +359,16 @@ void MainWindow::openRaster() {
     }
 }
 
-void MainWindow::saveRaster() {
-    string plugin;
-
-    Locker<const AbstractRasterModel> rasterModel = rasterModelForRead();
-    if(rasterModel()) plugin = rasterModel()->plugin();
-    rasterModel.unlock();
-
-    if(plugin.empty()) return;
-
-    SaveRasterWizard wizard(plugin);
-    wizard.exec();
-}
-
 void MainWindow::displayMapIfUsable() {
     Locker<const AbstractRasterModel> rasterModel = rasterModelForRead();
     QString name = rasterModel() ? QString::fromStdString(*rasterModel()->metadata()->name()) : "";
     bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;
-    bool isWriteable = rasterModel() ? (rasterModel()->features() & AbstractRasterModel::WriteableFormat) : false;
     rasterModel.unlock();
 
     /* Display map view, map options dock */
     if(_mapView && isUsable) {
         /* Enable menus */
-        saveRasterMenu->setDisabled(false);
         closeRasterAction->setDisabled(false);
-
-        /* Update action in "save raster" menu */
-        saveCurrentRasterAction->setText(tr("Offline %0 package").arg(name));
-        if(isWriteable)
-            saveCurrentRasterAction->setDisabled(false);
-        else
-            saveCurrentRasterAction->setDisabled(true);
 
         /* Show map view, show dock widgets */
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
@@ -408,7 +381,6 @@ void MainWindow::displayMapIfUsable() {
     /* Display welcome screen */
     } else {
         /* Disable menus */
-        saveRasterMenu->setDisabled(true);
         closeRasterAction->setDisabled(true);
 
         /* Show welcome screen, hide dock widgets */
@@ -459,14 +431,6 @@ void MainWindow::createActions() {
     openOnlineAction = new QAction(openOnlineIcon, tr("Load online map"), this);
     _actions.insert(AbstractUIComponent::Maps, openOnlineAction);
 
-    /* Save raster map */
-    saveRasterAction = new QAction(QIcon(":/save-16.png"), tr("Save map"), this);
-    _actions.insert(AbstractUIComponent::Maps, saveRasterAction);
-
-    /* Save raster map to current model */
-    saveCurrentRasterAction = new QAction(this);
-    connect(saveCurrentRasterAction, SIGNAL(triggered(bool)), SLOT(saveRaster()));
-
     /* Close raster map */
     closeRasterAction = new QAction(QIcon(":/close-16.png"), tr("Close map"), this);
     closeRasterAction->setDisabled(true);
@@ -487,15 +451,6 @@ void MainWindow::createMenus() {
     openOnlineAction->setMenu(openRasterMenu);
     OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(pluginManagerStore()->rasterModels()->manager(), openRasterMenu, 0, this);
     openRasterMenuView->update();
-
-    /* Save raster map menu */
-    saveRasterMenu = new QMenu(this);
-    saveRasterAction->setMenu(saveRasterMenu);
-    saveRasterMenu->addAction(saveCurrentRasterAction);
-    saveRasterMenu->addSeparator();
-    saveRasterMenu->setDisabled(true);
-    saveRasterMenuView = new SaveRasterMenuView(pluginManagerStore()->rasterModels()->manager(), saveRasterMenu, 0, this);
-    saveRasterMenuView->update();
 }
 
 void MainWindow::createUI() {

@@ -1,0 +1,24 @@
+qt4_wrap_cpp(SaveRasterUIComponent_MOC
+    AreaPage.h
+    ContentsPage.h
+    DownloadPage.h
+    MetadataPage.h
+    SaveRasterUIComponent.h
+    SaveRasterMenuView.h
+    SaveRasterThread.h
+    SaveRasterWizard.h
+    StatisticsPage.h
+)
+kompas_add_static_plugin(KompasQt_Plugins SaveRasterUIComponent
+    SaveRasterUIComponent.conf
+    AreaPage.cpp
+    ContentsPage.cpp
+    DownloadPage.cpp
+    MetadataPage.cpp
+    SaveRasterUIComponent.cpp
+    SaveRasterMenuView.cpp
+    SaveRasterThread.cpp
+    SaveRasterWizard.cpp
+    StatisticsPage.cpp
+    ${SaveRasterUIComponent_MOC}
+)

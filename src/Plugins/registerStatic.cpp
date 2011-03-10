@@ -11,5 +11,6 @@ int registerQtStaticPlugins() {
     PLUGIN_IMPORT(DistanceMeterUIComponent)
     PLUGIN_IMPORT(DmsDecimalConverterUIComponent)
     PLUGIN_IMPORT(MapOptionsUIComponent)
+    PLUGIN_IMPORT(SaveRasterUIComponent)
     return 1;
 } AUTOMATIC_INITIALIZER(registerQtStaticPlugins)

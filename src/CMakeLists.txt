@@ -17,9 +17,6 @@ set(Kompas_Qt_SRCS
     LatLonCoordsEdit.cpp
     AbstractPluginMenuView.cpp
     OpenRasterMenuView.cpp
-    SaveRasterMenuView.cpp
-    SaveRasterWizard.cpp
-    SaveRasterThread.cpp
     PluginManagerStore.cpp
     RasterPackageModel.cpp
     RasterLayerModel.cpp
@@ -42,8 +39,6 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     AbstractUIComponent.h
     PluginModel.h
     AbstractPluginMenuView.h
-    SaveRasterWizard.h
-    SaveRasterThread.h
     RasterPackageModel.h
     RasterLayerModel.h
     RasterOverlayModel.h

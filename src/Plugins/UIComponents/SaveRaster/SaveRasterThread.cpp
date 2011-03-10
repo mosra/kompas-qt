@@ -25,10 +25,11 @@
 using namespace std;
 using namespace Kompas::Utility;
 using namespace Kompas::Core;
+using namespace Kompas::QtGui;
 
 Q_DECLARE_METATYPE(std::string)
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 SaveRasterThread::SaveRasterThread(QObject* parent): QThread(parent), abort(false), destinationModel(0) {
     manager = new QNetworkAccessManager(this);
@@ -161,4 +162,4 @@ void SaveRasterThread::finishDownload(QNetworkReply* reply) {
     condition.wakeOne();
 }
 
-}}
+}}}

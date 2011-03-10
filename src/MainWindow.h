@@ -32,7 +32,6 @@
 class QStackedWidget;
 class QAction;
 class QMenu;
-class QLabel;
 
 namespace Kompas { namespace QtGui {
 
@@ -249,8 +248,6 @@ class MainWindow: public QMainWindow {
         QMenu *sessionMenu,
             *openRasterMenu;
 
-        QLabel* coordinateStatus;
-
         QStackedWidget* centralStackedWidget;
 
         QList<QDockWidget*> _dockWidgets;
@@ -260,9 +257,6 @@ class MainWindow: public QMainWindow {
         void createUI();
 
         void displayMapIfUsable();
-
-    private slots:
-        void currentCoordinates(const Core::LatLonCoords& coords);
 };
 
 }}

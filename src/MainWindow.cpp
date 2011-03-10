@@ -139,10 +139,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     centralStackedWidget->addWidget(welcomeScreen);
     setCentralWidget(centralStackedWidget);
 
-    /* Status bar with coordinates */
-    coordinateStatus = new QLabel;
-    statusBar()->addPermanentWidget(coordinateStatus);
-
     /* Load map view plugin */
     setMapView(_pluginManagerStore->mapViews()->manager()->instance(_configuration.group("map")->value<string>("viewPlugin")));
 
@@ -200,13 +196,9 @@ void MainWindow::setMapView(AbstractMapView* view) {
     if(_mapView) delete _mapView;
     _mapView = view;
 
-    /* View exists */
-    if(_mapView) {
-        /* Assign map view to second slot in stacked widget */
+    /* View exists - assign map view to second slot in stacked widget */
+    if(_mapView)
         centralStackedWidget->addWidget(_mapView);
-
-        connect(_mapView, SIGNAL(currentCoordinates(Core::LatLonCoords)), SLOT(currentCoordinates(Core::LatLonCoords)));
-    }
 
     emit mapViewChanged();
 
@@ -375,9 +367,6 @@ void MainWindow::displayMapIfUsable() {
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(false);
 
-        /* Show coordinate status */
-        coordinateStatus->setHidden(false);
-
     /* Display welcome screen */
     } else {
         /* Disable menus */
@@ -387,9 +376,6 @@ void MainWindow::displayMapIfUsable() {
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(true);
-
-        /* Don't show zeros in coordinate status */
-        coordinateStatus->setHidden(true);
     }
 }
 
@@ -547,13 +533,6 @@ void MainWindow::deleteSession() {
 
     sessionManager.deleteSession(sessionManager.current());
     sessionManager.load(0);
-}
-
-void MainWindow::currentCoordinates(const Kompas::Core::LatLonCoords& coords) {
-    if(!coords.isValid())
-        coordinateStatus->setText("");
-    else
-        coordinateStatus->setText(QString::fromStdString(coords.toString(0, true)));
 }
 
 }}

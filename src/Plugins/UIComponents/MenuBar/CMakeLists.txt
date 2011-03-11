@@ -1,4 +1,4 @@
-kompas_add_static_plugin(KompasQt_Plugins MenuBarUIComponent
+kompas_add_static_plugin(KompasQt_PluginsDesktop MenuBarUIComponent
     MenuBarUIComponent.conf
     MenuBarUIComponent.cpp
 )

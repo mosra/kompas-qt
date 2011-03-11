@@ -1,7 +1,7 @@
 #include "PluginManager/AbstractPluginManager.h"
 #include "Utility/utilities.h"
 
-int registerQtStaticPlugins() {
+int registerQtDesktopStaticPlugins() {
     PLUGIN_IMPORT(GraphicsMapView)
 
     PLUGIN_IMPORT(AboutUIComponent)
@@ -14,4 +14,4 @@ int registerQtStaticPlugins() {
     PLUGIN_IMPORT(SaveRasterUIComponent)
     PLUGIN_IMPORT(StatusBarUIComponent)
     return 1;
-} AUTOMATIC_INITIALIZER(registerQtStaticPlugins)
+} AUTOMATIC_INITIALIZER(registerQtDesktopStaticPlugins)

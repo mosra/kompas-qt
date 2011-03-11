@@ -9,3 +9,5 @@ add_subdirectory(SaveRaster)
 add_subdirectory(StatusBar)
 
 set(KompasQt_Plugins ${KompasQt_Plugins} PARENT_SCOPE)
+set(KompasQt_PluginsDesktop ${KompasQt_PluginsDesktop} PARENT_SCOPE)
+set(KompasQt_PluginsMobile ${KompasQt_PluginsMobile} PARENT_SCOPE)

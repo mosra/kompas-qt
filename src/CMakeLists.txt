@@ -64,11 +64,17 @@ add_library(KompasQt SHARED ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
 target_link_libraries(KompasQt ${KOMPAS_CORE_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 set_target_properties(KompasQt PROPERTIES VERSION ${KOMPAS_QT_LIBRARY_VERSION} SOVERSION ${KOMPAS_QT_LIBRARY_SOVERSION})
 
-add_executable(kompas-qt main.cpp Plugins/registerStatic.cpp)
-target_link_libraries(kompas-qt KompasQt ${KompasQt_Plugins})
+# Desktop version
+add_executable(kompas-qt main.cpp Plugins/registerStaticDesktop.cpp)
+target_link_libraries(kompas-qt KompasQt ${KompasQt_Plugins} ${KompasQt_PluginsDesktop})
+
+# Mobile version
+add_executable(kompas-qt-mobile main.cpp Plugins/registerStaticMobile.cpp)
+target_link_libraries(kompas-qt-mobile KompasQt ${KompasQt_Plugins} ${KompasQt_PluginsMobile})
 
 install(TARGETS KompasQt DESTINATION ${KOMPAS_LIBRARY_INSTALL_DIR})
 install(TARGETS kompas-qt DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
+install(TARGETS kompas-qt-mobile DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
 
 # Include also runtime libs for Win32 (remaining are bundled in Core)
 if(WIN32)

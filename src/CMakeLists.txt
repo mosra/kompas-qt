@@ -25,8 +25,6 @@ set(Kompas_Qt_SRCS
     SessionManager.cpp
     SessionMenuView.cpp
     MessageBox.cpp
-    main.cpp
-    Plugins/registerStatic.cpp
 )
 
 qt4_wrap_cpp(Kompas_Qt_MOC
@@ -61,9 +59,15 @@ if(WIN32)
     set(Kompas_Qt_SRCS ${Kompas_Qt_SRCS} ../package/win-icon.rc)
 endif(WIN32)
 
-add_executable(kompas-qt ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
-target_link_libraries(kompas-qt ${KOMPAS_CORE_LIBRARIES} ${KompasQt_Plugins} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+# Qt library
+add_library(KompasQt SHARED ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
+target_link_libraries(KompasQt ${KOMPAS_CORE_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+set_target_properties(KompasQt PROPERTIES VERSION ${KOMPAS_QT_LIBRARY_VERSION} SOVERSION ${KOMPAS_QT_LIBRARY_SOVERSION})
 
+add_executable(kompas-qt main.cpp Plugins/registerStatic.cpp)
+target_link_libraries(kompas-qt KompasQt ${KompasQt_Plugins})
+
+install(TARGETS KompasQt DESTINATION ${KOMPAS_LIBRARY_INSTALL_DIR})
 install(TARGETS kompas-qt DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
 
 # Include also runtime libs for Win32 (remaining are bundled in Core)

@@ -119,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/bin/*
 %{_prefix}/share/kompas
 %{_prefix}/share/applications/*
-%{_prefix}/share/icons/*/*
+%{_prefix}/share/icons/*
 %doc COPYING COPYING.LESSER
 
 %files devel

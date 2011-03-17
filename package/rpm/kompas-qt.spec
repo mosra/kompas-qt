@@ -10,6 +10,7 @@ Group: Applications/Multimedia
 %endif
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRequires: gcc-c++
 BuildRequires: cmake >= 2.6.0
 BuildRequires: kompas-core-devel = %{version}
 Requires: kompas-core = %{version}

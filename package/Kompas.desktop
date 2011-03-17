@@ -6,7 +6,7 @@ GenericName=Navigation software
 Comment=Online and offline map viewer
 Exec=kompas-qt
 Icon=kompas
-Categories=Education;Graphics;Network;Geography;Qt;
+Categories=Education;Geography;Astronomy;Graphics;Viewer;Network;WebBrowser;Qt;
 Terminal=false
 
 GenericName[cs]=Navigační software

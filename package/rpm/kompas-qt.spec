@@ -10,6 +10,7 @@ Group: Applications/Multimedia
 %endif
 Source: https://github.com/mosra/%{name}/tarball/v%{version}/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRequires: gcc-c++
 BuildRequires: cmake >= 2.6.0
 BuildRequires: kompas-core-devel = %{version}
 Requires: kompas-core = %{version}
@@ -27,7 +28,8 @@ Requires: qt >= 4.6.0
 Requires: qt-x11 >= 4.6.0
 %endif
 %if %{defined mandriva_version}
-Requires(post): update-desktop-database
+Requires(post): desktop-file-utils
+Requires(postun): desktop-file-utils
 # TODO: Better 64/32 bit splitting?
 %ifarch %{ix86}
 BuildRequires: libqt4-devel >= 4.6.0
@@ -117,7 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/bin/*
 %{_prefix}/share/kompas
 %{_prefix}/share/applications/*
-%{_prefix}/share/icons/*/*
+%{_prefix}/share/icons/*
 %doc COPYING COPYING.LESSER
 
 %files devel

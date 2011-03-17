@@ -28,7 +28,8 @@ Requires: qt >= 4.6.0
 Requires: qt-x11 >= 4.6.0
 %endif
 %if %{defined mandriva_version}
-Requires(post): update-desktop-database
+Requires(post): desktop-file-utils
+Requires(postun): desktop-file-utils
 # TODO: Better 64/32 bit splitting?
 %ifarch %{ix86}
 BuildRequires: libqt4-devel >= 4.6.0

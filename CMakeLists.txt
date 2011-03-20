@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project(KompasQt)
 
 # Version
-set(KOMPAS_QT_VERSION 0.1.1)
+set(KOMPAS_QT_VERSION 0.1.2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${KompasQt_SOURCE_DIR}/modules/")
 

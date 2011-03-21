@@ -7,7 +7,7 @@ arch=('i686' 'x86_64')
 url="http://mosra.cz/blog/kompas.php"
 license=('LGPLv3')
 makedepends=('cmake' 'git')
-depends=('kompas-core-git')
+depends=('kompas-core-git' 'qẗ́')
 provides=('kompas-qt')
 conflicts=('kompas-qt')
 

@@ -69,6 +69,7 @@ void SaveRasterUIComponent::saveRaster() {
 }
 
 void SaveRasterUIComponent::rasterModelChanged() {
+    /** @todo @c VERSION-0.1.1 Disable Save Raster menu when no writeable format is available at all */
     Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     QString name = rasterModel() ? QString::fromStdString(*rasterModel()->metadata()->name()) : "";
     bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;

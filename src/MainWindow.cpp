@@ -127,8 +127,6 @@ void MainWindow::setMapView(AbstractMapView* view) {
 }
 
 void MainWindow::setRasterModel(AbstractRasterModel* model) {
-    /** @todo @c VERSION-0.1.1 Disable Save Raster menu when no writeable format is available at all */
-
     rasterModelLock.lockForWrite();
     AbstractRasterModel* oldRasterModel = _rasterModel;
     _rasterModel = model;

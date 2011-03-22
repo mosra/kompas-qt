@@ -51,7 +51,8 @@ SaveRasterUIComponent::SaveRasterUIComponent(PluginManager::AbstractPluginManage
     _saveRasterMenuView->update();
 
     /* Update save raster menu to avoid showing the same plugin twice */
-    connect(MainWindow::instance(), SIGNAL(rasterModelChanged(const Core::AbstractRasterModel*)), this, SLOT(rasterModelChanged(const Core::AbstractRasterModel*)));
+    connect(MainWindow::instance(), SIGNAL(rasterModelChanged(const Core::AbstractRasterModel*)),
+            this, SLOT(rasterModelChanged()));
 }
 
 void SaveRasterUIComponent::saveRaster() {
@@ -67,7 +68,7 @@ void SaveRasterUIComponent::saveRaster() {
     wizard.exec();
 }
 
-void SaveRasterUIComponent::rasterModelChanged(const AbstractRasterModel* previous) {
+void SaveRasterUIComponent::rasterModelChanged() {
     Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     QString name = rasterModel() ? QString::fromStdString(*rasterModel()->metadata()->name()) : "";
     bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;

@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_UIComponents_SaveRasterUIComponent_h
-#define Kompas_Plugins_UIComponents_SaveRasterUIComponent_h
+#ifndef Kompas_Plugins_UIComponents_OpenRasterUIComponent_h
+#define Kompas_Plugins_UIComponents_OpenRasterUIComponent_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,31 +16,22 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::UIComponents::SaveRasterUIComponent
+ * @brief Class Kompas::Plugins::UIComponents::OpenRasterUIComponent
  */
 
 #include "AbstractUIComponent.h"
 
 class QAction;
-class QMenu;
 
-namespace Kompas {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
-namespace Core {
-    class AbstractRasterModel;
-}
-
-namespace Plugins { namespace UIComponents {
-
-class SaveRasterMenuView;
-
-/** @brief About Kompas and About Qt dialogs */
-class SaveRasterUIComponent: public QtGui::AbstractUIComponent {
+/** @brief Actions for opening raster maps */
+class OpenRasterUIComponent: public QtGui::AbstractUIComponent {
     Q_OBJECT
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        SaveRasterUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        OpenRasterUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline virtual const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Maps)
@@ -49,19 +40,15 @@ class SaveRasterUIComponent: public QtGui::AbstractUIComponent {
         }
 
     private slots:
-        /**
-         * @brief Save offline package of current raster map
-         */
-        void saveRaster();
+        void openRaster();
+        void closeRaster();
 
         void rasterModelChanged();
 
     private:
         QList<QAction*> _actions;
 
-        QAction* _saveCurrentRasterAction;
-        QMenu* _saveRasterMenu;
-        SaveRasterMenuView* _saveRasterMenuView;
+        QAction* closeRasterAction;
 };
 
 }}}

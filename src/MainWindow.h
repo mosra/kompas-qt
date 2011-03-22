@@ -27,16 +27,13 @@
 #include "SessionManager.h"
 #include "AbstractUIComponent.h"
 #include "Locker.h"
+#include "AbstractRasterModel.h"
 
 class QStackedWidget;
 class QAction;
 class QMenu;
 
 namespace Kompas {
-
-namespace Core {
-    class AbstractRasterModel;
-}
 
 namespace QtGui {
 
@@ -126,6 +123,17 @@ class MainWindow: public QMainWindow {
         }
 
         /**
+         * @brief Open raster map file
+         *
+         * Allows user to select an file through open file dialog. First checks
+         * whether the file can be opened with currently active model (if it
+         * either supports multiple packages or doesn't have any opened
+         * packages), otherwise goes through all available raster plugins
+         * and tries to open the file with them.
+         */
+        Core::AbstractRasterModel* rasterModelForFile(const QString& filename, Core::AbstractRasterModel::SupportLevel* supportLevel);
+
+        /**
          * @brief Map view
          * @return Current map view. The pointer should not be stored anywhere
          *      because it can change after loading another map view plugin.
@@ -184,23 +192,6 @@ class MainWindow: public QMainWindow {
          */
         void setOnlineEnabled(bool enabled);
 
-    private slots:
-        /**
-         * @brief Open raster map file
-         *
-         * Allows user to select an file through open file dialog. First checks
-         * whether the file can be opened with currently active model (if it
-         * either supports multiple packages or doesn't have any opened
-         * packages), otherwise goes through all available raster plugins
-         * and tries to open the file with them.
-         */
-        void openRaster();
-
-        /**
-         * @brief Close raster map
-         */
-        inline void closeRaster() { setRasterModel(0); }
-
     private:
         static MainWindow* _instance;
 
@@ -220,19 +211,10 @@ class MainWindow: public QMainWindow {
 
         QMultiMap<AbstractUIComponent::ActionCategory, QAction*> _actions;
 
-        QAction *openRasterAction,
-            *openOnlineAction,
-            *saveRasterAction,
-            *closeRasterAction;
-
-        QMenu *openRasterMenu;
-
         QStackedWidget* centralStackedWidget;
 
         QList<QDockWidget*> _dockWidgets;
 
-        void createActions();
-        void createMenus();
         void createUI();
 
         void displayMapIfUsable();

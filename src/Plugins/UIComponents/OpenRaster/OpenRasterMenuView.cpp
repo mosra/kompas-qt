@@ -17,8 +17,9 @@
 #include "MainWindow.h"
 
 using namespace Kompas::Core;
+using namespace Kompas::QtGui;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 void OpenRasterMenuView::clearMenu() {
     qDeleteAll<QList<QAction*> >(items.keys());
@@ -52,4 +53,4 @@ void OpenRasterMenuView::trigger(QAction* action) {
     MainWindow::instance()->setRasterModel(model);
 }
 
-}}
+}}}

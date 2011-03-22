@@ -11,6 +11,7 @@ int registerQtDesktopStaticPlugins() {
     PLUGIN_IMPORT(DistanceMeterUIComponent)
     PLUGIN_IMPORT(DmsDecimalConverterUIComponent)
     PLUGIN_IMPORT(MapOptionsUIComponent)
+    PLUGIN_IMPORT(OpenRasterUIComponent)
     PLUGIN_IMPORT(SaveRasterUIComponent)
     PLUGIN_IMPORT(SessionManagementUIComponent)
     PLUGIN_IMPORT(StatusBarUIComponent)

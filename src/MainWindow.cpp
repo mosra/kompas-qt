@@ -16,10 +16,8 @@
 #include "MainWindow.h"
 
 #include <QtGui/QMenuBar>
-#include <QtGui/QStyle>
 #include <QtGui/QStatusBar>
 #include <QtGui/QDockWidget>
-#include <QtGui/QFileDialog>
 #include <QtGui/QGridLayout>
 #include <QtGui/QToolButton>
 #include <QtGui/QStackedWidget>
@@ -27,12 +25,10 @@
 #include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
 #include "TileDataThread.h"
-#include "OpenRasterMenuView.h"
 #include "RasterPackageModel.h"
 #include "RasterLayerModel.h"
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
-#include "MessageBox.h"
 #include "PluginManagerStore.h"
 
 #define WELCOME_SCREEN 0
@@ -70,8 +66,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
 
-    createActions();
-    createMenus();
     createUI();
 
     /* Welcome screen, wrapped in another widget so it's nicely centered */
@@ -89,14 +83,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     openSessionButton->setFixedHeight(96);
 
     QToolButton* openRasterButton = new QToolButton(this);
-    openRasterButton->setDefaultAction(openRasterAction);
     openRasterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     openRasterButton->setAutoRaise(true);
     openRasterButton->setIconSize(QSize(64, 64));
     openRasterButton->setFixedHeight(96);
 
     QToolButton* openOnlineButton = new QToolButton(this);
-    openOnlineButton->setDefaultAction(openOnlineAction);
     openOnlineButton->setPopupMode(QToolButton::InstantPopup);
     openOnlineButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     openOnlineButton->setAutoRaise(true);
@@ -230,42 +222,8 @@ void MainWindow::setOnlineEnabled(bool enabled) {
     displayMapIfUsable();
 }
 
-void MainWindow::openRaster() {
+AbstractRasterModel* MainWindow::rasterModelForFile(const QString& filename, AbstractRasterModel::SupportLevel* supportLevel) {
     PluginManager<AbstractRasterModel>* rasterModelPluginManager = _pluginManagerStore->rasterModels()->manager();
-
-    /* Compose filter from all loaded plugins */
-    QString filter;
-    vector<string> plugins = rasterModelPluginManager->pluginList();
-    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-        /* Skip not loaded plugins */
-        if(!(rasterModelPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic)))
-            continue;
-
-        /* Instance of the model */
-        AbstractRasterModel* instance = rasterModelPluginManager->instance(*it);
-        if(!instance) continue;
-
-        vector<string> extensions = instance->fileExtensions();
-        if(extensions.empty()) {
-            delete instance;
-            continue;
-        }
-
-        filter += QString::fromStdString(*instance->metadata()->name()) + " (";
-
-        for(vector<string>::const_iterator it = extensions.begin(); it != extensions.end(); ++it) {
-            filter += QString::fromStdString(*it) + " ";
-        }
-
-        filter = filter.left(filter.length()-1) + ");;";
-
-        delete instance;
-    }
-
-    filter += tr("All files (*)");
-
-    QString filename = QFileDialog::getOpenFileName(this, tr("Select map file"), QString::fromStdString(_configuration.group("paths")->value<string>("packages")), filter);
-    if(filename.isEmpty()) return;
 
     /* Try to open the package with current model */
     /** @todo Disable online maps? */
@@ -278,11 +236,15 @@ void MainWindow::openRaster() {
 
         emit rasterModelChanged();
 
+        /** @todo Return really recongized support level */
+        *supportLevel = AbstractRasterModel::FullySupported;
+        return 0;
+
     /* Else try all plugins */
     } else {
         std::ifstream i(filename.toUtf8().constData());
         AbstractRasterModel* firstSupport = 0;
-        int state = AbstractRasterModel::NotSupported;
+        AbstractRasterModel::SupportLevel state = AbstractRasterModel::NotSupported;
 
         vector<string> plugins = rasterModelPluginManager->pluginList();
         for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
@@ -320,87 +282,33 @@ void MainWindow::openRaster() {
 
         i.close();
 
-        /* No supporting plugin found */
         if(!firstSupport) {
-            MessageBox::warning(this, tr("Unsupported file format"), tr("No suitable map plugin was found for this file."));
-            return;
+            *supportLevel = AbstractRasterModel::NotSupported;
+            return 0;
         }
 
-        /* If package cannot be opened or is unusable, destroy that bitch and
-           go home */
-        if(firstSupport->addPackage(filename.toStdString()) == -1 || !firstSupport->isUsable()) {
-            MessageBox::warning(this, tr("Cannot open file"), tr("The package cannot be loaded."));
-            delete firstSupport;
-            return;
-        }
-
-        /* Replace current raster model with new */
-        setRasterModel(firstSupport);
-
-        /* Package format is deprecated */
-        if(state == AbstractRasterModel::DeprecatedSupport) {
-            MessageBox::warning(this, tr("Deprecated file format"), tr("The package has deprecated format that probably won't be supported in future versions. Please save the package to a newer format."));
-        }
+        *supportLevel = state;
+        return firstSupport;
     }
 }
 
 void MainWindow::displayMapIfUsable() {
     Locker<const AbstractRasterModel> rasterModel = rasterModelForRead();
-    QString name = rasterModel() ? QString::fromStdString(*rasterModel()->metadata()->name()) : "";
     bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;
     rasterModel.unlock();
 
-    /* Display map view, map options dock */
+    /* Show map view, show dock widgets */
     if(_mapView && isUsable) {
-        /* Enable menus */
-        closeRasterAction->setDisabled(false);
-
-        /* Show map view, show dock widgets */
         centralStackedWidget->setCurrentIndex(MAP_VIEW);
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(false);
 
-    /* Display welcome screen */
+    /* Show welcome screen, hide dock widgets */
     } else {
-        /* Disable menus */
-        closeRasterAction->setDisabled(true);
-
-        /* Show welcome screen, hide dock widgets */
         centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
         foreach(QDockWidget* widget, _dockWidgets)
             widget->setHidden(true);
     }
-}
-
-void MainWindow::createActions() {
-    /* Open raster map */
-    QIcon openPackageIcon;
-    openPackageIcon.addFile(":/open-package-16.png");
-    openPackageIcon.addFile(":/open-package-64.png");
-    openRasterAction = new QAction(openPackageIcon, tr("Open map package"), this);
-    connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
-    _actions.insert(AbstractUIComponent::Maps, openRasterAction);
-
-    /* Open online map */
-    QIcon openOnlineIcon;
-    openOnlineIcon.addFile(":/open-online-16.png");
-    openOnlineIcon.addFile(":/open-online-64.png");
-    openOnlineAction = new QAction(openOnlineIcon, tr("Load online map"), this);
-    _actions.insert(AbstractUIComponent::Maps, openOnlineAction);
-
-    /* Close raster map */
-    closeRasterAction = new QAction(QIcon(":/close-16.png"), tr("Close map"), this);
-    closeRasterAction->setDisabled(true);
-    connect(closeRasterAction, SIGNAL(triggered(bool)), SLOT(closeRaster()));
-    _actions.insert(AbstractUIComponent::Maps, closeRasterAction);
-}
-
-void MainWindow::createMenus() {
-    /* Open raster map menu */
-    openRasterMenu = new QMenu(this);
-    openOnlineAction->setMenu(openRasterMenu);
-    OpenRasterMenuView* openRasterMenuView = new OpenRasterMenuView(pluginManagerStore()->rasterModels()->manager(), openRasterMenu, 0, this);
-    openRasterMenuView->update();
 }
 
 void MainWindow::createUI() {

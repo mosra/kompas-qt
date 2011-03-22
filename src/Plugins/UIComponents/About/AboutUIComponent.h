@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_UIComponents_About_h
-#define Kompas_Plugins_UIComponents_About_h
+#ifndef Kompas_Plugins_UIComponents_AboutUIComponent_h
+#define Kompas_Plugins_UIComponents_AboutUIComponent_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::UIComponents::About
+ * @brief Class Kompas::Plugins::UIComponents::AboutUIComponent
  */
 
 #include "AbstractUIComponent.h"
@@ -26,12 +26,12 @@ class QAction;
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /** @brief About Kompas and About Qt dialogs */
-class About: public QtGui::AbstractUIComponent {
+class AboutUIComponent: public QtGui::AbstractUIComponent {
     Q_OBJECT
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        About(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        AboutUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline virtual const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Help)

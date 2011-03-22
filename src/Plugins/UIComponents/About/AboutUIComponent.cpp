@@ -22,14 +22,14 @@
 #include "AboutDialog.h"
 
 PLUGIN_REGISTER_STATIC(AboutUIComponent,
-                       Kompas::Plugins::UIComponents::About,
+                       Kompas::Plugins::UIComponents::AboutUIComponent,
                        "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-About::About(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+AboutUIComponent::AboutUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* About */
     QAction* aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
     aboutAction->setStatusTip(tr("Show information about this application"));
@@ -43,7 +43,7 @@ About::About(PluginManager::AbstractPluginManager* manager, const std::string& p
     _actions << aboutQtAction;
 }
 
-void About::aboutDialog() {
+void AboutUIComponent::aboutDialog() {
     AboutDialog* dialog = new AboutDialog(MainWindow::instance());
     dialog->show();
 }

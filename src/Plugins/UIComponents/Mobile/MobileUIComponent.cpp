@@ -30,9 +30,6 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-#define WELCOME_SCREEN 0
-#define MAP_VIEW 1
-
 MobileUIComponent::MobileUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     AbstractRasterModel* rasterModel = MainWindow::instance()->pluginManagerStore()->rasterModels()->manager()->instance("OpenStreetMapRasterModel");
     rasterModel->setOnline(true);

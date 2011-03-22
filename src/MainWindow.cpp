@@ -47,6 +47,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     icon.addFile(":/logo-128.png");
     icon.addFile(":/logo-256.png");
     setWindowIcon(icon);
+    setWindowTitle("");
 
     /* Load default configuration */
     loadDefaultConfiguration();

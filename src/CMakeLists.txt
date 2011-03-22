@@ -23,7 +23,6 @@ set(Kompas_Qt_SRCS
     RasterOverlayModel.cpp
     RasterZoomModel.cpp
     SessionManager.cpp
-    SessionMenuView.cpp
     MessageBox.cpp
 )
 
@@ -42,7 +41,6 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     RasterOverlayModel.h
     RasterZoomModel.h
     SessionManager.h
-    SessionMenuView.h
     LatLonCoordsEdit.h
 )
 

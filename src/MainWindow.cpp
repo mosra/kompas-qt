@@ -33,7 +33,6 @@
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
 #include "MessageBox.h"
-#include "SessionMenuView.h"
 #include "PluginManagerStore.h"
 
 #define WELCOME_SCREEN 0
@@ -47,7 +46,7 @@ namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _rasterModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _rasterModel(0) {
     _instance = this;
 
     /* Window icon */
@@ -75,10 +74,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     createMenus();
     createUI();
 
-    /* Sessions */
-    currentSessionChange();
-    connect(&sessionManager, SIGNAL(currentChanged(uint)), SLOT(currentSessionChange()));
-
     /* Welcome screen, wrapped in another widget so it's nicely centered */
     QFrame* welcomeScreenFrame = new QFrame;
     welcomeScreenFrame->setAutoFillBackground(true);
@@ -87,7 +82,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     welcomeScreenFrame->setPalette(palette);
 
     QToolButton* openSessionButton = new QToolButton(this);
-    openSessionButton->setDefaultAction(openSessionAction);
     openSessionButton->setPopupMode(QToolButton::InstantPopup);
     openSessionButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     openSessionButton->setAutoRaise(true);
@@ -141,8 +135,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     resize(960, 700);
 }
 
-MainWindow::~MainWindow() {
-    sessionManager.save();
+void MainWindow::setWindowTitle(const QString& title) {
+    if(title.isEmpty())
+        QMainWindow::setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
+    else
+        QMainWindow::setWindowTitle(QString("[ %1 ] - %0").arg(tr("Kompas")).arg(title));
 }
 
 void MainWindow::loadDefaultConfiguration() {
@@ -376,28 +373,6 @@ void MainWindow::displayMapIfUsable() {
 }
 
 void MainWindow::createActions() {
-    /* Open session */
-    QIcon openSessionIcon;
-    openSessionIcon.addFile(":/open-session-16.png");
-    openSessionIcon.addFile(":/open-session-64.png");
-    openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
-    _actions.insert(AbstractUIComponent::Sessions, openSessionAction);
-
-    /* Create new session */
-    newSessionAction = new QAction(tr("Create new session"), this);
-    connect(newSessionAction, SIGNAL(triggered(bool)), SLOT(newSession()));
-    _actions.insert(AbstractUIComponent::Sessions, newSessionAction);
-
-    /* Rename current session */
-    renameSessionAction = new QAction(tr("Rename current session"), this);
-    connect(renameSessionAction, SIGNAL(triggered(bool)), SLOT(renameSession()));
-    _actions.insert(AbstractUIComponent::Sessions, renameSessionAction);
-
-    /* Delete current session */
-    deleteSessionAction = new QAction(tr("Delete current session"), this);
-    connect(deleteSessionAction, SIGNAL(triggered(bool)), SLOT(deleteSession()));
-    _actions.insert(AbstractUIComponent::Sessions, deleteSessionAction);
-
     /* Open raster map */
     QIcon openPackageIcon;
     openPackageIcon.addFile(":/open-package-16.png");
@@ -421,13 +396,6 @@ void MainWindow::createActions() {
 }
 
 void MainWindow::createMenus() {
-    /* Session list menu */
-    sessionMenu = new QMenu(this);
-    openSessionAction->setMenu(sessionMenu);
-    sessionMenu->addAction(newSessionAction);
-    sessionMenu->addSeparator();
-    new SessionMenuView(&sessionManager, sessionMenu, this);
-
     /* Open raster map menu */
     openRasterMenu = new QMenu(this);
     openOnlineAction->setMenu(openRasterMenu);
@@ -488,47 +456,6 @@ void MainWindow::createUI() {
 
         connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
     }
-}
-
-void MainWindow::currentSessionChange() {
-    /* Window title, disable/enable menu items */
-    if(!sessionManager.isLoaded() || sessionManager.current() == 0) {
-        setWindowTitle(QString("%0 %1").arg(tr("Kompas")).arg(KOMPAS_QT_VERSION));
-        renameSessionAction->setDisabled(true);
-        deleteSessionAction->setDisabled(true);
-    } else {
-        setWindowTitle(QString("[ %1 ] - %0").arg(tr("Kompas")).arg(sessionManager.names()[sessionManager.current()-1]));
-        renameSessionAction->setDisabled(false);
-        deleteSessionAction->setDisabled(false);
-    }
-}
-
-void MainWindow::newSession() {
-    bool ok;
-    QString name = QInputDialog::getText(this, tr("New session"), tr("Enter new session name:"), QLineEdit::Normal, tr("New session"), &ok);
-    if(!ok) return;
-
-    unsigned int id = sessionManager.newSession(name);
-    sessionManager.load(id);
-}
-
-void MainWindow::renameSession() {
-    if(sessionManager.current() == 0) return;
-
-    bool ok;
-    QString name = QInputDialog::getText(this, tr("Rename session"), tr("Enter new session name:"), QLineEdit::Normal, sessionManager.names()[sessionManager.current()-1], &ok);
-    if(!ok) return;
-
-    sessionManager.renameSession(sessionManager.current(), name);
-}
-
-void MainWindow::deleteSession() {
-    if(sessionManager.current() == 0) return;
-
-    if(MessageBox::question(this, tr("Delete session"), tr("Are you sure you want to delete session '%0'?").arg(sessionManager.names()[sessionManager.current()-1]), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) != QMessageBox::Yes) return;
-
-    sessionManager.deleteSession(sessionManager.current());
-    sessionManager.load(0);
 }
 
 }}

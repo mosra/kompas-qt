@@ -56,7 +56,7 @@ class MainWindow: public QMainWindow {
 
     public:
         /** @brief Global instance of MainWindow */
-        static MainWindow* instance() { return _instance; }
+        inline static MainWindow* instance() { return _instance; }
 
         /**
          * @brief Constructor
@@ -65,12 +65,21 @@ class MainWindow: public QMainWindow {
          */
         MainWindow(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
-        /** @brief Destructor */
-        virtual ~MainWindow();
+        /**
+         * @brief Set additional window title
+         *
+         * If @c title is empty, displays <tt>"Kompas VERSION"</tt>, otherwise
+         * displays <tt>"[ title ] - Kompas"</tt>.
+         */
+        void setWindowTitle(const QString& title);
 
         /** @brief Global application configuration */
         inline Utility::Configuration* configuration()
             { return &_configuration; }
+
+        /** @brief Session manager */
+        inline SessionManager* sessionManager()
+            { return &_sessionManager; }
 
         /** @brief Plugin manager store */
         inline PluginManagerStore* pluginManagerStore()
@@ -192,43 +201,11 @@ class MainWindow: public QMainWindow {
          */
         inline void closeRaster() { setRasterModel(0); }
 
-        /**
-         * @brief Reflect current session change in the UI
-         *
-         * Changes window title and disables rename/delete items in
-         * session menu if default session is loaded.
-         */
-        void currentSessionChange();
-
-        /**
-         * @brief Create new session
-         *
-         * Shows dialog asking for session name, creates new session and
-         * switches to it.
-         */
-        void newSession();
-
-        /**
-         * @brief Rename current session
-         *
-         * Shows dialog asking for session name. If current session is default
-         * session, does nothing.
-         */
-        void renameSession();
-
-        /**
-         * @brief Delete session
-         *
-         * Ask whether to delete, deletes current session and switches to
-         * default session. If current session is default session, does nothing.
-         */
-        void deleteSession();
-
     private:
         static MainWindow* _instance;
 
         Utility::Configuration _configuration;
-        SessionManager sessionManager;
+        SessionManager _sessionManager;
 
         PluginManagerStore* _pluginManagerStore;
 
@@ -243,17 +220,12 @@ class MainWindow: public QMainWindow {
 
         QMultiMap<AbstractUIComponent::ActionCategory, QAction*> _actions;
 
-        QAction *openSessionAction,
-            *newSessionAction,
-            *deleteSessionAction,
-            *renameSessionAction,
-            *openRasterAction,
+        QAction *openRasterAction,
             *openOnlineAction,
             *saveRasterAction,
             *closeRasterAction;
 
-        QMenu *sessionMenu,
-            *openRasterMenu;
+        QMenu *openRasterMenu;
 
         QStackedWidget* centralStackedWidget;
 

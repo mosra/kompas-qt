@@ -6,6 +6,7 @@ add_subdirectory(DistanceMeter)
 add_subdirectory(DmsDecimalConverter)
 add_subdirectory(MapOptions)
 add_subdirectory(SaveRaster)
+add_subdirectory(SessionManagement)
 add_subdirectory(StatusBar)
 
 set(KompasQt_Plugins ${KompasQt_Plugins} PARENT_SCOPE)

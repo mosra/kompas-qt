@@ -1,5 +1,5 @@
-#ifndef Kompas_QtGui_SessionMenuView_h
-#define Kompas_QtGui_SessionMenuView_h
+#ifndef Kompas_Plugins_UIComponents_SessionMenuView_h
+#define Kompas_Plugins_UIComponents_SessionMenuView_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,19 +16,23 @@
 */
 
 /** @file
- * @brief Class Kompas::QtGui::SessionMenuView
+ * @brief Class Kompas::Plugins::UIComponents::SessionMenuView
  */
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
-#include "SessionManager.h"
-
 class QActionGroup;
 class QMenu;
 class QAction;
 
-namespace Kompas { namespace QtGui {
+namespace Kompas {
+
+namespace QtGui {
+    class SessionManager;
+}
+
+namespace Plugins { namespace UIComponents {
 
 /**
  * @brief Menu view for sessions
@@ -47,7 +51,7 @@ class SessionMenuView: public QObject {
          *
          * Calls updateNames().
          */
-        SessionMenuView(SessionManager* _manager, QMenu* _menu,  QObject* parent);
+        SessionMenuView(QtGui::SessionManager* _manager, QMenu* _menu,  QObject* parent);
 
     public slots:
         /**
@@ -72,12 +76,12 @@ class SessionMenuView: public QObject {
         void trigger(QAction* action);
 
     private:
-        SessionManager* manager;
+        QtGui::SessionManager* manager;
         QMenu* menu;
         QHash<QAction*, unsigned int> sessions;
         QActionGroup* group;
 };
 
-}}
+}}}
 
 #endif

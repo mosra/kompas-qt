@@ -17,7 +17,11 @@
 
 #include <QtGui/QMenu>
 
-namespace Kompas { namespace QtGui {
+#include "SessionManager.h"
+
+using namespace Kompas::QtGui;
+
+namespace Kompas { namespace Plugins { namespace UIComponents {
 
 SessionMenuView::SessionMenuView(SessionManager* _manager, QMenu* _menu, QObject* parent): QObject(parent), manager(_manager), menu(_menu) {
     group = new QActionGroup(this);
@@ -82,4 +86,4 @@ void SessionMenuView::trigger(QAction* action) {
     manager->load(sessions.value(action));
 }
 
-}}
+}}}

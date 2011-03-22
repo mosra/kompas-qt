@@ -42,6 +42,7 @@ OpenRasterUIComponent::OpenRasterUIComponent(PluginManager::AbstractPluginManage
     openPackageIcon.addFile(":/open-package-16.png");
     openPackageIcon.addFile(":/open-package-64.png");
     QAction* openRasterAction = new QAction(openPackageIcon, tr("Open map package"), this);
+    openRasterAction->setData("openRaster");
     connect(openRasterAction, SIGNAL(triggered(bool)), SLOT(openRaster()));
 
     /* Open online map */
@@ -49,6 +50,7 @@ OpenRasterUIComponent::OpenRasterUIComponent(PluginManager::AbstractPluginManage
     openOnlineIcon.addFile(":/open-online-16.png");
     openOnlineIcon.addFile(":/open-online-64.png");
     QAction* openOnlineAction = new QAction(openOnlineIcon, tr("Load online map"), this);
+    openOnlineAction->setData("openOnline");
 
     /* Close raster map */
     closeRasterAction = new QAction(QIcon(":/close-16.png"), tr("Close map"), this);

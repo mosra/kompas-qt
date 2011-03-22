@@ -39,6 +39,7 @@ SessionManagementUIComponent::SessionManagementUIComponent(PluginManager::Abstra
     openSessionIcon.addFile(":/open-session-16.png");
     openSessionIcon.addFile(":/open-session-64.png");
     QAction* openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
+    openSessionAction->setData("openSession");
 
     /* Create new session */
     QAction* newSessionAction = new QAction(tr("Create new session"), this);

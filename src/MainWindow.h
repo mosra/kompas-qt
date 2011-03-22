@@ -211,8 +211,6 @@ class MainWindow: public QMainWindow {
 
         QMultiMap<AbstractUIComponent::ActionCategory, QAction*> _actions;
 
-        QStackedWidget* centralStackedWidget;
-
         QList<QDockWidget*> _dockWidgets;
 
         void createUI();

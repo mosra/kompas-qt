@@ -18,9 +18,6 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QDockWidget>
-#include <QtGui/QGridLayout>
-#include <QtGui/QToolButton>
-#include <QtGui/QStackedWidget>
 
 #include "Utility/Directory.h"
 #include "MainWindowConfigure.h"
@@ -30,9 +27,6 @@
 #include "RasterOverlayModel.h"
 #include "RasterZoomModel.h"
 #include "PluginManagerStore.h"
-
-#define WELCOME_SCREEN 0
-#define MAP_VIEW 1
 
 using namespace std;
 using namespace Kompas::Utility;
@@ -68,63 +62,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     createUI();
 
-    /* Welcome screen, wrapped in another widget so it's nicely centered */
-    QFrame* welcomeScreenFrame = new QFrame;
-    welcomeScreenFrame->setAutoFillBackground(true);
-    QPalette palette;
-    palette.setBrush(QPalette::Window, QBrush(QPixmap(":/welcome-640.png")));
-    welcomeScreenFrame->setPalette(palette);
-
-    QToolButton* openSessionButton = new QToolButton(this);
-    openSessionButton->setPopupMode(QToolButton::InstantPopup);
-    openSessionButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    openSessionButton->setAutoRaise(true);
-    openSessionButton->setIconSize(QSize(64, 64));
-    openSessionButton->setFixedHeight(96);
-
-    QToolButton* openRasterButton = new QToolButton(this);
-    openRasterButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    openRasterButton->setAutoRaise(true);
-    openRasterButton->setIconSize(QSize(64, 64));
-    openRasterButton->setFixedHeight(96);
-
-    QToolButton* openOnlineButton = new QToolButton(this);
-    openOnlineButton->setPopupMode(QToolButton::InstantPopup);
-    openOnlineButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    openOnlineButton->setAutoRaise(true);
-    openOnlineButton->setIconSize(QSize(64, 64));
-    openOnlineButton->setFixedHeight(96);
-
-    QGridLayout* welcomeScreenFrameLayout = new QGridLayout;
-    welcomeScreenFrameLayout->addWidget(new QWidget, 0, 0, 1, 5);
-    welcomeScreenFrameLayout->addWidget(new QWidget, 1, 0);
-    welcomeScreenFrameLayout->addWidget(openSessionButton, 1, 1);
-    welcomeScreenFrameLayout->addWidget(openRasterButton, 1, 2);
-    welcomeScreenFrameLayout->addWidget(openOnlineButton, 1, 3);
-    welcomeScreenFrameLayout->addWidget(new QWidget, 1, 4);
-    welcomeScreenFrameLayout->addWidget(new QWidget, 2, 0, 1, 5);
-    welcomeScreenFrameLayout->setColumnMinimumWidth(0, 100);
-    welcomeScreenFrameLayout->setColumnMinimumWidth(4, 100);
-    welcomeScreenFrameLayout->setRowMinimumHeight(0, 310);
-    welcomeScreenFrameLayout->setRowMinimumHeight(1, 120);
-    welcomeScreenFrameLayout->setRowMinimumHeight(2, 50);
-
-    welcomeScreenFrame->setLayout(welcomeScreenFrameLayout);
-    welcomeScreenFrame->setFixedSize(640, 480);
-    QWidget* welcomeScreen = new QWidget;
-    QHBoxLayout* welcomeScreenLayout = new QHBoxLayout;
-    welcomeScreenLayout->addWidget(welcomeScreenFrame);
-    welcomeScreen->setLayout(welcomeScreenLayout);
-
-    /* Stacked widget */
-    centralStackedWidget = new QStackedWidget;
-    centralStackedWidget->addWidget(welcomeScreen);
-    setCentralWidget(centralStackedWidget);
-
     /* Load map view plugin */
     setMapView(_pluginManagerStore->mapViews()->manager()->instance(_configuration.group("map")->value<string>("viewPlugin")));
-
-    resize(960, 700);
 }
 
 void MainWindow::setWindowTitle(const QString& title) {
@@ -180,10 +119,6 @@ void MainWindow::loadDefaultConfiguration() {
 void MainWindow::setMapView(AbstractMapView* view) {
     if(_mapView) delete _mapView;
     _mapView = view;
-
-    /* View exists - assign map view to second slot in stacked widget */
-    if(_mapView)
-        centralStackedWidget->addWidget(_mapView);
 
     emit mapViewChanged();
 
@@ -297,18 +232,9 @@ void MainWindow::displayMapIfUsable() {
     bool isUsable = rasterModel() ? rasterModel()->isUsable() : false;
     rasterModel.unlock();
 
-    /* Show map view, show dock widgets */
-    if(_mapView && isUsable) {
-        centralStackedWidget->setCurrentIndex(MAP_VIEW);
-        foreach(QDockWidget* widget, _dockWidgets)
-            widget->setHidden(false);
-
-    /* Show welcome screen, hide dock widgets */
-    } else {
-        centralStackedWidget->setCurrentIndex(WELCOME_SCREEN);
-        foreach(QDockWidget* widget, _dockWidgets)
-            widget->setHidden(true);
-    }
+    /* Show dock widgets only if map view is usable */
+    foreach(QDockWidget* widget, _dockWidgets)
+        widget->setVisible(_mapView && isUsable);
 }
 
 void MainWindow::createUI() {

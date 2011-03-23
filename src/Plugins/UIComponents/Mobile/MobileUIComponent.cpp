@@ -38,6 +38,7 @@ MobileUIComponent::MobileUIComponent(PluginManager::AbstractPluginManager* manag
 
     _centralWidget = new QWidget;
     _layout = new QHBoxLayout;
+    _layout->setContentsMargins(0, 0, 0, 0);
     _centralWidget->setLayout(_layout);
 
     connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(mapViewChanged()));

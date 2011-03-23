@@ -65,6 +65,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     /* Single-widget layout */
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(view);
+    layout->setContentsMargins(0, 0, 0, 0);
     setLayout(layout);
 
     updateRasterModel();

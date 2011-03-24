@@ -24,6 +24,7 @@
 
 class QHBoxLayout;
 class QPushButton;
+class QAction;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
@@ -48,6 +49,7 @@ class MobileCentralWidget: public QWidget {
 
     private slots:
         void mapViewChanged();
+        void toggleFullscreen();
 
     private:
         QHBoxLayout *_layout;
@@ -56,6 +58,8 @@ class MobileCentralWidget: public QWidget {
             *_settingsButton,
             *_leftButton,
             *_rightButton;
+
+        QAction *_fullscreenAction;
 
         void positionButtons(const QSize& widgetSize);
 };

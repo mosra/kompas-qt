@@ -15,11 +15,13 @@
 
 #include "MobileCentralWidget.h"
 
-#include "MainWindow.h"
-#include "AbstractMapView.h"
-
+#include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QPushButton>
+#include <QtGui/QMenu>
+
+#include "MainWindow.h"
+#include "AbstractMapView.h"
 
 using namespace Kompas::QtGui;
 
@@ -34,6 +36,15 @@ MobileCentralWidget::MobileCentralWidget(QWidget* parent): QWidget(parent) {
     _settingsButton = new QPushButton(tr("Menu"), this);
     _leftButton = new QPushButton(tr("-"), this);
     _rightButton = new QPushButton(tr("+"), this);
+
+    _fullscreenAction = new QAction(tr("Fullscreen"), this);
+    _fullscreenAction->setCheckable(true);
+    connect(_fullscreenAction, SIGNAL(triggered(bool)), SLOT(toggleFullscreen()));
+
+    /* Settings menu */
+    QMenu* settingsMenu = new QMenu(this);
+    settingsMenu->addAction(_fullscreenAction);
+    _settingsButton->setMenu(settingsMenu);
 
     connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(mapViewChanged()));
 }
@@ -53,6 +64,18 @@ void MobileCentralWidget::mapViewChanged() {
 
     connect(_leftButton, SIGNAL(clicked()), view, SLOT(zoomOut()));
     connect(_rightButton, SIGNAL(clicked()), view, SLOT(zoomIn()));
+}
+
+void MobileCentralWidget::toggleFullscreen() {
+    MainWindow* mainWindow = MainWindow::instance();
+
+    if(mainWindow->isFullScreen()) {
+        mainWindow->showNormal();
+        _fullscreenAction->setChecked(false);
+    } else {
+        mainWindow->showFullScreen();
+        _fullscreenAction->setChecked(true);
+    }
 }
 
 void MobileCentralWidget::positionButtons(const QSize& widgetSize) {

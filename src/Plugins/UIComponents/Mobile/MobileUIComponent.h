@@ -20,10 +20,7 @@
  */
 
 #include "AbstractUIComponent.h"
-
-class QHBoxLayout;
-class QToolButton;
-class QAction;
+#include "MobileCentralWidget.h"
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
@@ -37,12 +34,8 @@ class MobileUIComponent: public QtGui::AbstractUIComponent {
 
         inline virtual QWidget* centralWidget() const { return _centralWidget; }
 
-    private slots:
-        void mapViewChanged();
-
     private:
-        QWidget* _centralWidget;
-        QHBoxLayout* _layout;
+        MobileCentralWidget* _centralWidget;
 };
 
 }}}

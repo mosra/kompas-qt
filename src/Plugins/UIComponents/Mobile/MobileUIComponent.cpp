@@ -15,10 +15,7 @@
 
 #include "MobileUIComponent.h"
 
-#include <QtGui/QHBoxLayout>
-
 #include "MainWindow.h"
-#include "AbstractMapView.h"
 #include "PluginManagerStore.h"
 
 PLUGIN_REGISTER_STATIC(MobileUIComponent,
@@ -36,18 +33,7 @@ MobileUIComponent::MobileUIComponent(PluginManager::AbstractPluginManager* manag
     MainWindow::instance()->setRasterModel(rasterModel);
     MainWindow::instance()->resize(640, 360);
 
-    _centralWidget = new QWidget;
-    _layout = new QHBoxLayout;
-    _layout->setContentsMargins(0, 0, 0, 0);
-    _centralWidget->setLayout(_layout);
-
-    connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(mapViewChanged()));
-}
-
-void MobileUIComponent::mapViewChanged() {
-    /* View exists - assign map view to second slot in stacked widget */
-    if(MainWindow::instance()->mapView())
-        _layout->addWidget(MainWindow::instance()->mapView());
+    _centralWidget = new MobileCentralWidget;
 }
 
 }}}

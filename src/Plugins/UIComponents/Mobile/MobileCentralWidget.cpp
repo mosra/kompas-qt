@@ -41,9 +41,13 @@ MobileCentralWidget::MobileCentralWidget(QWidget* parent): QWidget(parent) {
     _fullscreenAction->setCheckable(true);
     connect(_fullscreenAction, SIGNAL(triggered(bool)), SLOT(toggleFullscreen()));
 
+    _quitAction = new QAction(tr("Quit"), this);
+    connect(_quitAction, SIGNAL(triggered(bool)), MainWindow::instance(), SLOT(close()));
+
     /* Settings menu */
     QMenu* settingsMenu = new QMenu(this);
     settingsMenu->addAction(_fullscreenAction);
+    settingsMenu->addAction(_quitAction);
     _settingsButton->setMenu(settingsMenu);
 
     connect(MainWindow::instance(), SIGNAL(mapViewChanged()), SLOT(mapViewChanged()));

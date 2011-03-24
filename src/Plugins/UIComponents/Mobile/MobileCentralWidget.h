@@ -59,7 +59,8 @@ class MobileCentralWidget: public QWidget {
             *_leftButton,
             *_rightButton;
 
-        QAction *_fullscreenAction;
+        QAction *_fullscreenAction,
+            *_quitAction;
 
         void positionButtons(const QSize& widgetSize);
 };

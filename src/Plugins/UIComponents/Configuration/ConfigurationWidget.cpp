@@ -65,6 +65,7 @@ ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): Ab
     packageDirLayout->addWidget(packageDirButton);
 
     /* Layout */
+    /** @todo Rewrite using QFormLayout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(new QLabel(tr("Map view plugin:")), 0, 0);
     layout->addWidget(mapViewPlugin, 0, 1);

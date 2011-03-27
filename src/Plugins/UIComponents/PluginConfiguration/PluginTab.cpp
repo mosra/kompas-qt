@@ -142,6 +142,7 @@ PluginTab::PluginTab(PluginManagerStore::AbstractItem* pluginManagerStoreItem, Q
     pluginDirLayout->addWidget(reloadPluginDirButton);
 
     /* Layout */
+    /** @todo Rewrite using QFormLayout */
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(categoryDescription, 0, 0, 1, 3);
     layout->addWidget(new QLabel(tr("Plugin directory:")), 1, 0);

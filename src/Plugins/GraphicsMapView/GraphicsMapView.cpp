@@ -51,6 +51,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setScene(&map);
+    view->setFrameShape(QFrame::NoFrame);
 
     map.setBackgroundBrush(QColor("#e6e6e6"));
 

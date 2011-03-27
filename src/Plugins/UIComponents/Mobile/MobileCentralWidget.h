@@ -22,6 +22,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QResizeEvent>
 
+class QStackedWidget;
 class QHBoxLayout;
 class QPushButton;
 class QAction;
@@ -35,6 +36,23 @@ class MobileCentralWidget: public QWidget {
     Q_OBJECT
 
     public:
+        enum Controls {
+            Default,
+            Map,
+            Menu
+        };
+
+        enum MapControlWidget {
+            Packages,
+            Online,
+            Layers
+        };
+
+        enum MenuControlWidget {
+            Configuration,
+            Plugins
+        };
+
         /** @brief Constructor */
         MobileCentralWidget(QWidget* parent = 0);
 
@@ -51,16 +69,43 @@ class MobileCentralWidget: public QWidget {
         void mapViewChanged();
         void toggleFullscreen();
 
+        void setControlsVisible(Controls controls);
+        inline void setDefaultControlsVisible() { setControlsVisible(Default); }
+        inline void setMapControlsVisible() { setControlsVisible(Map); }
+        inline void setSettingsControlVisible() { setControlsVisible(Menu); }
+
+        void setMapControlWidgetVisible(MapControlWidget widget);
+        inline void setMapPackagesControlWidgetVisible() { setMapControlWidgetVisible(Packages); }
+        inline void setMapOnlineControlWidgetVisible() { setMapControlWidgetVisible(Online); }
+        inline void setMapLayersControlWidgetVisible() { setMapControlWidgetVisible(Layers); }
+
+        void setMenuControlWidgetVisible(MenuControlWidget widget);
+        inline void setMenuConfigurationControlWidgetVisible() { setMenuControlWidgetVisible(Configuration); }
+        inline void setMenuPluginsControlWidgetVisible() { setMenuControlWidgetVisible(Plugins); }
+
     private:
+        QStackedWidget *_topLeftCorner,
+            *_topRightCorner,
+            *_bottomLeftCorner,
+            *_bottomRightCorner,
+            *_mapControlWidget,
+            *_menuControlWidget;
+
         QHBoxLayout *_layout;
 
         QPushButton *_mapButton,
-            *_settingsButton,
+            *_menuButton,
             *_leftButton,
-            *_rightButton;
+            *_rightButton,
 
-        QAction *_fullscreenAction,
-            *_quitAction;
+            *_onlineButton,
+            *_backButton,
+            *_layersButton,
+            *_packagesButton,
+
+            *_quitButton,
+            *_configurationButton,
+            *_pluginsButton;
 
         void positionButtons(const QSize& widgetSize);
 };

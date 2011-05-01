@@ -15,6 +15,7 @@
 
 #include "DownloadPage.h"
 
+#include <QtCore/QTimer>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -75,8 +76,11 @@ void DownloadPage::initializePage() {
 
     updateStatus(0, 0, "", 0, 0, 0);
 
-    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, area, wizard->layers, wizard->overlays))
+    if(!saveThread->initializePackage(wizard->model, wizard->filename, wizard->tileSize, wizard->zoomLevels, area, wizard->layers, wizard->overlays)) {
         filename->setText(tr("Failed to initialize package %0").arg(QString::fromStdString(wizard->filename)));
+        QTimer::singleShot(0, this, SIGNAL(error()));
+        return;
+    }
 
     if(!wizard->name.empty())
         saveThread->setPackageAttribute(AbstractRasterModel::Name, wizard->name);

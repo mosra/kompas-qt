@@ -110,12 +110,11 @@ TileArea SaveRasterWizard::area() const {
     TileArea area = rasterModel()->area()*pow2(zoomLevels[0]-*rasterModel()->zoomLevels().begin());
 
     /* Tile area at minimal zoom */
-    TileArea ta(
-        area.x+absoluteArea.x1*area.w,
-        area.y+absoluteArea.y1*area.h,
-        ceil((absoluteArea.x2-absoluteArea.x1)*area.w),
-        ceil((absoluteArea.y2-absoluteArea.y1)*area.h)
-    );
+    TileArea ta;
+    ta.x = area.x+absoluteArea.x1*area.w;
+    ta.y = area.y+absoluteArea.y1*area.h;
+    ta.w = area.x+absoluteArea.x2*area.w-ta.x+1;
+    ta.h = area.y+absoluteArea.y2*area.h-ta.y+1;
 
     return ta;
 }

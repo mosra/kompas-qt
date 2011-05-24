@@ -231,8 +231,8 @@ Wgs84Coords GraphicsMapView::coords(const QPoint& pos) {
 AbsoluteArea<double> GraphicsMapView::viewedArea(const QRect& area) {
     QRect sceneArea;
     if(area.isNull()) {
-        sceneArea.setTopLeft(view->mapToScene(visibleRegion().boundingRect().topLeft()).toPoint());
-        sceneArea.setBottomRight(view->mapToScene(visibleRegion().boundingRect().bottomRight()).toPoint());
+        sceneArea.setTopLeft(view->mapToScene(0, 0).toPoint());
+        sceneArea.setBottomRight(view->mapToScene(width(), height()).toPoint());
     } else {
         sceneArea.setTopLeft(view->mapToScene(area.topLeft()).toPoint());
         sceneArea.setBottomRight(view->mapToScene(area.bottomRight()).toPoint());

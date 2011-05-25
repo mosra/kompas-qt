@@ -15,7 +15,7 @@
 
 #include "AreaPage.h"
 
-#include <QtGui/QGridLayout>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QRadioButton>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
@@ -72,13 +72,13 @@ AreaPage::AreaPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wizard(_wiz
     customAreaLayout->addWidget(customArea);
     customAreaLayout->addWidget(customAreaSelect, 1, Qt::AlignLeft);
 
-    QGridLayout* layout = new QGridLayout;
-    layout->addWidget(wholeMap, 0, 0, 1, 2);
-    layout->addWidget(wholeMapLabel, 1, 0, 1, 2);
-    layout->addWidget(visibleArea, 2, 0, 1, 2);
-    layout->addWidget(visibleAreaLabel, 3, 0, 1, 2);
-    layout->addLayout(customAreaLayout, 4, 0, 1, 2);
-    layout->addWidget(customAreaLabel, 5, 0, 1, 2);
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(wholeMap);
+    layout->addWidget(wholeMapLabel);
+    layout->addWidget(visibleArea);
+    layout->addWidget(visibleAreaLabel);
+    layout->addLayout(customAreaLayout);
+    layout->addWidget(customAreaLabel);
 
     setLayout(layout);
 }

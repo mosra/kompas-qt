@@ -27,6 +27,7 @@
 #include "RasterZoomModel.h"
 #include "AbstractMapView.h"
 
+using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
@@ -40,18 +41,15 @@ ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wiz
     AbstractMapView* view = m->mapView();
 
     zoomLevelsView = new QListView;
-    zoomLevelsView->setSelectionMode(QAbstractItemView::MultiSelection);
     zoomLevelsView->setModel(m->rasterZoomModel());
     connect(zoomLevelsView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     layersView = new QListView;
-    layersView->setSelectionMode(QAbstractItemView::MultiSelection);
     layersView->setModel(m->rasterLayerModel());
     layersView->setModelColumn(RasterLayerModel::Translated);
     connect(layersView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SIGNAL(completeChanged()));
 
     overlaysView = new QListView;
-    overlaysView->setSelectionMode(QAbstractItemView::MultiSelection);
     overlaysView->setModel(m->rasterOverlayModel());
     overlaysView->setModelColumn(RasterOverlayModel::Translated);
 
@@ -75,6 +73,16 @@ ContentsPage::ContentsPage(SaveRasterWizard* _wizard): QWizardPage(_wizard), wiz
     layout->addWidget(overlaysView, 1, 2);
 
     setLayout(layout);
+}
+
+void ContentsPage::initializePage() {
+    /* Enable or disable multiselection based on destination model features */
+    zoomLevelsView->setSelectionMode((wizard->features & AbstractRasterModel::SingleZoom) ?
+        QAbstractItemView::SingleSelection : QAbstractItemView::MultiSelection);
+    layersView->setSelectionMode((wizard->features & AbstractRasterModel::SingleLayer) ?
+        QAbstractItemView::SingleSelection : QAbstractItemView::MultiSelection);
+    overlaysView->setSelectionMode((wizard->features & AbstractRasterModel::SingleLayer) ?
+        QAbstractItemView::NoSelection : QAbstractItemView::MultiSelection);
 }
 
 bool ContentsPage::isComplete() const {

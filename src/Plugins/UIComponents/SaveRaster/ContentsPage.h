@@ -43,6 +43,14 @@ class ContentsPage: public QWizardPage {
         ContentsPage(SaveRasterWizard* _wizard);
 
         /**
+         * @brief Page initializator
+         *
+         * Enables or disables multiselection based on destination model
+         * features.
+         */
+        virtual void initializePage();
+
+        /**
          * @brief Whether the page is complete
          * @return True if at least one zoom level and layer is selected.
          */

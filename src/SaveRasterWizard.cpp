@@ -109,8 +109,8 @@ TileArea SaveRasterWizard::area() const {
     TileArea ta;
     ta.x = area.x+absoluteArea.x1*area.w;
     ta.y = area.y+absoluteArea.y1*area.h;
-    ta.w = area.x+absoluteArea.x2*area.w-ta.x+1;
-    ta.h = area.y+absoluteArea.y2*area.h-ta.y+1;
+    ta.w = ceil(area.x+absoluteArea.x2*area.w-ta.x);
+    ta.h = ceil(area.y+absoluteArea.y2*area.h-ta.y);
 
     return ta;
 }

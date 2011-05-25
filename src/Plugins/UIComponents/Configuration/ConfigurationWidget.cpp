@@ -17,7 +17,7 @@
 
 #include <string>
 #include <QtGui/QComboBox>
-#include <QtGui/QGridLayout>
+#include <QtGui/QFormLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QSpinBox>
 #include <QtGui/QLineEdit>
@@ -65,17 +65,10 @@ ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): Ab
     packageDirLayout->addWidget(packageDirButton);
 
     /* Layout */
-    /** @todo Rewrite using QFormLayout */
-    QGridLayout* layout = new QGridLayout;
-    layout->addWidget(new QLabel(tr("Map view plugin:")), 0, 0);
-    layout->addWidget(mapViewPlugin, 0, 1);
-    layout->addWidget(new QLabel(tr("Max simultaenous downloads:")), 1, 0);
-    layout->addWidget(maxSimultaenousDownloads, 1, 1);
-    layout->addWidget(new QLabel(tr("Map package directory:")), 2, 0);
-    layout->addLayout(packageDirLayout, 2, 1);
-    layout->addWidget(new QWidget, 3, 0, 1, 2);
-    layout->setColumnStretch(1, 1);
-    layout->setRowStretch(4, 1);
+    QFormLayout* layout = new QFormLayout;
+    layout->addRow(tr("Map view plugin:"), mapViewPlugin);
+    layout->addRow(tr("Max simultaenous downloads:"), maxSimultaenousDownloads);
+    layout->addRow(tr("Map package directory:"), packageDirLayout);
     setLayout(layout);
 
     /* Fill in values */

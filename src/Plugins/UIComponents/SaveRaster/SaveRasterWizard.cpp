@@ -84,17 +84,30 @@ int SaveRasterWizard::exec() {
 
     /* Check what features are missing in destination model */
     QString log;
+    QString templ("<li><strong>%0</strong> - %1</li>");
     for(int i = 0; i != 32; ++i) {
         int feature = 1 << i;
 
-        /* If feature doesn't exist in source model or is present in destination
-            model, go to next feature */
-        if(!(feature & sourceFeatures) || (feature & features))
-            continue;
+        /* Check features that exists in source model and are not present in
+           destination model */
+        if((feature & sourceFeatures) && !(feature & features)) {
+            switch(feature) {
+                case AbstractRasterModel::ConvertableCoords:
+                    log += templ.arg(tr("No GPS coordinates support")).arg(tr("you won't be able to measure distances.")); break;
+            }
+        }
 
-        switch(feature) {
-            case AbstractRasterModel::ConvertableCoords:
-                log += QString("<li><strong>%0</strong> - %1</li>").arg(tr("No GPS coordinates support")).arg(tr("you won't be able to measure distances.")); break;
+        /* Check features that exists in destination model and are not present
+           in source model */
+        else if((feature & features) && !(feature & sourceFeatures)) {
+            switch(feature) {
+                case AbstractRasterModel::SingleLayer:
+                    log += templ.arg(tr("No multi-layer support")).arg(tr("you can save only one layer."));
+                    break;
+                case AbstractRasterModel::SingleZoom:
+                    log += templ.arg(tr("No multi-zoom support")).arg(tr("you can save only one zoom level."));
+                    break;
+            }
         }
     }
 

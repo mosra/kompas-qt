@@ -9,7 +9,8 @@ qt4_wrap_cpp(SaveRasterUIComponent_MOC
     SaveRasterWizard.h
     StatisticsPage.h
 )
-kompas_add_static_plugin(KompasQt_PluginsDesktop SaveRasterUIComponent
+kompas_add_plugin(SaveRasterUIComponent
+    ${KOMPAS_PLUGINS_UICOMPONENT_INSTALL_DIR}
     SaveRasterUIComponent.conf
     AreaPage.cpp
     ContentsPage.cpp

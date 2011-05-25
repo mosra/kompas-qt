@@ -20,9 +20,8 @@
 #include "MainWindow.h"
 #include "DmsDecimalConverterDialog.h"
 
-PLUGIN_REGISTER_STATIC(DmsDecimalConverterUIComponent,
-                       Kompas::Plugins::UIComponents::DmsDecimalConverterUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(Kompas::Plugins::UIComponents::DmsDecimalConverterUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace std;
 using namespace Kompas::QtGui;

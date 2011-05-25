@@ -3,7 +3,8 @@ qt4_wrap_cpp(DistanceMeterUIComponent_MOC
     DistanceMeterDialog.h
     CurrentCelestialBodyPluginModel.h
 )
-kompas_add_static_plugin(KompasQt_PluginsDesktop DistanceMeterUIComponent
+kompas_add_plugin(DistanceMeterUIComponent
+    ${KOMPAS_PLUGINS_UICOMPONENT_INSTALL_DIR}
     DistanceMeterUIComponent.conf
     DistanceMeterUIComponent.cpp
     DistanceMeterDialog.cpp

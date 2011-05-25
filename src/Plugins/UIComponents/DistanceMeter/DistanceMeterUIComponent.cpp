@@ -20,9 +20,8 @@
 #include "MainWindow.h"
 #include "DistanceMeterDialog.h"
 
-PLUGIN_REGISTER_STATIC(DistanceMeterUIComponent,
-                       Kompas::Plugins::UIComponents::DistanceMeterUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(Kompas::Plugins::UIComponents::DistanceMeterUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace std;
 using namespace Kompas::QtGui;

@@ -192,6 +192,14 @@ class MainWindow: public QMainWindow {
          */
         void setOnlineEnabled(bool enabled);
 
+    private slots:
+        /**
+         * @brief Load UI component
+         * @param plugin    Plugin name
+         * @param loadState Load state
+         */
+        void loadUIComponent(const std::string& plugin, int, int loadState);
+
     private:
         static MainWindow* _instance;
 

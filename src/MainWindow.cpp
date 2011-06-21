@@ -61,7 +61,11 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     TileDataThread::setMaxSimultaenousDownloads(_configuration.group("map")->value<int>("maxSimultaenousDownloads"));
 
+    /* Create UI and add UI components on plugin load */
     createUI();
+    connect(_pluginManagerStore->uiComponents()->manager(),
+            SIGNAL(loadAttempt(std::string,int,int)),
+            SLOT(loadUIComponent(std::string,int,int)));
 
     /* Load map view plugin */
     setMapView(_pluginManagerStore->mapViews()->manager()->instance(_configuration.group("map")->value<string>("viewPlugin")));
@@ -240,55 +244,60 @@ void MainWindow::createUI() {
     /* Foreach all loaded UI plugins and instance them */
     PluginManager<AbstractUIComponent>* uiComponentPluginManager = _pluginManagerStore->uiComponents()->manager();
     vector<string> plugins = uiComponentPluginManager->pluginList();
-    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it) {
-        /* Skip not loaded plugins */
-        if(!(uiComponentPluginManager->loadState(*it) & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) continue;
+    for(vector<string>::const_iterator it = plugins.begin(); it != plugins.end(); ++it)
+        loadUIComponent(*it, 0, uiComponentPluginManager->loadState(*it));
+}
 
-        AbstractUIComponent* instance = uiComponentPluginManager->instance(*it);
-        instance->setParent(this);
+void MainWindow::loadUIComponent(const string& plugin, int, int loadState) {
+    PluginManager<AbstractUIComponent>* uiComponentPluginManager = _pluginManagerStore->uiComponents()->manager();
 
-        /* Central widget */
-        if(instance->centralWidget()) setCentralWidget(instance->centralWidget());
+    /* Skip not loaded plugins */
+    if(!(loadState & (AbstractPluginManager::LoadOk|AbstractPluginManager::IsStatic))) return;
 
-        /* Dock widget */
-        Qt::DockWidgetArea dockWidgetArea = Qt::RightDockWidgetArea;
-        if(instance->dockWidget(&dockWidgetArea)) {
-            QDockWidget* dock = instance->dockWidget(&dockWidgetArea);
-            _dockWidgets << dock;
-            addDockWidget(dockWidgetArea, dock);
-        }
+    AbstractUIComponent* instance = uiComponentPluginManager->instance(plugin);
+    instance->setParent(this);
 
-        /* Menu bar */
-        if(instance->menuBar()) setMenuBar(instance->menuBar());
+    /* Central widget */
+    if(instance->centralWidget()) setCentralWidget(instance->centralWidget());
 
-        /* Tool bar */
-        Qt::ToolBarArea toolBarArea = Qt::TopToolBarArea;
-        if(instance->toolBar(&toolBarArea)) addToolBar(toolBarArea, instance->toolBar(&toolBarArea));
+    /* Dock widget */
+    Qt::DockWidgetArea dockWidgetArea = Qt::RightDockWidgetArea;
+    if(instance->dockWidget(&dockWidgetArea)) {
+        QDockWidget* dock = instance->dockWidget(&dockWidgetArea);
+        _dockWidgets << dock;
+        addDockWidget(dockWidgetArea, dock);
+    }
 
-        /* Status bar */
-        if(instance->statusBar()) setStatusBar(instance->statusBar());
+    /* Menu bar */
+    if(instance->menuBar()) setMenuBar(instance->menuBar());
 
-        /* Actions */
-        for(int i = 0; i != 6; ++i) {
-            AbstractUIComponent::ActionCategory category = static_cast<AbstractUIComponent::ActionCategory>(i);
+    /* Tool bar */
+    Qt::ToolBarArea toolBarArea = Qt::TopToolBarArea;
+    if(instance->toolBar(&toolBarArea)) addToolBar(toolBarArea, instance->toolBar(&toolBarArea));
 
-            /* Add current actions to component (in QMultiMap are stored in
-               reverse order => backward foreach) */
-            QList<QAction*> actionsOfCategory = _actions.values(category);
-            for(int i = actionsOfCategory.size()-1; i >= 0; --i)
-                instance->actionAdded(category, actionsOfCategory[i]);
+    /* Status bar */
+    if(instance->statusBar()) setStatusBar(instance->statusBar());
 
-            /* Add this component's actions to list and other components */
-            if(instance->actions(category)) {
-                foreach(QAction* action, *instance->actions(category)) {
-                    _actions.insert(category, action);
-                    emit actionAdded(category, action);
-                }
+    /* Actions */
+    for(int i = 0; i != 6; ++i) {
+        AbstractUIComponent::ActionCategory category = static_cast<AbstractUIComponent::ActionCategory>(i);
+
+        /* Add current actions to component (in QMultiMap are stored in
+            reverse order => backward foreach) */
+        QList<QAction*> actionsOfCategory = _actions.values(category);
+        for(int i = actionsOfCategory.size()-1; i >= 0; --i)
+            instance->actionAdded(category, actionsOfCategory[i]);
+
+        /* Add this component's actions to list and other components */
+        if(instance->actions(category)) {
+            foreach(QAction* action, *instance->actions(category)) {
+                _actions.insert(category, action);
+                emit actionAdded(category, action);
             }
         }
-
-        connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
     }
+
+    connect(this, SIGNAL(actionAdded(int,QAction*)), instance, SLOT(actionAdded(int,QAction*)));
 }
 
 }}

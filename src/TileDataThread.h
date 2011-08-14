@@ -51,6 +51,7 @@ class TileDataThread: public QThread {
             Core::Zoom zoom;            /**< @brief Tile zoom */
             Core::TileCoords coords;    /**< @brief Tile coordinates */
             bool running;               /**< @brief Whether tile download is in progress */
+            QByteArray downloadedData;  /**< @brief Downloaded data */
 
             /** @brief Constructor */
             inline TileJob(): reply(0), running(false) {}

@@ -79,46 +79,51 @@ void TileDataThread::run() {
 
         /* Job found, proceed */
         if(runningCount == -1) {
-
             Locker<AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForWrite();
 
-            /* No model available */
-            if(!rasterModel()) {
-                emit tileNotFound(firstPending.layer, firstPending.zoom, firstPending.coords);
-                return;
-            }
+            /* Tile is already downloaded, save it to cache and continue to another */
+            if(rasterModel() && !firstPending.downloadedData.isEmpty()) {
+                rasterModel()->tileToCache(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords, string(firstPending.downloadedData.data(), firstPending.downloadedData.size()));
 
-            /* First try to get the data locally */
-            string data = rasterModel()->tileFromPackage(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
-            /** @todo @c VERSION-0.2 Get data also from cache */
-            bool online = rasterModel()->online();
-
-            rasterModel.unlock();
-
-            /* If found, emit signal with data */
-            if(!data.empty()) {
-
-                /* QByteArray::fromRawData() doesn't copy data under pointer,
-                   "change" them to force deep copy */
-                QByteArray b = QByteArray::fromRawData(data.data(), data.size());
-                b[0] = b[0];
-
-                emit tileData(firstPending.layer, firstPending.zoom, firstPending.coords, b);
-
-            /* Else try to download the item */
             } else {
-                /* Online is not enabled, tile not found */
-                if(!online)
+                /* No model available */
+                if(!rasterModel()) {
                     emit tileNotFound(firstPending.layer, firstPending.zoom, firstPending.coords);
+                    return;
+                }
 
-                /* Add the item back to queue, request download */
-                else {
-                    mutex.lock();
-                    firstPending.running = true;
-                    queue.append(firstPending);
-                    mutex.unlock();
+                /* First try to get the data from package or cache */
+                string data = rasterModel()->tileFromPackage(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
+                if(data.empty())
+                    data = rasterModel()->tileFromCache(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
+                bool online = rasterModel()->online();
+                rasterModel.unlock();
 
-                    emit download(firstPending);
+                /* If found, emit signal with data */
+                if(!data.empty()) {
+
+                    /* QByteArray::fromRawData() doesn't copy data under pointer,
+                    "change" them to force deep copy */
+                    QByteArray b = QByteArray::fromRawData(data.data(), data.size());
+                    b[0] = b[0];
+
+                    emit tileData(firstPending.layer, firstPending.zoom, firstPending.coords, b);
+
+                /* Else try to download the item */
+                } else {
+                    /* Online is not enabled, tile not found */
+                    if(!online)
+                        emit tileNotFound(firstPending.layer, firstPending.zoom, firstPending.coords);
+
+                    /* Add the item back to queue, request download */
+                    else {
+                        mutex.lock();
+                        firstPending.running = true;
+                        queue.append(firstPending);
+                        mutex.unlock();
+
+                        emit download(firstPending);
+                    }
                 }
             }
 
@@ -191,13 +196,22 @@ void TileDataThread::finishDownload(QNetworkReply* reply) {
     /* Triggerred from abort() */
     if(reply->error() == QNetworkReply::OperationCanceledError) return;
 
-    /* Find the reply in queue */
+    /* Find the reply in queue, save the data there */
     TileJob dl;
 
     mutex.lock();
+    QByteArray data;
     for(int i = 0; i != queue.size(); ++i) if(queue[i].reply == reply) {
         dl = queue[i];
-        queue.removeAt(i);
+
+        data = reply->readAll();
+        if(data.isEmpty()) {
+            queue.removeAt(i);
+        } else {
+            queue[i].downloadedData = data;
+            queue[i].running = false;
+            queue[i].reply = 0;
+        }
         break;
     }
     mutex.unlock();
@@ -207,7 +221,7 @@ void TileDataThread::finishDownload(QNetworkReply* reply) {
         emit tileNotFound(dl.layer, dl.zoom, dl.coords);
 
     /* Download success */
-    } else emit tileData(dl.layer, dl.zoom, dl.coords, reply->readAll());
+    } else emit tileData(dl.layer, dl.zoom, dl.coords, data);
 
     reply->deleteLater();
     condition.wakeOne();

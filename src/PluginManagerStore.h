@@ -21,6 +21,7 @@
 
 #include "PluginManager.h"
 
+#include "AbstractCache.h"
 #include "AbstractCelestialBody.h"
 #include "AbstractMapView.h"
 #include "AbstractProjection.h"
@@ -57,6 +58,10 @@ class PluginManagerStore: public QObject {
          */
         inline const QList<AbstractItem*>& items() const { return _items; }
 
+        /** @brief Cache plugin manager */
+        inline Item<Core::AbstractCache>* caches()
+            { return _caches; }
+
         /** @brief Celestial bodies plugin manager */
         inline Item<Core::AbstractCelestialBody>* celestialBodies()
             { return _celestialBodies; }
@@ -79,6 +84,7 @@ class PluginManagerStore: public QObject {
 
     private:
         Item<AbstractMapView>* _mapViews;
+        Item<Core::AbstractCache>* _caches;
         Item<Core::AbstractCelestialBody>* _celestialBodies;
         Item<Core::AbstractProjection>* _projections;
         Item<Core::AbstractRasterModel>* _rasterModels;

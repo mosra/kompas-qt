@@ -24,6 +24,12 @@ using namespace Kompas::Core;
 namespace Kompas { namespace QtGui {
 
 PluginManagerStore::PluginManagerStore(ConfigurationGroup* configurationGroup, QObject* parent): QObject(parent) {
+    _caches = new Item<AbstractCache>(
+        configurationGroup->group("caches"),
+        tr("Caches"),
+        tr("Caching of downloaded data."),
+        this);
+    _items << _caches;
     _celestialBodies = new Item<AbstractCelestialBody>(
         configurationGroup->group("celestialBodies"),
         tr("Celestial bodies"),

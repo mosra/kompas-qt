@@ -48,12 +48,13 @@ class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
 
     private slots:
         void selectPackageDir();
+        void selectCacheDir();
 
     private:
-        QComboBox* mapViewPlugin;
-        QtGui::PluginModel* mapViewModel;
-        QSpinBox* maxSimultaenousDownloads;
-        QLineEdit* packageDir;
+        QComboBox *mapViewPlugin, *cachePlugin;
+        QtGui::PluginModel *mapViewModel, *cacheModel;
+        QSpinBox *maxSimultaenousDownloads, *cacheSize, *cacheBlockSize;
+        QLineEdit *packageDir, *cacheDir;
 };
 
 }}}

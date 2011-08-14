@@ -35,6 +35,10 @@ class QMenu;
 
 namespace Kompas {
 
+namespace Core {
+    class AbstractCache;
+}
+
 namespace QtGui {
 
 class AbstractMapView;
@@ -214,6 +218,7 @@ class MainWindow: public QMainWindow {
         RasterZoomModel* _rasterZoomModel;
 
         AbstractMapView* _mapView;
+        Core::AbstractCache* _cache;
         Core::AbstractRasterModel* _rasterModel;
         QReadWriteLock rasterModelLock;
 

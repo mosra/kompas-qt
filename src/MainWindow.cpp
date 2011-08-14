@@ -36,7 +36,7 @@ namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _rasterModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _cache(0), _rasterModel(0) {
     _instance = this;
 
     /* Window icon */
@@ -69,6 +69,23 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     /* Load map view plugin */
     setMapView(_pluginManagerStore->mapViews()->manager()->instance(_configuration.group("map")->value<string>("viewPlugin")));
+
+    /* Load cache */
+    string cachePlugin = _configuration.group("cache")->value<string>("plugin");
+    string cachePath = _configuration.group("cache")->value<string>("path");
+    if(!cachePlugin.empty() && !cachePath.empty()) {
+    _cache = _pluginManagerStore->caches()->manager()->instance(_configuration.group("cache")->value<string>("plugin"));
+        if(_cache) {
+            /* Preset block and cache size from configuration */
+            _cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
+            _cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
+            _cache->initializeCache(_configuration.group("cache")->value<string>("path"));
+
+            /* Save block and cache size back */
+            _configuration.group("cache")->setValue<unsigned int>("blockSize", _cache->blockSize());
+            _configuration.group("cache")->setValue<unsigned int>("size", _cache->cacheSize()/1024/1024);
+        }
+    }
 }
 
 void MainWindow::setWindowTitle(const QString& title) {
@@ -84,6 +101,7 @@ void MainWindow::loadDefaultConfiguration() {
 
     /* Plugin dirs */
     string mapViewPluginDir = PLUGIN_MAPVIEW_DIR;
+    string cachePluginDir = PLUGIN_CACHE_DIR;
     string celestialBodyPluginDir = PLUGIN_CELESTIALBODY_DIR;
     string projectionPluginDir = PLUGIN_PROJECTION_DIR;
     string rasterModelPluginDir = PLUGIN_RASTERMODEL_DIR;
@@ -93,6 +111,7 @@ void MainWindow::loadDefaultConfiguration() {
     #ifdef _WIN32
     string programPath = QApplication::applicationDirPath().toStdString();
     mapViewPluginDir = programPath + mapViewPluginDir;
+    cachePluginDir = programPath + cachePluginDir;
     celestialBodyPluginDir = programPath + celestialBodyPluginDir;
     projectionPluginDir = programPath + projectionPluginDir;
     rasterModelPluginDir = programPath + rasterModelPluginDir;
@@ -100,6 +119,7 @@ void MainWindow::loadDefaultConfiguration() {
     #endif
 
     _configuration.group("plugins")->group("mapViews")->value<string>("__dir", &mapViewPluginDir);
+    _configuration.group("plugins")->group("caches")->value<string>("__dir", &cachePluginDir);
     _configuration.group("plugins")->group("celestialBodies")->value<string>("__dir", &celestialBodyPluginDir);
     _configuration.group("plugins")->group("projections")->value<string>("__dir", &projectionPluginDir);
     _configuration.group("plugins")->group("rasterModels")->value<string>("__dir", &rasterModelPluginDir);
@@ -116,6 +136,16 @@ void MainWindow::loadDefaultConfiguration() {
     /* Paths */
     string packageDir = Directory::home();
     _configuration.group("paths")->value<string>("packages", &packageDir);
+
+    /* Cache */
+    string cachePlugin = "";
+    _configuration.group("cache")->value<string>("plugin", &cachePlugin);
+    string cacheDir = Directory::join(Directory::configurationDir("Kompas"), "cache");
+    _configuration.group("cache")->value<string>("path", &cacheDir);
+    unsigned int cacheSize = 100;
+    _configuration.group("cache")->value<unsigned int>("size", &cacheSize);
+    unsigned int cacheBlockSize = 4096;
+    _configuration.group("cache")->value<unsigned int>("blockSize", &cacheBlockSize);
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);
@@ -134,6 +164,7 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     rasterModelLock.lockForWrite();
     AbstractRasterModel* oldRasterModel = _rasterModel;
     _rasterModel = model;
+    _rasterModel->setCache(_cache);
     rasterModelLock.unlock();
 
     _rasterPackageModel->reload();

@@ -105,6 +105,13 @@ class PluginManagerStore::AbstractItem: public QObject {
          */
         AbstractItem(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent = 0);
 
+        /**
+         * @brief Destructor
+         *
+         * Deletes associated plugin manager.
+         */
+        virtual ~AbstractItem() { delete _manager; }
+
         /** @brief Name of plugin type */
         inline QString name() const { return _name; }
 

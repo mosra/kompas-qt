@@ -16,6 +16,8 @@
 # KOMPAS_CORE_INCLUDE_INSTALL_DIR        - Include installation directory for Core headers
 # KOMPAS_PLUGINS_INCLUDE_INSTALL_DIR     - Include installation directory for plugin headers
 # KOMPAS_PLUGINS_INSTALL_DIR             - Plugins installation directory
+# KOMPAS_PLUGINS_CACHE_INSTALL_DIR       - Cache plugins installation directory
+# KOMPAS_PLUGINS_CELESTIALBODY_INSTALL_DIR - Celestial body plugins installation directory
 # KOMPAS_PLUGINS_RASTERMODEL_INSTALL_DIR - Tile model plugins installation directory
 # KOMPAS_PLUGINS_PROJECTION_INSTALL_DIR  - Projection plugins installation directory
 #
@@ -81,6 +83,7 @@ if(KOMPASCORE_FOUND)
 
     set_parent_scope(KOMPAS_CORE_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Core)
     set_parent_scope(KOMPAS_PLUGINS_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Plugins)
+    set_parent_scope(KOMPAS_PLUGINS_CACHE_INSTALL_DIR ${KOMPAS_PLUGINS_INSTALL_DIR}/caches)
     set_parent_scope(KOMPAS_PLUGINS_CELESTIALBODY_INSTALL_DIR ${KOMPAS_PLUGINS_INSTALL_DIR}/celestialBodies)
     set_parent_scope(KOMPAS_PLUGINS_PROJECTION_INSTALL_DIR ${KOMPAS_PLUGINS_INSTALL_DIR}/projections)
     set_parent_scope(KOMPAS_PLUGINS_RASTERMODEL_INSTALL_DIR ${KOMPAS_PLUGINS_INSTALL_DIR}/rasterModels)

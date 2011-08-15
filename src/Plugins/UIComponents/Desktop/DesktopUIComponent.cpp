@@ -121,8 +121,12 @@ void DesktopUIComponent::rasterModelChanged() {
 
 void DesktopUIComponent::mapViewChanged() {
     /* View exists - assign map view to second slot in stacked widget */
-    if(MainWindow::instance()->mapView())
+    if(MainWindow::instance()->mapView()) {
         _centralWidget->addWidget(MainWindow::instance()->mapView());
+
+        /* Show the map view, if map is usable */
+        rasterModelChanged();
+    }
 }
 
 }}}

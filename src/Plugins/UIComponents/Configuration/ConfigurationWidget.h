@@ -42,9 +42,9 @@ class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
         ConfigurationWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
-        virtual void reset();
-        virtual void restoreDefaults();
-        virtual void save();
+        void reset();
+        void restoreDefaults();
+        void save();
 
     private slots:
         void selectPackageDir();

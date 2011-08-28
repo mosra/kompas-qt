@@ -33,7 +33,7 @@ class AboutUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         AboutUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual const QList<QAction*>* actions(ActionCategory category) const {
+        inline const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Help)
                 return &_actions;
             return 0;

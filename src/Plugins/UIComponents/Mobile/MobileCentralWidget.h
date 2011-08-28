@@ -42,7 +42,7 @@ class MobileCentralWidget: public QWidget {
          *
          * Repositions corner buttons on widget resize.
          */
-        inline virtual void resizeEvent(QResizeEvent* event) {
+        inline void resizeEvent(QResizeEvent* event) {
             positionButtons(event->size());
         }
 

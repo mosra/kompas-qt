@@ -36,7 +36,7 @@ class MenuBarUIComponent: public QtGui::AbstractUIComponent {
 
         inline QMenuBar* menuBar() const { return _menuBar; }
 
-        virtual void actionAdded(int category, QAction* action);
+        void actionAdded(int category, QAction* action);
 
     private:
         QMenuBar* _menuBar;

@@ -46,14 +46,14 @@ class StatisticsPage: public QWizardPage {
          * @brief Whether the page is complete
          * @return True if estimated package size doesn't exceed 10 GB.
          */
-        inline virtual bool isComplete() const { return canDownload; }
+        inline bool isComplete() const { return canDownload; }
 
         /**
          * @brief Page initializator
          *
          * Gets all needed data from SaveRasterWizard and computes data count.
          */
-        virtual void initializePage();
+        void initializePage();
 
     private:
         SaveRasterWizard* wizard;

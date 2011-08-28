@@ -48,13 +48,13 @@ class ContentsPage: public QWizardPage {
          * Enables or disables multiselection based on destination model
          * features.
          */
-        virtual void initializePage();
+        void initializePage();
 
         /**
          * @brief Whether the page is complete
          * @return True if at least one zoom level and layer is selected.
          */
-        virtual bool isComplete() const;
+        bool isComplete() const;
 
         /**
          * @brief Page validator
@@ -63,7 +63,7 @@ class ContentsPage: public QWizardPage {
          * layers into SaveRasterWizard::layers and overlays into
          * SaveRasterWizard::overlays.
          */
-        virtual bool validatePage();
+        bool validatePage();
 
     private:
         SaveRasterWizard* wizard;

@@ -47,14 +47,14 @@ class RasterOverlayModel: public QAbstractTableModel {
             QAbstractTableModel(parent) { reload(); }
 
         /** @brief Column count */
-        inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 2; }
+        inline int columnCount(const QModelIndex& parent = QModelIndex()) const { return 2; }
 
         /** @brief Row count */
-        inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
+        inline int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return overlays.count(); }
 
         /** @brief Data read access */
-        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
         /**
          * @brief Find overlay

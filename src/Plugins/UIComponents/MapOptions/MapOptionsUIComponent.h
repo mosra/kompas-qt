@@ -29,7 +29,7 @@ class MapOptionsUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         MapOptionsUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual QDockWidget* dockWidget(Qt::DockWidgetArea* area) const {
+        inline QDockWidget* dockWidget(Qt::DockWidgetArea* area) const {
             *area = Qt::RightDockWidgetArea;
             return _dockWidget;
         }

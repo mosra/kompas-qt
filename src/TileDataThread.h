@@ -96,7 +96,7 @@ class TileDataThread: public QThread {
         /**
          * @brief Main thread loop
          */
-        virtual void run();
+        void run();
 
         /**
          * @brief Request for tile data

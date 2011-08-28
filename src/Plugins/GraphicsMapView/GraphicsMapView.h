@@ -45,22 +45,22 @@ class GraphicsMapView: public QtGui::AbstractMapView {
         /** @copydoc QtGui::AbstractMapView::AbstractMapView */
         GraphicsMapView(Kompas::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
 
-        virtual inline unsigned int zoom() const { return _zoom; }
-        virtual Core::LatLonCoords coords(const QPoint& pos = QPoint());
-        virtual Core::AbsoluteArea<double> viewedArea(const QRect& area = QRect());
-        virtual QString layer() const { return _layer; }
-        virtual QStringList overlays() const { return _overlays; }
+        inline unsigned int zoom() const { return _zoom; }
+        Core::LatLonCoords coords(const QPoint& pos = QPoint());
+        Core::AbsoluteArea<double> viewedArea(const QRect& area = QRect());
+        QString layer() const { return _layer; }
+        QStringList overlays() const { return _overlays; }
 
     public slots:
-        virtual void updateRasterModel();
-        virtual bool zoomIn(const QPoint& pos = QPoint());
-        virtual bool zoomOut(const QPoint& pos = QPoint());
-        virtual bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
-        virtual bool setCoords(const Kompas::Core::LatLonCoords& coords, const QPoint& pos = QPoint());
-        virtual bool move(int x, int y);
-        virtual bool setLayer(const QString& layer);
-        virtual bool addOverlay(const QString& overlay);
-        virtual bool removeOverlay(const QString& overlay);
+        void updateRasterModel();
+        bool zoomIn(const QPoint& pos = QPoint());
+        bool zoomOut(const QPoint& pos = QPoint());
+        bool zoomTo(Core::Zoom zoom, const QPoint& pos = QPoint());
+        bool setCoords(const Kompas::Core::LatLonCoords& coords, const QPoint& pos = QPoint());
+        bool move(int x, int y);
+        bool setLayer(const QString& layer);
+        bool addOverlay(const QString& overlay);
+        bool removeOverlay(const QString& overlay);
 
     protected:
         /**
@@ -69,7 +69,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
          * If mouse is over the map and no button is pressed, emits
          * currentCoordinates().
          */
-        virtual void mouseMoveEvent(QMouseEvent* event);
+        void mouseMoveEvent(QMouseEvent* event);
 
     private:
         MapView* view;                          /**< @brief Map view */
@@ -107,22 +107,22 @@ class GraphicsMapView: public QtGui::AbstractMapView {
          */
         void updateTilePositions();
 
-        virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QByteArray& data) {
+        void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QByteArray& data) {
             QPixmap pixmap;
             pixmap.loadFromData(data);
             tileData(layer, z, coords, pixmap);
         }
-        inline virtual void tileLoading(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
+        inline void tileLoading(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
             /* Don't display loading for overlays */
             if(layer == _layer) tileData(layer, z, coords, tileLoadingImage);
         }
-        virtual void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
+        void tileNotFound(const QString& layer, Core::Zoom z, const Core::TileCoords& coords) {
             /* Don't display not found for overlays */
             if(layer == _layer) tileData(layer, z, coords, tileNotFoundImage);
         }
 
     private:
-        virtual void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
+        void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
 };
 
 }}

@@ -36,10 +36,10 @@ class DesktopUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         DesktopUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual QWidget* centralWidget() const { return _centralWidget; }
+        inline QWidget* centralWidget() const { return _centralWidget; }
 
     public slots:
-        virtual void actionAdded(int category, QAction* action);
+        void actionAdded(int category, QAction* action);
 
     private slots:
         void rasterModelChanged();

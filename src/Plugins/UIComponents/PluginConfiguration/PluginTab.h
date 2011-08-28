@@ -53,12 +53,12 @@ class PluginTab: public QtGui::AbstractConfigurationWidget {
         PluginTab(QtGui::PluginManagerStore::AbstractItem* pluginManagerStoreItem, QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
-        virtual void reset();
-        virtual void restoreDefaults();
-        virtual void save();
+        void reset();
+        void restoreDefaults();
+        void save();
 
     private slots:
-        virtual void setPluginDir();
+        void setPluginDir();
 
         void reloadPluginDirectory();
 

@@ -70,22 +70,22 @@ class PluginModel: public QAbstractTableModel {
         int findPlugin(const QString& plugin) const;
 
         /** @brief Row count */
-        virtual int rowCount(const QModelIndex& parent = QModelIndex()) const { return plugins.size(); }
+        int rowCount(const QModelIndex& parent = QModelIndex()) const { return plugins.size(); }
 
         /** @brief Column count */
-        virtual int columnCount(const QModelIndex& parent = QModelIndex()) const { return 10; }
+        int columnCount(const QModelIndex& parent = QModelIndex()) const { return 10; }
 
         /** @brief Header data access */
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
         /** @brief Data read access */
-        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
         /** @brief Item flags */
-        virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+        Qt::ItemFlags flags(const QModelIndex& index) const;
 
         /** @brief Data write access */
-        virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+        bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     public slots:
         /** @brief Reload data from PluginManager */

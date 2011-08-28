@@ -48,7 +48,7 @@ class AreaPage: public QWizardPage {
          *
          * Saves selected area type into SaveRasterWizard::areaType.
          */
-        virtual bool validatePage();
+        bool validatePage();
 
     private:
         SaveRasterWizard* wizard;

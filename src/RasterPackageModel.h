@@ -45,15 +45,15 @@ class RasterPackageModel: public QAbstractTableModel {
         inline RasterPackageModel(QObject* parent = 0): QAbstractTableModel(parent) {}
 
         /** @brief Column count */
-        inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
+        inline int columnCount(const QModelIndex& parent = QModelIndex()) const
             { return 4; }
 
         /** @brief Row count */
-        inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
+        inline int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return packages.count(); }
 
         /** @brief Data read access */
-        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     public slots:
         /**

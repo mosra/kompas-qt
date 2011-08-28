@@ -42,7 +42,7 @@ class SaveRasterUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         SaveRasterUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual const QList<QAction*>* actions(ActionCategory category) const {
+        inline const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Maps)
                 return &_actions;
             return 0;

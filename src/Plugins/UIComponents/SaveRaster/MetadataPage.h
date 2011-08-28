@@ -47,7 +47,7 @@ class MetadataPage: public QWizardPage {
          * @brief Whether the page is complete
          * @return True if filename is not empty
          */
-        virtual bool isComplete() const;
+        bool isComplete() const;
 
         /**
          * @brief Page validator
@@ -55,7 +55,7 @@ class MetadataPage: public QWizardPage {
          * Saves data to SaveRasterWizard::filename, SaveRasterWizard::name,
          * SaveRasterWizard::description and SaveRasterWizard::packager.
          */
-        virtual bool validatePage();
+        bool validatePage();
 
     private slots:
         void saveFileDialog(QString path = "");

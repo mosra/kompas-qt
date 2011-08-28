@@ -51,13 +51,13 @@ class DownloadPage: public QWizardPage {
          *
          * Starts downloading immediately.
          */
-        virtual void initializePage();
+        void initializePage();
 
         /**
          * @brief Whether the page is complete
          * @return True if download is finished
          */
-        inline virtual bool isComplete() const { return _isComplete; }
+        inline bool isComplete() const { return _isComplete; }
 
     private slots:
         void updateStatus(Core::Zoom _currentZoom, int currentZoomNumber, const std::string& _currentLayer, int currentLayerNumber, int _totalCompleted, int _currentZoomLayerCompleted);

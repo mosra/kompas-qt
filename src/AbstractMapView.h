@@ -194,7 +194,7 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
          * displays context menu which allows copying current coordinates to
          * clipboard.
          */
-        virtual void contextMenuEvent(QContextMenuEvent* event);
+        void contextMenuEvent(QContextMenuEvent* event);
 
         /**
          * @brief Whether the view is ready for displaying

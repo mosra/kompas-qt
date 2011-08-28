@@ -50,36 +50,36 @@ class CurrentCelestialBodyPluginModel: public QAbstractProxyModel {
         CurrentCelestialBodyPluginModel(QObject* parent = 0);
 
         /** @brief Index creation */
-        inline virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
+        inline QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const
             { return createIndex(row, column); }
 
         /** @brief Parent index of given index */
-        inline virtual QModelIndex parent(const QModelIndex& child) const
+        inline QModelIndex parent(const QModelIndex& child) const
             { return QModelIndex(); }
 
         /** @brief Column count */
-        inline virtual int columnCount(const QModelIndex& parent = QModelIndex()) const
+        inline int columnCount(const QModelIndex& parent = QModelIndex()) const
             { return sourceModel()->columnCount(); }
 
         /** @brief Row count */
-        inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
+        inline int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return sourceModel()->rowCount(); }
 
         /** @brief Set source model */
-        virtual void setSourceModel(QtGui::PluginModel* sourceModel);
+        void setSourceModel(QtGui::PluginModel* sourceModel);
 
         /** @brief Map index from source model */
-        virtual QModelIndex mapFromSource(const QModelIndex& sourceIndex) const {
+        QModelIndex mapFromSource(const QModelIndex& sourceIndex) const {
             return index(sourceIndex.row(), sourceIndex.column());
         }
 
         /** @brief Map index to source model */
-        virtual QModelIndex mapToSource(const QModelIndex& proxyIndex) const {
+        QModelIndex mapToSource(const QModelIndex& proxyIndex) const {
             return sourceModel()->index(proxyIndex.row(), proxyIndex.column());
         }
 
         /** @brief Data read access */
-        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     private slots:
         void changeCurrent(const Core::AbstractRasterModel* previous);

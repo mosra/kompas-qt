@@ -47,7 +47,7 @@ class StatusBarUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         StatusBarUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual QStatusBar* statusBar() const { return _statusBar; }
+        inline QStatusBar* statusBar() const { return _statusBar; }
 
     private slots:
         void mapViewChanged();

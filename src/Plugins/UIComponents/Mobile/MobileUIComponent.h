@@ -32,7 +32,7 @@ class MobileUIComponent: public QtGui::AbstractUIComponent {
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         MobileUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
-        inline virtual QWidget* centralWidget() const { return _centralWidget; }
+        inline QWidget* centralWidget() const { return _centralWidget; }
 
     private:
         MobileCentralWidget* _centralWidget;

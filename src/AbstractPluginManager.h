@@ -70,7 +70,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @copydoc PluginManager::AbstractPluginManager::reloadPluginDirectory()
          * Emits pluginDirectoryReloaded().
          */
-        inline virtual void reloadPluginDirectory() {
+        inline void reloadPluginDirectory() {
             Kompas::PluginManager::AbstractPluginManager::reloadPluginDirectory();
             emit pluginDirectoryReloaded();
         }
@@ -80,7 +80,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @copydoc PluginManager::AbstractPluginManager::reloadPluginMetadata()
          * If the plugin disappears, emits pluginDisappeared().
          */
-        virtual bool reloadPluginMetadata(std::map<std::string, PluginObject*>::iterator it) {
+        bool reloadPluginMetadata(std::map<std::string, PluginObject*>::iterator it) {
             if(!Kompas::PluginManager::AbstractPluginManager::reloadPluginMetadata(it)) {
                 emit pluginDisappeared(it->first);
                 return false;

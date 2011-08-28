@@ -43,11 +43,11 @@ class RasterZoomModel: public QAbstractListModel {
             QAbstractListModel(parent) { reload(); }
 
         /** @brief Row count */
-        inline virtual int rowCount(const QModelIndex& parent = QModelIndex()) const
+        inline int rowCount(const QModelIndex& parent = QModelIndex()) const
             { return z.count(); }
 
         /** @brief Data read access */
-        virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
         /**
          * @brief Find zoom level

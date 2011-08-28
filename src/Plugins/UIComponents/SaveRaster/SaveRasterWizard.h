@@ -97,7 +97,7 @@ class SaveRasterWizard: public QWizard {
          */
         Core::TileArea area() const;
 
-        virtual void done(int result);
+        void done(int result);
 };
 
 }}}

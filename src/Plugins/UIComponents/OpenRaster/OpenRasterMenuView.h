@@ -38,14 +38,14 @@ class OpenRasterMenuView: public QtGui::AbstractPluginMenuView {
             AbstractPluginMenuView(manager, menu, before, parent), rasterManager(manager) {}
 
     private slots:
-        virtual void trigger(QAction* action);
+        void trigger(QAction* action);
 
     private:
         QtGui::PluginManager<Core::AbstractRasterModel>* rasterManager;
         QHash<QAction*, QString> items;
 
-        virtual void clearMenu();
-        virtual QAction* createMenuAction(const std::string& pluginName);
+        void clearMenu();
+        QAction* createMenuAction(const std::string& pluginName);
 };
 
 }}}

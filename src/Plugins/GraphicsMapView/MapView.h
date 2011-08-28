@@ -44,7 +44,7 @@ class MapView: public QGraphicsView {
          *
          * Emits mapMoved() signal.
          */
-        inline virtual void mouseMoveEvent(QMouseEvent* event) {
+        inline void mouseMoveEvent(QMouseEvent* event) {
             if(!event->buttons()) event->ignore();
             else {
                 QGraphicsView::mouseMoveEvent(event);
@@ -59,7 +59,7 @@ class MapView: public QGraphicsView {
          * Doesn't move the map, but emits zoomIn() or zoomOut() signal with
          * current cursor position.
          */
-        inline virtual void wheelEvent(QWheelEvent* event) {
+        inline void wheelEvent(QWheelEvent* event) {
             event->accept();
 
             if(event->delta() > 0) emit zoomIn(event->pos());
@@ -72,7 +72,7 @@ class MapView: public QGraphicsView {
          *
          * Emits mapResized() signal.
          */
-        inline virtual void resizeEvent(QResizeEvent* event) {
+        inline void resizeEvent(QResizeEvent* event) {
             QGraphicsView::resizeEvent(event);
 
             emit mapResized();

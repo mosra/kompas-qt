@@ -1,6 +1,7 @@
 qt4_wrap_cpp(MapOptionsUIComponent_MOC
     EditableRasterOverlayModel.h
     EditableRasterPackageModel.h
+    MapOptionsUIComponent.h
     MapOptionsDock.h
     MovingWidget.h
     ZoomSlider.h

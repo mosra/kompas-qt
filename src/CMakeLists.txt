@@ -35,6 +35,7 @@ qt4_wrap_cpp(Kompas_Qt_MOC
     AbstractUIComponent.h
     PluginModel.h
     AbstractPluginMenuView.h
+    PluginManagerStore.h
     RasterPackageModel.h
     RasterLayerModel.h
     RasterOverlayModel.h

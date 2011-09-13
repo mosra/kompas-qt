@@ -39,6 +39,8 @@ class PluginModel;
  * as @ref rasterModels(), all items together can be accessed via @ref items().
  */
 class PluginManagerStore: public QObject {
+    Q_OBJECT
+
     public:
         class AbstractItem;
         template<class Interface> class Item;

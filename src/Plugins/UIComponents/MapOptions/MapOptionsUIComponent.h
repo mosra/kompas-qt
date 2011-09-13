@@ -25,6 +25,8 @@ namespace Kompas { namespace Plugins { namespace UIComponents {
 
 /** @brief Map options dock for desktop interface */
 class MapOptionsUIComponent: public QtGui::AbstractUIComponent {
+    Q_OBJECT
+
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
         MapOptionsUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");

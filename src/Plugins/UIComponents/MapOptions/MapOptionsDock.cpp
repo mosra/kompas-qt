@@ -109,6 +109,7 @@ void MapOptionsDock::setActualLayer(const QString& layer) {
 }
 
 void MapOptionsDock::setActualLayer(int id) {
+    if(id == -1) return;
     AbstractMapView* mapView = MainWindow::instance()->mapView();
     if(!mapView) return;
 

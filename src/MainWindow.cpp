@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load default configuration */
     loadDefaultConfiguration();
 
-    _sessionManager = new SessionManager(_configuration.group("sessions"), this);
+    _sessionManager = new SessionManager(_configuration.group("sessions"));
 
     _pluginManagerStore = new PluginManagerStore(_configuration.group("plugins"), this);
 
@@ -91,6 +91,12 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     /* Load previous session, if autoload enabled */
     _sessionManager->load();
+}
+
+MainWindow::~MainWindow() {
+    /* It must be done this way, because if it is left to QObject hierarchy,
+       the objects which SessionManager queries are already destroyed. */
+    delete _sessionManager;
 }
 
 void MainWindow::setWindowTitle(const QString& title) {

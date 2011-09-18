@@ -107,6 +107,13 @@ class MainWindow: public QMainWindow {
         MainWindow(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
         /**
+         * @brief Destructor
+         *
+         * Saves current state to session.
+         */
+        ~MainWindow();
+
+        /**
          * @brief Set additional window title
          *
          * If @c title is empty, displays <tt>"Kompas VERSION"</tt>, otherwise

@@ -72,8 +72,8 @@ class PluginManagerStore: public QObject {
         inline Item<AbstractMapView>* mapViews()
             { return _mapViews; }
 
-        /** @brief Projection plugins manager */
-        inline Item<Core::AbstractProjection>* projectionPlugins()
+        /** @brief Projections plugin manager */
+        inline Item<Core::AbstractProjection>* projections()
             { return _projections; }
 
         /** @brief Raster models plugin manager */

@@ -32,12 +32,38 @@ namespace Kompas { namespace QtGui {
 class PluginModel;
 
 /**
- * @brief Store for different plugin managers
- *
- * Centralized class which contains all plugin managers along with data access
- * models. Each store item can be accessed via specific member function such
- * as @ref rasterModels(), all items together can be accessed via @ref items().
- */
+@brief Store for different plugin managers
+
+Centralized class which contains all plugin managers along with data access
+models. Each store item can be accessed via specific member function such
+as @ref rasterModels(), all items together can be accessed via @ref items().
+
+@configuration
+
+<p>All plugin configuration is stored in configuration group given to the
+constructor.</p>
+<p>There are several plugin groups, each group has its own configuration group
+which contains parameter <tt>__dir</tt>, which points to plugin directory for
+given plugin group, and several parameters named after plugins with boolean
+values indicating whether the plugin is loaded or not. Load state of static
+plugins is saved too (set to <tt>true</tt>), so when any plugin is made
+non-static in next version, it will be still loaded.</p>
+<p>Example structure with all current plugin group names. Group names correspond
+with plugin manangers' accessor function names.</p>
+<pre>
+[caches]
+__dir=
+pluginName1=
+pluginName2=
+
+# ...
+[celestialBodies]
+[mapViews]
+[projections]
+[rasterModels]
+[uiComponents]
+</pre>
+*/
 class PluginManagerStore: public QObject {
     Q_OBJECT
 

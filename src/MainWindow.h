@@ -49,9 +49,49 @@ class RasterOverlayModel;
 class RasterZoomModel;
 
 /**
- * @brief %Kompas main window
- * @todo @c VERSION-0.2 Session management
- */
+@brief %Kompas main window
+
+@configuration
+
+<p>Basic configuration file structure:</p>
+<pre>
+# Plugin configuration, see PluginManagerStore class documentation
+[plugins]
+
+# Map configuration
+[map]
+
+# Map view plugin
+viewPlugin=GraphicsMapView
+
+# Max count of simultaenous downloads
+maxSimultaenousDownloads=3
+
+# Application paths configuration
+[paths]
+
+# Package dir, defaults to Utility::Directory::home()
+packages=
+
+# Session configuration, see SessionManager class documentation
+[sessions]
+
+# Cache configuration
+[cache]
+
+# Caching plugin, if not set, cache is not used
+plugin=
+
+# Cache dir, defaults to cache/ subdir of %Kompas configuration dir.
+path=
+
+# Cache size, in megabytes
+size=100
+
+# Cache block size, in bytes
+blockSize=4096
+</pre>
+*/
 class MainWindow: public QMainWindow {
     Q_OBJECT
 
@@ -74,7 +114,16 @@ class MainWindow: public QMainWindow {
          */
         void setWindowTitle(const QString& title);
 
-        /** @brief Global application configuration */
+        /**
+         * @brief Global application configuration
+         *
+         * %Kompas configuration is stored in directory defined by
+         * Utility::Directory::configurationDir() with <em>%Kompas</em> as
+         * application name. Each class which writes something to this
+         * configuration file has its own section named <em>Configuration
+         * values</em>, which documents all stored configuration groups and
+         * parameters.
+         */
         inline Utility::Configuration* configuration()
             { return &_configuration; }
 

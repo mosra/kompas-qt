@@ -46,6 +46,43 @@ be then loaded with load(). If there was no last active session, last active
 session id is set to default session. On exit current state is saved into active
 session or into default session, if no other session is active. The default
 session cannot be renamed or deleted.</p>
+
+@configuration
+
+<p>All session configuration is stored in configuration group given to the
+constructor.</p>
+<pre>
+# Boolean whether to load previous session automatically on startup:
+loadAutomatically=true
+
+# Current session (group ID, 0 is default, 1 is first session etc.)
+default=0
+
+# Default session
+[default]
+
+# Used map view plugin
+mapView=
+
+# Used raster model plugin
+rasterModel=
+
+# Whether online maps are enabled
+online=
+
+# Loaded map packages
+package=
+package=
+
+# Current GPS coordinates and zoom
+coordinates=
+zoom=
+
+# Map layer and overlays
+layer=
+overlay=
+overlay=
+</pre>
 */
 class SessionManager: public QObject {
     Q_OBJECT

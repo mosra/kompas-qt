@@ -33,7 +33,7 @@ class MapView: public QGraphicsView {
          * @brief Constructor
          * @param parent        Parent widget
          */
-        inline MapView(QWidget* parent = 0): QGraphicsView(parent) {
+        inline MapView(QString* copyright, QWidget* parent = 0): QGraphicsView(parent), _copyright(copyright) {
             setMouseTracking(true);
         }
 
@@ -63,12 +63,17 @@ class MapView: public QGraphicsView {
          */
         void resizeEvent(QResizeEvent* event);
 
+        /** @brief Draws map copyright on bottom right */
+        void drawForeground(QPainter* painter, const QRectF &rect);
 
     signals:
         void mapMoved();        /**< @brief Map moved */
         void mapResized();      /**< @brief Map resized */
         void zoomIn(const QPoint& pos = QPoint()); /**< @brief Zooming in requested */
         void zoomOut(const QPoint& pos = QPoint()); /**< @brief Zooming out requested */
+
+    private:
+        QString* _copyright;
 };
 
 }}

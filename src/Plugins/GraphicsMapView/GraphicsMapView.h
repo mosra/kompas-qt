@@ -81,7 +81,6 @@ class GraphicsMapView: public QtGui::AbstractMapView {
             tileLoadingImage;                   /**< @brief "Tile loading" image */
 
     private slots:
-
         /**
          * @brief Update map area
          *
@@ -123,6 +122,8 @@ class GraphicsMapView: public QtGui::AbstractMapView {
 
     private:
         void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
+
+        QString _copyright;
 };
 
 }}

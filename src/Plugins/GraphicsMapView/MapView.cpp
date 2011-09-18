@@ -40,4 +40,36 @@ void MapView::resizeEvent(QResizeEvent* event) {
     emit mapResized();
 }
 
+void MapView::drawForeground(QPainter* painter, const QRectF& _rect) {
+    /* If the copyright is empty, nothing to do */
+    if(_copyright->isEmpty()) return;
+
+    /* The background rect has margin 1px, the text has left and right margin
+       2px, top and bottom margin 1px. */
+    QRect textBounds = QRect(mapToScene(3, 2).toPoint(), contentsRect().size()-QSize(4, 3));
+
+    /* Compute text rectangle from font metrics */
+    QFontMetrics metrics = painter->fontMetrics();
+    QRect textRect = metrics.boundingRect(textBounds, Qt::AlignRight|Qt::AlignBottom, *_copyright);
+
+    /* Rectangle for background */
+    QRect backgroundRect = textRect;
+    backgroundRect.moveTopLeft(backgroundRect.topLeft()-QPoint(2, 1));
+    backgroundRect.moveBottomRight(backgroundRect.bottomRight()+QPoint(2, 1));
+
+    /* Save previous brush and pen */
+    QBrush textBrush = painter->brush();
+    QPen textPen = painter->pen();
+
+    /* Draw background with light white brush and no pen, then revert it back */
+    painter->setBrush(QBrush(QColor(255, 255, 255, 160)));
+    painter->setPen(Qt::NoPen);
+    painter->drawRoundedRect(backgroundRect, 2, 2);
+    painter->setPen(textPen);
+    painter->setBrush(textBrush);
+
+    /* Draw text */
+    painter->drawText(textRect, Qt::AlignRight|Qt::AlignBottom, *_copyright);
+}
+
 }}

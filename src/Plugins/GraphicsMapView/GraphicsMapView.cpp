@@ -46,7 +46,7 @@ GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, 
     setMouseTracking(true);
 
     /* Graphics view */
-    view = new MapView(this);
+    view = new MapView(&_copyright, this);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
@@ -494,7 +494,7 @@ void GraphicsMapView::updateRasterModel() {
     Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     Zoom z = *rasterModel()->zoomLevels().begin();
     QString layer = QString::fromStdString(rasterModel()->layers()[0]);
-    QString _copyright = QString::fromStdString(rasterModel()->copyright());
+    _copyright = QString::fromStdString(rasterModel()->copyright());
     rasterModel.unlock();
 
     updateMapArea();

@@ -21,6 +21,7 @@
 
 #include "AbstractConfigurationWidget.h"
 
+class QCheckBox;
 class QSpinBox;
 class QComboBox;
 class QLineEdit;
@@ -51,6 +52,7 @@ class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
         void selectCacheDir();
 
     private:
+        QCheckBox *loadSessionAutomatically;
         QComboBox *mapViewPlugin, *cachePlugin;
         QtGui::PluginModel *mapViewModel, *cacheModel;
         QSpinBox *maxSimultaenousDownloads, *cacheSize, *cacheBlockSize;

@@ -36,7 +36,7 @@ namespace Kompas { namespace QtGui {
 
 MainWindow* MainWindow::_instance;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _sessionManager(QString::fromStdString(Directory::join(Directory::configurationDir("Kompas"), "sessions.conf"))), _mapView(0), _cache(0), _rasterModel(0) {
+MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(parent, flags), _configuration(Directory::join(Directory::configurationDir("Kompas"), "kompas.conf")), _mapView(0), _cache(0), _rasterModel(0) {
     _instance = this;
 
     /* Window icon */
@@ -51,6 +51,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
 
     /* Load default configuration */
     loadDefaultConfiguration();
+
+    _sessionManager = new SessionManager(_configuration.group("sessions"), this);
 
     _pluginManagerStore = new PluginManagerStore(_configuration.group("plugins"), this);
 
@@ -86,6 +88,9 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
             _configuration.group("cache")->setValue<unsigned int>("size", _cache->cacheSize()/1024/1024);
         }
     }
+
+    /* Load previous session, if autoload enabled */
+    _sessionManager->load();
 }
 
 void MainWindow::setWindowTitle(const QString& title) {
@@ -136,6 +141,12 @@ void MainWindow::loadDefaultConfiguration() {
     /* Paths */
     string packageDir = Directory::home();
     _configuration.group("paths")->value<string>("packages", &packageDir);
+
+    /* Sessions */
+    bool loadSessionAutomatically = true;
+    _configuration.group("sessions")->value<bool>("loadAutomatically", &loadSessionAutomatically);
+    int currentSession = 0;
+    _configuration.group("sessions")->value<int>("current", &currentSession);
 
     /* Cache */
     string cachePlugin = "";

@@ -26,20 +26,41 @@
 namespace Kompas { namespace QtGui {
 
 /**
- * @brief Session manager
- */
+@brief Session manager
+
+<p>Session is used to hold current application state, so when the user exits the
+application and then starts it later, the state can be restored. Currently saved
+properties are:</p>
+<ul>
+<li>used map view</li>
+<li>active raster model</li>
+<li>whether online maps are enabled</li>
+<li>opened packages</li>
+<li>actual position and zoom</li>
+<li>current layer</li>
+<li>enabled overlays</li>
+</ul>
+<p>If automatic session loading is enabled in configuration, last
+active session id is retrieved from configuration and last active session can
+be then loaded with load(). If there was no last active session, last active
+session id is set to default session. On exit current state is saved into active
+session or into default session, if no other session is active. The default
+session cannot be renamed or deleted.</p>
+*/
 class SessionManager: public QObject {
     Q_OBJECT
 
     public:
         /**
          * @brief Constructor
-         * @param filename      Filename of session configuration file
+         * @param configuration     Session configuration
+         * @param parent            Parent object
          *
-         * Initializes manager with session list and sets current ID to last
-         * active session ID.
+         * Initializes manager with session list and if automatic loading on
+         * startup is enabled, loads previously active session ID. Previous
+         * active session can be then loaded with load().
          */
-        SessionManager(const QString& filename);
+        SessionManager(Utility::ConfigurationGroup* configuration, QObject* parent = 0);
 
         /**
          * @brief Destructor
@@ -79,7 +100,7 @@ class SessionManager: public QObject {
          * Convenience function, same as calling <tt>load(current())</tt>.
          * @see load(unsigned int)
          */
-        inline void load() { load(current()); }
+        inline void load() { if(_current != -1) load(_current); }
 
         /**
          * @brief Load session
@@ -88,15 +109,6 @@ class SessionManager: public QObject {
          *      exist, the function does nothing. If given session is currently
          *      loaded, this call reverts it to saved state.
          *
-         * Loads given session, that is:
-         * - used map view
-         * - active raster moder
-         * - whether online maps are enabled
-         * - opened packages
-         * - actual position
-         * - current layer
-         * - enabled overlays
-         *
          * Emits currentChanged().
          */
         void load(unsigned int id);
@@ -104,10 +116,10 @@ class SessionManager: public QObject {
         /**
          * @brief Save current state to current session
          *
-         * Convenience function, same as calling <tt>saveAs(current())</tt>.
+         * Convenience function, same as calling <tt>save(current())</tt>.
          * @see save(unsigned int)
          */
-        inline void save() { save(current()); }
+        inline void save() { save(_current); }
 
         /**
          * @brief Save current state
@@ -167,13 +179,12 @@ class SessionManager: public QObject {
         void currentChanged(unsigned int id);
 
     private:
-        Utility::Configuration conf;
-
+        Utility::ConfigurationGroup* conf;
         Utility::ConfigurationGroup* defaultSession;
         std::vector<Utility::ConfigurationGroup*> sessions;
         QStringList _names;
 
-        unsigned int _current;
+        int _current;
         bool loaded;
 };
 

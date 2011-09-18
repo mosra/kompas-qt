@@ -80,7 +80,7 @@ class MainWindow: public QMainWindow {
 
         /** @brief Session manager */
         inline SessionManager* sessionManager()
-            { return &_sessionManager; }
+            { return _sessionManager; }
 
         /** @brief Plugin manager store */
         inline PluginManagerStore* pluginManagerStore()
@@ -208,7 +208,7 @@ class MainWindow: public QMainWindow {
         static MainWindow* _instance;
 
         Utility::Configuration _configuration;
-        SessionManager _sessionManager;
+        SessionManager* _sessionManager;
 
         PluginManagerStore* _pluginManagerStore;
 

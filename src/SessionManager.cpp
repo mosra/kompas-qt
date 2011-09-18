@@ -25,30 +25,36 @@ using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
-SessionManager::SessionManager(const QString& filename): conf(filename.toStdString()), loaded(false) {
+SessionManager::SessionManager(ConfigurationGroup* configuration, QObject* parent): QObject(parent), conf(configuration), _current(-1), loaded(false) {
     /* Default session, create it if doesn't exist */
-    defaultSession = conf.group("default");
-    if(!defaultSession) defaultSession = conf.addGroup("default");
+    defaultSession = conf->group("default");
+    if(!defaultSession) defaultSession = conf->addGroup("default");
 
     /* Named sessions, extract their names */
-    sessions = conf.groups("session");
+    sessions = conf->groups("session");
     for(vector<ConfigurationGroup*>::const_iterator it = sessions.begin(); it != sessions.end(); ++it)
         _names << QString::fromStdString((*it)->value<string>("name"));
 
     /* Current session ID */
-    _current = conf.value<unsigned int>("current");
+    if(conf->value<bool>("loadAutomatically"))
+        _current = conf->value<int>("current");
 }
 
 SessionManager::~SessionManager() {
-    /* Save current session ID */
-    conf.setValue<unsigned int>("current", _current);
+    /* If no session is loaded, save everything to default session */
+    if(_current == -1)
+        _current = 0;
+
+    /* Save current session */
+    save();
+    conf->setValue<unsigned int>("current", _current);
 }
 
 void SessionManager::load(unsigned int id) {
     if(id > sessions.size()) return;
 
     /* Save previous session, if it is not saved */
-    if(id != _current) save();
+    if(id != static_cast<unsigned int>(_current)) save();
 
     /* Session configuration group */
     ConfigurationGroup* g;
@@ -144,7 +150,7 @@ void SessionManager::save(unsigned int id) {
 }
 
 unsigned int SessionManager::newSession(const QString& name) {
-    ConfigurationGroup* g = conf.addGroup("session");
+    ConfigurationGroup* g = conf->addGroup("session");
     g->setValue<string>("name", name.toStdString());
 
     sessions.push_back(g);
@@ -167,7 +173,7 @@ void SessionManager::renameSession(unsigned int id, const QString& name) {
 void SessionManager::deleteSession(unsigned int id) {
     if(id == 0 || id > sessions.size()) return;
 
-    conf.removeGroup(sessions.at(id-1));
+    conf->removeGroup(sessions.at(id-1));
 
     sessions.erase(sessions.begin()+id-1);
     _names.removeAt(id-1);

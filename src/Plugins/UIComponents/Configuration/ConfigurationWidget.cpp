@@ -16,6 +16,7 @@
 #include "ConfigurationWidget.h"
 
 #include <string>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QFormLayout>
 #include <QtGui/QLabel>
@@ -82,6 +83,9 @@ ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): Ab
     cacheBlockSize->setMinimum(0);
     cacheBlockSize->setMaximum(33554432); /* 32 MB */
 
+    /* Autoloading of sessions */
+    loadSessionAutomatically = new QCheckBox(tr("Load previous session on startup"));
+
     /* Emit signal when edited */
     connect(mapViewPlugin, SIGNAL(currentIndexChanged(int)), SIGNAL(edited()));
     connect(maxSimultaenousDownloads, SIGNAL(valueChanged(int)), SIGNAL(edited()));
@@ -90,6 +94,7 @@ ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): Ab
     connect(cacheDir, SIGNAL(textChanged(QString)), SIGNAL(edited()));
     connect(cacheSize, SIGNAL(valueChanged(int)), SIGNAL(edited()));
     connect(cacheBlockSize, SIGNAL(valueChanged(int)), SIGNAL(edited()));
+    connect(loadSessionAutomatically, SIGNAL(clicked(bool)), SIGNAL(edited()));
 
     /* Package directory layout */
     QHBoxLayout* packageDirLayout = new QHBoxLayout;
@@ -110,6 +115,7 @@ ConfigurationWidget::ConfigurationWidget(QWidget* parent, Qt::WindowFlags f): Ab
     layout->addRow(tr("Cache dir:"), cacheDirLayout);
     layout->addRow(tr("Cache size:"), cacheSize);
     layout->addRow(tr("Cache block size:"), cacheBlockSize);
+    layout->addRow(loadSessionAutomatically);
     setLayout(layout);
 
     /* Fill in values */
@@ -131,6 +137,8 @@ void ConfigurationWidget::reset() {
         MainWindow::instance()->configuration()->group("cache")->value<unsigned int>("size"));
     cacheBlockSize->setValue(
         MainWindow::instance()->configuration()->group("cache")->value<unsigned int>("blockSize"));
+    loadSessionAutomatically->setChecked(
+        MainWindow::instance()->configuration()->group("sessions")->value<bool>("loadAutomatically"));
 }
 
 void ConfigurationWidget::restoreDefaults() {
@@ -141,6 +149,7 @@ void ConfigurationWidget::restoreDefaults() {
     MainWindow::instance()->configuration()->group("cache")->removeValue("path");
     MainWindow::instance()->configuration()->group("cache")->removeValue("size");
     MainWindow::instance()->configuration()->group("cache")->removeValue("blockSize");
+    MainWindow::instance()->configuration()->group("sessions")->removeValue("loadAutomatically");
     MainWindow::instance()->loadDefaultConfiguration();
 
     reset();
@@ -161,6 +170,8 @@ void ConfigurationWidget::save() {
         cacheSize->value());
     MainWindow::instance()->configuration()->group("cache")->setValue<unsigned int>("blockSize",
         cacheBlockSize->value());
+    MainWindow::instance()->configuration()->group("sessions")->setValue<bool>("loadAutomatically",
+        loadSessionAutomatically->isChecked());
 }
 
 void ConfigurationWidget::selectPackageDir() {

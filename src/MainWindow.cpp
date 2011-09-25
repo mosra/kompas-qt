@@ -15,6 +15,7 @@
 
 #include "MainWindow.h"
 
+#include <QtCore/QtConcurrentRun>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QDockWidget>
@@ -75,15 +76,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load cache */
     string cachePlugin = _configuration.group("cache")->value<string>("plugin");
     string cachePath = _configuration.group("cache")->value<string>("path");
-    if(!cachePlugin.empty() && !cachePath.empty()) {
-    _cache = _pluginManagerStore->caches()->manager()->instance(_configuration.group("cache")->value<string>("plugin"));
-        if(_cache) {
-            /* Preset block and cache size from configuration */
-            _cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
-            _cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
-            _cache->initializeCache(_configuration.group("cache")->value<string>("path"));
-        }
-    }
+    if(!cachePlugin.empty() && !cachePath.empty())
+        setCache(_pluginManagerStore->caches()->manager()->instance(_configuration.group("cache")->value<string>("plugin")));
 
     /* Load previous session, if autoload enabled */
     _sessionManager->load();
@@ -162,6 +156,28 @@ void MainWindow::loadDefaultConfiguration() {
 
     _configuration.setAutomaticGroupCreation(false);
     _configuration.setAutomaticKeyCreation(false);
+}
+
+void MainWindow::setCache(AbstractCache* cache) {
+    cacheLock.lockForWrite();
+    cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
+    cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
+    QtConcurrent::run(this, &MainWindow::setCacheInternal, cache);
+}
+
+void MainWindow::setCacheInternal(AbstractCache* cache) {
+    /* Finalize previous cache and replace it with new */
+    if(_cache) {
+        _cache->finalizeCache();
+        delete _cache;
+    }
+    _cache = cache;
+
+    if(_cache) {
+        _cache->initializeCache(_configuration.group("cache")->value<string>("path"));
+    }
+
+    cacheLock.unlock();
 }
 
 void MainWindow::setMapView(AbstractMapView* view) {

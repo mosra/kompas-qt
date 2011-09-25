@@ -255,6 +255,15 @@ class MainWindow: public QMainWindow {
         void loadDefaultConfiguration();
 
         /**
+         * @brief Set cache
+         * @param cache     Instance of cache
+         *
+         * Finalizes previous cache and replaces it with this.
+         * @todo Asynchronous?
+         */
+        void setCache(Core::AbstractCache* cache);
+
+        /**
          * @brief Set map view
          * @param view      Instance of map view
          *
@@ -309,6 +318,8 @@ class MainWindow: public QMainWindow {
         void createUI();
 
         void displayMapIfUsable();
+
+        void setCacheInternal(Core::AbstractCache* cache);
 };
 
 }}

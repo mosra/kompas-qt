@@ -85,10 +85,10 @@ plugin=
 # Cache dir, defaults to cache/ subdir of %Kompas configuration dir.
 path=
 
-# Cache size, in megabytes
+# Default cache size, in megabytes (used for newly created caches)
 size=100
 
-# Cache block size, in bytes
+# Default cache block size, in bytes (used for newly created caches)
 blockSize=4096
 </pre>
 */

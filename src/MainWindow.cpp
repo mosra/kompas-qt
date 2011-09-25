@@ -82,10 +82,6 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
             _cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
             _cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
             _cache->initializeCache(_configuration.group("cache")->value<string>("path"));
-
-            /* Save block and cache size back */
-            _configuration.group("cache")->setValue<unsigned int>("blockSize", _cache->blockSize());
-            _configuration.group("cache")->setValue<unsigned int>("size", _cache->cacheSize()/1024/1024);
         }
     }
 

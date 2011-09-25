@@ -139,13 +139,6 @@ class PluginManagerStore::AbstractItem: public QObject {
          */
         AbstractItem(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent = 0);
 
-        /**
-         * @brief Destructor
-         *
-         * Deletes associated plugin manager.
-         */
-        virtual ~AbstractItem() { delete _manager; }
-
         /** @brief Name of plugin type */
         inline QString name() const { return _name; }
 
@@ -199,10 +192,10 @@ template<class Interface> class PluginManagerStore::Item: public PluginManagerSt
          *
          * Items are accessible via @ref PluginManagerStore member functions,
          * there is no need to construct them manually.
-         * @todo Proper parenting of PluginManager
          */
         inline Item(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, QObject* parent = 0): AbstractItem(configurationGroup, name, description, new PluginManager<Interface>(configurationGroup->value<std::string>("__dir")), parent) {
             _manager = static_cast<PluginManager<Interface>* >(AbstractItem::manager());
+            _manager->setParent(this);
         }
 
         /** @brief Plugin manager */

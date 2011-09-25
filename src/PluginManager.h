@@ -40,7 +40,10 @@ namespace Kompas { namespace QtGui {
  * Exactly the same code as PluginManager::PluginManager, but this class
  * depends on QtGui::AbstractPluginManager instead of
  * PluginManager::AbstractPluginManager.
- * @todo Proper parenting!
+ *
+ * If you want to set parent QObject to the manager, you have to call
+ * setParent(), because the original PluginManager doesn't have such
+ * constructor.
  */
 template<class T> class PluginManager: public AbstractPluginManager {
     public:

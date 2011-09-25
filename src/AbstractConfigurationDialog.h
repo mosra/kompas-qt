@@ -101,6 +101,7 @@ class AbstractConfigurationDialog: public QDialog {
         QDialogButtonBox* buttons;
         QPushButton *restoreDefaultsButton,
             *resetButton,
+            *applyButton,
             *saveButton,
             *cancelButton;
         QVBoxLayout* _layout;

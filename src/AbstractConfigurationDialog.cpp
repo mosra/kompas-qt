@@ -28,21 +28,26 @@ AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::Wi
     buttons = new QDialogButtonBox;
     restoreDefaultsButton = buttons->addButton(QDialogButtonBox::RestoreDefaults);
     resetButton = buttons->addButton(QDialogButtonBox::Reset);
+    applyButton = buttons->addButton(QDialogButtonBox::Apply);
     saveButton = buttons->addButton(QDialogButtonBox::Save);
     cancelButton = buttons->addButton(QDialogButtonBox::Cancel);
 
     connect(buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
     connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
+    connect(applyButton, SIGNAL(clicked(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(saveButton, SIGNAL(clicked(bool)), SLOT(restartRequiredWarning()));
 
     /* Save and reset button is enabled only after editing, disable back after
         resets */
     resetButton->setDisabled(true);
+    applyButton->setDisabled(true);
     saveButton->setDisabled(true);
     connect(this, SIGNAL(restoreDefaults(bool)), resetButton, SLOT(setDisabled(bool)));
+    connect(this, SIGNAL(restoreDefaults(bool)), applyButton, SLOT(setDisabled(bool)));
     connect(this, SIGNAL(restoreDefaults(bool)), saveButton, SLOT(setDisabled(bool)));
     connect(resetButton, SIGNAL(clicked(bool)), resetButton, SLOT(setEnabled(bool)));
+    connect(resetButton, SIGNAL(clicked(bool)), applyButton, SLOT(setEnabled(bool)));
     connect(resetButton, SIGNAL(clicked(bool)), saveButton, SLOT(setEnabled(bool)));
 
     /* Layout */
@@ -61,8 +66,10 @@ void AbstractConfigurationDialog::setCentralLayout(QLayout* layout) {
 
 void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* widget) {
     connect(widget, SIGNAL(edited(bool)), resetButton, SLOT(setEnabled(bool)));
+    connect(widget, SIGNAL(edited(bool)), applyButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(restartRequired(bool)), SLOT(requireRestart(bool)));
+    connect(applyButton, SIGNAL(clicked(bool)), widget, SLOT(save()));
     connect(this, SIGNAL(accepted()), widget, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), widget, SLOT(restoreDefaults()));
     connect(resetButton, SIGNAL(clicked(bool)), widget, SLOT(reset()));

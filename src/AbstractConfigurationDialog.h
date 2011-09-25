@@ -83,6 +83,12 @@ class AbstractConfigurationDialog: public QDialog {
          */
         inline void requireRestart(bool require = true) { restartRequired = require; }
 
+        inline void done(int r) {
+            if(blockingOperationInProgress)
+                return;
+            QDialog::done(r);
+        }
+
     signals:
         /**
          * @brief Restore default values
@@ -97,6 +103,8 @@ class AbstractConfigurationDialog: public QDialog {
         void restoreDefaultsWarning();
         void restartRequiredWarning();
 
+        void blockingOperation(bool);
+
     private:
         QDialogButtonBox* buttons;
         QPushButton *restoreDefaultsButton,
@@ -107,6 +115,7 @@ class AbstractConfigurationDialog: public QDialog {
         QVBoxLayout* _layout;
 
         bool restartRequired;
+        bool blockingOperationInProgress;
 };
 
 }}

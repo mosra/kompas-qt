@@ -23,7 +23,7 @@
 
 namespace Kompas { namespace QtGui {
 
-AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f), restartRequired(false) {
+AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::WindowFlags f): QDialog(parent, f), restartRequired(false), blockingOperationInProgress(false) {
     /* Buttons */
     buttons = new QDialogButtonBox;
     restoreDefaultsButton = buttons->addButton(QDialogButtonBox::RestoreDefaults);
@@ -69,6 +69,7 @@ void AbstractConfigurationDialog::connectWidget(AbstractConfigurationWidget* wid
     connect(widget, SIGNAL(edited(bool)), applyButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(edited(bool)), saveButton, SLOT(setEnabled(bool)));
     connect(widget, SIGNAL(restartRequired(bool)), SLOT(requireRestart(bool)));
+    connect(widget, SIGNAL(blockingOperation(bool)), SLOT(blockingOperation(bool)));
     connect(applyButton, SIGNAL(clicked(bool)), widget, SLOT(save()));
     connect(this, SIGNAL(accepted()), widget, SLOT(save()));
     connect(this, SIGNAL(restoreDefaults()), widget, SLOT(restoreDefaults()));
@@ -87,6 +88,11 @@ void AbstractConfigurationDialog::restartRequiredWarning() {
 
     MessageBox::warning(this, tr("Application restart required"),
         tr("Some changes would need application restart to work properly."));
+}
+
+void AbstractConfigurationDialog::blockingOperation(bool inProgress) {
+    blockingOperationInProgress = inProgress;
+    buttons->setDisabled(inProgress);
 }
 
 }}

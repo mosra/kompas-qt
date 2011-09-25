@@ -46,6 +46,14 @@ class AbstractConfigurationWidget: public QWidget {
     signals:
         void edited(bool = true);           /**< @brief Emitted when the data are changed */
         void restartRequired(bool required = true); /**< @brief Emitted when data which require restart are changed */
+
+        /**
+         * @brief Blocking operation
+         *
+         * Emitted when the widget starts or stops an blocking operation and
+         * the dialog cannot be closed until the operation is finished.
+         */
+        void blockingOperation(bool inProgress);
 };
 
 }}

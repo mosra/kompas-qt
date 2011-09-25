@@ -83,7 +83,8 @@ void TileDataThread::run() {
 
             /* Tile is already downloaded, save it to cache and continue to another */
             if(rasterModel() && !firstPending.downloadedData.isEmpty()) {
-                rasterModel()->tileToCache(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords, string(firstPending.downloadedData.data(), firstPending.downloadedData.size()));
+                Locker<AbstractCache> cache = MainWindow::instance()->cacheForWrite();
+                rasterModel()->tileToCache(cache(), firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords, string(firstPending.downloadedData.data(), firstPending.downloadedData.size()));
 
             } else {
                 /* No model available */
@@ -94,8 +95,10 @@ void TileDataThread::run() {
 
                 /* First try to get the data from package or cache */
                 string data = rasterModel()->tileFromPackage(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
-                if(data.empty())
-                    data = rasterModel()->tileFromCache(firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
+                if(data.empty()) {
+                    Locker<AbstractCache> cache = MainWindow::instance()->cacheForWrite();
+                    data = rasterModel()->tileFromCache(cache(), firstPending.layer.toStdString(), firstPending.zoom, firstPending.coords);
+                }
                 bool online = rasterModel()->online();
                 rasterModel.unlock();
 

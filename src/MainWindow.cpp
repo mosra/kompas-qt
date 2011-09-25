@@ -177,7 +177,6 @@ void MainWindow::setRasterModel(AbstractRasterModel* model) {
     rasterModelLock.lockForWrite();
     AbstractRasterModel* oldRasterModel = _rasterModel;
     _rasterModel = model;
-    if(_rasterModel) _rasterModel->setCache(_cache);
     rasterModelLock.unlock();
 
     _rasterPackageModel->reload();

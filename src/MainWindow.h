@@ -159,6 +159,30 @@ class MainWindow: public QMainWindow {
             { return _rasterZoomModel; }
 
         /**
+         * @brief Get cache for reading
+         * @return Locker with cache
+         *
+         * This functions locks cache for reading. After usage the cache
+         * has to be unlocked either by destroying @ref Locker instance or
+         * calling @ref Locker::unlock().
+         */
+        inline Locker<const Core::AbstractCache> cacheForRead() {
+            return Locker<const Core::AbstractCache>(_cache, &cacheLock);
+        }
+
+        /**
+         * @brief Get cache for writing
+         * @return Locker with cache
+         *
+         * This functions locks cache for writing. After usage the cache
+         * has to be unlocked either by destroying @ref Locker instance or
+         * calling @ref Locker::unlock().
+         */
+        inline Locker<Core::AbstractCache> cacheForWrite() {
+            return Locker<Core::AbstractCache>(_cache, &cacheLock);
+        }
+
+        /**
          * @brief Get raster model for reading
          * @return Locker with raster model
          *
@@ -276,7 +300,7 @@ class MainWindow: public QMainWindow {
         AbstractMapView* _mapView;
         Core::AbstractCache* _cache;
         Core::AbstractRasterModel* _rasterModel;
-        QReadWriteLock rasterModelLock;
+        QReadWriteLock rasterModelLock, cacheLock;
 
         QMultiMap<AbstractUIComponent::ActionCategory, QAction*> _actions;
 

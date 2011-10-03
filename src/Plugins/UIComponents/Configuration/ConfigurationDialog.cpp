@@ -14,16 +14,29 @@
 */
 
 #include "ConfigurationDialog.h"
-#include "ConfigurationWidget.h"
+
+#include <QtGui/QTabWidget>
+
+#include "MainTab.h"
+#include "CacheTab.h"
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
 ConfigurationDialog::ConfigurationDialog(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationDialog(parent, f) {
-    ConfigurationWidget* widget = new ConfigurationWidget(this);
-    connectWidget(widget);
-    setCentralWidget(widget);
+    /* Tabs */
+    QTabWidget* tabs = new QTabWidget;
+
+    MainTab* main = new MainTab;
+    tabs->addTab(main, tr("Main configuration"));
+    connectWidget(main);
+
+    CacheTab* cache = new CacheTab;
+    tabs->addTab(cache, tr("Cache"));
+    connectWidget(cache);
+
+    setCentralWidget(tabs);
     setWindowTitle(tr("Kompas configuration"));
-    resize(480, 240);
+    resize(480, 280);
 }
 
 }}}

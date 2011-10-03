@@ -1,5 +1,5 @@
-#ifndef Kompas_Plugins_UIComponents_ConfigurationWidget_h
-#define Kompas_Plugins_UIComponents_ConfigurationWidget_h
+#ifndef Kompas_Plugins_UIComponents_MainTab_h
+#define Kompas_Plugins_UIComponents_MainTab_h
 /*
     Copyright © 2007, 2008, 2009, 2010, 2011 Vladimír Vondruš <mosra@centrum.cz>
 
@@ -16,7 +16,7 @@
 */
 
 /** @file
- * @brief Class Kompas::Plugins::UIComponents::ConfigurationWidget
+ * @brief Class Kompas::Plugins::UIComponents::MainTab
  */
 
 #include "AbstractConfigurationWidget.h"
@@ -35,12 +35,12 @@ namespace QtGui {
 namespace Plugins { namespace UIComponents {
 
 /** @brief Widget in main configuration dialog */
-class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
+class MainTab: public QtGui::AbstractConfigurationWidget {
     Q_OBJECT
 
     public:
         /** @copydoc QtGui::AbstractConfigurationWidget::AbstractConfigurationWidget */
-        ConfigurationWidget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+        MainTab(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
     public slots:
         void reset();
@@ -49,14 +49,13 @@ class ConfigurationWidget: public QtGui::AbstractConfigurationWidget {
 
     private slots:
         void selectPackageDir();
-        void selectCacheDir();
 
     private:
         QCheckBox *loadSessionAutomatically;
-        QComboBox *mapViewPlugin, *cachePlugin;
-        QtGui::PluginModel *mapViewModel, *cacheModel;
-        QSpinBox *maxSimultaenousDownloads, *cacheSize, *cacheBlockSize;
-        QLineEdit *packageDir, *cacheDir;
+        QComboBox *mapViewPlugin;
+        QtGui::PluginModel *mapViewModel;
+        QSpinBox *maxSimultaenousDownloads;
+        QLineEdit *packageDir;
 };
 
 }}}

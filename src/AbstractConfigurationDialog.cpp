@@ -36,6 +36,8 @@ AbstractConfigurationDialog::AbstractConfigurationDialog(QWidget* parent, Qt::Wi
     connect(buttons, SIGNAL(rejected()), SLOT(reject()));
     connect(restoreDefaultsButton, SIGNAL(clicked(bool)), this, SLOT(restoreDefaultsWarning()));
     connect(applyButton, SIGNAL(clicked(bool)), saveButton, SLOT(setEnabled(bool)));
+    connect(applyButton, SIGNAL(clicked(bool)), applyButton, SLOT(setEnabled(bool)));
+    connect(applyButton, SIGNAL(clicked(bool)), resetButton, SLOT(setEnabled(bool)));
     connect(saveButton, SIGNAL(clicked(bool)), SLOT(restartRequiredWarning()));
 
     /* Save and reset button is enabled only after editing, disable back after

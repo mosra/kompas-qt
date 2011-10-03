@@ -160,8 +160,12 @@ void MainWindow::loadDefaultConfiguration() {
 
 void MainWindow::setCache(AbstractCache* cache) {
     cacheLock.lockForWrite();
-    cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
-    cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
+
+    /* Set default values for block and cache size */
+    if(cache) {
+        cache->setBlockSize(_configuration.group("cache")->value<unsigned int>("blockSize"));
+        cache->setCacheSize(_configuration.group("cache")->value<unsigned int>("size")*1024*1024);
+    }
     QtConcurrent::run(this, &MainWindow::setCacheInternal, cache);
 }
 

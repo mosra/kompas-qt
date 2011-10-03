@@ -259,7 +259,6 @@ class MainWindow: public QMainWindow {
          * @param cache     Instance of cache
          *
          * Finalizes previous cache and replaces it with this.
-         * @todo Asynchronous?
          */
         void setCache(Core::AbstractCache* cache);
 

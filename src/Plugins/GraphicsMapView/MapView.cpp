@@ -15,6 +15,7 @@
 
 #include "MapView.h"
 
+#include <QtCore/QTimer>
 
 namespace Kompas { namespace Plugins {
 
@@ -36,7 +37,7 @@ void MapView::wheelEvent(QWheelEvent* event) {
 void MapView::resizeEvent(QResizeEvent* event) {
     QGraphicsView::resizeEvent(event);
 
-    emit mapResized();
+    QTimer::singleShot(0, this, SIGNAL(mapResized()));
 }
 
 void MapView::drawForeground(QPainter* painter, const QRectF& _rect) {

@@ -15,7 +15,6 @@
 
 #include "MapView.h"
 
-#include <QtCore/QDebug>
 
 namespace Kompas { namespace Plugins {
 

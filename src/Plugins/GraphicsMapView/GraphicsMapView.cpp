@@ -17,9 +17,7 @@
 
 #include <vector>
 #include <algorithm>
-#include <QtCore/QTimer>
 #include <QtCore/QBitArray>
-#include <QtCore/QDebug>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QMouseEvent>

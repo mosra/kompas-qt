@@ -52,6 +52,9 @@ SaveRasterUIComponent::SaveRasterUIComponent(PluginManager::AbstractPluginManage
     /* Update save raster menu to avoid showing the same plugin twice */
     connect(MainWindow::instance(), SIGNAL(rasterModelChanged(const Core::AbstractRasterModel*)),
             this, SLOT(rasterModelChanged()));
+
+    /* Update it for the first time */
+    rasterModelChanged();
 }
 
 void SaveRasterUIComponent::saveRaster() {

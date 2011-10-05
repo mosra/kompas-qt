@@ -107,9 +107,108 @@
     </message>
 </context>
 <context>
+    <name>Kompas::Plugins::UIComponents::CacheTab</name>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="73"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="317"/>
+        <source>Used size:</source>
+        <translation>Využitá velikost:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="79"/>
+        <source>Optimize cache</source>
+        <translation>Optimalizovat cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="80"/>
+        <source>Purge cache</source>
+        <translation>Vyčistit cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="102"/>
+        <source>Cache plugin:</source>
+        <translation>Plugin pro cache:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="103"/>
+        <source>Cache dir:</source>
+        <translation>Složka s cache:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="104"/>
+        <source>Cache size:</source>
+        <translation>Velikost cache:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="105"/>
+        <source>Cache block size:</source>
+        <translation>Velikost bloku cache:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="194"/>
+        <source>Setting block size to %0 B...</source>
+        <translation>Nastavování velikosti bloku cache na %0 B...</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="229"/>
+        <source>Initializing cache...</source>
+        <translation>Inicializace cache...</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="259"/>
+        <source>Optimizing cache...</source>
+        <translation>Optimalizace cache...</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="270"/>
+        <source>Purging cache...</source>
+        <translation>Čištení cache...</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="251"/>
+        <source>Setting cache size to %0 MB...</source>
+        <translation>Nastavování velikosti cache na %0 MB...</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="237"/>
+        <source>Select cache directory</source>
+        <translation>Vyberte složku pro cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="244"/>
+        <source>Non-empty directory</source>
+        <translation>Neprázdná složka</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="244"/>
+        <source>The directory contains some files which will be overwritten with the cache. Do you want to continue?</source>
+        <translation>Složka obsahuje některé soubory, které budou přepsány cache. Chcete pokračovat?</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="267"/>
+        <source>Cache purge</source>
+        <translation>Vyčištění cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="267"/>
+        <source>Are you sure you want to remove all items from the cache?</source>
+        <translation>Opravdu chcete z cache odstranit všechna data?</translation>
+    </message>
+</context>
+<context>
     <name>Kompas::Plugins::UIComponents::ConfigurationDialog</name>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationDialog.cpp" line="25"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationDialog.cpp" line="30"/>
+        <source>Main configuration</source>
+        <translation>Hlavní konfigurace</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationDialog.cpp" line="34"/>
+        <source>Cache</source>
+        <translation>Cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationDialog.cpp" line="38"/>
         <source>Kompas configuration</source>
         <translation>Nastavení Kompasu</translation>
     </message>
@@ -120,64 +219,6 @@
         <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationUIComponent.cpp" line="29"/>
         <source>Configure Kompas</source>
         <translation>Nastavit Kompas</translation>
-    </message>
-</context>
-<context>
-    <name>Kompas::Plugins::UIComponents::ConfigurationWidget</name>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="106"/>
-        <source>Map view plugin:</source>
-        <translation>Plugin pro zobrazení mapy:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="107"/>
-        <source>Max simultaenous downloads:</source>
-        <translation>Maximální počet souřasných stahování:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="108"/>
-        <source>Map package directory:</source>
-        <translation>Složka s mapovými balíčky:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="109"/>
-        <source>Cache plugin:</source>
-        <translation>Plugin pro cache:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="110"/>
-        <source>Cache dir:</source>
-        <translation>Složka s cache:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="111"/>
-        <source>Cache size:</source>
-        <translation>Velikost cache:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="112"/>
-        <source>Cache block size:</source>
-        <translation>Velikost bloku cache:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="167"/>
-        <source>Select package directory</source>
-        <translation>Vyberte složku s mapami</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="174"/>
-        <source>Select cache directory</source>
-        <translation>Vyberte složku pro cache</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="181"/>
-        <source>Non-empty directory</source>
-        <translation>Neprázdná složka</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/ConfigurationWidget.cpp" line="181"/>
-        <source>The directory contains some files which will be overwritten with the cache. Do you want to continue?</source>
-        <translation>Složka obsahuje některé soubory, které budou přepsány cache. Chcete pokračovat?</translation>
     </message>
 </context>
 <context>
@@ -379,19 +420,42 @@
     </message>
 </context>
 <context>
+    <name>Kompas::Plugins::UIComponents::MainTab</name>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/MainTab.cpp" line="59"/>
+        <source>Load previous session on startup</source>
+        <translation>Načíst předchozí relaci po startu</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/MainTab.cpp" line="74"/>
+        <source>Map view plugin:</source>
+        <translation>Plugin pro zobrazení mapy:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/MainTab.cpp" line="75"/>
+        <source>Max simultaenous downloads:</source>
+        <translation>Maximální počet současných stahování:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/MainTab.cpp" line="76"/>
+        <source>Map package directory:</source>
+        <translation>Složka s mapovými balíčky:</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/MainTab.cpp" line="117"/>
+        <source>Select package directory</source>
+        <translation>Vyberte složku s mapami</translation>
+    </message>
+</context>
+<context>
     <name>Kompas::Plugins::UIComponents::MapOptionsDock</name>
     <message>
-        <location filename="../src/Plugins/UIComponents/MapOptions/MapOptionsDock.cpp" line="83"/>
-        <source>Map view:</source>
-        <translation>Zobrazení mapy:</translation>
+        <location filename="../src/Plugins/UIComponents/MapOptions/MapOptionsDock.cpp" line="82"/>
+        <source>Map view, maps:</source>
+        <translation>Mapové zobrazení, mapy:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/MapOptions/MapOptionsDock.cpp" line="85"/>
-        <source>Maps:</source>
-        <translation>Mapy:</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/MapOptions/MapOptionsDock.cpp" line="87"/>
+        <location filename="../src/Plugins/UIComponents/MapOptions/MapOptionsDock.cpp" line="91"/>
         <source>Map layer, overlays:</source>
         <translation>Vrstva mapy, překrytí:</translation>
     </message>
@@ -695,7 +759,7 @@
         <translation>Uložit mapu</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SaveRaster/SaveRasterUIComponent.cpp" line="84"/>
+        <location filename="../src/Plugins/UIComponents/SaveRaster/SaveRasterUIComponent.cpp" line="87"/>
         <source>Offline %0 package</source>
         <translation>Offline balíček %0</translation>
     </message>
@@ -866,22 +930,22 @@
 <context>
     <name>Kompas::QtGui::AbstractConfigurationDialog</name>
     <message>
-        <location filename="../src/AbstractConfigurationDialog.cpp" line="72"/>
+        <location filename="../src/AbstractConfigurationDialog.cpp" line="82"/>
         <source>Really restore defaults?</source>
         <translation>Opravdu obnovit výchozí?</translation>
     </message>
     <message>
-        <location filename="../src/AbstractConfigurationDialog.cpp" line="73"/>
+        <location filename="../src/AbstractConfigurationDialog.cpp" line="83"/>
         <source>Do you really want to restore default configuration? This action is irreversible.</source>
         <translation>Opravdu chcete obnovit výchozí nastavení? Tato akce je nevratná.</translation>
     </message>
     <message>
-        <location filename="../src/AbstractConfigurationDialog.cpp" line="81"/>
+        <location filename="../src/AbstractConfigurationDialog.cpp" line="91"/>
         <source>Application restart required</source>
         <translation>Vyžadován restart aplikace</translation>
     </message>
     <message>
-        <location filename="../src/AbstractConfigurationDialog.cpp" line="82"/>
+        <location filename="../src/AbstractConfigurationDialog.cpp" line="92"/>
         <source>Some changes would need application restart to work properly.</source>
         <translation>Některé změny vyžadují restart aplikace, aby fungovaly správně.</translation>
     </message>
@@ -902,8 +966,8 @@
 <context>
     <name>Kompas::QtGui::MainWindow</name>
     <message>
-        <location filename="../src/MainWindow.cpp" line="93"/>
-        <location filename="../src/MainWindow.cpp" line="95"/>
+        <location filename="../src/MainWindow.cpp" line="94"/>
+        <location filename="../src/MainWindow.cpp" line="96"/>
         <source>Kompas</source>
         <translation>Kompas</translation>
     </message>
@@ -913,7 +977,7 @@
     <message>
         <location filename="../src/PluginManagerStore.cpp" line="29"/>
         <source>Caches</source>
-        <translation>Cache:</translation>
+        <translation>Cache</translation>
     </message>
     <message>
         <location filename="../src/PluginManagerStore.cpp" line="30"/>

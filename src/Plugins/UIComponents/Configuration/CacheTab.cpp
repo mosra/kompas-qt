@@ -191,7 +191,7 @@ void CacheTab::save() {
 
         /* Modifying block size */
         if(MainWindow::instance()->cacheForRead()()->blockSize() != static_cast<size_t>(blockSize->value())) {
-            startBlockingOperation(tr("Setting block size to %0 B").arg(blockSize->value()));
+            startBlockingOperation(tr("Setting block size to %0 B...").arg(blockSize->value()));
             QFuture<void> future = QtConcurrent::run(this, &CacheTab::setBlockSizeInternal, blockSize->value());
             blockSizeWatcher = new QFutureWatcher<void>(this);
             blockSizeWatcher->setFuture(future);
@@ -226,7 +226,7 @@ void CacheTab::initialize() {
     /* Call asynchronous initialization and block until it is ready */
     MainWindow::instance()->setCache(MainWindow::instance()->pluginManagerStore()->caches()->manager()->instance(conf->value<string>("plugin")));
 
-    startBlockingOperation(tr("Cache initialization progress..."));
+    startBlockingOperation(tr("Initializing cache..."));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::initializeInternal);
     QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
     watcher->setFuture(future);
@@ -248,7 +248,7 @@ void CacheTab::selectCacheDir() {
 }
 
 void CacheTab::setSize() {
-    startBlockingOperation(tr("Setting cache size to %0 MB").arg(size->value()));
+    startBlockingOperation(tr("Setting cache size to %0 MB...").arg(size->value()));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::setSizeInternal, size->value());
     QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
     watcher->setFuture(future);
@@ -256,7 +256,7 @@ void CacheTab::setSize() {
 }
 
 void CacheTab::optimize() {
-    startBlockingOperation(tr("Cache optimization in progress..."));
+    startBlockingOperation(tr("Optimizing cache..."));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::optimizeInternal);
     QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
     watcher->setFuture(future);
@@ -267,7 +267,7 @@ void CacheTab::purge() {
     if(MessageBox::question(this, tr("Cache purge"), tr("Are you sure you want to remove all items from the cache?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
         return;
 
-    startBlockingOperation(tr("Cache purge in progress..."));
+    startBlockingOperation(tr("Purging cache..."));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::purgeInternal);
     QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
     watcher->setFuture(future);

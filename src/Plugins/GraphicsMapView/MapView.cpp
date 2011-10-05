@@ -46,30 +46,30 @@ void MapView::drawForeground(QPainter* painter, const QRectF& _rect) {
 
     /* The background rect has margin 1px, the text has left and right margin
        2px, top and bottom margin 1px. */
-    QRect textBounds = QRect(mapToScene(3, 2).toPoint(), contentsRect().size()-QSize(4, 3));
+    QRect textBounds = QRect(QPoint(3, 2), contentsRect().size()-QSize(6, 4));
 
     /* Compute text rectangle from font metrics */
     QFontMetrics metrics = painter->fontMetrics();
-    QRect textRect = metrics.boundingRect(textBounds, Qt::AlignRight|Qt::AlignBottom, *_copyright);
+    QRect textRect = metrics.boundingRect(textBounds, 0, *_copyright);
 
-    /* Rectangle for background */
-    QRect backgroundRect = textRect;
-    backgroundRect.moveTopLeft(backgroundRect.topLeft()-QPoint(2, 1));
-    backgroundRect.moveBottomRight(backgroundRect.bottomRight()+QPoint(2, 1));
+    /* Pixmap for rendering copyright */
+    QPixmap copyright(textRect.width()+6, textRect.height()+4);
+    copyright.fill(QColor(0, 0, 0, 0));
+    QPainter copyrightPainter(&copyright);
 
-    /* Save previous brush and pen */
-    QBrush textBrush = painter->brush();
-    QPen textPen = painter->pen();
-
-    /* Draw background with light white brush and no pen, then revert it back */
-    painter->setBrush(QBrush(QColor(255, 255, 255, 160)));
-    painter->setPen(Qt::NoPen);
-    painter->drawRoundedRect(backgroundRect, 2, 2);
-    painter->setPen(textPen);
-    painter->setBrush(textBrush);
+    /* Draw background with light white brush and no pen */
+    copyrightPainter.setBrush(QBrush(QColor(255, 255, 255, 160)));
+    copyrightPainter.setPen(Qt::NoPen);
+    copyrightPainter.drawRoundedRect(1, 1, copyright.width()-2, copyright.height()-2, 2, 2);
 
     /* Draw text */
-    painter->drawText(textRect, Qt::AlignRight|Qt::AlignBottom, *_copyright);
+    copyrightPainter.setPen(QPen(Qt::black));
+    copyrightPainter.drawText(textRect, *_copyright);
+
+    /* Draw the copyright onto the widget */
+    QPoint topLeft = mapToScene(0, 0).toPoint() +
+        QPoint(contentsRect().width() - copyright.width(), contentsRect().height() - copyright.height());
+    painter->drawPixmap(topLeft, copyright);
 }
 
 }}

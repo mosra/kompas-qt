@@ -20,6 +20,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QListWidget>
 #include <QtGui/QPushButton>
+#include <QtGui/QSplitter>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
 
@@ -54,7 +55,6 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     editableRasterPackageModel->setSourceModel(MainWindow::instance()->rasterPackageModel());
     rasterPackages = new QListView;
     rasterPackages->setModel(editableRasterPackageModel);
-    rasterPackages->setFixedHeight(100);
     rasterPackages->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     /* Raster layers combobox */
@@ -69,7 +69,6 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     rasterOverlays = new QListView;
     rasterOverlays->setModel(rasterOverlayModel);
     rasterOverlays->setModelColumn(RasterOverlayModel::Translated);
-    rasterOverlays->setFixedHeight(100);
     rasterOverlays->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     /* Moving widget */
@@ -78,17 +77,44 @@ MapOptionsDock::MapOptionsDock(QWidget* parent, Qt::WindowFlags f): QWidget(pare
     /* Zoom slider */
     zoomSlider = new ZoomSlider;
 
-    /* Layout */
+    /* Widget with packages view */
+    QVBoxLayout* packagesLayout = new QVBoxLayout;
+    packagesLayout->addWidget(new QLabel(tr("Map view, maps:")));
+    packagesLayout->addWidget(mapView);
+    packagesLayout->addWidget(rasterPackages);
+    packagesLayout->setContentsMargins(0, 0, 0, 0);
+    QWidget* packagesWidget = new QWidget;
+    packagesWidget->setLayout(packagesLayout);
+
+    /* Widget with overlays view */
+    QVBoxLayout* overlaysLayout = new QVBoxLayout;
+    overlaysLayout->addWidget(new QLabel(tr("Map layer, overlays:")));
+    overlaysLayout->addWidget(rasterLayers);
+    overlaysLayout->addWidget(rasterOverlays);
+    overlaysLayout->setContentsMargins(0, 0, 0, 0);
+    QWidget* overlaysWidget = new QWidget;
+    overlaysWidget->setLayout(overlaysLayout);
+
+    /* Moving widget + slider */
+    QVBoxLayout* controlsLayout = new QVBoxLayout;
+    controlsLayout->addWidget(movingWidget, 0, Qt::AlignCenter);
+    controlsLayout->addWidget(zoomSlider, 1, Qt::AlignHCenter);
+    controlsLayout->setContentsMargins(0, 0, 0, 0);
+    QWidget* controlsWidget = new QWidget;
+    controlsWidget->setLayout(controlsLayout);
+
+    /* Splitter */
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(packagesWidget);
+    splitter->addWidget(overlaysWidget);
+    splitter->addWidget(controlsWidget);
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 1);
+    splitter->setStretchFactor(2, 4);
+
+    /* Splitter layout */
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget(new QLabel(tr("Map view:")));
-    layout->addWidget(mapView);
-    layout->addWidget(new QLabel(tr("Maps:")));
-    layout->addWidget(rasterPackages);
-    layout->addWidget(new QLabel(tr("Map layer, overlays:")));
-    layout->addWidget(rasterLayers);
-    layout->addWidget(rasterOverlays);
-    layout->addWidget(movingWidget, 0, Qt::AlignCenter);
-    layout->addWidget(zoomSlider, 1, Qt::AlignHCenter);
+    layout->addWidget(splitter);
     setLayout(layout);
 
     setFixedWidth(200);

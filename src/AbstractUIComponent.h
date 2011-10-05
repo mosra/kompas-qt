@@ -45,6 +45,10 @@ actions and send every one of them with its corresponding category to slot
 @ref actionAdded() of newly instanced plugin. Also when a new UI plugin, which
 contains actions, is loaded, all these actions are sent to @ref actionAdded()
 slots of already loaded plugins.
+
+To be able to dynamically remove UI components without the need for restart,
+the canBeDeleted() function is set to true, thus plugin manager deletes all
+instances when the plugin is being unloaded.
 */
 class AbstractUIComponent: public QObject, public Core::TranslatablePlugin {
     Q_OBJECT
@@ -63,6 +67,8 @@ class AbstractUIComponent: public QObject, public Core::TranslatablePlugin {
 
         /** @copydoc PluginManager::Plugin::Plugin */
         inline AbstractUIComponent(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""): TranslatablePlugin(manager, plugin) {}
+
+        inline bool canBeDeleted() { return true; }
 
         /**
          * @brief Central widget

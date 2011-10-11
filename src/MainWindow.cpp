@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags): QMainWindow(pare
     /* Load cache */
     string cachePlugin = _configuration.group("cache")->value<string>("plugin");
     string cachePath = _configuration.group("cache")->value<string>("path");
-    if(!cachePlugin.empty() && !cachePath.empty())
+    if(_configuration.group("cache")->value<bool>("enabled") && !cachePlugin.empty() && !cachePath.empty())
         setCache(_pluginManagerStore->caches()->manager()->instance(_configuration.group("cache")->value<string>("plugin")));
 
     /* Load previous session, if autoload enabled */
@@ -145,6 +145,8 @@ void MainWindow::loadDefaultConfiguration() {
     _configuration.group("sessions")->value<int>("current", &currentSession);
 
     /* Cache */
+    bool enabled = false;
+    _configuration.group("cache")->value<bool>("enabled", &enabled);
     string cachePlugin = "";
     _configuration.group("cache")->value<string>("plugin", &cachePlugin);
     string cacheDir = Directory::join(Directory::configurationDir("Kompas"), "cache");

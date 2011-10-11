@@ -79,6 +79,9 @@ packages=
 # Cache configuration
 [cache]
 
+# Whether the cache is enabled
+enabled=false
+
 # Caching plugin, if not set, cache is not used
 plugin=
 

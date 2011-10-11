@@ -21,6 +21,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QFormLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QProgressBar>
@@ -75,6 +76,10 @@ CacheTab::CacheTab(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWid
     usage->setMinimum(0);
     usage->setMaximum(100);
 
+    /* Disable-able configuration */
+    configurationGroup = new QGroupBox(tr("Use cache"));
+    configurationGroup->setCheckable(true);
+
     /* Cache management buttons */
     optimizeButton = new QPushButton(tr("Optimize cache"));
     purgeButton = new QPushButton(tr("Purge cache"));
@@ -82,6 +87,7 @@ CacheTab::CacheTab(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWid
     connect(purgeButton, SIGNAL(clicked(bool)), SLOT(purge()));
 
     /* Emit signal when edited */
+    connect(configurationGroup, SIGNAL(toggled(bool)), SIGNAL(edited()));
     connect(plugin, SIGNAL(currentIndexChanged(int)), SIGNAL(edited()));
     connect(dir, SIGNAL(textChanged(QString)), SIGNAL(edited()));
     connect(size, SIGNAL(valueChanged(int)), SIGNAL(edited()));
@@ -104,14 +110,21 @@ CacheTab::CacheTab(QWidget* parent, Qt::WindowFlags f): AbstractConfigurationWid
     formLayout->addRow(tr("Cache size:"), size);
     formLayout->addRow(tr("Cache block size:"), blockSize);
 
+    /* Configuration layout */
+    QGridLayout* configurationLayout = new QGridLayout;
+    configurationLayout->addLayout(formLayout, 0, 0, 1, 2);
+    configurationLayout->setRowStretch(0, 1);
+    configurationLayout->addWidget(usageLabel, 1, 0, 1, 2);
+    configurationLayout->addWidget(usage, 2, 0, 1, 2);
+    configurationLayout->addWidget(optimizeButton, 3, 0);
+    configurationLayout->addWidget(purgeButton, 3, 1);
+    setLayout(configurationLayout);
+
+    configurationGroup->setLayout(configurationLayout);
+
     /* Layout */
-    QGridLayout* layout = new QGridLayout;
-    layout->addLayout(formLayout, 0, 0, 1, 2);
-    layout->setRowStretch(0, 1);
-    layout->addWidget(usageLabel, 1, 0, 1, 2);
-    layout->addWidget(usage, 2, 0, 1, 2);
-    layout->addWidget(optimizeButton, 3, 0);
-    layout->addWidget(purgeButton, 3, 1);
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(configurationGroup);
     setLayout(layout);
 
     /* Fill in values */
@@ -125,6 +138,7 @@ void CacheTab::reset() {
 
     ConfigurationGroup* conf = MainWindow::instance()->configuration()->group("cache");
 
+    configurationGroup->setChecked(conf->value<bool>("enabled"));
     plugin->setCurrentIndex(pluginModel->findPlugin(
     QString::fromStdString(conf->value<string>("plugin"))));
     dir->setText(QString::fromStdString(conf->value<string>("path")));
@@ -169,6 +183,7 @@ void CacheTab::restoreDefaults() {
     string plugin = conf->value<string>("plugin");
     string path = conf->value<string>("path");
 
+    conf->removeValue("enabled");
     conf->removeValue("plugin");
     conf->removeValue("path");
     conf->removeValue("size");
@@ -185,8 +200,10 @@ void CacheTab::restoreDefaults() {
 void CacheTab::save() {
     ConfigurationGroup* conf = MainWindow::instance()->configuration()->group("cache");
 
+    conf->setValue<bool>("enabled", configurationGroup->isChecked());
+
     /* Modifying already initialized cache */
-    if(pluginModel->index(plugin->currentIndex(), PluginModel::Plugin).data().toString().toStdString() == conf->value<string>("plugin") && dir->text().toStdString() == conf->value<string>("path")) {
+    if(MainWindow::instance()->cacheForRead()() && pluginModel->index(plugin->currentIndex(), PluginModel::Plugin).data().toString().toStdString() == conf->value<string>("plugin") && dir->text().toStdString() == conf->value<string>("path")) {
         QFutureWatcher<void>* blockSizeWatcher = 0;
 
         /* Modifying block size */
@@ -224,7 +241,10 @@ void CacheTab::initialize() {
     ConfigurationGroup* conf = MainWindow::instance()->configuration()->group("cache");
 
     /* Call asynchronous initialization and block until it is ready */
-    MainWindow::instance()->setCache(MainWindow::instance()->pluginManagerStore()->caches()->manager()->instance(conf->value<string>("plugin")));
+    AbstractCache* cache = 0;
+    if(conf->value<bool>("enabled"))
+        cache = MainWindow::instance()->pluginManagerStore()->caches()->manager()->instance(conf->value<string>("plugin"));
+    MainWindow::instance()->setCache(cache);
 
     startBlockingOperation(tr("Initializing cache..."));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::initializeInternal);

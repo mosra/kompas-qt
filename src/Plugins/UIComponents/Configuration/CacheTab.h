@@ -21,6 +21,7 @@
 
 #include "AbstractConfigurationWidget.h"
 
+class QGroupBox;
 class QLabel;
 class QPushButton;
 class QProgressBar;
@@ -71,6 +72,7 @@ class CacheTab: public QtGui::AbstractConfigurationWidget {
         void finishBlockingOperation();
 
     private:
+        QGroupBox* configurationGroup;
         QtGui::PluginModel *pluginModel;
         QComboBox *plugin;
         QLabel* usageLabel;

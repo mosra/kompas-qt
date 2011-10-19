@@ -161,6 +161,27 @@ unsigned int SessionManager::newSession(const QString& name) {
     return sessions.size();
 }
 
+void SessionManager::copySession(unsigned int source, unsigned int destination) {
+    if(source > sessions.size() || destination > sessions.size()) return;
+
+    ConfigurationGroup* _source = source == 0 ? defaultSession : sessions[source-1];
+    ConfigurationGroup* _destination = destination == 0 ? defaultSession : sessions[destination-1];
+
+    /* Preserve original name of destination session */
+    string name = _destination->value<string>("name");
+
+    *_destination = *_source;
+
+    /* If the destination is not zero, set the name back */
+    if(destination != 0)
+        _destination->setValue<string>("name", name);
+
+    /* If the destination is zero (default), remove name parameter */
+    else _destination->removeValue("name");
+
+    emit namesChanged();
+}
+
 void SessionManager::renameSession(unsigned int id, const QString& name) {
     if(id == 0 || id > sessions.size()) return;
 

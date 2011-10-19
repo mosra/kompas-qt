@@ -180,6 +180,16 @@ class SessionManager: public QObject {
         unsigned int newSession(const QString& name);
 
         /**
+         * @brief Copy session to another session
+         * @param source        Source session
+         * @param destination   Destination session
+         *
+         * Replaces destination with source and preserves original destination
+         * session name (if destination is not default).
+         */
+        void copySession(unsigned int source, unsigned int destination);
+
+        /**
          * @brief Rename session
          * @param id        Session ID. If session with given ID doesn't exist,
          *      the function does nothing. Default session (with ID @c 0) cannot

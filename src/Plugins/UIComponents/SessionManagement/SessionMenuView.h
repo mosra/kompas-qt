@@ -51,7 +51,7 @@ class SessionMenuView: public QObject {
          *
          * Calls updateNames().
          */
-        SessionMenuView(QtGui::SessionManager* _manager, QMenu* _menu,  QObject* parent);
+        SessionMenuView(QtGui::SessionManager* _manager, QMenu* _menu, QAction* before, QObject* parent);
 
     public slots:
         /**
@@ -78,6 +78,7 @@ class SessionMenuView: public QObject {
     private:
         QtGui::SessionManager* manager;
         QMenu* menu;
+        QAction* before;
         QHash<QAction*, unsigned int> sessions;
         QActionGroup* group;
 };

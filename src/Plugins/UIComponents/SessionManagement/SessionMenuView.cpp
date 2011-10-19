@@ -23,7 +23,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-SessionMenuView::SessionMenuView(SessionManager* _manager, QMenu* _menu, QObject* parent): QObject(parent), manager(_manager), menu(_menu) {
+SessionMenuView::SessionMenuView(SessionManager* _manager, QMenu* _menu, QAction* before, QObject* parent): QObject(parent), manager(_manager), menu(_menu), before(before) {
     group = new QActionGroup(this);
 
     /* Connect manager name changes */
@@ -49,14 +49,14 @@ void SessionMenuView::updateNames() {
         action->setCheckable(true);
         action->setChecked(true);
     }
-    menu->addAction(action);
+    menu->insertAction(before, action);
     sessions.insert(action, 0);
     group->addAction(action);
 
     QStringList names = manager->names();
     for(int i = 0; i != names.size(); ++i) {
         QAction* action = new QAction(names[i], group);
-        menu->addAction(action);
+        menu->insertAction(before, action);
         group->addAction(action);
         if(manager->current() == static_cast<unsigned int>(i+1) && manager->isLoaded()) {
             action->setCheckable(true);

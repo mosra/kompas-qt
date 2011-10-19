@@ -22,6 +22,7 @@
 #include "Utility/Directory.h"
 #include "MainWindow.h"
 #include "MessageBox.h"
+#include "SessionManagerDialog.h"
 #include "SessionMenuView.h"
 
 PLUGIN_REGISTER_STATIC(SessionManagementUIComponent,
@@ -41,71 +42,19 @@ SessionManagementUIComponent::SessionManagementUIComponent(PluginManager::Abstra
     QAction* openSessionAction = new QAction(openSessionIcon, tr("Restore saved session"), this);
     openSessionAction->setData("openSession");
 
-    /* Create new session */
-    QAction* newSessionAction = new QAction(tr("Create new session"), this);
-    connect(newSessionAction, SIGNAL(triggered(bool)), SLOT(newSession()));
-
-    /* Rename current session */
-    renameSessionAction = new QAction(tr("Rename current session"), this);
-    connect(renameSessionAction, SIGNAL(triggered(bool)), SLOT(renameSession()));
-
-    /* Delete current session */
-    deleteSessionAction = new QAction(tr("Delete current session"), this);
-    connect(deleteSessionAction, SIGNAL(triggered(bool)), SLOT(deleteSession()));
-
-    _actions << openSessionAction << newSessionAction << renameSessionAction << deleteSessionAction;
+    _actions << openSessionAction;
 
     /* Session list menu */
     sessionMenu = new QMenu(MainWindow::instance());
     openSessionAction->setMenu(sessionMenu);
-    sessionMenu->addAction(newSessionAction);
-    sessionMenu->addSeparator();
-    new SessionMenuView(MainWindow::instance()->sessionManager(), sessionMenu, this);
-
-    /* Sessions */
-    currentSessionChange();
-    connect(MainWindow::instance()->sessionManager(), SIGNAL(currentChanged(uint)), SLOT(currentSessionChange()));
+    QAction* separator = sessionMenu->addSeparator();
+    sessionMenu->addAction(tr("Session manager"), this, SLOT(sessionManagerDialog()));
+    new SessionMenuView(MainWindow::instance()->sessionManager(), sessionMenu, separator, this);
 }
 
-void SessionManagementUIComponent::currentSessionChange() {
-    /* Window title, disable/enable menu items */
-    if(!MainWindow::instance()->sessionManager()->isLoaded() || MainWindow::instance()->sessionManager()->current() == 0) {
-        MainWindow::instance()->setWindowTitle("");
-        renameSessionAction->setDisabled(true);
-        deleteSessionAction->setDisabled(true);
-    } else {
-        MainWindow::instance()->setWindowTitle(MainWindow::instance()->sessionManager()->names()[MainWindow::instance()->sessionManager()->current()-1]);
-        renameSessionAction->setDisabled(false);
-        deleteSessionAction->setDisabled(false);
-    }
-}
-
-void SessionManagementUIComponent::newSession() {
-    bool ok;
-    QString name = QInputDialog::getText(MainWindow::instance(), tr("New session"), tr("Enter new session name:"), QLineEdit::Normal, tr("New session"), &ok);
-    if(!ok) return;
-
-    unsigned int id = MainWindow::instance()->sessionManager()->newSession(name);
-    MainWindow::instance()->sessionManager()->load(id);
-}
-
-void SessionManagementUIComponent::renameSession() {
-    if(MainWindow::instance()->sessionManager()->current() == 0) return;
-
-    bool ok;
-    QString name = QInputDialog::getText(MainWindow::instance(), tr("Rename session"), tr("Enter new session name:"), QLineEdit::Normal, MainWindow::instance()->sessionManager()->names()[MainWindow::instance()->sessionManager()->current()-1], &ok);
-    if(!ok) return;
-
-    MainWindow::instance()->sessionManager()->renameSession(MainWindow::instance()->sessionManager()->current(), name);
-}
-
-void SessionManagementUIComponent::deleteSession() {
-    if(MainWindow::instance()->sessionManager()->current() == 0) return;
-
-    if(MessageBox::question(MainWindow::instance(), tr("Delete session"), tr("Are you sure you want to delete session '%0'?").arg(MainWindow::instance()->sessionManager()->names()[MainWindow::instance()->sessionManager()->current()-1]), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) != QMessageBox::Yes) return;
-
-    MainWindow::instance()->sessionManager()->deleteSession(MainWindow::instance()->sessionManager()->current());
-    MainWindow::instance()->sessionManager()->load(0);
+void SessionManagementUIComponent::sessionManagerDialog() {
+    SessionManagerDialog* dialog = new SessionManagerDialog(MainWindow::instance());
+    dialog->show();
 }
 
 }}}

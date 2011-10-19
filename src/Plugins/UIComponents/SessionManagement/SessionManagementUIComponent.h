@@ -41,45 +41,10 @@ class SessionManagementUIComponent: public QtGui::AbstractUIComponent {
         }
 
     private slots:
-
-        /**
-         * @brief Reflect current session change in the UI
-         *
-         * Changes window title and disables rename/delete items in
-         * session menu if default session is loaded.
-         */
-        void currentSessionChange();
-
-        /**
-         * @brief Create new session
-         *
-         * Shows dialog asking for session name, creates new session and
-         * switches to it.
-         */
-        void newSession();
-
-        /**
-         * @brief Rename current session
-         *
-         * Shows dialog asking for session name. If current session is default
-         * session, does nothing.
-         */
-        void renameSession();
-
-        /**
-         * @brief Delete session
-         *
-         * Ask whether to delete, deletes current session and switches to
-         * default session. If current session is default session, does nothing.
-         */
-        void deleteSession();
+        void sessionManagerDialog();
 
     private:
         QList<QAction*> _actions;
-
-        QAction *deleteSessionAction,
-            *renameSessionAction;
-
         QMenu *sessionMenu;
 };
 

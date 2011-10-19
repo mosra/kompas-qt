@@ -109,88 +109,93 @@
 <context>
     <name>Kompas::Plugins::UIComponents::CacheTab</name>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="73"/>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="317"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="74"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="337"/>
         <source>Used size:</source>
         <translation>Využitá velikost:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="79"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="80"/>
+        <source>Use cache</source>
+        <translation>Použít cache</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="84"/>
         <source>Optimize cache</source>
         <translation>Optimalizovat cache</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="80"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="85"/>
         <source>Purge cache</source>
         <translation>Vyčistit cache</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="102"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="108"/>
         <source>Cache plugin:</source>
         <translation>Plugin pro cache:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="103"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="109"/>
         <source>Cache dir:</source>
         <translation>Složka s cache:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="104"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="110"/>
         <source>Cache size:</source>
         <translation>Velikost cache:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="105"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="111"/>
         <source>Cache block size:</source>
         <translation>Velikost bloku cache:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="194"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="211"/>
         <source>Setting block size to %0 B...</source>
         <translation>Nastavování velikosti bloku cache na %0 B...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="229"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="249"/>
         <source>Initializing cache...</source>
         <translation>Inicializace cache...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="259"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="279"/>
         <source>Optimizing cache...</source>
         <translation>Optimalizace cache...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="270"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="290"/>
         <source>Purging cache...</source>
         <translation>Čištení cache...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="251"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="271"/>
         <source>Setting cache size to %0 MB...</source>
         <translation>Nastavování velikosti cache na %0 MB...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="237"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="257"/>
         <source>Select cache directory</source>
         <translation>Vyberte složku pro cache</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="244"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="264"/>
         <source>Non-empty directory</source>
         <translation>Neprázdná složka</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="244"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="264"/>
         <source>The directory contains some files which will be overwritten with the cache. Do you want to continue?</source>
         <translation>Složka obsahuje některé soubory, které budou přepsány cache. Chcete pokračovat?</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="267"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="287"/>
         <source>Cache purge</source>
         <translation>Vyčištění cache</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="267"/>
+        <location filename="../src/Plugins/UIComponents/Configuration/CacheTab.cpp" line="287"/>
         <source>Are you sure you want to remove all items from the cache?</source>
         <translation>Opravdu chcete z cache odstranit všechna data?</translation>
     </message>
@@ -830,56 +835,101 @@
 <context>
     <name>Kompas::Plugins::UIComponents::SessionManagementUIComponent</name>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="41"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="42"/>
         <source>Restore saved session</source>
         <translation>Obnovit uloženou relaci</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="45"/>
-        <source>Create new session</source>
-        <translation>Vytvořit novou relaci</translation>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="51"/>
+        <source>Session manager</source>
+        <translation>Správce relací</translation>
+    </message>
+</context>
+<context>
+    <name>Kompas::Plugins::UIComponents::SessionManagerDialog</name>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="42"/>
+        <source>New empty session</source>
+        <translation>Nová prázdná relace</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="49"/>
-        <source>Rename current session</source>
-        <translation>Přejmenovat současnou relaci</translation>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="46"/>
+        <source>Save as...</source>
+        <translation>Uložit jako...</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="53"/>
-        <source>Delete current session</source>
-        <translation>Smazat současnou relaci</translation>
-    </message>
-    <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="85"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="48"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="88"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="96"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="149"/>
         <source>New session</source>
-        <translation>Nová relace</translation>
+        <translation>Novou relaci</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="85"/>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="96"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="49"/>
+        <source>Default session</source>
+        <translation>Výchozí relaci</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="53"/>
+        <source>Rename</source>
+        <translation>Přejmenovat</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="57"/>
+        <source>Delete</source>
+        <translation>Smazat</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="61"/>
+        <source>Load</source>
+        <translation>Načíst</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="81"/>
+        <source>Session manager</source>
+        <translation>Správce relací</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="88"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="96"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="113"/>
         <source>Enter new session name:</source>
         <translation>Zadejte název nové relace:</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="96"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="113"/>
         <source>Rename session</source>
         <translation>Přejmenovat relaci</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="105"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="122"/>
         <source>Delete session</source>
         <translation>Smazat relaci</translation>
     </message>
     <message>
-        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagementUIComponent.cpp" line="105"/>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="122"/>
         <source>Are you sure you want to delete session &apos;%0&apos;?</source>
         <translation>Opravdu chcete smazat relaci &apos;%0&apos;?</translation>
+    </message>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionManagerDialog.cpp" line="150"/>
+        <source>New session (%0)</source>
+        <translation>Nová relace (%0)</translation>
     </message>
 </context>
 <context>
     <name>Kompas::Plugins::UIComponents::SessionMenuView</name>
     <message>
         <location filename="../src/Plugins/UIComponents/SessionManagement/SessionMenuView.cpp" line="47"/>
+        <source>(default session)</source>
+        <translation>(výchozí relace)</translation>
+    </message>
+</context>
+<context>
+    <name>Kompas::Plugins::UIComponents::SessionModel</name>
+    <message>
+        <location filename="../src/Plugins/UIComponents/SessionManagement/SessionModel.cpp" line="30"/>
         <source>(default session)</source>
         <translation>(výchozí relace)</translation>
     </message>

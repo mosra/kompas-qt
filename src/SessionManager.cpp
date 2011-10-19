@@ -173,6 +173,18 @@ void SessionManager::renameSession(unsigned int id, const QString& name) {
 void SessionManager::deleteSession(unsigned int id) {
     if(id == 0 || id > sessions.size()) return;
 
+    if(_current != -1 && id <= static_cast<unsigned int>(_current)) {
+
+        /* Decrease current, if deleting something before it */
+        if(id < static_cast<unsigned int>(_current))
+            --_current;
+
+        /* If deleting current, set current to -1 */
+        else _current = -1;
+
+        emit currentChanged(_current);
+    }
+
     conf->removeGroup(sessions.at(id-1));
 
     sessions.erase(sessions.begin()+id-1);

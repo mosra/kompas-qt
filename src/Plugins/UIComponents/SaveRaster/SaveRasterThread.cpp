@@ -116,8 +116,16 @@ void SaveRasterThread::run() {
 
                     TileCoords coords(currentArea.x+col, currentArea.y+row);
 
+                    Locker<AbstractRasterModel> model = MainWindow::instance()->rasterModelForWrite();
+
                     /* First try to get tile from file */
-                    string data = MainWindow::instance()->rasterModelForWrite()()->tileFromPackage(layer, zoom, coords);
+                    string data = model()->tileFromPackage(layer, zoom, coords);
+
+                    /* Then from cache */
+                    if(data.empty())
+                        data = model()->tileFromCache(MainWindow::instance()->cacheForWrite()(), layer, zoom, coords);
+
+                    model.unlock();
 
                     /* Otherwise download */
                     if(data.empty()) {

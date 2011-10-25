@@ -95,6 +95,7 @@ class PluginModel: public QAbstractTableModel {
         void loadAttempt(const std::string& plugin, int before, int after);
         void unloadAttempt(const std::string& plugin, int before, int after);
         void reloadPluginMetadata(const std::string& plugin);
+        void reloadPluginUsedByMetadata(const std::string& plugin);
         void removePlugin(const std::string& plugin);
 
     private:

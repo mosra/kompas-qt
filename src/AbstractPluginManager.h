@@ -89,6 +89,26 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
             return true;
         }
 
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::addUsedBy()
+         * Emits pluginUsedByMetadataChanged().
+         */
+        void addUsedBy(const std::string& plugin, const std::string& usedBy) {
+            Kompas::PluginManager::AbstractPluginManager::addUsedBy(plugin, usedBy);
+
+            emit pluginUsedByMetadataChanged(plugin);
+        }
+
+        /**
+         * @copydoc PluginManager::AbstractPluginManager::removeUsedBy()
+         * Emits pluginUsedByMetadataChanged().
+         */
+        void removeUsedBy(const std::string& plugin, const std::string& usedBy) {
+            Kompas::PluginManager::AbstractPluginManager::removeUsedBy(plugin, usedBy);
+
+            emit pluginUsedByMetadataChanged(plugin);
+        }
+
     signals:
         /**
          * @brief Plugin load attempt
@@ -123,6 +143,11 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @brief Plugin was reloaded
          */
         void pluginMetadataReloaded(const std::string& plugin);
+
+        /**
+         * @brief Plugin "used by" metadata changed
+         */
+        void pluginUsedByMetadataChanged(const std::string& plugin);
 
         /**
          * @brief Plugin disappeared

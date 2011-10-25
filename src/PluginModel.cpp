@@ -30,6 +30,9 @@ PluginModel::PluginModel(AbstractPluginManager* _manager, int flags, QObject* pa
             SIGNAL(pluginMetadataReloaded(std::string)),
             SLOT(reloadPluginMetadata(std::string)));
     connect(manager,
+            SIGNAL(pluginUsedByMetadataChanged(std::string)),
+            SLOT(reloadPluginUsedByMetadata(std::string)));
+    connect(manager,
             SIGNAL(pluginDisappeared(std::string)),
             SLOT(removePlugin(std::string)));
     connect(manager,
@@ -224,6 +227,19 @@ void PluginModel::reloadPluginMetadata(const std::string& plugin) {
     /* Update plugin metadata */
     plugins.replace(found, PluginMetadata(plugin, manager->loadState(plugin), manager->metadata(plugin)));
     emit dataChanged(index(found, 0), index(found, columnCount()-1));
+}
+
+void PluginModel::reloadPluginUsedByMetadata(const string& plugin) {
+    /* Find the name in list */
+    int found = findPlugin(QString::fromStdString(plugin));
+    if(found == -1) return;
+
+    QStringList list;
+    vector<string> temp = manager->metadata(plugin)->usedBy();
+    for(vector<string>::const_iterator it = temp.begin(); it != temp.end(); ++it) {
+        list << QString::fromStdString(*it);
+    }
+    plugins[found].usedBy = list.join(", ");
 }
 
 void PluginModel::removePlugin(const std::string& plugin) {

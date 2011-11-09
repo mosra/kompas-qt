@@ -45,6 +45,10 @@ void ZoomSlider::updateMapView() {
 }
 
 void ZoomSlider::updateRasterModel() {
+    /* Disconnect, so the slider doesn't zoom the map when limits are changed,
+       connect it back when it's done */
+    disconnect(this, SIGNAL(valueChanged(int)), this, SLOT(zoomTo(int)));
+
     Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
     if(rasterModel() && rasterModel()->zoomLevels().size() > 1) {
         setDisabled(false);
@@ -55,6 +59,8 @@ void ZoomSlider::updateRasterModel() {
         setMinimum(0);
         setMaximum(0);
     }
+
+    connect(this, SIGNAL(valueChanged(int)), SLOT(zoomTo(int)));
 }
 
 void ZoomSlider::updateZoom(Core::Zoom z) {

@@ -123,6 +123,14 @@ class GraphicsMapView: public QtGui::AbstractMapView {
     private:
         void tileData(const QString& layer, Core::Zoom z, const Core::TileCoords& coords, const QPixmap& data);
 
+        /**
+         * @brief Get current map coordinates for given model
+         *
+         * The same as public coords(const QPoint&), but uses given raster model
+         * for computation.
+         */
+        Core::LatLonCoords coords(const Core::AbstractRasterModel* rasterModel, const QPoint& pos = QPoint());
+
         QString _copyright;
 };
 

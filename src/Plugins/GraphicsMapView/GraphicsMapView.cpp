@@ -193,6 +193,10 @@ bool GraphicsMapView::zoomTo(Core::Zoom zoom, const QPoint& pos) {
 }
 
 LatLonCoords GraphicsMapView::coords(const QPoint& pos) {
+    return coords(MainWindow::instance()->rasterModelForRead()(), pos);
+}
+
+LatLonCoords GraphicsMapView::coords(const AbstractRasterModel* rasterModel, const QPoint& pos) {
     if(!isReady()) return LatLonCoords();
 
     /* Position where to get coordinates */
@@ -202,14 +206,12 @@ LatLonCoords GraphicsMapView::coords(const QPoint& pos) {
     else
         center = view->mapToScene(pos);
 
-    Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
-
     /* The model doesn't have projection, return invalid coordinates */
-    if(!rasterModel()->projection()) return LatLonCoords();
+    if(!rasterModel->projection()) return LatLonCoords();
 
-    LatLonCoords ret = rasterModel()->projection()->toLatLon(Coords<double>(
-        center.x()/(pow2(_zoom)*rasterModel()->tileSize().x),
-        center.y()/(pow2(_zoom)*rasterModel()->tileSize().y)
+    LatLonCoords ret = rasterModel->projection()->toLatLon(Coords<double>(
+        center.x()/(pow2(_zoom)*rasterModel->tileSize().x),
+        center.y()/(pow2(_zoom)*rasterModel->tileSize().y)
     ));
 
     return ret;

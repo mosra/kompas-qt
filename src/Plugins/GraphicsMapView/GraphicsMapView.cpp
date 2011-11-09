@@ -15,6 +15,7 @@
 
 #include "GraphicsMapView.h"
 
+#include <cmath>
 #include <vector>
 #include <algorithm>
 #include <QtCore/QBitArray>
@@ -487,29 +488,97 @@ void GraphicsMapView::updateRasterModel(const Core::AbstractRasterModel* previou
     qDeleteAll(tiles);
     tiles.clear();
     map.setSceneRect(0, 0, 0, 0);
-    _zoom = pow2(31); /* << something impossible, so zoomTo won't skip on z == _zoom */
     _layer.clear();
     _overlays.clear();
 
     Locker<const AbstractRasterModel> rasterModel = MainWindow::instance()->rasterModelForRead();
-    Zoom z = *rasterModel()->zoomLevels().begin();
     QString layer = QString::fromStdString(rasterModel()->layers()[0]);
     _copyright = QString::fromStdString(rasterModel()->copyright());
-    rasterModel.unlock();
 
     updateMapArea();
 
-    /* Zoom and set layer (that emits signals), emit signal about overlays
-       cleared too */
-    zoomTo(z);
+    Zoom desiredZoom = *rasterModel()->zoomLevels().begin();
+    LatLonCoords desiredCoordinates;
+
+    /* If we stay on the same celestial body and both models support coordinate
+       conversion and we are on the map, center on the same coordinates and
+       nearest zoom level */
+    if(previous && previous->celestialBody() == rasterModel()->celestialBody() && (previous->features() & rasterModel()->features() & AbstractRasterModel::ConvertableCoords) && (desiredCoordinates = coords(previous)).isValid()) {
+        set<Zoom> zoomLevels = rasterModel()->zoomLevels();
+        TileSize tileSize = rasterModel()->tileSize();
+        TileArea area = rasterModel()->area();
+
+        /* Previous coordinates halfway from center to edges */
+        LatLonCoords previousTopCoords = coords(previous, QPoint(view->width()/2, view->height()/4));
+        LatLonCoords previousBottomCoords = coords(previous, QPoint(view->width()/2, view->height()*3/4));
+        LatLonCoords previousLeftCoords = coords(previous, QPoint(view->width()/4, view->height()/2));
+        LatLonCoords previousRightCoords = coords(previous, QPoint(view->width()*3/4, view->height()/2));
+
+        double verticalDistance = 0;
+        double horizontalDistance = 0;
+
+        /* Compute vertical distance, if the coordinates are valid */
+        if(previousTopCoords.isValid() && previousBottomCoords.isValid()) {
+            Coords<double> topCoords = rasterModel()->projection()->fromLatLon(previousTopCoords);
+            Coords<double> bottomCoords = rasterModel()->projection()->fromLatLon(previousBottomCoords);
+            verticalDistance = abs(bottomCoords.y-topCoords.y);
+            horizontalDistance = abs(bottomCoords.x-topCoords.x);
+        }
+
+        /* Compute horizontal distance, if the coordinates are valid */
+        if(previousLeftCoords.isValid() && previousRightCoords.isValid()) {
+            Coords<double> leftCoords = rasterModel()->projection()->fromLatLon(previousLeftCoords);
+            Coords<double> rightCoords = rasterModel()->projection()->fromLatLon(previousRightCoords);
+            verticalDistance = max(verticalDistance, abs(rightCoords.y-leftCoords.y));
+            horizontalDistance = max(horizontalDistance, abs(rightCoords.x-leftCoords.x));
+        }
+
+        rasterModel.unlock();
+
+        /* Distance in lowest zoom, substract 1 for rounding errors */
+        unsigned int minVerticalDistance = area.w*tileSize.x*verticalDistance-1;
+        unsigned int minHorizontalDistance = area.h*tileSize.y*horizontalDistance-1;
+
+        /* If the distance is unmeasurable or larger than desired, stay on
+           lowest zoom, else try to find largest zoom where the distance is
+           lower than view width/2 and height/2. */
+        if(minVerticalDistance != 0 || minHorizontalDistance != 0) {
+            if(minVerticalDistance == 0)
+                desiredZoom = log2(view->width()/(2*minHorizontalDistance));
+            else if(minHorizontalDistance == 0)
+                desiredZoom = log2(view->height()/(2*minVerticalDistance));
+            else desiredZoom = min(
+                log2(view->height()/(2*minVerticalDistance)),
+                log2(view->width()/(2*minHorizontalDistance))
+            );
+        }
+
+        set<Zoom>::iterator it = zoomLevels.lower_bound(desiredZoom);
+        if(it == zoomLevels.end())
+            desiredZoom = *zoomLevels.begin();
+        else
+            desiredZoom = *it;
+
+    } else rasterModel.unlock();
+
+    /* Set zoom to something impossible, so zoomTo() won't skip on z == _zoom,
+       zoom to desired zoom */
+    _zoom = pow2(31);
+    zoomTo(desiredZoom);
+
+    /* Set coords, if they are valid, or center on center of the map */
+    if(desiredCoordinates.isValid())
+        setCoords(desiredCoordinates);
+    else {
+        QRectF rect = map.sceneRect();
+        view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);
+    }
+
+    /* Set layer (it emits signals), emit signal about overlays cleared too */
     setLayer(layer);
     emit overlaysChanged(_overlays);
 
-    QRectF rect = map.sceneRect();
-    view->centerOn(rect.left() + rect.width()/2, rect.top() + rect.height()/2);
     updateTilePositions();
-
-    /** @todo @c VERSION-0.1.1 Stay on previous coordinates, nearest zoom level (previous model needed)  */
 }
 
 }}

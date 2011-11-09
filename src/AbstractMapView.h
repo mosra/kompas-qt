@@ -48,11 +48,13 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
     public slots:
         /**
          * @brief Update raster model
+         * @param previous  If set, the model is changed to another. Otherwise
+         *      just a new package was loaded or online maps enabled / disabled.
          *
-         * Connected to MainWindow::rasterModelChanged(). Reloads all map data
-         * from new model.
+         * Connected to MainWindow::rasterModelChanged(). Loads map data from
+         * new model.
          */
-        virtual void updateRasterModel() = 0;
+        virtual void updateRasterModel(const Core::AbstractRasterModel* previous = 0) = 0;
 
     public:
         /**

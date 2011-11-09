@@ -41,7 +41,7 @@ AbstractMapView::AbstractMapView(Kompas::PluginManager::AbstractPluginManager* m
     qRegisterMetaType<Core::Zoom>("Core::Zoom");
     qRegisterMetaType<Core::TileCoords>("Core::TileCoords");
 
-    connect(MainWindow::instance(), SIGNAL(rasterModelChanged()), SLOT(updateRasterModel()));
+    connect(MainWindow::instance(), SIGNAL(rasterModelChanged(const Core::AbstractRasterModel*)), SLOT(updateRasterModel(const Core::AbstractRasterModel*)));
 
     connect(tileDataThread, SIGNAL(tileData(QString,Core::Zoom,Core::TileCoords,QByteArray)),
             SLOT(tileData(QString,Core::Zoom,Core::TileCoords,QByteArray)));

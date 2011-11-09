@@ -471,7 +471,7 @@ void GraphicsMapView::tileData(const QString& layer, Core::Zoom z, const Core::T
     }
 }
 
-void GraphicsMapView::updateRasterModel() {
+void GraphicsMapView::updateRasterModel(const Core::AbstractRasterModel* previous) {
     if(!isReady()) return;
 
     /**

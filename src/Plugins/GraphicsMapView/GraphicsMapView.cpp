@@ -17,7 +17,6 @@
 
 #include <cmath>
 #include <vector>
-#include <algorithm>
 #include <QtCore/QBitArray>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QGraphicsItem>

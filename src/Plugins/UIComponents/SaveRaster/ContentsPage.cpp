@@ -15,7 +15,6 @@
 
 #include "ContentsPage.h"
 
-#include <algorithm>
 #include <QtGui/QListView>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>

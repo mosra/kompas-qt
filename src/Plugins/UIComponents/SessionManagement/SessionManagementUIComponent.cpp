@@ -29,7 +29,6 @@ PLUGIN_REGISTER_STATIC(SessionManagementUIComponent,
                        Kompas::Plugins::UIComponents::SessionManagementUIComponent,
                        "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
-using namespace Kompas::Utility;
 using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {

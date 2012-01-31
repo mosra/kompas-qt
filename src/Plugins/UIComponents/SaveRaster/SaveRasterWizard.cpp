@@ -16,7 +16,6 @@
 #include "SaveRasterWizard.h"
 
 #include <cmath>
-#include <algorithm>
 #include <QtGui/QGroupBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>

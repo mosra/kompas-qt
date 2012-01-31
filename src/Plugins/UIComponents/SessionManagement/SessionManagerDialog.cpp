@@ -98,7 +98,6 @@ void SessionManagerDialog::saveAs() {
 
     unsigned int source = view->currentIndex().row();
     unsigned int destination = MainWindow::instance()->sessionManager()->newSession(name);
-    Utility::Debug() << source << destination;
     MainWindow::instance()->sessionManager()->copySession(source, destination);
 }
 

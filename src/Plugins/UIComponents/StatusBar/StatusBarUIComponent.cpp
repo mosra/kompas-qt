@@ -30,7 +30,7 @@ PLUGIN_REGISTER_STATIC(StatusBarUIComponent,
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-StatusBarUIComponent::StatusBarUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+StatusBarUIComponent::StatusBarUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     _coordinateStatus = new QLabel;
     _statusBar = new QStatusBar(MainWindow::instance());
     _statusBar->addPermanentWidget(_coordinateStatus);

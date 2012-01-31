@@ -33,7 +33,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-SessionManagementUIComponent::SessionManagementUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+SessionManagementUIComponent::SessionManagementUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* Open session */
     QIcon openSessionIcon;
     openSessionIcon.addFile(":/open-session-16.png");

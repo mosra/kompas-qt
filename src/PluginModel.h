@@ -100,7 +100,7 @@ class PluginModel: public QAbstractTableModel {
 
     private:
         struct PluginMetadata {
-            PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata);
+            PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Corrade::PluginManager::PluginMetadata* metadata);
 
             const std::string *name,
                 *description;

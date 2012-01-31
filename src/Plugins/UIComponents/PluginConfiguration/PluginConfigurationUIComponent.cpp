@@ -29,7 +29,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-PluginConfigurationUIComponent::PluginConfigurationUIComponent(PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
+PluginConfigurationUIComponent::PluginConfigurationUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
     QAction* action = new QAction(QIcon(":/plugins-16.png"), tr("Plugins"), this);
     connect(action, SIGNAL(triggered(bool)), SLOT(pluginDialog()));
     _actions << action;

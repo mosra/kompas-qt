@@ -25,7 +25,7 @@ PLUGIN_REGISTER_STATIC(ConfigurationUIComponent,
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-ConfigurationUIComponent::ConfigurationUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+ConfigurationUIComponent::ConfigurationUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     QAction* action = new QAction(QIcon(":/settings-16.png"), tr("Configure Kompas"), this);
     connect(action, SIGNAL(triggered(bool)), SLOT(configurationDialog()));
     _actions << action;

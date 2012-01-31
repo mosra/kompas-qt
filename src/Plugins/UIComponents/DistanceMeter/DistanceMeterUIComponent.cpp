@@ -28,7 +28,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-DistanceMeterUIComponent::DistanceMeterUIComponent(PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
+DistanceMeterUIComponent::DistanceMeterUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
     QAction* action = new QAction(QString::fromStdString(*metadata()->name()), this);
     connect(action, SIGNAL(triggered(bool)), SLOT(distanceMeterDialog()));
     _actions << action;

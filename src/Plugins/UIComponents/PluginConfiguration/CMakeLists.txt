@@ -3,7 +3,7 @@ qt4_wrap_cpp(PluginConfigurationUIComponent_MOC
     PluginDialog.h
     PluginTab.h
 )
-kompas_add_static_plugin(KompasQt_Plugins PluginConfigurationUIComponent
+corrade_add_static_plugin(KompasQt_Plugins PluginConfigurationUIComponent
     PluginConfigurationUIComponent.conf
     PluginConfigurationUIComponent.cpp
     PluginDialog.cpp

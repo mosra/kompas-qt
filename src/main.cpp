@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
     /* Localizations */
-    Kompas::Utility::Translator::setLocale(QLocale::system().name().toStdString());
+    Corrade::Utility::Translator::setLocale(QLocale::system().name().toStdString());
     QTranslator translatorQt, translator;
 
     #ifndef _WIN32

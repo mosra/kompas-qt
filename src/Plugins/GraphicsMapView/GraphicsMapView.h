@@ -43,7 +43,7 @@ class GraphicsMapView: public QtGui::AbstractMapView {
 
     public:
         /** @copydoc QtGui::AbstractMapView::AbstractMapView */
-        GraphicsMapView(Kompas::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
+        GraphicsMapView(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin);
 
         inline unsigned int zoom() const { return _zoom; }
         Core::LatLonCoords coords(const QPoint& pos = QPoint());

@@ -31,7 +31,7 @@ namespace Kompas { namespace QtGui {
  * Instead of PluginManager::AbstractPluginManager provides signal notification
  * when a plugin is loaded, unloaded or reloaded.
  */
-class AbstractPluginManager: public QObject, public Kompas::PluginManager::AbstractPluginManager {
+class AbstractPluginManager: public QObject, public Corrade::PluginManager::AbstractPluginManager {
     Q_OBJECT
 
     public:
@@ -41,7 +41,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * @param parent                Parent object
          * @copydetails PluginManager::AbstractPluginManager::AbstractPluginManager()
          */
-        inline AbstractPluginManager(const std::string& pluginDirectory, QObject* parent = 0): QObject(parent), Kompas::PluginManager::AbstractPluginManager(pluginDirectory) {}
+        inline AbstractPluginManager(const std::string& pluginDirectory, QObject* parent = 0): QObject(parent), Corrade::PluginManager::AbstractPluginManager(pluginDirectory) {}
 
         /**
          * @copydoc PluginManager::AbstractPluginManager::load()
@@ -49,7 +49,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          */
         inline LoadState load(const std::string& _plugin) {
             LoadState before = loadState(_plugin);
-            LoadState after = Kompas::PluginManager::AbstractPluginManager::load(_plugin);
+            LoadState after = Corrade::PluginManager::AbstractPluginManager::load(_plugin);
             emit loadAttempt(_plugin, before, after);
             return after;
         }
@@ -60,7 +60,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          */
         inline LoadState unload(const std::string& _plugin) {
             LoadState before = loadState(_plugin);
-            LoadState after = Kompas::PluginManager::AbstractPluginManager::unload(_plugin);
+            LoadState after = Corrade::PluginManager::AbstractPluginManager::unload(_plugin);
             emit unloadAttempt(_plugin, before, after);
             return after;
         }
@@ -71,7 +71,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * Emits pluginDirectoryReloaded().
          */
         inline void reloadPluginDirectory() {
-            Kompas::PluginManager::AbstractPluginManager::reloadPluginDirectory();
+            Corrade::PluginManager::AbstractPluginManager::reloadPluginDirectory();
             emit pluginDirectoryReloaded();
         }
 
@@ -81,7 +81,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * If the plugin disappears, emits pluginDisappeared().
          */
         bool reloadPluginMetadata(std::map<std::string, PluginObject*>::iterator it) {
-            if(!Kompas::PluginManager::AbstractPluginManager::reloadPluginMetadata(it)) {
+            if(!Corrade::PluginManager::AbstractPluginManager::reloadPluginMetadata(it)) {
                 emit pluginDisappeared(it->first);
                 return false;
             }
@@ -94,7 +94,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * Emits pluginUsedByMetadataChanged().
          */
         void addUsedBy(const std::string& plugin, const std::string& usedBy) {
-            Kompas::PluginManager::AbstractPluginManager::addUsedBy(plugin, usedBy);
+            Corrade::PluginManager::AbstractPluginManager::addUsedBy(plugin, usedBy);
 
             emit pluginUsedByMetadataChanged(plugin);
         }
@@ -104,7 +104,7 @@ class AbstractPluginManager: public QObject, public Kompas::PluginManager::Abstr
          * Emits pluginUsedByMetadataChanged().
          */
         void removeUsedBy(const std::string& plugin, const std::string& usedBy) {
-            Kompas::PluginManager::AbstractPluginManager::removeUsedBy(plugin, usedBy);
+            Corrade::PluginManager::AbstractPluginManager::removeUsedBy(plugin, usedBy);
 
             emit pluginUsedByMetadataChanged(plugin);
         }

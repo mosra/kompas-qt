@@ -134,7 +134,7 @@ class MainWindow: public QMainWindow {
          * values</em>, which documents all stored configuration groups and
          * parameters.
          */
-        inline Utility::Configuration* configuration()
+        inline Corrade::Utility::Configuration* configuration()
             { return &_configuration; }
 
         /** @brief Session manager */
@@ -298,7 +298,7 @@ class MainWindow: public QMainWindow {
     private:
         static MainWindow* _instance;
 
-        Utility::Configuration _configuration;
+        Corrade::Utility::Configuration _configuration;
         SessionManager* _sessionManager;
 
         PluginManagerStore* _pluginManagerStore;

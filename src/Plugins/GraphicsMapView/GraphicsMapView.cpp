@@ -30,7 +30,7 @@
 #include "TileDataThread.h"
 
 using namespace std;
-using namespace Kompas::Utility;
+using namespace Corrade::Utility;
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
@@ -39,7 +39,7 @@ PLUGIN_REGISTER_STATIC(GraphicsMapView, Kompas::Plugins::GraphicsMapView,
 
 namespace Kompas { namespace Plugins {
 
-GraphicsMapView::GraphicsMapView(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/notfound-256.png"), tileLoadingImage(":/loading-256.png") {
+GraphicsMapView::GraphicsMapView(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractMapView(manager, plugin), _zoom(0), tileNotFoundImage(":/notfound-256.png"), tileLoadingImage(":/loading-256.png") {
     /* Enable mouse tracking */
     setMouseTracking(true);
 

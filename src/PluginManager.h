@@ -25,8 +25,8 @@
 
 namespace Kompas { namespace QtGui {
 
-/* The same code as in Kompas::PluginManager::PluginManager */
-#define KOMPAS_SKIP_PLUGINMANAGER_NAMESPACE
+/* The same code as in Corrade::PluginManager::PluginManager */
+#define CORRADE_SKIP_PLUGINMANAGER_NAMESPACE
 #ifndef DOXYGEN_GENERATING_OUTPUT
 #include "PluginManager/PluginManager.h"
 #endif

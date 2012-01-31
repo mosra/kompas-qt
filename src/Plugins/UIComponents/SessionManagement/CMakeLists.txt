@@ -4,7 +4,7 @@ qt4_wrap_cpp(SessionManagementUIComponent_MOC
     SessionMenuView.h
     SessionModel.h
 )
-kompas_add_static_plugin(KompasQt_PluginsDesktop SessionManagementUIComponent
+corrade_add_static_plugin(KompasQt_PluginsDesktop SessionManagementUIComponent
     SessionManagementUIComponent.conf
     SessionManagementUIComponent.cpp
     SessionManagerDialog.cpp

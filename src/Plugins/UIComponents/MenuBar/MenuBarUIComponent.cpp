@@ -29,7 +29,7 @@ PLUGIN_REGISTER_STATIC(MenuBarUIComponent,
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-MenuBarUIComponent::MenuBarUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+MenuBarUIComponent::MenuBarUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     _menuBar = new QMenuBar(MainWindow::instance());
     _fileMenu = _menuBar->addMenu(QObject::tr("File"));
     _toolsMenu = _menuBar->addMenu(QObject::tr("Tools"));

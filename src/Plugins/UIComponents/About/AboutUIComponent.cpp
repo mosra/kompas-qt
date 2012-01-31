@@ -29,7 +29,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-AboutUIComponent::AboutUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+AboutUIComponent::AboutUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* About */
     QAction* aboutAction = new QAction(QIcon(":/logo-16.png"), tr("About Kompas"), this);
     aboutAction->setStatusTip(tr("Show information about this application"));

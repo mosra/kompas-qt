@@ -32,7 +32,7 @@ class SessionManagementUIComponent: public QtGui::AbstractUIComponent {
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        SessionManagementUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        SessionManagementUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Sessions)

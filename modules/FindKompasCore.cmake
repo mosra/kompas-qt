@@ -1,14 +1,13 @@
 # Find KompasCore - Kompas Core handling module for CMake
 #
-# This module defines:
+# This module depends on Corrade and additionally defines:
 #
 # KOMPASCORE_FOUND           - True if Kompas Core library is found
 #
 # KOMPAS_CORE_INCLUDE_DIR    - Include dir for Kompas Core
 # KOMPAS_PLUGINS_INCLUDE_DIR - Include dir for Kompas plugins
 #
-# KOMPAS_CORE_LIBRARIES      - Kompas Core libraries
-# KOMPAS_RC_EXECUTABLE       - Kompas resource compiler executable
+# KOMPAS_CORE_LIBRARY        - Kompas Core library
 #
 # KOMPAS_BINARY_INSTALL_DIR              - Binary installation directory
 # KOMPAS_LIBRARY_INSTALL_DIR             - Library installation directory
@@ -22,23 +21,20 @@
 # KOMPAS_PLUGINS_PROJECTION_INSTALL_DIR  - Projection plugins installation directory
 #
 
-if (KOMPAS_CORE_INCLUDE_DIR AND KOMPAS_PLUGINS_INCLUDE_DIR AND KOMPAS_UTILITY_LIBRARY AND KOMPAS_PLUGINMANAGER_LIBRARY AND KOMPAS_CORE_LIBRARY AND KOMPAS_RC_EXECUTABLE)
+find_package(Corrade REQUIRED)
+
+if (KOMPAS_CORE_INCLUDE_DIR AND KOMPAS_PLUGINS_INCLUDE_DIR AND KOMPAS_CORE_LIBRARY)
 
     # Already in cache
     set(KOMPASCORE_FOUND TRUE)
 
 else()
     # Libraries
-    find_library(KOMPAS_UTILITY_LIBRARY KompasUtility)
-    find_library(KOMPAS_PLUGINMANAGER_LIBRARY KompasPluginManager)
     find_library(KOMPAS_CORE_LIBRARY KompasCore)
-
-    # RC executable
-    find_program(KOMPAS_RC_EXECUTABLE kompas-rc)
 
     # Paths
     find_path(KOMPAS_CORE_INCLUDE_DIR
-        NAMES PluginManager Utility
+        NAMES LatLonCoords.h
         PATH_SUFFIXES Kompas/Core
     )
     find_path(KOMPAS_PLUGINS_INCLUDE_DIR
@@ -50,17 +46,12 @@ else()
     find_package_handle_standard_args("KompasCore" DEFAULT_MSG
         KOMPAS_CORE_INCLUDE_DIR
         KOMPAS_PLUGINS_INCLUDE_DIR
-        KOMPAS_UTILITY_LIBRARY
-        KOMPAS_PLUGINMANAGER_LIBRARY
         KOMPAS_CORE_LIBRARY
-        KOMPAS_RC_EXECUTABLE
     )
 
 endif()
 
 if(KOMPASCORE_FOUND)
-    include(KompasMacros)
-
     # Installation dirs
     if(WIN32)
         set_parent_scope(KOMPAS_BINARY_INSTALL_DIR .)
@@ -70,7 +61,7 @@ if(KOMPASCORE_FOUND)
         set_parent_scope(KOMPAS_PLUGINS_INSTALL_DIR /plugins)
         set_parent_scope(KOMPAS_DATA_INSTALL_DIR )
     else()
-        include(KompasLibSuffix)
+        include(CorradeLibSuffix)
         set_parent_scope(KOMPAS_BINARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/bin)
         set_parent_scope(KOMPAS_LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
         set_parent_scope(KOMPAS_PLUGINS_INSTALL_DIR ${KOMPAS_LIBRARY_INSTALL_DIR}/kompas)
@@ -78,8 +69,6 @@ if(KOMPASCORE_FOUND)
         set_parent_scope(KOMPAS_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/Kompas)
         set_parent_scope(KOMPAS_DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share/kompas)
     endif()
-
-    set_parent_scope(KOMPAS_CORE_LIBRARIES ${KOMPAS_UTILITY_LIBRARY} ${KOMPAS_PLUGINMANAGER_LIBRARY} ${KOMPAS_CORE_LIBRARY})
 
     set_parent_scope(KOMPAS_CORE_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Core)
     set_parent_scope(KOMPAS_PLUGINS_INCLUDE_INSTALL_DIR ${KOMPAS_INCLUDE_INSTALL_DIR}/Plugins)

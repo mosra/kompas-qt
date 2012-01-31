@@ -2,7 +2,7 @@ qt4_wrap_cpp(DmsDecimalConverterUIComponent_MOC
     DmsDecimalConverterUIComponent.h
     DmsDecimalConverterDialog.h
 )
-kompas_add_plugin(DmsDecimalConverterUIComponent
+corrade_add_plugin(DmsDecimalConverterUIComponent
     ${KOMPAS_PLUGINS_UICOMPONENT_INSTALL_DIR}
     DmsDecimalConverterUIComponent.conf
     DmsDecimalConverterUIComponent.cpp

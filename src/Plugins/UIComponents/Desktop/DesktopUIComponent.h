@@ -34,7 +34,7 @@ class DesktopUIComponent: public QtGui::AbstractUIComponent {
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        DesktopUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        DesktopUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline QWidget* centralWidget() const { return _centralWidget; }
 

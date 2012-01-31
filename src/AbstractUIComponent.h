@@ -66,7 +66,7 @@ class AbstractUIComponent: public QObject, public Core::TranslatablePlugin {
         };
 
         /** @copydoc PluginManager::Plugin::Plugin */
-        inline AbstractUIComponent(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""): TranslatablePlugin(manager, plugin) {}
+        inline AbstractUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = ""): TranslatablePlugin(manager, plugin) {}
 
         inline bool canBeDeleted() { return true; }
 

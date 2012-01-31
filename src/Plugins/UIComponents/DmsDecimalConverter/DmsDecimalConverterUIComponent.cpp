@@ -28,7 +28,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-DmsDecimalConverterUIComponent::DmsDecimalConverterUIComponent(PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
+DmsDecimalConverterUIComponent::DmsDecimalConverterUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const string& plugin): AbstractUIComponent(manager, plugin) {
     QAction* action = new QAction(QString::fromStdString(*metadata()->name()), this);
     connect(action, SIGNAL(triggered(bool)), SLOT(dmsDecimalConverterDialog()));
     _actions << action;

@@ -18,7 +18,7 @@
 #include "PluginModel.h"
 
 using namespace std;
-using namespace Kompas::Utility;
+using namespace Corrade::Utility;
 using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
@@ -66,7 +66,7 @@ PluginManagerStore::PluginManagerStore(ConfigurationGroup* configurationGroup, Q
         item->loadedFromConfiguration();
 }
 
-PluginManagerStore::AbstractItem::AbstractItem(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent): QObject(parent), _configurationGroup(configurationGroup), _name(name), _description(description), _manager(manager) {
+PluginManagerStore::AbstractItem::AbstractItem(Corrade::Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent): QObject(parent), _configurationGroup(configurationGroup), _name(name), _description(description), _manager(manager) {
     _model = new PluginModel(_manager, 0, this);
     /** @todo Make this proxy to original model */
     _loadedOnlyModel = new PluginModel(_manager, PluginModel::LoadedOnly, this);

@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/MainWindowConfigure.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/MainWindowConfigure.h)
 
-include_directories(${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})
+include_directories(${CORRADE_INCLUDE_DIR} ${KOMPAS_CORE_INCLUDE_DIR} ${KOMPAS_QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})
 
 add_subdirectory(Plugins)
 
@@ -59,7 +59,7 @@ endif(WIN32)
 
 # Qt library
 add_library(KompasQt SHARED ${Kompas_Qt_SRCS} ${Kompas_Qt_MOC} ${Kompas_Qt_QRC})
-target_link_libraries(KompasQt ${KOMPAS_CORE_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+target_link_libraries(KompasQt ${CORRADE_UTILITY_LIBRARY} ${CORRADE_PLUGINMANAGER_LIBRARY} ${KOMPAS_CORE_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 set_target_properties(KompasQt PROPERTIES VERSION ${KOMPAS_QT_LIBRARY_VERSION} SOVERSION ${KOMPAS_QT_LIBRARY_SOVERSION})
 
 # Desktop version
@@ -76,8 +76,9 @@ install(TARGETS kompas-qt-mobile DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
 
 # Include also runtime libs for Win32 (remaining are bundled in Core)
 if(WIN32)
-    kompas_bundle_dlls(${KOMPAS_LIBRARY_INSTALL_DIR}
-        libgcc_s_dw2-1.dll
+    corrade_bundle_dlls(${KOMPAS_LIBRARY_INSTALL_DIR}
+        libpng14-14.dll
+        zlib1.dll
         QtCore4.dll
         QtGui4.dll
         QtNetwork4.dll

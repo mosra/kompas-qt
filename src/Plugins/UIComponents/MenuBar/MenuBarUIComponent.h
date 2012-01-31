@@ -32,7 +32,7 @@ namespace Kompas { namespace Plugins { namespace UIComponents {
 class MenuBarUIComponent: public QtGui::AbstractUIComponent {
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        MenuBarUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        MenuBarUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline QMenuBar* menuBar() const { return _menuBar; }
 

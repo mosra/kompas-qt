@@ -29,7 +29,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-MapOptionsUIComponent::MapOptionsUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+MapOptionsUIComponent::MapOptionsUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     _dockWidget = new QDockWidget(MainWindow::instance());
     _dockWidget->setWidget(new MapOptionsDock(MainWindow::instance()));
     _dockWidget->setWindowTitle(tr("Map options"));

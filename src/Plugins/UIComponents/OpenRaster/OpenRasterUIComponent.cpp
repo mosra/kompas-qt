@@ -36,7 +36,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-OpenRasterUIComponent::OpenRasterUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+OpenRasterUIComponent::OpenRasterUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* Open raster map */
     QIcon openPackageIcon;
     openPackageIcon.addFile(":/open-package-16.png");

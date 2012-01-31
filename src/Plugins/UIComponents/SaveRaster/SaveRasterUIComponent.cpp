@@ -31,7 +31,7 @@ using namespace Kompas::QtGui;
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 
-SaveRasterUIComponent::SaveRasterUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+SaveRasterUIComponent::SaveRasterUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* Save raster map */
     QAction* saveRasterAction = new QAction(QIcon(":/save-16.png"), tr("Save map"), this);
     _actions << saveRasterAction;

@@ -4,7 +4,7 @@ qt4_wrap_cpp(ConfigurationUIComponent_MOC
     ConfigurationDialog.h
     MainTab.h
 )
-kompas_add_static_plugin(KompasQt_Plugins ConfigurationUIComponent
+corrade_add_static_plugin(KompasQt_Plugins ConfigurationUIComponent
     ConfigurationUIComponent.conf
     CacheTab.cpp
     ConfigurationUIComponent.cpp

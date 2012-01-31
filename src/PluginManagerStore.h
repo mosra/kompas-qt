@@ -76,7 +76,7 @@ class PluginManagerStore: public QObject {
          * @param configurationGroup    Group with configuration of all plugins
          * @param parent                Parent object
          */
-        PluginManagerStore(Utility::ConfigurationGroup* configurationGroup, QObject* parent = 0);
+        PluginManagerStore(Corrade::Utility::ConfigurationGroup* configurationGroup, QObject* parent = 0);
 
         /**
          * @brief All store items
@@ -137,7 +137,7 @@ class PluginManagerStore::AbstractItem: public QObject {
          * Items are accessible via @ref PluginManagerStore::items(), there is
          * no need to construct them manually.
          */
-        AbstractItem(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent = 0);
+        AbstractItem(Corrade::Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, AbstractPluginManager* manager, QObject* parent = 0);
 
         /** @brief Name of plugin type */
         inline QString name() const { return _name; }
@@ -146,7 +146,7 @@ class PluginManagerStore::AbstractItem: public QObject {
         inline QString description() const { return _description; }
 
         /** @brief Configuration group for this particular plugin type */
-        inline Utility::ConfigurationGroup* configurationGroup() { return _configurationGroup; }
+        inline Corrade::Utility::ConfigurationGroup* configurationGroup() { return _configurationGroup; }
 
         /** @brief Abstract plugin manager */
         inline AbstractPluginManager* manager() { return _manager; }
@@ -170,7 +170,7 @@ class PluginManagerStore::AbstractItem: public QObject {
         void loadedToConfiguration();
 
     private:
-        Utility::ConfigurationGroup* _configurationGroup;
+        Corrade::Utility::ConfigurationGroup* _configurationGroup;
 
         QString _name,
             _description;
@@ -193,7 +193,7 @@ template<class Interface> class PluginManagerStore::Item: public PluginManagerSt
          * Items are accessible via @ref PluginManagerStore member functions,
          * there is no need to construct them manually.
          */
-        inline Item(Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, QObject* parent = 0): AbstractItem(configurationGroup, name, description, new PluginManager<Interface>(configurationGroup->value<std::string>("__dir")), parent) {
+        inline Item(Corrade::Utility::ConfigurationGroup* configurationGroup, const QString& name, const QString& description, QObject* parent = 0): AbstractItem(configurationGroup, name, description, new PluginManager<Interface>(configurationGroup->value<std::string>("__dir")), parent) {
             _manager = static_cast<PluginManager<Interface>* >(AbstractItem::manager());
             _manager->setParent(this);
         }

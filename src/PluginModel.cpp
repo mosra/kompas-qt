@@ -255,7 +255,7 @@ void PluginModel::removePlugin(const std::string& plugin) {
     }
 }
 
-PluginModel::PluginMetadata::PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Kompas::PluginManager::PluginMetadata* metadata) {
+PluginModel::PluginMetadata::PluginMetadata(const std::string& _plugin, AbstractPluginManager::LoadState _loadState, const Corrade::PluginManager::PluginMetadata* metadata) {
     plugin = QString::fromStdString(_plugin);
     loadState = _loadState;
     name = metadata->name();

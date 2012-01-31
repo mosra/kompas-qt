@@ -35,7 +35,7 @@ namespace Kompas { namespace Plugins { namespace UIComponents {
 #define WELCOME_SCREEN 0
 #define MAP_VIEW 1
 
-DesktopUIComponent::DesktopUIComponent(PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
+DesktopUIComponent::DesktopUIComponent(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): AbstractUIComponent(manager, plugin) {
     /* Welcome screen, wrapped in another widget so it's nicely centered */
     QFrame* welcomeScreenFrame = new QFrame;
     welcomeScreenFrame->setAutoFillBackground(true);

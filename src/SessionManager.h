@@ -97,7 +97,7 @@ class SessionManager: public QObject {
          * startup is enabled, loads previously active session ID. Previous
          * active session can be then loaded with load().
          */
-        SessionManager(Utility::ConfigurationGroup* configuration, QObject* parent = 0);
+        SessionManager(Corrade::Utility::ConfigurationGroup* configuration, QObject* parent = 0);
 
         /**
          * @brief Destructor
@@ -226,9 +226,9 @@ class SessionManager: public QObject {
         void currentChanged(unsigned int id);
 
     private:
-        Utility::ConfigurationGroup* conf;
-        Utility::ConfigurationGroup* defaultSession;
-        std::vector<Utility::ConfigurationGroup*> sessions;
+        Corrade::Utility::ConfigurationGroup* conf;
+        Corrade::Utility::ConfigurationGroup* defaultSession;
+        std::vector<Corrade::Utility::ConfigurationGroup*> sessions;
         QStringList _names;
 
         int _current;

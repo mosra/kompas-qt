@@ -32,7 +32,7 @@ namespace Kompas { namespace QtGui {
 class TileDataThread;
 
 /** @brief Abstract class for map viewer widget plugins */
-class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
+class AbstractMapView: public QWidget, public Corrade::PluginManager::Plugin {
     Q_OBJECT
 
     #ifndef QT_MOC_RUN
@@ -41,7 +41,7 @@ class AbstractMapView: public QWidget, public Kompas::PluginManager::Plugin {
 
     public:
         /** @copydoc PluginManager::Plugin::Plugin */
-        AbstractMapView(Kompas::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        AbstractMapView(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         /** @{ @name Map data functions */
 

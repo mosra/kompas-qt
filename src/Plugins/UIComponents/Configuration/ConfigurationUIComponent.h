@@ -31,7 +31,7 @@ class ConfigurationUIComponent: public QtGui::AbstractUIComponent {
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        ConfigurationUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        ConfigurationUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline const QList<QAction*>* actions(ActionCategory category) const {
             if(category == QtGui::AbstractUIComponent::Settings)

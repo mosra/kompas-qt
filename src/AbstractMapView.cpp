@@ -28,7 +28,7 @@ using namespace Kompas::Core;
 
 namespace Kompas { namespace QtGui {
 
-AbstractMapView::AbstractMapView(Kompas::PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin) {
+AbstractMapView::AbstractMapView(Corrade::PluginManager::AbstractPluginManager* manager, const std::string& plugin): Plugin(manager, plugin) {
     tileDataThread = new TileDataThread(this);
 
     /* Context menu */

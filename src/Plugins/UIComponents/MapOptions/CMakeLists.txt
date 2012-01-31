@@ -6,7 +6,7 @@ qt4_wrap_cpp(MapOptionsUIComponent_MOC
     MovingWidget.h
     ZoomSlider.h
 )
-kompas_add_static_plugin(KompasQt_PluginsDesktop MapOptionsUIComponent
+corrade_add_static_plugin(KompasQt_PluginsDesktop MapOptionsUIComponent
     MapOptionsUIComponent.conf
     EditableRasterOverlayModel.cpp
     EditableRasterPackageModel.cpp

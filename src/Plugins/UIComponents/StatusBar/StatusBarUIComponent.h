@@ -45,7 +45,7 @@ class StatusBarUIComponent: public QtGui::AbstractUIComponent {
 
     public:
         /** @copydoc QtGui::AbstractUIComponent::AbstractUIComponent */
-        StatusBarUIComponent(PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
+        StatusBarUIComponent(Corrade::PluginManager::AbstractPluginManager* manager = 0, const std::string& plugin = "");
 
         inline QStatusBar* statusBar() const { return _statusBar; }
 

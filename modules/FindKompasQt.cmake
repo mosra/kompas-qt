@@ -4,7 +4,8 @@
 #
 # KOMPASQT_FOUND             - True if Kompas Qt was found
 #
-# KOMPAS_QT_INCLUDE_DIR      - Include dir for Kompas Core
+# KOMPAS_QT_INCLUDE_DIR      - Include dir for Kompas Qt
+# KOMPAS_QT_LIBRARY          - Kompas Qt library
 #
 # KOMPAS_QT_INCLUDE_INSTALL_DIR      - Include installation directory for Qt headers
 # KOMPAS_PLUGINS_MAPVIEW_INSTALL_DIR - Map view plugins installation directory
@@ -13,12 +14,14 @@
 
 find_package(KompasCore REQUIRED)
 
-if (KOMPAS_QT_INCLUDE_DIR)
+if (KOMPAS_QT_INCLUDE_DIR AND KOMPAS_QT_LIBRARY)
 
     # Already in cache
     set(KOMPASQT_FOUND TRUE)
 
 else()
+    # Libraries
+    find_library(KOMPAS_QT_LIBRARY KompasQt)
 
     # Paths
     find_path(KOMPAS_QT_INCLUDE_DIR

@@ -16,7 +16,8 @@ if(BUILD_TESTS)
     enable_testing()
 endif()
 
-set_parent_scope(KOMPAS_QT_INCLUDE_DIR       "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set_parent_scope(KOMPAS_QT_INCLUDE_DIR      "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set_parent_scope(KOMPAS_QT_LIBRARY          KompasQt)
 
 include(FindKompasQt)
 

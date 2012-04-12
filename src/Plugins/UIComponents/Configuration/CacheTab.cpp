@@ -281,6 +281,9 @@ void CacheTab::setSize() {
 }
 
 void CacheTab::optimize() {
+    if(!MainWindow::instance()->cacheForRead()())
+        return;
+
     startBlockingOperation(tr("Optimizing cache..."));
     QFuture<void> future = QtConcurrent::run(this, &CacheTab::optimizeInternal);
     QFutureWatcher<void>* watcher = new QFutureWatcher<void>(this);
@@ -289,6 +292,9 @@ void CacheTab::optimize() {
 }
 
 void CacheTab::purge() {
+    if(!MainWindow::instance()->cacheForRead()())
+        return;
+
     if(MessageBox::question(this, tr("Cache purge"), tr("Are you sure you want to remove all items from the cache?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
         return;
 

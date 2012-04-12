@@ -22,7 +22,7 @@
 #include "SaveRasterWizard.h"
 #include "PluginManagerStore.h"
 
-PLUGIN_REGISTER(Kompas::Plugins::UIComponents::SaveRasterUIComponent,
+PLUGIN_REGISTER(SaveRasterUIComponent, Kompas::Plugins::UIComponents::SaveRasterUIComponent,
                 "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace std;

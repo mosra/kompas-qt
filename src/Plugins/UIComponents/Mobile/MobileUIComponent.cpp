@@ -18,9 +18,8 @@
 #include "MainWindow.h"
 #include "PluginManagerStore.h"
 
-PLUGIN_REGISTER_STATIC(MobileUIComponent,
-                       Kompas::Plugins::UIComponents::MobileUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(MobileUIComponent, Kompas::Plugins::UIComponents::MobileUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;

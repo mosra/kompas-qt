@@ -23,9 +23,8 @@
 
 using namespace Kompas::QtGui;
 
-PLUGIN_REGISTER_STATIC(MenuBarUIComponent,
-                       Kompas::Plugins::UIComponents::MenuBarUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(MenuBarUIComponent, Kompas::Plugins::UIComponents::MenuBarUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 

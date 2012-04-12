@@ -19,9 +19,8 @@
 
 #include "ConfigurationDialog.h"
 
-PLUGIN_REGISTER_STATIC(ConfigurationUIComponent,
-                       Kompas::Plugins::UIComponents::ConfigurationUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(ConfigurationUIComponent, Kompas::Plugins::UIComponents::ConfigurationUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 

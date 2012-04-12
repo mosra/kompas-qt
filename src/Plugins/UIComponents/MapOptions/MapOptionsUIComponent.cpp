@@ -20,9 +20,8 @@
 #include "MainWindow.h"
 #include "MapOptionsDock.h"
 
-PLUGIN_REGISTER_STATIC(MapOptionsUIComponent,
-                       Kompas::Plugins::UIComponents::MapOptionsUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(MapOptionsUIComponent, Kompas::Plugins::UIComponents::MapOptionsUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace std;
 using namespace Kompas::QtGui;

@@ -24,9 +24,8 @@
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
-PLUGIN_REGISTER_STATIC(StatusBarUIComponent,
-                       Kompas::Plugins::UIComponents::StatusBarUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(StatusBarUIComponent, Kompas::Plugins::UIComponents::StatusBarUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 namespace Kompas { namespace Plugins { namespace UIComponents {
 

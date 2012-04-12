@@ -26,9 +26,8 @@
 #include "PluginManagerStore.h"
 #include "OpenRasterMenuView.h"
 
-PLUGIN_REGISTER_STATIC(OpenRasterUIComponent,
-                       Kompas::Plugins::UIComponents::OpenRasterUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(OpenRasterUIComponent, Kompas::Plugins::UIComponents::OpenRasterUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace std;
 using namespace Kompas::Core;

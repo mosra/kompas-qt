@@ -21,9 +21,8 @@
 #include "MainWindow.h"
 #include "AboutDialog.h"
 
-PLUGIN_REGISTER_STATIC(AboutUIComponent,
-                       Kompas::Plugins::UIComponents::AboutUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(AboutUIComponent, Kompas::Plugins::UIComponents::AboutUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace Kompas::QtGui;
 

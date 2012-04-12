@@ -34,8 +34,8 @@ using namespace Corrade::Utility;
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;
 
-PLUGIN_REGISTER_STATIC(GraphicsMapView, Kompas::Plugins::GraphicsMapView,
-                       "cz.mosra.Kompas.QtGui.AbstractMapView/0.2")
+PLUGIN_REGISTER(GraphicsMapView, Kompas::Plugins::GraphicsMapView,
+                "cz.mosra.Kompas.QtGui.AbstractMapView/0.2")
 
 namespace Kompas { namespace Plugins {
 

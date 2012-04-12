@@ -23,9 +23,8 @@
 #include "MainWindow.h"
 #include "AbstractMapView.h"
 
-PLUGIN_REGISTER_STATIC(DesktopUIComponent,
-                       Kompas::Plugins::UIComponents::DesktopUIComponent,
-                       "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
+PLUGIN_REGISTER(DesktopUIComponent, Kompas::Plugins::UIComponents::DesktopUIComponent,
+                "cz.mosra.Kompas.QtGui.AbstractUIComponent/0.2")
 
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;

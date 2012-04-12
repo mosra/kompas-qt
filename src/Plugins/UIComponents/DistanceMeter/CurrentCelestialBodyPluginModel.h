@@ -40,7 +40,7 @@ class CurrentCelestialBodyPluginModel: public QAbstractProxyModel {
     Q_OBJECT
 
     private:
-        QAbstractProxyModel::setSourceModel;
+        using QAbstractProxyModel::setSourceModel;
 
     public:
         /**

@@ -16,7 +16,9 @@ build() {
     mkdir -p "${srcdir}/build"
     cd "${srcdir}/build"
 
-    cmake -DCMAKE_INSTALL_PREFIX=/usr ../mosra-${pkgname}-53a7b35
+    cmake ../mosra-${pkgname}-53a7b35 \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
     make
 }
 

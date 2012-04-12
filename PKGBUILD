@@ -2,12 +2,12 @@
 pkgname=kompas-qt
 pkgver=dev
 pkgrel=1
-pkgdesc="Qt GUI for Kompas navigation system"
+pkgdesc="Qt GUI for Kompas navigation software"
 arch=('i686' 'x86_64')
 url="http://mosra.cz/blog/kompas.php"
 license=('LGPLv3')
 makedepends=('cmake')
-depends=('kompas-core')
+depends=('kompas-core' 'qt')
 options=(!strip)
 
 build() {

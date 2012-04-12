@@ -15,6 +15,7 @@
 
 #include "CacheTab.h"
 
+#include <unistd.h>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFutureWatcher>
 #include <QtCore/QtConcurrentRun>
@@ -34,6 +35,10 @@
 #include "PluginManager.h"
 #include "PluginManagerStore.h"
 #include "PluginModel.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 using namespace std;
 using namespace Corrade::Utility;
@@ -296,7 +301,11 @@ void CacheTab::purge() {
 
 void CacheTab::initializeInternal() {
     /* Wait for the initialization thread in MainWindow to start */
+    #ifndef _WIN32
     usleep(100000);
+    #else
+    Sleep(100);
+    #endif
 
     /* Block until the cache is initialized */
     MainWindow::instance()->cacheForRead()();

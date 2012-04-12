@@ -67,12 +67,12 @@ add_executable(kompas-qt main.cpp Plugins/registerStaticDesktop.cpp)
 target_link_libraries(kompas-qt KompasQt ${KompasQt_Plugins} ${KompasQt_PluginsDesktop})
 
 # Mobile version
-add_executable(kompas-qt-mobile main.cpp Plugins/registerStaticMobile.cpp)
-target_link_libraries(kompas-qt-mobile KompasQt ${KompasQt_Plugins} ${KompasQt_PluginsMobile})
+#add_executable(kompas-qt-mobile main.cpp Plugins/registerStaticMobile.cpp)
+#target_link_libraries(kompas-qt-mobile KompasQt ${KompasQt_Plugins} ${KompasQt_PluginsMobile})
 
 install(TARGETS KompasQt DESTINATION ${KOMPAS_LIBRARY_INSTALL_DIR})
 install(TARGETS kompas-qt DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
-install(TARGETS kompas-qt-mobile DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
+#install(TARGETS kompas-qt-mobile DESTINATION ${KOMPAS_BINARY_INSTALL_DIR})
 
 # Include also runtime libs for Win32 (remaining are bundled in Core)
 if(WIN32)

@@ -296,7 +296,7 @@ void CacheTab::purge() {
 
 void CacheTab::initializeInternal() {
     /* Wait for the initialization thread in MainWindow to start */
-    usleep(100000);
+    sleep(100);
 
     /* Block until the cache is initialized */
     MainWindow::instance()->cacheForRead()();

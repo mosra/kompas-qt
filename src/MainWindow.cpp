@@ -16,6 +16,9 @@
 #include "MainWindow.h"
 
 #include <QtCore/QtConcurrentRun>
+#ifdef _WIN32
+#include <QtGui/QApplication>
+#endif
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QDockWidget>

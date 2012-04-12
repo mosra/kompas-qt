@@ -23,3 +23,7 @@ corrade_add_plugin(SaveRasterUIComponent
     StatisticsPage.cpp
     ${SaveRasterUIComponent_MOC}
 )
+
+if(WIN32)
+    target_link_libraries(SaveRasterUIComponent ${KOMPAS_CORE_LIBRARY} ${KOMPAS_QT_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+endif()

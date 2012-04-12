@@ -9,3 +9,7 @@ corrade_add_plugin(DmsDecimalConverterUIComponent
     DmsDecimalConverterDialog.cpp
     ${DmsDecimalConverterUIComponent_MOC}
 )
+
+if(WIN32)
+    target_link_libraries(DmsDecimalConverterUIComponent ${KOMPAS_CORE_LIBRARY} ${KOMPAS_QT_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+endif()

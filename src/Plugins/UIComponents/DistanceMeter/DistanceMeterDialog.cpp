@@ -30,6 +30,10 @@
 #include "PluginManager.h"
 #include "CurrentCelestialBodyPluginModel.h"
 
+#ifdef _WIN32
+#undef MessageBox /* I fucking hate windows.h defines! */
+#endif
+
 using namespace std;
 using namespace Kompas::Core;
 using namespace Kompas::QtGui;

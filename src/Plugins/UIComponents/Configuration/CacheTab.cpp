@@ -257,11 +257,11 @@ void CacheTab::selectCacheDir() {
     QString selected = QFileDialog::getExistingDirectory(this, tr("Select cache directory"), dir->text());
     if(selected.isEmpty()) return;
 
-    QDir d(QFileInfo(selected).absoluteDir());
+    QDir d(selected);
     QStringList l = d.entryList(QDir::AllEntries|QDir::NoDotAndDotDot);
 
     /* If the dir contains files, show warning */
-    if(l.count() > 1 && MessageBox::question(this, tr("Non-empty directory"), tr("The directory contains some files which will be overwritten with the cache. Do you want to continue?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
+    if(!l.empty() && MessageBox::question(this, tr("Non-empty directory"), tr("The directory contains some files which will be overwritten with the cache. Do you want to continue?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No) == QMessageBox::No)
         return;
 
     dir->setText(selected);
